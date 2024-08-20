@@ -4,9 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:dio/dio.dart';
+import 'Common/api_config.dart';
 import 'HomeScreen.dart';
+import 'Model/FarmerResponseModel.dart';
+import 'OtpActivity.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,9 +20,10 @@ class LoginScreen extends StatefulWidget {
 class _loginScreenState extends State<LoginScreen> {
   TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
-  bool isLoading = true;
-  String? farmerMobileNumber;
 
+  String? farmerMobileNumber;
+  bool _isLoading = false;
+ late String _mobileNumber;
 
   @override
   void dispose() {
@@ -121,10 +126,8 @@ class _loginScreenState extends State<LoginScreen> {
                           ),
                           child:
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => HomeScreen()),
-                              );
+                            onPressed: ()  {
+                              onLoginPressed();
                               // Handle language selection here
                             },
                             style: ElevatedButton.styleFrom(
@@ -215,6 +218,91 @@ class _loginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> onLoginPressed() async {
+    String farmerIdText = _farmercodeController.text.trim();
+    if (farmerIdText.isNotEmpty) {
+      farmercode = farmerIdText.replaceAll(" ", "");
+      print("former==id: $farmercode");
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('farmerid', farmercode);
+      bool isConnected = await CommonStyles.checkInternetConnectivity();
+      if (isConnected) {
+    
+        // Call your login function here
+        GetLogin();
+      } else {
+        print("Please check your internet connection.");
+        //showDialogMessage(context, "Please check your internet connection.");
+      }
+    } else {
+     // showDialogMessage(context, "Please enter Farmer ID.");
+    }
+  }
+
+
+
+  void GetLogin() async {
+    if (_isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final dio = Dio();
+    final farmerId = _farmercodeController.text.trim();
+    print("farmerId==263: $farmerId");
+
+    try {
+      final response = await dio.get(baseUrl + Farmer_ID_CHECK + '$farmerId/null');
+
+      if (response.statusCode == 200) {
+        final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+
+        if (farmerResponseModel.isSuccess!) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          if (farmerResponseModel.result != null) {
+            _mobileNumber = farmerResponseModel.result!;
+            print('mobile_number=== $_mobileNumber');
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OtpActivity(mobile: _mobileNumber),
+              ),
+            );
+          } else {
+            _showDialog('No Registered Mobile Number for Send Otp');
+          }
+        } else {
+          _showDialog('Invalid');
+        }
+      } else {
+        _showDialog('Server Error');
+      }
+    } on DioError catch (e) {
+      print('Error: $e');
+      _showDialog('Server Error');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+
+  void _showDialog(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
     );
   }
 

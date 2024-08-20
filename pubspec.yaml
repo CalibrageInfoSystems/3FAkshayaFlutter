@@ -52,6 +52,9 @@ dev_dependencies:
   connectivity: ^3.0.6
   permission_handler: ^11.3.1
   flutter_svg: ^2.0.10+1
+  dio: ^5.6.0
+  fluttertoast: ^8.2.8
+  flutter_spinkit: ^5.2.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
