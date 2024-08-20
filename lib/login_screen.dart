@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:akshaya_flutter/Common/common_styles.dart';
+import 'package:akshaya_flutter/login_otp_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,17 +14,19 @@ import 'OtpActivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _loginScreenState createState() => _loginScreenState();
 }
 
 class _loginScreenState extends State<LoginScreen> {
-  TextEditingController _farmercodeController = TextEditingController();
+  final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
   bool _isLoading = false;
- late String _mobileNumber;
+  late String _mobileNumber;
 
   @override
   void dispose() {
@@ -35,7 +38,7 @@ class _loginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
@@ -46,14 +49,13 @@ class _loginScreenState extends State<LoginScreen> {
                 fit: BoxFit.cover,
               ),
               Container(
-                color: Color(0x8D000000),
+                color: const Color(0x8D000000),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 180.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
                     Align(
                       alignment: Alignment.topCenter,
                       child: Image.asset(
@@ -62,83 +64,80 @@ class _loginScreenState extends State<LoginScreen> {
                         height: 150,
                       ),
                     ),
-                    Text(
-                        'Welcome',
-                        style:CommonStyles.txSty_24w
-                    ),
+                    const Text('Welcome', style: CommonStyles.txSty_24w),
                     Padding(
-                      padding:  EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           top: 22.0, left: 22.0, right: 22.0),
                       child: TextFormField(
                           controller: _farmercodeController,
                           decoration: InputDecoration(
                             hintText: 'Enter Farmer Id',
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white, // Set the border line color to white
+                              borderSide: const BorderSide(
+                                color: Colors
+                                    .white, // Set the border line color to white
                               ),
                               borderRadius: BorderRadius.circular(
                                   10.0), // Set the border radius
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.white, // Set the border line color to white
+                              borderSide: const BorderSide(
+                                color: Colors
+                                    .white, // Set the border line color to white
                               ),
-                              borderRadius: BorderRadius.circular(
-                                  10.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                             hintStyle: CommonStyles.txSty_20hint_fb,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 15),
                             // Add padding to center the hint text
-                            alignLabelWithHint: true, // Center-align the hint text
+                            alignLabelWithHint:
+                                true, // Center-align the hint text
                           ),
                           textAlign: TextAlign.center,
-                          style: CommonStyles.txSty_20wh_fb
-                      ),
+                          style: CommonStyles.txSty_20wh_fb),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          top: 22.0,
-                          left: 22.0,
-                          right: 22.0),
-                      child:
-                      SizedBox(
+                          top: 22.0, left: 22.0, right: 22.0),
+                      child: SizedBox(
                         width: double.infinity,
                         // Makes the button take up the full width of its parent
-                        child:
-                        Container(
+                        child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0), // Rounded corners
-                            gradient: LinearGradient(
+                            borderRadius:
+                                BorderRadius.circular(20.0), // Rounded corners
+                            gradient: const LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Color(0xFFCCCCCC),  // Start color (light gray)
-                                Color(0xFFFFFFFF),  // Center color (white)
-                                Color(0xFFCCCCCC),  // End color (light gray)
+                                Color(0xFFCCCCCC), // Start color (light gray)
+                                Color(0xFFFFFFFF), // Center color (white)
+                                Color(0xFFCCCCCC), // End color (light gray)
                               ],
                             ),
                             border: Border.all(
-                              color: Color(0xFFe86100), // Orange border color
+                              color: const Color(
+                                  0xFFe86100), // Orange border color
                               width: 2.0,
                             ),
                           ),
-                          child:
-                          ElevatedButton(
-                            onPressed: ()  {
+                          child: ElevatedButton(
+                            onPressed: () {
                               onLoginPressed();
                               // Handle language selection here
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 0),
-                              backgroundColor: Colors.transparent, // Transparent to show the gradient
-                              shadowColor: Colors.transparent, // Remove button shadow
+                              padding: const EdgeInsets.symmetric(vertical: 0),
+                              backgroundColor: Colors
+                                  .transparent, // Transparent to show the gradient
+                              shadowColor:
+                                  Colors.transparent, // Remove button shadow
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Login',
                               style: CommonStyles.text18orange,
                             ),
@@ -150,7 +149,7 @@ class _loginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.only(top: 6.0),
                       child: Container(
                         alignment: AlignmentDirectional.center,
-                        child: Text(
+                        child: const Text(
                           'OR',
                           style: TextStyle(
                             color: Colors.white,
@@ -163,52 +162,53 @@ class _loginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 10.0, left: 22.0, right: 22.0),
-                      child:
-                      SizedBox(
+                      child: SizedBox(
                         width: double.infinity,
                         // Makes the button take up the full width of its parent
-                        child:
-                        Container(
+                        child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0), // Rounded corners
-                            gradient: LinearGradient(
+                            borderRadius:
+                                BorderRadius.circular(20.0), // Rounded corners
+                            gradient: const LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Color(0xFFCCCCCC),  // Start color (light gray)
-                                Color(0xFFFFFFFF),  // Center color (white)
-                                Color(0xFFCCCCCC),  // End color (light gray)
+                                Color(0xFFCCCCCC), // Start color (light gray)
+                                Color(0xFFFFFFFF), // Center color (white)
+                                Color(0xFFCCCCCC), // End color (light gray)
                               ],
                             ),
                             border: Border.all(
-                              color: Color(0xFFe86100), // Orange border color
+                              color: const Color(
+                                  0xFFe86100), // Orange border color
                               width: 2.0,
                             ),
                           ),
-                          child:
-                          ElevatedButton(
+                          child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => LoginScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
                               );
                               // Handle language selection here
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 0),
-                              backgroundColor: Colors.transparent, // Transparent to show the gradient
-                              shadowColor: Colors.transparent, // Remove button shadow
+                              padding: const EdgeInsets.symmetric(vertical: 0),
+                              backgroundColor: Colors
+                                  .transparent, // Transparent to show the gradient
+                              shadowColor:
+                                  Colors.transparent, // Remove button shadow
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Scan QR',
                               style: CommonStyles.text18orange,
                             ),
                           ),
                         ),
                       ),
-
                     ),
                     // Other Buttons
                   ],
@@ -231,7 +231,6 @@ class _loginScreenState extends State<LoginScreen> {
       prefs.setString('farmerid', farmercode);
       bool isConnected = await CommonStyles.checkInternetConnectivity();
       if (isConnected) {
-    
         // Call your login function here
         GetLogin();
       } else {
@@ -239,11 +238,9 @@ class _loginScreenState extends State<LoginScreen> {
         //showDialogMessage(context, "Please check your internet connection.");
       }
     } else {
-     // showDialogMessage(context, "Please enter Farmer ID.");
+      // showDialogMessage(context, "Please enter Farmer ID.");
     }
   }
-
-
 
   void GetLogin() async {
     if (_isLoading) return;
@@ -257,7 +254,7 @@ class _loginScreenState extends State<LoginScreen> {
     print("farmerId==263: $farmerId");
 
     try {
-      final response = await dio.get(baseUrl + Farmer_ID_CHECK + '$farmerId/null');
+      final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
 
       if (response.statusCode == 200) {
         final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
@@ -274,7 +271,7 @@ class _loginScreenState extends State<LoginScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OtpActivity(mobile: _mobileNumber),
+                builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
               ),
             );
           } else {
@@ -286,7 +283,7 @@ class _loginScreenState extends State<LoginScreen> {
       } else {
         _showDialog('Server Error');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error: $e');
       _showDialog('Server Error');
     } finally {
@@ -296,7 +293,6 @@ class _loginScreenState extends State<LoginScreen> {
     }
   }
 
-
   void _showDialog(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -305,6 +301,4 @@ class _loginScreenState extends State<LoginScreen> {
       timeInSecForIosWeb: 1,
     );
   }
-
-
 }
