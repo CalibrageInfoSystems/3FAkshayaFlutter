@@ -1,6 +1,10 @@
-import 'package:akshaya_flutter/Common/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../navigation/app_routes.dart';
 
 class LoginOtpScreen extends StatefulWidget {
   final String mobile;
@@ -49,6 +53,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: PinCodeTextField(
                         appContext: context,
+                        textStyle: CommonStyles.txSty_16w_fb,
                         length: 6,
                         obscureText: false,
                         animationType: AnimationType.fade,
@@ -115,7 +120,10 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     );
   }
 
-  Widget submitBtn(BuildContext context, String language) {
+  Widget submitBtn(
+    BuildContext context,
+    String language,
+  ) {
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -136,7 +144,16 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           ),
         ),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const HomeScreen(),
+            //   ),
+            // );
+            
+      context.go(Routes.homeScreen.path);
+          },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0),
             backgroundColor: Colors.transparent,

@@ -1,13 +1,13 @@
-import 'package:akshaya_flutter/Common/common_styles.dart';
-import 'package:akshaya_flutter/login_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'package:flutter/material.dart';
+import '../navigation/app_routes.dart';
 
-import 'package:flutter/material.dart';
 
 class LanguageScreen extends StatelessWidget {
+  const LanguageScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,15 +17,15 @@ class LanguageScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              const Text(
                 'Please Select Language Below:',
                 style: CommonStyles.text18orange, // Assuming you have this style defined
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildLanguageButton(context, 'English'),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildLanguageButton(context, 'Telugu'),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildLanguageButton(context, 'Kannada'),
             ],
           ),
@@ -44,7 +44,7 @@ class LanguageScreen extends StatelessWidget {
       Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20.0), // Rounded corners
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
@@ -54,20 +54,22 @@ class LanguageScreen extends StatelessWidget {
             ],
           ),
           border: Border.all(
-            color: Color(0xFFe86100), // Orange border color
+            color: const Color(0xFFe86100), // Orange border color
             width: 2.0,
           ),
         ),
         child:
         ElevatedButton(
           onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => LoginScreen()),
-            );
+            // Navigator.of(context).pushReplacement(
+            //   MaterialPageRoute(builder: (context) => const LoginScreen()),
+            // );
+            
+      context.go(Routes.loginScreen.path);
             // Handle language selection here
           },
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 0),
+            padding: const EdgeInsets.symmetric(vertical: 0),
             backgroundColor: Colors.transparent, // Transparent to show the gradient
             shadowColor: Colors.transparent, // Remove button shadow
             shape: RoundedRectangleBorder(

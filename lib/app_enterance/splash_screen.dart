@@ -1,15 +1,17 @@
 import 'dart:async';
-import 'package:akshaya_flutter/Common/Constants.dart';
-import 'package:akshaya_flutter/Languagescreen.dart';
-import 'package:akshaya_flutter/login_screen.dart';
+import 'package:akshaya_flutter/common_utils/Constants.dart';
+import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
@@ -30,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
 
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -55,15 +57,21 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       // Navigator.of(context).pushReplacement(MaterialPageRoute(
       //   builder: (context) => homepage(),
       // ));
+      //  context.push(Routes.screenSignup.path);
+      context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
-        );
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(builder: (context) => const LoginScreen()),
+        // );
+        
+      context.go(Routes.loginScreen.path);
       } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LanguageScreen()),
-        );
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(builder: (context) => LanguageScreen()),
+        // );
+        
+      context.go(Routes.languageScreen.path);
       }
     }
   }
@@ -91,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ),
               // Background Color with Opacity
               Container(
-                color: Color(0x8D000000), // Background color with opacity
+                color: const Color(0x8D000000), // Background color with opacity
               ),
               Center(
                 child: Column(
@@ -111,16 +119,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         );
                       },
                     ),
-                    SizedBox(height: 16), // Add spacing between logo and text
+                    const SizedBox(height: 16), // Add spacing between logo and text
                     // Typewriter Text
                     TypewriterText(
                       text: "3F Oil Palm",
-                      color: Color(0xFFCE0E2D),
+                      color: const Color(0xFFCE0E2D),
                     ),
                     // Add spacing between the two lines
                     TypewriterText(
                       text: "Sowing for a Better Future",
-                      color: Color(0xFFe86100),
+                      color: const Color(0xFFe86100),
                     ),
                   ],
                 ),

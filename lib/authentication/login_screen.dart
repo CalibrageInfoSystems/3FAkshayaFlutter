@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'package:akshaya_flutter/Common/common_styles.dart';
-import 'package:akshaya_flutter/login_otp_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:akshaya_flutter/common_utils/api_config.dart';
+import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/models/FarmerResponseModel.dart';
+import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-import 'Common/api_config.dart';
-import 'HomeScreen.dart';
-import 'Model/FarmerResponseModel.dart';
-import 'OtpActivity.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -17,11 +13,11 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _loginScreenState createState() => _loginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _loginScreenState extends State<LoginScreen> {
-  final TextEditingController _farmercodeController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+ final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
@@ -186,11 +182,7 @@ class _loginScreenState extends State<LoginScreen> {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()),
-                              );
-                              // Handle language selection here
+                             
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
@@ -268,12 +260,13 @@ class _loginScreenState extends State<LoginScreen> {
             _mobileNumber = farmerResponseModel.result!;
             print('mobile_number=== $_mobileNumber');
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
+            //   ),
+            // );
+            context.push(Routes.loginOtpScreen.path);
           } else {
             _showDialog('No Registered Mobile Number for Send Otp');
           }

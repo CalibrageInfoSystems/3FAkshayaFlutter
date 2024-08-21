@@ -173,15 +173,19 @@ class CommonStyles {
   );
 
   static const TextStyle txSty_12b_fb = TextStyle(
-    fontFamily: 'hind_semibold',
-    fontSize: 12,
-    color: Color(0xFF000000),
-    fontWeight: FontWeight.w500
-  );
+      fontFamily: 'hind_semibold',
+      fontSize: 12,
+      color: Color(0xFF000000),
+      fontWeight: FontWeight.w500);
   static const TextStyle txSty_12bl_fb = TextStyle(
     fontFamily: 'hind_semibold',
     fontSize: 12,
     color: Color(0xA1000000),
+  );
+  static const TextStyle txSty_12W_fb = TextStyle(
+    fontFamily: 'hind_semibold',
+    fontSize: 12,
+    color: whiteColor,
   );
   static const TextStyle txSty_12blu_fb = TextStyle(
     fontFamily: 'hind_semibold',
@@ -226,8 +230,6 @@ class CommonStyles {
     color: primaryTextColor,
   );
 
-
-
   static Future<bool> checkInternetConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -237,9 +239,4 @@ class CommonStyles {
       return false; // Not connected to the internet
     }
   }
-
-
-
-
 }
-
