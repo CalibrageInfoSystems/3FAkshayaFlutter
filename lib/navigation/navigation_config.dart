@@ -31,8 +31,7 @@ final GoRouter router = GoRouter(
   },
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, child) =>
-          MainScreen(navigationShell: child),
+      builder: (context, state, child) => MainScreen(navigationShell: child),
       branches: <StatefulShellBranch>[
         //MARK: Branch 1
         StatefulShellBranch(
@@ -94,14 +93,13 @@ final GoRouter router = GoRouter(
               path: Routes.requestsScreen.path,
               name: Routes.requestsScreen.name,
               builder: (context, state) => const RequestsScreen(),
-             /*  routes: <RouteBase>[
+              /*  routes: <RouteBase>[
                
                ], */
             )
           ],
         ),
-     
-        
+
         //MARK: Branch 5
         StatefulShellBranch(
           navigatorKey: _customerCareBranchNavigatorKey,
@@ -114,42 +112,42 @@ final GoRouter router = GoRouter(
             )
           ],
         ),
-     
-
-
       ],
     ),
 
     //MARK: Other Screens
-    GoRoute( 
+    GoRoute(
       path: Routes.testScreen.path,
       name: Routes.testScreen.name,
       pageBuilder: (context, state) =>
           CupertinoPage(key: state.pageKey, child: const PageNotFound()),
     ),
-     GoRoute( 
+    GoRoute(
       path: Routes.splashScreen.path,
       name: Routes.splashScreen.name,
       pageBuilder: (context, state) =>
           CupertinoPage(key: state.pageKey, child: const SplashScreen()),
     ),
-     GoRoute( 
+    GoRoute(
       path: Routes.languageScreen.path,
       name: Routes.languageScreen.name,
       pageBuilder: (context, state) =>
           CupertinoPage(key: state.pageKey, child: const LanguageScreen()),
     ),
-    GoRoute( 
+    GoRoute(
       path: Routes.loginScreen.path,
       name: Routes.loginScreen.name,
       pageBuilder: (context, state) =>
           CupertinoPage(key: state.pageKey, child: const LoginScreen()),
     ),
-     GoRoute( 
+    GoRoute(
       path: Routes.loginOtpScreen.path,
       name: Routes.loginOtpScreen.name,
-      pageBuilder: (context, state) =>
-          CupertinoPage(key: state.pageKey, child: const LoginOtpScreen(mobile: '????????',)),
+      pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey,
+          child: const LoginOtpScreen(
+            mobile: '????????',
+          )),
     ),
   ],
 );
