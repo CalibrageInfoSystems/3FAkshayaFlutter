@@ -1,9 +1,24 @@
+import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/navigation/navigation_config.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: const [
+          AppLocal.teluguLocale,
+          AppLocal.englishLocale,
+          AppLocal.kannadaLocale
+        ],
+        path: AppLocal.localePath,
+        saveLocale: true,
+        fallbackLocale: AppLocal.englishLocale,
+        startLocale: AppLocal.englishLocale,
+        child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,6 +33,9 @@ class MyApp extends StatelessWidget {
     ); */
 
     return MaterialApp.router(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       debugShowCheckedModeBanner: false,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
@@ -25,4 +43,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

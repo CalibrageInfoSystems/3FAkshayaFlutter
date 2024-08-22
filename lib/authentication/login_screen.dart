@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
- final TextEditingController _farmercodeController = TextEditingController();
+  final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
@@ -66,36 +66,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 22.0, left: 22.0, right: 22.0),
-                      child:
-                      TextFormField(
+                      child: TextFormField(
                         controller: _farmercodeController,
                         decoration: InputDecoration(
                           hintText: 'Enter Farmer Id',
                           focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
-                              color: Colors.white, // Set the border line color to white
+                              color: Colors
+                                  .white, // Set the border line color to white
                             ),
-                            borderRadius: BorderRadius.circular(10.0), // Set the border radius
+                            borderRadius: BorderRadius.circular(
+                                10.0), // Set the border radius
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
-                              color: Colors.white, // Set the border line color to white
+                              color: Colors
+                                  .white, // Set the border line color to white
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           hintStyle: CommonStyles.txSty_20hint_fb,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                          alignLabelWithHint: true, // Center-align the hint text
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 15),
+                          alignLabelWithHint:
+                              true, // Center-align the hint text
                         ),
                         textAlign: TextAlign.center,
                         style: CommonStyles.txSty_20wh_fb,
-                        textCapitalization: TextCapitalization.characters, // Automatically enables CAPS lock
+                        textCapitalization: TextCapitalization
+                            .characters, // Automatically enables CAPS lock
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')), // Allows only uppercase letters and numbers
+                          FilteringTextInputFormatter.allow(RegExp(
+                              r'[A-Z0-9]')), // Allows only uppercase letters and numbers
                         ],
                       ),
-
-
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -103,8 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         // Makes the button take up the full width of its parent
-                        child:
-                        Container(
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(20.0), // Rounded corners
@@ -125,12 +128,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: ElevatedButton(
                             onPressed: () async {
-    bool validationSuccess = await isvalidations();
-    if (validationSuccess) {
-    onLoginPressed();
-    }
-    },
-                       
+                              bool validationSuccess = await isvalidations();
+                              if (validationSuccess) {
+                                onLoginPressed();
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               backgroundColor: Colors
@@ -276,10 +278,11 @@ class _LoginScreenState extends State<LoginScreen> {
             //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
             //   ),
             // );
-            context.push(Routes.loginOtpScreen.path);
+            context.push('${Routes.loginOtpScreen.path}/$_mobileNumber');
           } else {
-            CommonStyles.showCustomDialog(context, 'No Register Mobile Number for Send Otp');
-           // _showDialog('No Registered Mobile Number for Send Otp');
+            CommonStyles.showCustomDialog(
+                context, 'No Register Mobile Number for Send Otp');
+            // _showDialog('No Registered Mobile Number for Send Otp');
           }
         } else {
           CommonStyles.showCustomDialog(context, 'Invalid');
@@ -287,12 +290,12 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         CommonStyles.showCustomDialog(context, 'Server Error');
-       // _showDialog('Server Error');
+        // _showDialog('Server Error');
       }
     } on DioException catch (e) {
       print('Error: $e');
       CommonStyles.showCustomDialog(context, 'Server Error');
-    //  _showDialog('Server Error');
+      //  _showDialog('Server Error');
     } finally {
       setState(() {
         _isLoading = false;
@@ -309,39 +312,36 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
- Future<void> _scanQR() async {
-   // Request camera permission
-   var status = await Permission.camera.request();
-   if (status.isGranted) {
-     try {
-       String? cameraScanResult = await scanner.scan();
-       setState(() {
-         if (cameraScanResult != null) {
-           _farmercodeController.text = cameraScanResult;
-         }
-       });
-     } on PlatformException catch (e) {
-       print(e);
-     }
-   } else {
-     // Handle permission denied
-     setState(() {
-       _farmercodeController.text = "Camera permission denied";
-     });
-   }
- }
+  Future<void> _scanQR() async {
+    // Request camera permission
+    var status = await Permission.camera.request();
+    if (status.isGranted) {
+      try {
+        String? cameraScanResult = await scanner.scan();
+        setState(() {
+          if (cameraScanResult != null) {
+            _farmercodeController.text = cameraScanResult;
+          }
+        });
+      } on PlatformException catch (e) {
+        print(e);
+      }
+    } else {
+      // Handle permission denied
+      setState(() {
+        _farmercodeController.text = "Camera permission denied";
+      });
+    }
+  }
 
- Future<bool> isvalidations() async {
-   bool isValid = true;
+  Future<bool> isvalidations() async {
+    bool isValid = true;
 
+    if (_farmercodeController.text.isEmpty) {
+      CommonStyles.showCustomDialog(context, ' Enter Farmer Id');
+      isValid = false;
+    }
 
-
-   if (_farmercodeController.text.isEmpty) {
-     CommonStyles.showCustomDialog(context, ' Enter Farmer Id');
-     isValid = false;
-   }
-
-   return isValid; // Return true if validation is successful, false otherwise
- }
-
+    return isValid; // Return true if validation is successful, false otherwise
+  }
 }

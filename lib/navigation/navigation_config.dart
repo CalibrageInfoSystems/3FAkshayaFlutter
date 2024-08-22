@@ -141,13 +141,17 @@ final GoRouter router = GoRouter(
           CupertinoPage(key: state.pageKey, child: const LoginScreen()),
     ),
     GoRoute(
-      path: Routes.loginOtpScreen.path,
+      path: '${Routes.loginOtpScreen.path}/:mobile',
       name: Routes.loginOtpScreen.name,
-      pageBuilder: (context, state) => CupertinoPage(
+      pageBuilder: (context, state) {
+        final mobile = state.pathParameters['mobile'];
+        return CupertinoPage(
           key: state.pageKey,
-          child: const LoginOtpScreen(
-            mobile: '????????',
-          )),
+          child: LoginOtpScreen(
+            mobile: mobile!,
+          ),
+        );
+      },
     ),
   ],
 );

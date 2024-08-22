@@ -1,6 +1,9 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/localization/app_locale.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -264,7 +267,9 @@ class MainScreen extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              // Navigator.pop(context);
+
+              openLanguageDialog(context);
             },
           ),
           ListTile(
@@ -363,10 +368,8 @@ class MainScreen extends StatelessWidget {
             'Logout',
             style: CommonStyles.txSty_14b_fb,
           ),
-          content:  Text(
-            'Are you sure you want to Logout?',
-            style:CommonStyles.txSty_12b_fb
-          ),
+          content: const Text('Are you sure you want to Logout?',
+              style: CommonStyles.txSty_12b_fb),
           actions: [
             TextButton(
               onPressed: () {
@@ -382,7 +385,7 @@ class MainScreen extends StatelessWidget {
                 Navigator.of(context).pop();
                 onConfirmLogout(context);
               },
-              child:  Text(
+              child: const Text(
                 'Logout',
                 style: CommonStyles.txSty_12b_fb,
               ),
@@ -394,10 +397,98 @@ class MainScreen extends StatelessWidget {
   }
 
   Future<void> onConfirmLogout(BuildContext context) async {
-  //  SharedPreferences prefs = await SharedPreferences.getInstance();
+    //  SharedPreferences prefs = await SharedPreferences.getInstance();
     SharedPreferencesHelper.putBool(Constants.isLogin, false);
-   // CommonUtils.showCustomToastMessageLong("Logout Successful", context, 0, 3);
+    // CommonUtils.showCustomToastMessageLong("Logout Successful", context, 0, 3);
     context.go(Routes.loginScreen.path);
+  }
 
+  void openLanguageDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54, // Background color when the dialog is open
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: CommonStyles.blackColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: CommonStyles.primaryTextColor,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(tr(LocaleKeys.choose_language_str),
+                      style: CommonStyles.text18orange),
+                  const SizedBox(height: 5),
+                  languageBox('English', colors: [
+                    CommonStyles.primaryTextColor,
+                    const Color.fromARGB(255, 110, 6, 228)
+                  ], onPressed: () {
+                    Navigator.of(context).pop();
+                    context.setLocale(AppLocal.englishLocale);
+                  }),
+                  languageBox('తెలుగు', onPressed: () {
+                    Navigator.of(context).pop();
+                    context.setLocale(AppLocal.teluguLocale);
+                  }),
+                  languageBox('ಕನ್ನಡ', onPressed: () {
+                    Navigator.of(context).pop();
+                    context.setLocale(AppLocal.kannadaLocale);
+                  }),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack, // Customize the animation curve here
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Container languageBox(String language,
+      {List<Color> colors = const [Colors.grey, Colors.grey],
+      required void Function()? onPressed}) {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      child: Column(
+        children: [
+          Container(
+            height: 0.5,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: colors),
+            ),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: onPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+            ),
+            child: Text(language, style: CommonStyles.txSty_16w_fb),
+          ),
+        ],
+      ),
+    );
   }
 }
