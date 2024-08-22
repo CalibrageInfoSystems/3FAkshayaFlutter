@@ -326,39 +326,9 @@ class CommonStyles {
                     ),
                   ),
 
-              // ElevatedButton(
-              //       onPressed: ()  {
-              //         Navigator.of(context).pop();
-              //       },
-              //
-              //       style: ElevatedButton.styleFrom(
-              //         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
-              //         backgroundColor: Colors
-              //             .transparent, // Transparent to show the gradient
-              //         shadowColor:
-              //         Colors.transparent, // Remove button shadow
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(20.0),
-              //         ),
-              //       ),
-              //       child: const Text(
-              //         'OK',
-              //         style: txSty_16b_fb,
-              //       ),
-              //     ),
+           
                 ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.of(context).pop();
-                //   },
-                //   style: ElevatedButton.styleFrom(
-                //     shape: RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.circular(12.0),
-                //     ),
-                //     padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                //   ),
-                //   child: Text('OK'),
-                // ),
+              
           )  ],
             ),
           ),
@@ -367,5 +337,125 @@ class CommonStyles {
     );
   }
 
+  static void showHorizontalDotsLoadingDialog(BuildContext context, {String message = "Loading...", int dotCount = 5}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width/1.5,
+              color: Colors.black,
+              child:   Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    message,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 20),
 
+                  SpinKitHorizontalDots(
+                    color: Color(0xFFe86100),
+
+                    dotCount: dotCount, // Number of dots
+                  ),
+                  // SizedBox(height: 20),
+// ElevatedButton(onPressed: (){
+//   Navigator.of(context).pop();
+// }, child:  Text(
+//   'close',
+//   style: TextStyle(color: Colors.white),
+// ),)
+                ],
+              ),
+            )
+
+        );
+      },
+    );
+  }
+
+  static void hideHorizontalDotsLoadingDialog(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+}
+
+class SpinKitHorizontalDots extends StatefulWidget {
+  final Color color;
+  final double size;
+  final int dotCount;
+  final double dotSpacing;
+
+  SpinKitHorizontalDots({
+    required this.color,
+    this.size = 50.0,
+    this.dotSpacing = 8.0,
+    this.dotCount = 5, // Number of dots
+  });
+
+  @override
+  SpinKitHorizontalDotsState createState() => SpinKitHorizontalDotsState();
+}
+
+class SpinKitHorizontalDotsState extends State<SpinKitHorizontalDots>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: false);
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final totalWidth = widget.size + (widget.dotSpacing * (widget.dotCount - 1));
+    final dotSize = widget.size / widget.dotCount;
+
+    return SizedBox(
+
+      width: totalWidth,
+      height: dotSize,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Stack(
+            children: List.generate(widget.dotCount, (index) {
+              final offset = _animation.value * (totalWidth + dotSize);
+              final double position = (offset - index * (dotSize + widget.dotSpacing)) % (totalWidth + dotSize);
+
+              return Positioned(
+                left: position - dotSize,
+                child: Container(
+                  width: dotSize,
+                  height: dotSize,
+                  decoration: BoxDecoration(
+                    color: widget.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
 }

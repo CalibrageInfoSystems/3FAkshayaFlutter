@@ -66,34 +66,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 22.0, left: 22.0, right: 22.0),
-                      child: TextFormField(
-                          controller: _farmercodeController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter Farmer Id',
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors
-                                    .white, // Set the border line color to white
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  10.0), // Set the border radius
+                      child:
+                      TextFormField(
+                        controller: _farmercodeController,
+                        decoration: InputDecoration(
+                          hintText: 'Enter Farmer Id',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Set the border line color to white
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors
-                                    .white, // Set the border line color to white
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            hintStyle: CommonStyles.txSty_20hint_fb,
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 15),
-                            // Add padding to center the hint text
-                            alignLabelWithHint:
-                                true, // Center-align the hint text
+                            borderRadius: BorderRadius.circular(10.0), // Set the border radius
                           ),
-                          textAlign: TextAlign.center,
-                          style: CommonStyles.txSty_20wh_fb),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                              color: Colors.white, // Set the border line color to white
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          hintStyle: CommonStyles.txSty_20hint_fb,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                          alignLabelWithHint: true, // Center-align the hint text
+                        ),
+                        textAlign: TextAlign.center,
+                        style: CommonStyles.txSty_20wh_fb,
+                        textCapitalization: TextCapitalization.characters, // Automatically enables CAPS lock
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')), // Allows only uppercase letters and numbers
+                        ],
+                      ),
+
+
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -244,6 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_isLoading) return;
 
     setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
       _isLoading = true;
     });
 
@@ -259,6 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         if (farmerResponseModel.isSuccess!) {
           setState(() {
+            CommonStyles.showHorizontalDotsLoadingDialog(context);
             _isLoading = false;
           });
 
@@ -274,17 +278,21 @@ class _LoginScreenState extends State<LoginScreen> {
             // );
             context.push(Routes.loginOtpScreen.path);
           } else {
-            _showDialog('No Registered Mobile Number for Send Otp');
+            CommonStyles.showCustomDialog(context, 'No Register Mobile Number for Send Otp');
+           // _showDialog('No Registered Mobile Number for Send Otp');
           }
         } else {
-          _showDialog('Invalid');
+          CommonStyles.showCustomDialog(context, 'Invalid');
+          //_showDialog('Invalid');
         }
       } else {
-        _showDialog('Server Error');
+        CommonStyles.showCustomDialog(context, 'Server Error');
+       // _showDialog('Server Error');
       }
     } on DioException catch (e) {
       print('Error: $e');
-      _showDialog('Server Error');
+      CommonStyles.showCustomDialog(context, 'Server Error');
+    //  _showDialog('Server Error');
     } finally {
       setState(() {
         _isLoading = false;
@@ -329,7 +337,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
    if (_farmercodeController.text.isEmpty) {
-     CommonStyles.showCustomDialog(context, 'Please Enter Farmer Id');
+     CommonStyles.showCustomDialog(context, ' Enter Farmer Id');
      isValid = false;
    }
 

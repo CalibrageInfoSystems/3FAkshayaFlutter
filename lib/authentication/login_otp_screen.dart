@@ -15,6 +15,7 @@ import '../navigation/app_routes.dart';
 
 class LoginOtpScreen extends StatefulWidget {
   final String mobile;
+
   const LoginOtpScreen({super.key, required this.mobile});
 
   @override
@@ -24,6 +25,7 @@ class LoginOtpScreen extends StatefulWidget {
 class _LoginOtpScreenState extends State<LoginOtpScreen> {
   bool isLoading = false;
   String? farmerId;
+  String enteredOTP = '';
   final _dio = Dio();
   String fetchlast4Digits(String number) {
     return number.substring(number.length - 4);
@@ -89,13 +91,25 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         keyboardType: TextInputType.number,
                         // validator: validateotp,
                         onCompleted: (v) {
+                          print(v);
+                          setState(() {
+                            enteredOTP =v;
+                          });
                           print("Completed");
                         },
-                        onChanged: (value) {
-                          // setState(() {
-                          //   currentText = value;
-                          // });
-                        },
+                        // onChanged: (value) {
+                        //   print(value);
+                        //   // setState(() {
+                        //   //   currentText = value;
+                        //   // });
+                        // },
+                          // onSubmitted: (value){
+                          //   print("enteredotp$value");
+                          //   // setState(() {
+                          //   //   enteredOTP =value;
+                          //   // });
+                          //
+                          // },
                         beforeTextPaste: (text) {
                           print("Allowing to paste $text");
                           return true;
@@ -129,7 +143,16 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       ),
     );
   }
-
+  Future<bool> isvalidations() async {
+    bool isValid = true;
+print('enteredOTP===$enteredOTP');
+    if (enteredOTP.isEmpty) {
+      CommonStyles.showCustomDialog(context, 'Please Enter OTP');
+    //  showCustomToastMessageLong('Please Enter OTP', context, 1, 4);
+      isValid = false;
+    }
+    return isValid; // Return true if validation is successful, false otherwise
+  }
   Widget submitBtn(
     BuildContext context,
     String language,
@@ -154,9 +177,13 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           ),
         ),
         child: ElevatedButton(
-          onPressed: () {
-            _verifyOtp();
-            
+          onPressed: () async {
+           // _verifyOtp();
+            print('enteredOTP$enteredOTP');
+            bool validationSuccess = await isvalidations();
+            if( validationSuccess){
+              _verifyOtp();
+            }
 
           },
           style: ElevatedButton.styleFrom(
@@ -196,7 +223,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       isLoading = true;
     });
 
-    final url = baseUrl + Farmer_otp + farmerId! + "/123456";
+    final url = baseUrl + Farmer_otp + farmerId! + '/${enteredOTP}';
     print("otpsubmiturl==== $url");
     try {
       print("Sending request to URL: $url");
