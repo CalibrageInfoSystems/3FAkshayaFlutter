@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Image.asset(
                 'assets/images/appbg.png',
-
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -102,7 +101,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         // Makes the button take up the full width of its parent
-                        child: Container(
+                        child:
+                        Container(
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(20.0), // Rounded corners
@@ -122,10 +122,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: ElevatedButton(
-                            onPressed: () {
-                              onLoginPressed();
-                              // Handle language selection here
-                            },
+                            onPressed: () async {
+    bool validationSuccess = await isvalidations();
+    if (validationSuccess) {
+    onLoginPressed();
+    }
+    },
+                       
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               backgroundColor: Colors
@@ -319,4 +322,18 @@ class _LoginScreenState extends State<LoginScreen> {
      });
    }
  }
+
+ Future<bool> isvalidations() async {
+   bool isValid = true;
+
+
+
+   if (_farmercodeController.text.isEmpty) {
+     CommonStyles.showCustomDialog(context, 'Please Enter Farmer Id');
+     isValid = false;
+   }
+
+   return isValid; // Return true if validation is successful, false otherwise
+ }
+
 }

@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import '../common_utils/Constants.dart';
+import '../common_utils/SharedPreferencesHelper.dart';
+import '../navigation/app_routes.dart';
+
 class MainScreen extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
   const MainScreen({super.key, required this.navigationShell});
@@ -341,13 +345,59 @@ class MainScreen extends StatelessWidget {
                 fontFamily: 'hind_semibold',
               ),
             ),
-            onTap: () {
-              // Implement the action when the Care item is tapped
-              Navigator.pop(context); // Close the drawer
+            onTap: () async {
+              logOutDialog(context);
             },
           ),
         ],
       ),
     );
+  }
+
+  void logOutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Logout',
+            style: CommonStyles.txSty_14b_fb,
+          ),
+          content:  Text(
+            'Are you sure you want to Logout?',
+            style:CommonStyles.txSty_12b_fb
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: CommonStyles.txSty_12b_fb,
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onConfirmLogout(context);
+              },
+              child:  Text(
+                'Logout',
+                style: CommonStyles.txSty_12b_fb,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> onConfirmLogout(BuildContext context) async {
+  //  SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferencesHelper.putBool(Constants.isLogin, false);
+   // CommonUtils.showCustomToastMessageLong("Logout Successful", context, 0, 3);
+    context.go(Routes.loginScreen.path);
+
   }
 }

@@ -26,6 +26,7 @@ class CommonStyles {
   static const whiteColor = Colors.white;
   static const hintTextColor = Color(0xCBBEBEBE);
   // styles
+  static const RedColor = Color(0xFFC93437);
   static const TextStyle txSty_12b_f5 = TextStyle(
     fontSize: 12,
     fontFamily: "hind_semibold",
@@ -239,4 +240,132 @@ class CommonStyles {
       return false; // Not connected to the internet
     }
   }
+
+
+  static void showCustomDialog(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0),
+            side: BorderSide(color: Color(0x8D000000), width: 2.0), // Adding border to the dialog
+          ),
+
+          child: Container(
+            color: blackColor,
+            padding: EdgeInsets.all(0.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                // Header with "X" icon and "Error" text
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  color: RedColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.close, color: Colors.white),
+                      Text(
+                        '  Error',
+                        style: txSty_20w_fb
+                      ),
+                      SizedBox(width: 24.0), // Spacer to align text in the center
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                // Message Text
+                Text(
+                  msg,
+                  textAlign: TextAlign.center,
+                  style: text16white,
+                ),
+                SizedBox(height: 20.0),
+                // OK Button
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 10.0),
+            child:Container(
+                  decoration: BoxDecoration(
+                    borderRadius:
+                    BorderRadius.circular(20.0), // Rounded corners
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFCCCCCC), // Start color (light gray)
+                        Color(0xFFFFFFFF), // Center color (white)
+                        Color(0xFFCCCCCC), // End color (light gray)
+                      ],
+                    ),
+                    border: Border.all(
+                      color: const Color(
+                          0xFFe86100), // Orange border color
+                      width: 2.0,
+                    ),
+                  ),
+                  child: SizedBox(
+                    height: 30.0, // Set the desired height
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 35.0),
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'OK',
+                        style: txSty_16b_fb,
+                      ),
+                    ),
+                  ),
+
+              // ElevatedButton(
+              //       onPressed: ()  {
+              //         Navigator.of(context).pop();
+              //       },
+              //
+              //       style: ElevatedButton.styleFrom(
+              //         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 0.0),
+              //         backgroundColor: Colors
+              //             .transparent, // Transparent to show the gradient
+              //         shadowColor:
+              //         Colors.transparent, // Remove button shadow
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(20.0),
+              //         ),
+              //       ),
+              //       child: const Text(
+              //         'OK',
+              //         style: txSty_16b_fb,
+              //       ),
+              //     ),
+                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(12.0),
+                //     ),
+                //     padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                //   ),
+                //   child: Text('OK'),
+                // ),
+          )  ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 }
