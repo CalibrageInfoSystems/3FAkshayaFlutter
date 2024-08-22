@@ -27,7 +27,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           children: [
             Positioned.fill(
               child: Image.asset(
-                'assets/appbg.png',
+                'assets/images/appbg.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -151,8 +151,8 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             //     builder: (context) => const HomeScreen(),
             //   ),
             // );
-            
-      context.go(Routes.homeScreen.path);
+
+            context.go(Routes.homeScreen.path);
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0),

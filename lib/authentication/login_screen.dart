@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
- final TextEditingController _farmercodeController = TextEditingController();
+  final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Stack(
             children: [
               Image.asset(
-                'assets/appbg.png',
+                'assets/images/appbg.png',
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Align(
                       alignment: Alignment.topCenter,
                       child: Image.asset(
-                        'assets/ic_user.png',
+                        'assets/images/ic_user.png',
                         width: 200,
                         height: 150,
                       ),
@@ -181,9 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: ElevatedButton(
-                            onPressed: () {
-                             
-                            },
+                            onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               backgroundColor: Colors

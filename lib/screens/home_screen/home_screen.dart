@@ -1,4 +1,5 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
@@ -16,12 +17,22 @@ class _HomeScreenState extends State<HomeScreen> {
     'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
   ];
 
+  List<GridItem> gridItems = [
+    GridItem(imagePath: Assets.images.fertilizers.path, title: 'Fertilizer'),
+    GridItem(imagePath: Assets.images.equipment.path, title: 'Equipment'),
+    GridItem(imagePath: Assets.images.fertilizers1.path, title: 'Bio Lab'),
+    GridItem(imagePath: Assets.images.labour.path, title: 'Labour'),
+    GridItem(imagePath: Assets.images.quickPay.path, title: 'QuickPay'),
+    GridItem(imagePath: Assets.images.visit.path, title: 'Visit'),
+    GridItem(imagePath: Assets.images.loan.path, title: 'Loan'),
+    GridItem(imagePath: Assets.images.passbook.path, title: 'Edible Oil'),
+  ];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xfff4f3f1),
-
       body: Column(
         children: [
           Expanded(
@@ -95,28 +106,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container servicesSection(Size size, String title) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(title, style: const TextStyle(fontSize: 20)),
-          const SizedBox(height: 10),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 0,
-              crossAxisSpacing: 0,
-            ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              return _buildGridItem(index, 12);
-            },
+  Column servicesSection(Size size, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: CommonStyles.txSty_16b_fb,
+        ),
+        const SizedBox(height: 10),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 0,
           ),
-        ],
-      ),
+          itemCount: gridItems.length,
+          itemBuilder: (context, index) {
+            return _buildGridItem(index, gridItems.length, gridItems[index]);
+          },
+        ),
+      ],
     );
   }
 
@@ -132,20 +144,27 @@ class _HomeScreenState extends State<HomeScreen> {
           ])),
       child: Column(
         children: [
-          const Text('data'),
+          Text(
+            'Views',
+            style: CommonStyles.txSty_16b_fb
+                .copyWith(color: CommonStyles.whiteColor),
+          ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              viewOption(size,
-                  imagePath: 'assets/ffb_collection.png',
-                  title: 'FFB Collection'),
-              viewOption(size,
-                  imagePath: 'assets/ffb_collection.png',
-                  title: 'Farmer Passbook'),
-              viewOption(size,
-                  imagePath: 'assets/main_visit.png',
-                  title: 'Crop Maintenance Visits'),
+              viewOption(
+                size,
+                imagePath: 'assets/images/ffb_collection.png',
+              ),
+              viewOption(
+                size,
+                imagePath: 'assets/images/ffb_collection.png',
+              ),
+              viewOption(
+                size,
+                imagePath: 'assets/images/main_visit.png',
+              ),
             ],
           ),
           Row(
@@ -183,8 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget viewOption(Size size,
-      {required String imagePath, required String title}) {
+  Widget viewOption(Size size, {required String imagePath}) {
     return SizedBox(
       width: size.width / 3,
       child: Column(
@@ -202,12 +220,32 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGridItem(int index, int gridSize) {
+  Widget gridItem(GridItem gridItem) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          gridItem.imagePath,
+          width: 35,
+          height: 35,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 5),
+        Text(
+          gridItem.title,
+          style: CommonStyles.txSty_12W_fb.copyWith(
+              color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGridItem(int index, int gridSize, GridItem item) {
     int totalColumns = 3;
     int totalRows = (gridSize / totalColumns).ceil();
     int currentRow = (index / totalColumns).floor() + 1;
 
-    BorderSide borderSide = const BorderSide(color: Colors.black, width: 1.0);
+    BorderSide borderSide = const BorderSide(color: Colors.grey, width: 0.5);
 
     return Container(
       decoration: BoxDecoration(
@@ -220,12 +258,14 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
         ),
       ),
-      child: Center(
-        child: Text(
-          'Item ${index + 1}',
-          style: const TextStyle(fontSize: 18),
-        ),
-      ),
+      child: gridItem(item),
     );
   }
+}
+
+class GridItem {
+  final String imagePath;
+  final String title;
+
+  GridItem({required this.imagePath, required this.title});
 }

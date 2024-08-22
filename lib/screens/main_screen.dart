@@ -33,13 +33,13 @@ class MainScreen extends StatelessWidget {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            'assets/ic_home.svg',
+            'assets/images/ic_home.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
           ),
           activeIcon: SvgPicture.asset(
-            'assets/ic_home.svg',
+            'assets/images/ic_home.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
@@ -49,13 +49,13 @@ class MainScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            'assets/ic_myprofile.svg',
+            'assets/images/ic_myprofile.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
           ),
           activeIcon: SvgPicture.asset(
-            'assets/ic_myprofile.svg',
+            'assets/images/ic_myprofile.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
@@ -65,13 +65,13 @@ class MainScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            'assets/ic_my.svg',
+            'assets/images/ic_my.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
           ),
           activeIcon: SvgPicture.asset(
-            'assets/ic_my.svg',
+            'assets/images/ic_my.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
@@ -81,13 +81,13 @@ class MainScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            'assets/ic_request.svg',
+            'assets/images/ic_request.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
           ),
           activeIcon: SvgPicture.asset(
-            'assets/ic_request.svg',
+            'assets/images/ic_request.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
@@ -97,13 +97,13 @@ class MainScreen extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
-            'assets/ic_care.svg',
+            'assets/images/ic_care.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
           ),
           activeIcon: SvgPicture.asset(
-            'assets/ic_care.svg',
+            'assets/images/ic_care.svg',
             width: 20,
             height: 20,
             fit: BoxFit.contain,
@@ -118,6 +118,17 @@ class MainScreen extends StatelessWidget {
   AppBar appBar() {
     return AppBar(
       backgroundColor: const Color(0xffe46f5d),
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: CommonStyles.whiteColor,
+          ), // Replace with your custom icon or widget
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
+      ),
       title: const Text('data'),
     );
   }
@@ -128,21 +139,20 @@ class MainScreen extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-           child: Container(
-             width: 120.0,
-             height: 120.0,
-             decoration: const BoxDecoration(
-               shape: BoxShape.circle,
-             ),
-             child: CircleAvatar(
-               backgroundColor: Colors.transparent,
-               child: Image.asset(
-                 'assets/ic_user.png',
-                 fit: BoxFit.fill,
-               ),
-           ),
-          )
-         ),
+              child: Container(
+            width: 120.0,
+            height: 120.0,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/images/ic_user.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+          )),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -155,7 +165,9 @@ class MainScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 10.0,),
+              SizedBox(
+                width: 10.0,
+              ),
               Text(
                 'farmerlastname',
                 style: TextStyle(
@@ -167,7 +179,9 @@ class MainScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10.0,),
+          const SizedBox(
+            height: 10.0,
+          ),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -180,7 +194,9 @@ class MainScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(width: 10.0,),
+              SizedBox(
+                width: 10.0,
+              ),
               Text(
                 'address2',
                 style: TextStyle(
@@ -192,109 +208,118 @@ class MainScreen extends StatelessWidget {
               ),
             ],
           ),
-
-      Container(
-        height: 2.0,
-        width: 10.0,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFFF4500),
-              Color(0xFFA678EF),
-              Color(0xFFFF4500),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.center,
+          Container(
+            height: 2.0,
+            width: 10.0,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFF4500),
+                  Color(0xFFA678EF),
+                  Color(0xFFFF4500),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.center,
+              ),
+            ),
           ),
-        ),
-      ),
           ListTile(
             leading: SvgPicture.asset(
-            'assets/ic_home.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
               color: Colors.white,
-          ),
-            title: const Text('Home', style: TextStyle(
-              color:Colors.white,
-              //   fontSize: 16,
-              fontFamily: 'hind_semibold',
-            ),),
+            ),
+            title: const Text(
+              'Home',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
             onTap: () {
               Navigator.pop(context); // Close the drawer
             },
           ),
           ListTile(
             leading: SvgPicture.asset(
-              'assets/ic_home.svg',
+              'assets/images/ic_home.svg',
               width: 20,
               height: 20,
               fit: BoxFit.contain,
               color: Colors.white,
-
             ),
-            title: const Text('Choose Language', style: TextStyle(
-              color:Colors.white,
-              //   fontSize: 16,
-              fontFamily: 'hind_semibold',
-            ),),
+            title: const Text(
+              'Choose Language',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
             onTap: () {
-
               Navigator.pop(context);
             },
           ),
           ListTile(
             leading: SvgPicture.asset(
-              'assets/ic_myprofile.svg',
+              'assets/images/ic_myprofile.svg',
               width: 20,
               height: 20,
               fit: BoxFit.contain,
               color: Colors.white,
             ),
-            title: const Text('Profile', style: TextStyle(
-              color:Colors.white,
-              //   fontSize: 16,
-              fontFamily: 'hind_semibold',
-            ),),
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
             onTap: () {
               Navigator.pop(context); // Close the drawer
             },
           ),
           ListTile(
             leading: SvgPicture.asset(
-              'assets/ic_request.svg',
+              'assets/images/ic_request.svg',
               width: 20,
               height: 20,
               fit: BoxFit.contain,
               color: Colors.white, // Set the icon color to white
             ),
-            title: const Text('Request', style: TextStyle(
-              color:Colors.white,
-              //   fontSize: 16,
-              fontFamily: 'hind_semibold',
-            ),),
+            title: const Text(
+              'Request',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
             onTap: () {
               // Implement the action when the My3F item is tapped
               Navigator.pop(context); // Close the drawer
             },
           ),
-
           ListTile(
             leading: SvgPicture.asset(
-              'assets/ic_my.svg',
+              'assets/images/ic_my.svg',
               width: 20,
               height: 20,
               fit: BoxFit.fill,
               color: Colors.white, // Set the icon color to white
-
             ),
-            title: const Text('My3F',
+            title: const Text(
+              'My3F',
               style: TextStyle(
-                color:Colors.white,
-             //   fontSize: 16,
+                color: Colors.white,
+                //   fontSize: 16,
                 fontFamily: 'hind_semibold',
-              ),),
+              ),
+            ),
             onTap: () {
               // Implement the action when the Requests item is tapped
               Navigator.pop(context); // Close the drawer
@@ -302,18 +327,20 @@ class MainScreen extends StatelessWidget {
           ),
           ListTile(
             leading: SvgPicture.asset(
-              'assets/ic_home.svg',
+              'assets/images/ic_home.svg',
               width: 20,
               height: 20,
               fit: BoxFit.contain,
               color: Colors.white, // Set the icon color to white
-
             ),
-            title: const Text('Logout', style: TextStyle(
-              color:Colors.white,
-              //   fontSize: 16,
-              fontFamily: 'hind_semibold',
-            ),),
+            title: const Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
             onTap: () {
               // Implement the action when the Care item is tapped
               Navigator.pop(context); // Close the drawer
@@ -321,7 +348,6 @@ class MainScreen extends StatelessWidget {
           ),
         ],
       ),
-
     );
   }
 }
