@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common_utils/Constants.dart';
 import '../common_utils/api_config.dart';
+import '../models/FarmerResponseModel.dart';
 import '../navigation/app_routes.dart';
 
 class LoginOtpScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   String? farmerId;
   String enteredOTP = '';
   final _dio = Dio();
+
   String fetchlast4Digits(String number) {
     return number.substring(number.length - 4);
   }
@@ -125,15 +127,25 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         Text(
                           "Didn't receive code? ",
                           style: CommonStyles.text14white.copyWith(
-                              color: const Color.fromARGB(255, 240, 237, 237)),
+                            color: const Color.fromARGB(255, 240, 237, 237),
+                          ),
                         ),
-                        Text(
-                          "Resend OTP",
-                          style: CommonStyles.text14white.copyWith(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () {
+                            resendOTP(); // Call your resendOTP method here
+                          },
+                          child: Text(
+                            "Resend OTP",
+                            style: CommonStyles.text14white.copyWith(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline, // Optional: Add underline to indicate it's clickable
+                            ),
+                          ),
                         ),
                       ],
                     )
+
                   ],
                 ),
               ),
@@ -145,7 +157,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   }
   Future<bool> isvalidations() async {
     bool isValid = true;
-print('enteredOTP===$enteredOTP');
+    print('enteredOTP===$enteredOTP');
     if (enteredOTP.isEmpty) {
       CommonStyles.showCustomDialog(context, 'Please Enter OTP');
     //  showCustomToastMessageLong('Please Enter OTP', context, 1, 4);
@@ -221,6 +233,7 @@ print('enteredOTP===$enteredOTP');
     setState(() {
       farmerId = prefs.getString('farmerid');
       isLoading = true;
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
 
     final url = baseUrl + Farmer_otp + farmerId! + '/${enteredOTP}';
@@ -246,29 +259,33 @@ print('enteredOTP===$enteredOTP');
           prefs.setString('districtName', data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => HomeScreen(),
-          //   ),
-          // );
           context.go(Routes.homeScreen.path);
         } else {
           print("OTP validation failed: ${data['endUserMessage']}");
-          _showDialog(data['endUserMessage']);
+       //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          _showErrorDialog(data['endUserMessage']);
         }
       } else {
         print("Server error: Status code ${response.statusCode}");
-        _showDialog('Server error');
+      //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        _showErrorDialog('Server error');
       }
     } catch (e) {
       print("Exception caught: $e");
-      _showDialog('Failed to load data');
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      _showErrorDialog('Failed to load data');
     } finally {
       setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
         isLoading = false;
       });
     }
+  }
+
+  void _showErrorDialog(String message) {
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showCustomDialog(context, message);
+    });
   }
 
 
@@ -280,6 +297,81 @@ print('enteredOTP===$enteredOTP');
       timeInSecForIosWeb: 1,
     );
   }
+  void resendOTP() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+
+      farmerId = prefs.getString('farmerid');
+      isLoading = true;
+    });
+
+    final dio = Dio();
+
+    print("farmerId==263: $farmerId");
+
+    try {
+      final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
+
+      if (response.statusCode == 200) {
+        final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+
+        if (farmerResponseModel.isSuccess!) {
+          setState(() {
+            // CommonStyles.hideHorizontalDotsLoadingDialog(context);
+            isLoading = false;
+          });
+
+          if (farmerResponseModel.result != null) {
+          String  _mobileNumber = farmerResponseModel.result!;
+            print('mobile_number=== $_mobileNumber');
+            //otpsuccess
+          Fluttertoast.showToast(
+              msg: "OTP Success", // Replace with your message or a localized string
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM, // You can also use ToastGravity.TOP or ToastGravity.CENTER
+              timeInSecForIosWeb: 1, // Duration for iOS and Web
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
+            //   ),
+            // );
+         //   context.push(Routes.loginOtpScreen.path);
+          } else {
+            CommonStyles.showCustomDialog(context, 'No Register Mobile Number for Send Otp');
+            CommonStyles.hideHorizontalDotsLoadingDialog(context);
+            // _showDialog('No Registered Mobile Number for Send Otp');
+          }
+        } else {
+          CommonStyles.showCustomDialog(context, 'Invalid');
+          //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          //_showDialog('Invalid');
+        }
+      } else {
+        CommonStyles.showCustomDialog(context, 'Server Error');
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        // _showDialog('Server Error');
+      }
+    } on DioException catch (e) {
+      print('Error: $e');
+      CommonStyles.showCustomDialog(context, 'Server Error');
+      //  _showDialog('Server Error');
+    } finally {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        isLoading = false;
+      });
+    }
+  }
+
+
+
 }
 
 

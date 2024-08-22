@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _farmercodeController = TextEditingController();
+ final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
@@ -66,40 +66,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 22.0, left: 22.0, right: 22.0),
-                      child: TextFormField(
+                      child:
+                      TextFormField(
                         controller: _farmercodeController,
                         decoration: InputDecoration(
                           hintText: 'Enter Farmer Id',
                           focusedBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
-                              color: Colors
-                                  .white, // Set the border line color to white
+                              color: Colors.white, // Set the border line color to white
                             ),
-                            borderRadius: BorderRadius.circular(
-                                10.0), // Set the border radius
+                            borderRadius: BorderRadius.circular(10.0), // Set the border radius
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(
-                              color: Colors
-                                  .white, // Set the border line color to white
+                              color: Colors.white, // Set the border line color to white
                             ),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           hintStyle: CommonStyles.txSty_20hint_fb,
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 15),
-                          alignLabelWithHint:
-                              true, // Center-align the hint text
+                          contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                          alignLabelWithHint: true, // Center-align the hint text
                         ),
                         textAlign: TextAlign.center,
                         style: CommonStyles.txSty_20wh_fb,
-                        textCapitalization: TextCapitalization
-                            .characters, // Automatically enables CAPS lock
+                        textCapitalization: TextCapitalization.characters, // Automatically enables CAPS lock
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(
-                              r'[A-Z0-9]')), // Allows only uppercase letters and numbers
+                          FilteringTextInputFormatter.allow(RegExp(r'[A-Z0-9]')), // Allows only uppercase letters and numbers
                         ],
                       ),
+
+
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
@@ -107,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         // Makes the button take up the full width of its parent
-                        child: Container(
+                        child:
+                        Container(
                           decoration: BoxDecoration(
                             borderRadius:
                                 BorderRadius.circular(20.0), // Rounded corners
@@ -128,11 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: ElevatedButton(
                             onPressed: () async {
-                              bool validationSuccess = await isvalidations();
-                              if (validationSuccess) {
-                                onLoginPressed();
-                              }
-                            },
+                              FocusScope.of(context).unfocus();
+    bool validationSuccess = await isvalidations();
+    if (validationSuccess) {
+    onLoginPressed();
+    }
+    },
+                       
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               backgroundColor: Colors
@@ -243,105 +242,100 @@ class _LoginScreenState extends State<LoginScreen> {
       // showDialogMessage(context, "Please enter Farmer ID.");
     }
   }
+ void GetLogin() async {
+   // Ensure that the keyboard is hidden and the focus is removed
+   FocusScope.of(context).unfocus();
 
-  void GetLogin() async {
-    if (_isLoading) return;
+   // Prevent further actions if already loading
+   if (_isLoading) return;
 
-    setState(() {
-      CommonStyles.showHorizontalDotsLoadingDialog(context);
-      _isLoading = true;
-    });
+   setState(() {
+     CommonStyles.showHorizontalDotsLoadingDialog(context); // Show loading dialog
+     _isLoading = true;
+   });
 
-    final dio = Dio();
-    final farmerId = _farmercodeController.text.trim();
-    print("farmerId==263: $farmerId");
+   final dio = Dio();
+   final farmerId = _farmercodeController.text.trim();
+   print("farmerId==255: $farmerId");
 
-    try {
-      final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
+   try {
+     final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
+     print("farmerId==259: $response");
+     print("farmerId==260: ${response.statusCode}");
 
-      if (response.statusCode == 200) {
-        final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+     if (response.statusCode == 200) {
+       final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+       print("farmerId==266: ${farmerResponseModel.isSuccess!}");
+       if (farmerResponseModel.isSuccess!) {
+         if (farmerResponseModel.result != null) {
+           _mobileNumber = farmerResponseModel.result!;
+           print('mobile_number=== $_mobileNumber');
+           CommonStyles.hideHorizontalDotsLoadingDialog(context);
+           context.go('${Routes.loginOtpScreen.path}/$_mobileNumber');
+         } else {
+           CommonStyles.hideHorizontalDotsLoadingDialog(context);
+           _showErrorDialog('No Registered Mobile Number to Send OTP');
+         }
+       } else {
+         CommonStyles.hideHorizontalDotsLoadingDialog(context);
+         _showErrorDialog('Invalid Farmer');
+       }
+     } else {
+       CommonStyles.hideHorizontalDotsLoadingDialog(context);
+       _showErrorDialog('Server Error');
+     }
+   } on DioException catch (e) {
+     print('Error: $e');
+     CommonStyles.hideHorizontalDotsLoadingDialog(context);
+     _showErrorDialog('Server Error');
+   } finally {
+     setState(() {
+       _isLoading = false;
+     });
+   }
+ }
 
-        if (farmerResponseModel.isSuccess!) {
-          setState(() {
-            CommonStyles.showHorizontalDotsLoadingDialog(context);
-            _isLoading = false;
-          });
+ void _showErrorDialog(String message) {
+   Future.delayed(Duration.zero, () {
+     CommonStyles.showCustomDialog(context, message);
+   });
+ }
 
-          if (farmerResponseModel.result != null) {
-            _mobileNumber = farmerResponseModel.result!;
-            print('mobile_number=== $_mobileNumber');
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
-            //   ),
-            // );
-            context.push('${Routes.loginOtpScreen.path}/$_mobileNumber');
-          } else {
-            CommonStyles.showCustomDialog(
-                context, 'No Register Mobile Number for Send Otp');
-            // _showDialog('No Registered Mobile Number for Send Otp');
-          }
-        } else {
-          CommonStyles.showCustomDialog(context, 'Invalid');
-          //_showDialog('Invalid');
-        }
-      } else {
-        CommonStyles.showCustomDialog(context, 'Server Error');
-        // _showDialog('Server Error');
-      }
-    } on DioException catch (e) {
-      print('Error: $e');
-      CommonStyles.showCustomDialog(context, 'Server Error');
-      //  _showDialog('Server Error');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
-  void _showDialog(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-    );
-  }
 
-  Future<void> _scanQR() async {
-    // Request camera permission
-    var status = await Permission.camera.request();
-    if (status.isGranted) {
-      try {
-        String? cameraScanResult = await scanner.scan();
-        setState(() {
-          if (cameraScanResult != null) {
-            _farmercodeController.text = cameraScanResult;
-          }
-        });
-      } on PlatformException catch (e) {
-        print(e);
-      }
-    } else {
-      // Handle permission denied
-      setState(() {
-        _farmercodeController.text = "Camera permission denied";
-      });
-    }
-  }
 
-  Future<bool> isvalidations() async {
-    bool isValid = true;
+ Future<void> _scanQR() async {
+   // Request camera permission
+   var status = await Permission.camera.request();
+   if (status.isGranted) {
+     try {
+       String? cameraScanResult = await scanner.scan();
+       setState(() {
+         if (cameraScanResult != null) {
+           _farmercodeController.text = cameraScanResult;
+         }
+       });
+     } on PlatformException catch (e) {
+       print(e);
+     }
+   } else {
+     // Handle permission denied
+     setState(() {
+       _farmercodeController.text = "Camera permission denied";
+     });
+   }
+ }
 
-    if (_farmercodeController.text.isEmpty) {
-      CommonStyles.showCustomDialog(context, ' Enter Farmer Id');
-      isValid = false;
-    }
+ Future<bool> isvalidations() async {
+   bool isValid = true;
 
-    return isValid; // Return true if validation is successful, false otherwise
-  }
+   if (_farmercodeController.text.isEmpty) {
+     CommonStyles.showCustomDialog(context, ' Enter Farmer Id');
+     isValid = false;
+   }
+
+   return isValid; // Return true if validation is successful, false otherwise
+ }
+
 }

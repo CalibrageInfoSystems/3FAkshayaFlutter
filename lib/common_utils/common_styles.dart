@@ -337,7 +337,7 @@ class CommonStyles {
     );
   }
 
-  static void showHorizontalDotsLoadingDialog(BuildContext context, {String message = "Loading...", int dotCount = 5}) {
+  static void showHorizontalDotsLoadingDialog(BuildContext context, {String message = "Please Wait...", int dotCount =5 }) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -346,6 +346,7 @@ class CommonStyles {
             backgroundColor: Colors.transparent,
             child: Container(
               width: MediaQuery.of(context).size.width/1.5,
+              height: 100.0,
               color: Colors.black,
               child:   Column(
                 mainAxisSize: MainAxisSize.min,
@@ -363,13 +364,7 @@ class CommonStyles {
 
                     dotCount: dotCount, // Number of dots
                   ),
-                  // SizedBox(height: 20),
-// ElevatedButton(onPressed: (){
-//   Navigator.of(context).pop();
-// }, child:  Text(
-//   'close',
-//   style: TextStyle(color: Colors.white),
-// ),)
+
                 ],
               ),
             )
@@ -393,7 +388,7 @@ class SpinKitHorizontalDots extends StatefulWidget {
 
   SpinKitHorizontalDots({
     required this.color,
-    this.size = 50.0,
+    this.size = 30.0,
     this.dotSpacing = 8.0,
     this.dotCount = 5, // Number of dots
   });
