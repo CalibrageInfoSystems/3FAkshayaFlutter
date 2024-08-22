@@ -17,106 +17,106 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/images/appbg.png
   AssetGenImage get appbg =>
-      const AssetGenImage('assets/images/images/appbg.png');
+      const AssetGenImage('assets/images/appbg.png');
 
   /// File path: assets/images/images/equipment.png
   AssetGenImage get equipment =>
-      const AssetGenImage('assets/images/images/equipment.png');
+      const AssetGenImage('assets/images/equipment.png');
 
   /// File path: assets/images/images/fertilizers.png
   AssetGenImage get fertilizers =>
-      const AssetGenImage('assets/images/images/fertilizers.png');
+      const AssetGenImage('assets/images/fertilizers.png');
 
   /// File path: assets/images/images/fertilizers_1.png
   AssetGenImage get fertilizers1 =>
-      const AssetGenImage('assets/images/images/fertilizers_1.png');
+      const AssetGenImage('assets/images/fertilizers_1.png');
 
   /// File path: assets/images/images/ffb_collection.png
   AssetGenImage get ffbCollection =>
-      const AssetGenImage('assets/images/images/ffb_collection.png');
+      const AssetGenImage('assets/images/ffb_collection.png');
 
   /// File path: assets/images/images/general.png
   AssetGenImage get general =>
-      const AssetGenImage('assets/images/images/general.png');
+      const AssetGenImage('assets/images/general.png');
 
   /// File path: assets/images/images/harvesting.png
   AssetGenImage get harvesting =>
-      const AssetGenImage('assets/images/images/harvesting.png');
+      const AssetGenImage('assets/images/harvesting.png');
 
   /// File path: assets/images/images/ic_bank_white.png
   AssetGenImage get icBankWhite =>
-      const AssetGenImage('assets/images/images/ic_bank_white.png');
+      const AssetGenImage('assets/images/ic_bank_white.png');
 
   /// File path: assets/images/images/ic_calender.png
   AssetGenImage get icCalender =>
-      const AssetGenImage('assets/images/images/ic_calender.png');
+      const AssetGenImage('assets/images/ic_calender.png');
 
   /// File path: assets/images/images/ic_care.svg
   SvgGenImage get icCare =>
-      const SvgGenImage('assets/images/images/ic_care.svg');
+      const SvgGenImage('assets/images/ic_care.svg');
 
   /// File path: assets/images/images/ic_home.svg
   SvgGenImage get icHome =>
-      const SvgGenImage('assets/images/images/ic_home.svg');
+      const SvgGenImage('assets/images/ic_home.svg');
 
   /// File path: assets/images/images/ic_left.png
   AssetGenImage get icLeft =>
-      const AssetGenImage('assets/images/images/ic_left.png');
+      const AssetGenImage('assets/images/ic_left.png');
 
   /// File path: assets/images/images/ic_lernin.png
   AssetGenImage get icLernin =>
-      const AssetGenImage('assets/images/images/ic_lernin.png');
+      const AssetGenImage('assets/images/ic_lernin.png');
 
   /// File path: assets/images/images/ic_logo.png
   AssetGenImage get icLogo =>
-      const AssetGenImage('assets/images/images/ic_logo.png');
+      const AssetGenImage('assets/images/ic_logo.png');
 
   /// File path: assets/images/images/ic_my.svg
-  SvgGenImage get icMy => const SvgGenImage('assets/images/images/ic_my.svg');
+  SvgGenImage get icMy => const SvgGenImage('assets/images/ic_my.svg');
 
   /// File path: assets/images/images/ic_myprofile.svg
   SvgGenImage get icMyprofile =>
-      const SvgGenImage('assets/images/images/ic_myprofile.svg');
+      const SvgGenImage('assets/images/ic_myprofile.svg');
 
   /// File path: assets/images/images/ic_request.svg
   SvgGenImage get icRequest =>
-      const SvgGenImage('assets/images/images/ic_request.svg');
+      const SvgGenImage('assets/images/ic_request.svg');
 
   /// File path: assets/images/images/ic_user.png
   AssetGenImage get icUser =>
-      const AssetGenImage('assets/images/images/ic_user.png');
+      const AssetGenImage('assets/images/ic_user.png');
 
   /// File path: assets/images/images/labour.png
   AssetGenImage get labour =>
-      const AssetGenImage('assets/images/images/labour.png');
+      const AssetGenImage('assets/images/labour.png');
 
   /// File path: assets/images/images/loan.png
   AssetGenImage get loan =>
-      const AssetGenImage('assets/images/images/loan.png');
+      const AssetGenImage('assets/images/loan.png');
 
   /// File path: assets/images/images/main_visit.png
   AssetGenImage get mainVisit =>
-      const AssetGenImage('assets/images/images/main_visit.png');
+      const AssetGenImage('assets/images/main_visit.png');
 
   /// File path: assets/images/images/oilpalm.png
   AssetGenImage get oilpalm =>
-      const AssetGenImage('assets/images/images/oilpalm.png');
+      const AssetGenImage('assets/images/oilpalm.png');
 
   /// File path: assets/images/images/passbook.png
   AssetGenImage get passbook =>
-      const AssetGenImage('assets/images/images/passbook.png');
+      const AssetGenImage('assets/images/passbook.png');
 
   /// File path: assets/images/images/pest.png
   AssetGenImage get pest =>
-      const AssetGenImage('assets/images/images/pest.png');
+      const AssetGenImage('assets/images/pest.png');
 
   /// File path: assets/images/images/quick_pay.png
   AssetGenImage get quickPay =>
-      const AssetGenImage('assets/images/images/quick_pay.png');
+      const AssetGenImage('assets/images/quick_pay.png');
 
   /// File path: assets/images/images/visit.png
   AssetGenImage get visit =>
-      const AssetGenImage('assets/images/images/visit.png');
+      const AssetGenImage('assets/images/visit.png');
 
   /// List of all assets
   List<dynamic> get values => [

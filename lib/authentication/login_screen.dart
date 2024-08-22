@@ -3,10 +3,12 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/models/FarmerResponseModel.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
-
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _farmercodeController = TextEditingController();
+ final TextEditingController _farmercodeController = TextEditingController();
   String farmercode = "";
 
   String? farmerMobileNumber;
@@ -40,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Image.asset(
                 'assets/images/appbg.png',
+
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -181,7 +184,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _scanQR();
+                            },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 0),
                               backgroundColor: Colors
@@ -292,4 +297,26 @@ class _LoginScreenState extends State<LoginScreen> {
       timeInSecForIosWeb: 1,
     );
   }
+
+ Future<void> _scanQR() async {
+   // Request camera permission
+   var status = await Permission.camera.request();
+   if (status.isGranted) {
+     try {
+       String? cameraScanResult = await scanner.scan();
+       setState(() {
+         if (cameraScanResult != null) {
+           _farmercodeController.text = cameraScanResult;
+         }
+       });
+     } on PlatformException catch (e) {
+       print(e);
+     }
+   } else {
+     // Handle permission denied
+     setState(() {
+       _farmercodeController.text = "Camera permission denied";
+     });
+   }
+ }
 }

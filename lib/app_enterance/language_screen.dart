@@ -1,11 +1,14 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common_utils/Constants.dart';
 import '../navigation/app_routes.dart';
 
 
 class LanguageScreen extends StatelessWidget {
+
   const LanguageScreen({super.key});
 
   @override
@@ -35,9 +38,7 @@ class LanguageScreen extends StatelessWidget {
   }
 
   Widget _buildLanguageButton(BuildContext context, String language)  {
-    return
-
-      SizedBox(
+    return SizedBox(
       width: double.infinity,
       // Makes the button take up the full width of its parent
       child:
@@ -60,11 +61,12 @@ class LanguageScreen extends StatelessWidget {
         ),
         child:
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             // Navigator.of(context).pushReplacement(
             //   MaterialPageRoute(builder: (context) => const LoginScreen()),
             // );
-            
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool(Constants.welcome, true);
       context.go(Routes.loginScreen.path);
             // Handle language selection here
           },

@@ -9,7 +9,7 @@ var getBanners = "GetBanner?Id=null";
 var getbanners = "Banner/GetActiveBannerByStateCode/";
 var getServices = "StateService/GetServicesByStateCode/";
 var getlearning = "Encyclopedia/GetActiveEncyclopediaCategoryDetails";
-
+var Farmer_otp = "Farmer/";
 var Farmer_ID_CHECK = "farmer/SendOTP/";
 
 

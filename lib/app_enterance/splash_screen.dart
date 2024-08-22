@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -13,8 +14,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool isLogin = false;
@@ -54,24 +54,15 @@ class _SplashScreenState extends State<SplashScreen>
   void navigateToNextScreen() {
     if (isLogin) {
       // Navigate to home screen
-      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //   builder: (context) => homepage(),
-      // ));
-      //  context.push(Routes.screenSignup.path);
+
       context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => const LoginScreen()),
-        // );
 
-        context.go(Routes.loginScreen.path);
+      context.go(Routes.loginScreen.path);
       } else {
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => LanguageScreen()),
-        // );
-
-        context.go(Routes.languageScreen.path);
+        
+      context.go(Routes.languageScreen.path);
       }
     }
   }
@@ -87,9 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context)
-              .size
-              .height, // Set container height to the screen height
+          height: MediaQuery.of(context).size.height, // Set container height to the screen height
           child: Stack(
             children: [
               // Background Image
@@ -121,8 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
                         );
                       },
                     ),
-                    const SizedBox(
-                        height: 16), // Add spacing between logo and text
+                    const SizedBox(height: 16), // Add spacing between logo and text
                     // Typewriter Text
                     TypewriterText(
                       text: "3F Oil Palm",
@@ -168,7 +156,7 @@ class TypewriterText extends StatefulWidget {
 
 class _TypewriterTextState extends State<TypewriterText> {
   String _displayedText = ""; // Initial empty text
-  int _index = 0; // Index for tracking characters
+  int _index = 0;   // Index for tracking characters
 
   @override
   void initState() {
@@ -209,3 +197,7 @@ class _TypewriterTextState extends State<TypewriterText> {
     );
   }
 }
+
+
+
+

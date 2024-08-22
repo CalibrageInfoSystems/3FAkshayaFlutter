@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common_utils/Constants.dart';
+import '../common_utils/api_config.dart';
 import '../navigation/app_routes.dart';
 
 class LoginOtpScreen extends StatefulWidget {
@@ -15,6 +22,9 @@ class LoginOtpScreen extends StatefulWidget {
 }
 
 class _LoginOtpScreenState extends State<LoginOtpScreen> {
+  bool isLoading = false;
+  String? farmerId;
+  final _dio = Dio();
   String fetchlast4Digits(String number) {
     return number.substring(number.length - 4);
   }
@@ -145,14 +155,9 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         ),
         child: ElevatedButton(
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => const HomeScreen(),
-            //   ),
-            // );
+            _verifyOtp();
+            
 
-            context.go(Routes.homeScreen.path);
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0),
@@ -170,4 +175,84 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       ),
     );
   }
+
+  Future<void> _verifyOtp() async {
+    // Call your login function here
+
+    bool isConnected = await CommonStyles.checkInternetConnectivity();
+    if (isConnected) {
+      // Call your login function here
+      _getOtp();
+    } else {
+      print("Please check your internet connection.");
+      //showDialogMessage(context, "Please check your internet connection.");
+    }
+
+  }
+  Future<void> _getOtp() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      farmerId = prefs.getString('farmerid');
+      isLoading = true;
+    });
+
+    final url = baseUrl + Farmer_otp + farmerId! + "/123456";
+    print("otpsubmiturl==== $url");
+    try {
+      print("Sending request to URL: $url");
+      final response = await _dio.get(url);
+
+      print("Response status code: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data;
+        print("Response data: $data");
+        if (data['isSuccess']) {
+          // Convert the complete response to a JSON string and save it
+          String responseJson = json.encode(data);
+          prefs.setString('otp_response', responseJson);
+          print("OTP validation successful");
+
+          prefs.setBool(Constants.isLogin, true);
+          prefs.setString('user_id', data['result']['farmerDetails'][0]['code']);
+          prefs.setString('statecode', data['result']['farmerDetails'][0]['stateCode']);
+          prefs.setInt('districtId', data['result']['farmerDetails'][0]['districtId']);
+          prefs.setString('districtName', data['result']['farmerDetails'][0]['districtName']);
+
+          print("Navigating to Home screen");
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => HomeScreen(),
+          //   ),
+          // );
+          context.go(Routes.homeScreen.path);
+        } else {
+          print("OTP validation failed: ${data['endUserMessage']}");
+          _showDialog(data['endUserMessage']);
+        }
+      } else {
+        print("Server error: Status code ${response.statusCode}");
+        _showDialog('Server error');
+      }
+    } catch (e) {
+      print("Exception caught: $e");
+      _showDialog('Failed to load data');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
+  void _showDialog(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+    );
+  }
 }
+
+
