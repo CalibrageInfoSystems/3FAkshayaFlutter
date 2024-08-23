@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'package:akshaya_flutter/common_utils/Constants.dart';
+import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +13,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   bool isLogin = false;
@@ -58,11 +58,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
-
-      context.go(Routes.loginScreen.path);
+        context.go(Routes.loginScreen.path);
       } else {
-        
-      context.go(Routes.languageScreen.path);
+        context.go(Routes.languageScreen.path);
       }
     }
   }
@@ -77,8 +75,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height, // Set container height to the screen height
+        child: SizedBox(
+          height: MediaQuery.of(context)
+              .size
+              .height, // Set container height to the screen height
           child: Stack(
             children: [
               // Background Image
@@ -110,16 +110,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         );
                       },
                     ),
-                    const SizedBox(height: 16), // Add spacing between logo and text
+                    const SizedBox(
+                        height: 16), // Add spacing between logo and text
                     // Typewriter Text
-                    TypewriterText(
+                    const TypewriterText(
                       text: "3F Oil Palm",
-                      color: const Color(0xFFCE0E2D),
+                      color: Color(0xFFCE0E2D),
                     ),
                     // Add spacing between the two lines
-                    TypewriterText(
+                    const TypewriterText(
                       text: "Sowing for a Better Future",
-                      color: const Color(0xFFe86100),
+                      color: Color(0xFFe86100),
                     ),
                   ],
                 ),
@@ -145,7 +146,8 @@ class TypewriterText extends StatefulWidget {
   final String text;
   final Color color;
 
-  TypewriterText({
+  const TypewriterText({
+    super.key,
     required this.text,
     required this.color,
   });
@@ -156,7 +158,7 @@ class TypewriterText extends StatefulWidget {
 
 class _TypewriterTextState extends State<TypewriterText> {
   String _displayedText = ""; // Initial empty text
-  int _index = 0;   // Index for tracking characters
+  int _index = 0; // Index for tracking characters
 
   @override
   void initState() {
@@ -197,7 +199,3 @@ class _TypewriterTextState extends State<TypewriterText> {
     );
   }
 }
-
-
-
-

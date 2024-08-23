@@ -1,7 +1,20 @@
+import 'dart:convert';
+
+import 'package:akshaya_flutter/common_utils/Constants.dart';
+import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/models/learning_model.dart';
+import 'package:akshaya_flutter/models/service_model.dart';
+import 'package:akshaya_flutter/navigation/app_routes.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:go_router/go_router.dart';
+import 'package:marquee/marquee.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +24,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<int>> servicesData;
+  late Future<List<String?>> learningsData;
+  @override
+  void initState() {
+    super.initState();
+    servicesData = getServicesData();
+    learningsData = getLearningsData();
+  }
+
   List<String> bannersList = [
     'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
     'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
@@ -28,6 +50,60 @@ class _HomeScreenState extends State<HomeScreen> {
     GridItem(imagePath: Assets.images.passbook.path, title: 'Edible Oil'),
   ];
 
+  Future<List<int>> getServicesData() async {
+    final apiUrl = '$baseUrl${getServices}AP';
+    print('getServicesData apiUrl: $apiUrl');
+
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getServicesData jsonResponse: ${jsonResponse.body}');
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        List<dynamic> servicesList = response['listResult'];
+
+        List<int> serviceTypeIds = servicesList
+            .map((item) => ServiceModel.fromJson(item))
+            .map((service) => service.serviceTypeId)
+            .where((serviceTypeId) => serviceTypeId != 108)
+            .map((id) => id!)
+            .toList();
+        print('serviceTypeIds: $serviceTypeIds');
+        return serviceTypeIds;
+      } else {
+        throw Exception('Failed to get learning data');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<List<String?>> getLearningsData() async {
+    final apiUrl = '$baseUrl$getlearning';
+
+    print('getLearningsData apiUrl: $apiUrl');
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        List<dynamic> learningList = response['listResult'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String language =
+            prefs.getString(SharedPrefsKeys.language) ?? 'english';
+        print('getLearningsData language: $language');
+        List<LearningModel> result =
+            learningList.map((item) => LearningModel.fromJson(item)).toList();
+        return getlearningString(language, result);
+        /*  return learningList
+            .map((item) => LearningModel.fromJson(item))
+            .toList(); */
+      } else {
+        throw Exception('Failed to get services data');
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -42,13 +118,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   menuSection(size),
                   servicesSection(size, 'Services'),
                   Container(
-                    color: Colors.pinkAccent,
+                    color: Colors.transparent,
                     height: 20,
                   ),
-                  servicesSection(size, 'Learnings'),
+                  learningSection(size, 'Learnings',
+                      backgroundColor: Colors.grey.shade300),
                 ],
               ),
             ),
+          ),
+          Container(
+            color: Colors.green,
+            height: 20,
+            child: Marquee(
+                text:
+                    '  ged_boost_gpu_freq, level 100, eOrigin 2, final_idx 29, oppidx_max 29, oppidx_min 0   '),
           ),
           banners(size),
         ],
@@ -56,79 +140,142 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container banners(Size size) {
-    return Container(
-      color: Colors.tealAccent,
-      width: size.width,
-      height: size.height * 0.2,
-      child: FlutterCarousel(
-        options: CarouselOptions(
-          showIndicator: true,
-          autoPlay: true,
-          floatingIndicator: true,
-          autoPlayCurve: Curves.linear,
-          slideIndicator: const CircularSlideIndicator(
-              slideIndicatorOptions: SlideIndicatorOptions(
-            indicatorBorderColor: Colors.grey,
-            currentIndicatorColor: CommonStyles.whiteColor,
-            indicatorRadius: 2,
-          )),
-        ),
-        items: bannersList.map((item) {
-          return Builder(
-            builder: (BuildContext context) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      item,
-                      height: 100,
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                            child: CircularProgressIndicator.adaptive());
-                      },
-                    ),
+  Widget banners(Size size) {
+    return FlutterCarousel(
+      options: CarouselOptions(
+        height: size.height * 0.2,
+        showIndicator: true,
+        autoPlay: true,
+        floatingIndicator: true,
+        autoPlayCurve: Curves.linear,
+        slideIndicator: const CircularSlideIndicator(
+            slideIndicatorOptions: SlideIndicatorOptions(
+          indicatorBorderColor: Colors.grey,
+          currentIndicatorColor: CommonStyles.whiteColor,
+          indicatorRadius: 2,
+        )),
+      ),
+      items: bannersList.map((item) {
+        return Builder(
+          builder: (BuildContext context) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 4,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    item,
+                    height: 100,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive());
+                    },
                   ),
                 ),
-              );
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Container servicesSection(Size size, String title, {Color? backgroundColor}) {
+    return Container(
+      color: backgroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: CommonStyles.txSty_16b_fb,
+          ),
+          const SizedBox(height: 10),
+          FutureBuilder(
+            future: servicesData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator.adaptive();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final serviceTypeIdList = snapshot.data as List<int>;
+                return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 0,
+                      crossAxisSpacing: 0,
+                      childAspectRatio: 1.5,
+                    ),
+                    itemCount: serviceTypeIdList.length,
+                    itemBuilder: (context, index) {
+                      print(
+                          'serviceTypeIdList $index: ${serviceTypeIdList[index]}');
+                      return serviceGridItem(index, serviceTypeIdList.length,
+                          serviceTypeIdList[index]);
+                    });
+              }
             },
-          );
-        }).toList(),
+          ),
+        ],
       ),
     );
   }
 
-  Column servicesSection(Size size, String title) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          title,
-          style: CommonStyles.txSty_16b_fb,
-        ),
-        const SizedBox(height: 10),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
+  Container learningSection(Size size, String title, {Color? backgroundColor}) {
+    return Container(
+      color: backgroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: CommonStyles.txSty_16b_fb,
           ),
-          itemCount: gridItems.length,
-          itemBuilder: (context, index) {
-            return _buildGridItem(index, gridItems.length, gridItems[index]);
-          },
-        ),
-      ],
+          const SizedBox(height: 10),
+          FutureBuilder(
+            future: learningsData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator.adaptive();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final learningsList = snapshot.data as List<String?>;
+
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 0,
+                    childAspectRatio: 1.5,
+                  ),
+                  itemCount: learningsList.length,
+                  itemBuilder: (context, index) {
+                    //MARK: Work
+                    return learningGridItem(
+                        index: index,
+                        learningsList: learningsList.length,
+                        title: learningsList[index]!);
+                    // return learningGridItem(index, learningsList.length, learningsList[index]);
+                  },
+                );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -154,46 +301,22 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               viewOption(
-                size,
-                imagePath: 'assets/images/ffb_collection.png',
-              ),
+                  size, Assets.images.ffbCollection.path, 'FFB Collection',
+                  onTap: () {
+                context.push(
+                    context.namedLocation(Routes.ffbCollectionScreen.name));
+              }),
+              viewOption(size, Assets.images.passbook.path, 'Farmer Passbook',
+                  onTap: () {
+                context.push(
+                    context.namedLocation(Routes.farmerPassbookScreen.name));
+              }),
               viewOption(
-                size,
-                imagePath: 'assets/images/ffb_collection.png',
-              ),
-              viewOption(
-                size,
-                imagePath: 'assets/images/main_visit.png',
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: 120,
-                alignment: Alignment.center,
-                child: const Text(
-                  'FFB Collection',
-                  style: CommonStyles.txSty_12W_fb,
-                ),
-              ),
-              Container(
-                width: 120,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Farmer Passbook',
-                  style: CommonStyles.txSty_12W_fb,
-                ),
-              ),
-              Container(
-                width: 120,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Crop Maintenance Visits',
-                  style: CommonStyles.txSty_12W_fb,
-                ),
-              ),
+                  size, Assets.images.mainVisit.path, 'Crop Maintenance Visits',
+                  onTap: () {
+                context.push(context
+                    .namedLocation(Routes.cropMaintenanceVisitsScreen.name));
+              }),
             ],
           ),
           const SizedBox(height: 20),
@@ -202,37 +325,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget viewOption(Size size, {required String imagePath}) {
-    return SizedBox(
-      width: size.width / 3,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            imagePath,
-            width: 35,
-            height: 35,
-            fit: BoxFit.cover,
+  Widget viewOption(Size size, String imagePath, String title,
+      {void Function()? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(children: [
+        SizedBox(
+          width: size.width / 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                imagePath,
+                width: 35,
+                height: 35,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                width: 120,
+                height: 30,
+                alignment: Alignment.center,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: CommonStyles.txSty_12W_fb,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 5),
-        ],
-      ),
+        )
+      ]),
     );
   }
 
-  Widget gridItem(GridItem gridItem) {
+  Widget gridServiceItem(int serviceTypeId) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(
-          gridItem.imagePath,
+          getServiceImagePath(serviceTypeId),
           width: 35,
           height: 35,
           fit: BoxFit.cover,
         ),
         const SizedBox(height: 5),
         Text(
-          gridItem.title,
+          getServiceName(serviceTypeId),
+          textAlign: TextAlign.center,
           style: CommonStyles.txSty_12W_fb.copyWith(
               color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
         ),
@@ -240,7 +381,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildGridItem(int index, int gridSize, GridItem item) {
+  Widget gridLearningItem(int index, String title) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(
+          getLearningImagePath(index),
+          width: 35,
+          height: 35,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 5),
+        Text(
+          title,
+          style: CommonStyles.txSty_12W_fb.copyWith(
+              color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget serviceGridItem(int index, int gridSize, int serviceTypeId) {
     int totalColumns = 3;
     int totalRows = (gridSize / totalColumns).ceil();
     int currentRow = (index / totalColumns).floor() + 1;
@@ -258,8 +420,153 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
         ),
       ),
-      child: gridItem(item),
+      child: gridServiceItem(serviceTypeId),
     );
+  }
+
+  Widget learningGridItem(
+      {required int index, required int learningsList, required String title}) {
+    int totalColumns = 3;
+    int totalRows = (learningsList / totalColumns).ceil();
+    int currentRow = (index / totalColumns).floor() + 1;
+
+    BorderSide borderSide = const BorderSide(color: Colors.grey, width: 0.5);
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: (index < totalColumns) ? BorderSide.none : borderSide,
+          left: (index % totalColumns == 0) ? BorderSide.none : borderSide,
+          right: (index % totalColumns == totalColumns - 1)
+              ? BorderSide.none
+              : borderSide,
+          bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
+        ),
+      ),
+      child: gridLearningItem(index, title),
+    );
+  }
+
+  String getServiceImagePath(int serviceTypeId) {
+    // 12 10 107 11 13 14 28 108 116
+    switch (serviceTypeId) {
+      case 10: // Pole Request
+        return Assets.images.equipment.path;
+      case 11: // Labour Request
+        return Assets.images.labour.path;
+      case 12: // Fertilizer Request
+        return Assets.images.fertilizers.path;
+      case 13: // QuickPay Request
+        return Assets.images.quickPay.path;
+      case 14: // Visit Request
+        return Assets.images.visit.path;
+      case 28: // Loan Request
+        return Assets.images.loan.path;
+      case 107: // Bio Lab Request
+        return Assets.images.fertilizers.path;
+      case 000: // 108 Transport Request
+        return Assets.images.fertilizers.path;
+      case 116: // Edible Oils Request
+        return Assets.images.ediableoils.path;
+
+      default:
+        return Assets.images.mainVisit.path;
+    }
+  }
+
+  String getServiceName(int serviceTypeId) {
+    // 12 10 107 11 13 14 28 108 116
+    switch (serviceTypeId) {
+      case 10: // Pole Request
+        return tr(LocaleKeys.pole);
+      case 11: // Labour Request
+        return tr(LocaleKeys.select_labour_type);
+      case 12: // Fertilizer Request
+        return tr(LocaleKeys.fertilizer);
+      case 13: // QuickPay Request
+        return tr(LocaleKeys.quick);
+      case 14: // Visit Request
+        return tr(LocaleKeys.visit);
+      case 28: // Loan Request
+        return tr(LocaleKeys.loan);
+      case 107: // Bio Lab Request
+        return tr(LocaleKeys.labproducts);
+      case 108: // Transport Request
+        return tr(LocaleKeys.App_version);
+      case 116: // Edible Oils Request
+        return tr(LocaleKeys.edibleoils);
+
+      default:
+        return Assets.images.mainVisit.path;
+    }
+  }
+
+  String getLearningImagePath(int index) {
+    // 12 10 107 11 13 14 28 108 116
+    switch (index) {
+      case 0: // Fertilizers
+        return Assets.images.fertilizers.path;
+      case 1: // Harvesting
+        return Assets.images.harvesting.path;
+      case 2: // Pests and Diseases
+        return Assets.images.pest.path;
+      case 3: // Oil Palm Management
+        return Assets.images.oilpalm.path;
+      case 4: // General
+        return Assets.images.general.path;
+      case 5: // Loan Request
+        return Assets.images.loan.path;
+      case 107: // Bio Lab Request
+        return Assets.images.fertilizers.path;
+      case 108: // Transport Request
+        return Assets.images.fertilizers.path;
+      case 116: // Edible Oils Request
+        return Assets.images.ediableoils.path;
+
+      default:
+        return Assets.images.mainVisit.path;
+    }
+  }
+
+  String getLearningName(int serviceTypeId) {
+    // 12 10 107 11 13 14 28 108 116
+    switch (serviceTypeId) {
+      case 10: // Pole Request
+        return tr(LocaleKeys.pole);
+      case 11: // Labour Request
+        return tr(LocaleKeys.select_labour_type);
+      case 12: // Fertilizer Request
+        return tr(LocaleKeys.fertilizer);
+      case 13: // QuickPay Request
+        return tr(LocaleKeys.quick);
+      case 14: // Visit Request
+        return tr(LocaleKeys.visit);
+      case 28: // Loan Request
+        return tr(LocaleKeys.loan);
+      case 107: // Bio Lab Request
+        return tr(LocaleKeys.labproducts);
+      case 108: // Transport Request
+        return tr(LocaleKeys.App_version);
+      case 116: // Edible Oils Request
+        return tr(LocaleKeys.edibleoils);
+
+      default:
+        return Assets.images.mainVisit.path;
+    }
+  }
+
+  List<String?> getlearningString(String language, List<LearningModel> result) {
+    switch (language) {
+      case 'english':
+        return result.map((item) => item.name).toList();
+      case 'telugu':
+        return result.map((item) => item.teluguName).toList();
+      case 'kannada':
+        return result.map((item) => item.kannadaName).toList();
+
+      default:
+        return result.map((item) => item.updatedBy).toList();
+    }
   }
 }
 

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../common_utils/Constants.dart';
+import '../common_utils/constants.dart';
 import '../navigation/app_routes.dart';
 
 class LanguageScreen extends StatelessWidget {
@@ -27,18 +29,21 @@ class LanguageScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               _buildLanguageButton(context, 'English', onPressed: () {
-                context.setLocale(AppLocal.englishLocale);
-                saveDataAndNavigate(context);
+                saveDataAndNavigate(context,
+                    language: Constants.englishLanguage,
+                    locale: AppLocal.englishLocale);
               }),
               const SizedBox(height: 16),
               _buildLanguageButton(context, 'Telugu', onPressed: () {
-                context.setLocale(AppLocal.teluguLocale);
-                saveDataAndNavigate(context);
+                saveDataAndNavigate(context,
+                    language: Constants.teluguLanguage,
+                    locale: AppLocal.teluguLocale);
               }),
               const SizedBox(height: 16),
               _buildLanguageButton(context, 'Kannada', onPressed: () {
-                context.setLocale(AppLocal.kannadaLocale);
-                saveDataAndNavigate(context);
+                saveDataAndNavigate(context,
+                    language: Constants.kannadaLanguage,
+                    locale: AppLocal.kannadaLocale);
               }),
             ],
           ),
@@ -95,9 +100,12 @@ class LanguageScreen extends StatelessWidget {
     );
   }
 
-  Future<void> saveDataAndNavigate(BuildContext context) async {
+  Future<void> saveDataAndNavigate(BuildContext context,
+      {required String language, required Locale locale}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(Constants.welcome, true);
+    prefs.setString(SharedPrefsKeys.language, language);
+    context.setLocale(locale);
     context.go(Routes.loginScreen.path);
   }
 }

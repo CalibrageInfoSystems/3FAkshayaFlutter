@@ -95,7 +95,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         onCompleted: (v) {
                           print(v);
                           setState(() {
-                            enteredOTP =v;
+                            enteredOTP = v;
                           });
                           print("Completed");
                         },
@@ -105,13 +105,13 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                         //   //   currentText = value;
                         //   // });
                         // },
-                          // onSubmitted: (value){
-                          //   print("enteredotp$value");
-                          //   // setState(() {
-                          //   //   enteredOTP =value;
-                          //   // });
-                          //
-                          // },
+                        // onSubmitted: (value){
+                        //   print("enteredotp$value");
+                        //   // setState(() {
+                        //   //   enteredOTP =value;
+                        //   // });
+                        //
+                        // },
                         beforeTextPaste: (text) {
                           print("Allowing to paste $text");
                           return true;
@@ -139,13 +139,13 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                             style: CommonStyles.text14white.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline, // Optional: Add underline to indicate it's clickable
+                              decoration: TextDecoration
+                                  .underline, // Optional: Add underline to indicate it's clickable
                             ),
                           ),
                         ),
                       ],
                     )
-
                   ],
                 ),
               ),
@@ -155,16 +155,18 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       ),
     );
   }
+
   Future<bool> isvalidations() async {
     bool isValid = true;
     print('enteredOTP===$enteredOTP');
     if (enteredOTP.isEmpty) {
       CommonStyles.showCustomDialog(context, 'Please Enter OTP');
-    //  showCustomToastMessageLong('Please Enter OTP', context, 1, 4);
+      //  showCustomToastMessageLong('Please Enter OTP', context, 1, 4);
       isValid = false;
     }
     return isValid; // Return true if validation is successful, false otherwise
   }
+
   Widget submitBtn(
     BuildContext context,
     String language,
@@ -190,13 +192,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         ),
         child: ElevatedButton(
           onPressed: () async {
-           // _verifyOtp();
+            // _verifyOtp();
             print('enteredOTP$enteredOTP');
             bool validationSuccess = await isvalidations();
-            if( validationSuccess){
+            if (validationSuccess) {
               _verifyOtp();
             }
-
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0),
@@ -226,8 +227,8 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       print("Please check your internet connection.");
       //showDialogMessage(context, "Please check your internet connection.");
     }
-
   }
+
   Future<void> _getOtp() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -236,7 +237,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
 
-    final url = baseUrl + Farmer_otp + farmerId! + '/${enteredOTP}';
+    final url = '$baseUrl$Farmer_otp${farmerId!}/$enteredOTP';
     print("otpsubmiturl==== $url");
     try {
       print("Sending request to URL: $url");
@@ -249,25 +250,29 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         if (data['isSuccess']) {
           // Convert the complete response to a JSON string and save it
           String responseJson = json.encode(data);
-          prefs.setString('otp_response', responseJson);
+          prefs.setString(SharedPrefsKeys.farmerData, responseJson);
           print("OTP validation successful");
 
           prefs.setBool(Constants.isLogin, true);
-          prefs.setString('user_id', data['result']['farmerDetails'][0]['code']);
-          prefs.setString('statecode', data['result']['farmerDetails'][0]['stateCode']);
-          prefs.setInt('districtId', data['result']['farmerDetails'][0]['districtId']);
-          prefs.setString('districtName', data['result']['farmerDetails'][0]['districtName']);
+          prefs.setString(
+              'user_id', data['result']['farmerDetails'][0]['code']);
+          prefs.setString(
+              'statecode', data['result']['farmerDetails'][0]['stateCode']);
+          prefs.setInt(
+              'districtId', data['result']['farmerDetails'][0]['districtId']);
+          prefs.setString('districtName',
+              data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
           context.go(Routes.homeScreen.path);
         } else {
           print("OTP validation failed: ${data['endUserMessage']}");
-       //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
           _showErrorDialog(data['endUserMessage']);
         }
       } else {
         print("Server error: Status code ${response.statusCode}");
-      //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
         _showErrorDialog('Server error');
       }
     } catch (e) {
@@ -288,7 +293,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     });
   }
 
-
   void _showDialog(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -297,6 +301,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       timeInSecForIosWeb: 1,
     );
   }
+
   void resendOTP() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -323,18 +328,19 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           });
 
           if (farmerResponseModel.result != null) {
-          String  _mobileNumber = farmerResponseModel.result!;
-            print('mobile_number=== $_mobileNumber');
+            String mobileNumber = farmerResponseModel.result!;
+            print('mobile_number=== $mobileNumber');
             //otpsuccess
-          Fluttertoast.showToast(
-              msg: "OTP Success", // Replace with your message or a localized string
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM, // You can also use ToastGravity.TOP or ToastGravity.CENTER
-              timeInSecForIosWeb: 1, // Duration for iOS and Web
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
+            Fluttertoast.showToast(
+                msg:
+                    "OTP Success", // Replace with your message or a localized string
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity
+                    .BOTTOM, // You can also use ToastGravity.TOP or ToastGravity.CENTER
+                timeInSecForIosWeb: 1, // Duration for iOS and Web
+                backgroundColor: Colors.black,
+                textColor: Colors.white,
+                fontSize: 16.0);
 
             // Navigator.push(
             //   context,
@@ -342,9 +348,10 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
             //   ),
             // );
-         //   context.push(Routes.loginOtpScreen.path);
+            //   context.push(Routes.loginOtpScreen.path);
           } else {
-            CommonStyles.showCustomDialog(context, 'No Register Mobile Number for Send Otp');
+            CommonStyles.showCustomDialog(
+                context, 'No Register Mobile Number for Send Otp');
             CommonStyles.hideHorizontalDotsLoadingDialog(context);
             // _showDialog('No Registered Mobile Number for Send Otp');
           }
@@ -369,9 +376,4 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       });
     }
   }
-
-
-
 }
-
-

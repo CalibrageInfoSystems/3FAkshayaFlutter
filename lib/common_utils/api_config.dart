@@ -12,7 +12,8 @@ var getlearning = "Encyclopedia/GetActiveEncyclopediaCategoryDetails";
 var Farmer_otp = "Farmer/";
 var Farmer_ID_CHECK = "farmer/SendOTP/";
 
-
+//MARK: Banners
+var getActiveBannerByStateCode = "Banner/GetActiveBannerByStateCode/API";
 // APWGBDAB00010005
 
 

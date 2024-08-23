@@ -2,6 +2,9 @@ import 'package:akshaya_flutter/app_enterance/language_screen.dart';
 import 'package:akshaya_flutter/app_enterance/splash_screen.dart';
 import 'package:akshaya_flutter/authentication/login_otp_screen.dart';
 import 'package:akshaya_flutter/authentication/login_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:akshaya_flutter/screens/main_screen.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:akshaya_flutter/navigation/page_not_found.dart';
@@ -140,6 +143,25 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) =>
           CupertinoPage(key: state.pageKey, child: const LoginScreen()),
     ),
+    GoRoute(
+      path: Routes.ffbCollectionScreen.path,
+      name: Routes.ffbCollectionScreen.name,
+      pageBuilder: (context, state) =>
+          CupertinoPage(key: state.pageKey, child: const FfbCollectionScreen()),
+    ),
+    GoRoute(
+      path: Routes.farmerPassbookScreen.path,
+      name: Routes.farmerPassbookScreen.name,
+      pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey, child: const FarmerPassbookScreen()),
+    ),
+    GoRoute(
+      path: Routes.cropMaintenanceVisitsScreen.path,
+      name: Routes.cropMaintenanceVisitsScreen.name,
+      pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey, child: const CropMaintenanceVisitsScreen()),
+    ),
+
     GoRoute(
       path: '${Routes.loginOtpScreen.path}/:mobile',
       name: Routes.loginOtpScreen.name,

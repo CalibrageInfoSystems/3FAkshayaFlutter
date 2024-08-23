@@ -1,12 +1,12 @@
 class ServiceModel {
-  final int id;
-  final String stateCode;
-  final String stateName;
-  final int serviceTypeId;
-  final int createdByUserId;
-  final String createdDate;
-  final String serviceType;
-  final String createdBy;
+  final int? id;
+  final String? stateCode;
+  final String? stateName;
+  final int? serviceTypeId;
+  final int? createdByUserId;
+  final String? createdDate;
+  final String? serviceType;
+  final String? createdBy;
 
   ServiceModel({
     required this.id,
