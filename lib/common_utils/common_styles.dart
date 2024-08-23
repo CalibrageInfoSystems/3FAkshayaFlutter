@@ -221,6 +221,7 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: CommonStyles.whiteColor,
   );
+
   static TextStyle dayTextStyle =
       const TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
 
@@ -329,7 +330,8 @@ class CommonStyles {
            
                 ),
               
-          )  ],
+          )
+              ],
             ),
           ),
         );

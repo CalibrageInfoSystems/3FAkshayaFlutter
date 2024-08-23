@@ -3,124 +3,231 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../common_utils/Constants.dart';
 import '../common_utils/SharedPreferencesHelper.dart';
 import '../navigation/app_routes.dart';
+import 'customer_care_screen.dart/customer_care_screen.dart';
+import 'home_screen/home_screen.dart';
+import 'my3f_screen.dart/my3f_screen.dart';
 
-class MainScreen extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
-  const MainScreen({super.key, required this.navigationShell});
-
+// class MainScreen extends StatefulWidget {
+//   final StatefulNavigationShell navigationShell;
+//
+//   const MainScreen({super.key, required this.navigationShell});
+  class MainScreen extends StatefulWidget {
+    final StatefulNavigationShell navigationShell;
+    const MainScreen({super.key, required this.navigationShell});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      drawer: drawer(context),
-      backgroundColor: Colors.transparent,
-      body: SafeArea(child: navigationShell),
-      bottomNavigationBar: bottomNavigationBar(),
-    );
+  _MainScreenPageState createState() => _MainScreenPageState();
   }
 
-  BottomNavigationBar bottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: navigationShell.currentIndex,
-      onTap: (index) {
-        navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
+  class _MainScreenPageState extends State<MainScreen> {
+    int _selectedIndex = 0;
+
+    @override
+    void initState() {
+      super.initState();
+      _selectedIndex = widget.navigationShell.currentIndex; // Sync with initial index
+    }
+
+    Future<bool> _onWillPop() async {
+      if (_selectedIndex != 0) {
+        setState(() {
+          _selectedIndex = 0;
+        });
+        widget.navigationShell.goBranch(0, initialLocation: false);
+        return Future.value(false); // Prevent the app from closing
+      } else {
+        bool confirmClose = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirm Exit'),
+              content: const Text('Are You Sure You Want to Close The App?'),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Don't exit
+                  },
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(
+                      color: CommonStyles.primaryTextColor,
+                    ),
+                    side: const BorderSide(
+                      color: CommonStyles.primaryTextColor,
+                    ),
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'No',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: CommonStyles.primaryTextColor,
+                      fontFamily: 'Outfit',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(true), // Exit the app
+                  style: ElevatedButton.styleFrom(
+                    textStyle: const TextStyle(
+                      color: CommonStyles.primaryTextColor,
+                    ),
+                    side: const BorderSide(
+                      color: CommonStyles.primaryTextColor,
+                    ),
+                    backgroundColor: CommonStyles.primaryTextColor,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: 'Outfit',
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         );
-      },
-      selectedItemColor: CommonStyles.primaryTextColor,
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_home.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_home.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Home',
+        if (confirmClose == true) {
+          SystemNavigator.pop(); // Close the app
+        }
+        return Future.value(false); // Prevent the default back action
+      }
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          appBar: appBar(),
+          drawer: drawer(context),
+          backgroundColor: Colors.transparent,
+          body: SafeArea(child: widget.navigationShell),
+          bottomNavigationBar: bottomNavigationBar(),
         ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_myprofile.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
+      );
+    }
+
+    BottomNavigationBar bottomNavigationBar() {
+      return BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+          widget.navigationShell.goBranch(
+            index,
+            initialLocation: index == _selectedIndex,
+          );
+        },
+        selectedItemColor: CommonStyles.primaryTextColor,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: CommonStyles.primaryTextColor,
+            ),
+            label: 'Home',
           ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_myprofile.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/ic_myprofile.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ic_myprofile.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: CommonStyles.primaryTextColor,
+            ),
+            label: 'Profile',
           ),
-          label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_my.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/ic_my.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ic_my.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: CommonStyles.primaryTextColor,
+            ),
+            label: 'My 3F',
           ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_my.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/ic_request.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ic_request.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: CommonStyles.primaryTextColor,
+            ),
+            label: 'Requests',
           ),
-          label: 'My 3F',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_request.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              'assets/images/ic_care.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+            ),
+            activeIcon: SvgPicture.asset(
+              'assets/images/ic_care.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: CommonStyles.primaryTextColor,
+            ),
+            label: 'Customer Care',
           ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_request.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Requests',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_care.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_care.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Customer Care',
-        ),
-      ],
-    );
-  }
+        ],
+      );
+    }
 
   AppBar appBar() {
     return AppBar(
@@ -147,19 +254,19 @@ class MainScreen extends StatelessWidget {
         children: [
           DrawerHeader(
               child: Container(
-            width: 120.0,
-            height: 120.0,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              child: Image.asset(
-                'assets/images/ic_user.png',
-                fit: BoxFit.fill,
-              ),
-            ),
-          )),
+                width: 120.0,
+                height: 120.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/ic_user.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              )),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -242,12 +349,11 @@ class MainScreen extends StatelessWidget {
               'Home',
               style: TextStyle(
                 color: Colors.white,
-                //   fontSize: 16,
                 fontFamily: 'hind_semibold',
               ),
             ),
             onTap: () {
-              Navigator.pop(context); // Close the drawer
+              _onItemTapped(0);
             },
           ),
           ListTile(
@@ -284,33 +390,11 @@ class MainScreen extends StatelessWidget {
               'Profile',
               style: TextStyle(
                 color: Colors.white,
-                //   fontSize: 16,
                 fontFamily: 'hind_semibold',
               ),
             ),
             onTap: () {
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_request.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white, // Set the icon color to white
-            ),
-            title: const Text(
-              'Request',
-              style: TextStyle(
-                color: Colors.white,
-                //   fontSize: 16,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              // Implement the action when the My3F item is tapped
-              Navigator.pop(context); // Close the drawer
+              _onItemTapped(1);
             },
           ),
           ListTile(
@@ -319,19 +403,36 @@ class MainScreen extends StatelessWidget {
               width: 20,
               height: 20,
               fit: BoxFit.fill,
-              color: Colors.white, // Set the icon color to white
+              color: Colors.white,
             ),
             title: const Text(
               'My3F',
               style: TextStyle(
                 color: Colors.white,
-                //   fontSize: 16,
                 fontFamily: 'hind_semibold',
               ),
             ),
             onTap: () {
-              // Implement the action when the Requests item is tapped
-              Navigator.pop(context); // Close the drawer
+              _onItemTapped(2);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_request.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Request',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              _onItemTapped(3);
             },
           ),
           ListTile(
@@ -340,13 +441,12 @@ class MainScreen extends StatelessWidget {
               width: 20,
               height: 20,
               fit: BoxFit.contain,
-              color: Colors.white, // Set the icon color to white
+              color: Colors.white,
             ),
             title: const Text(
               'Logout',
               style: TextStyle(
                 color: Colors.white,
-                //   fontSize: 16,
                 fontFamily: 'hind_semibold',
               ),
             ),
@@ -359,42 +459,183 @@ class MainScreen extends StatelessWidget {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      widget.navigationShell.goBranch(
+        index,
+        initialLocation: index == widget.navigationShell.currentIndex,
+      );
+    });
+    Navigator.pop(context); // Close the drawer after selection
+  }
+}
   void logOutDialog(BuildContext context) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Logout',
-            style: CommonStyles.txSty_14b_fb,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54, // Background color when the dialog is open
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: CommonStyles.blackColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: CommonStyles.primaryTextColor,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(tr(LocaleKeys.confirmation), style: CommonStyles.text18orange),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 0.5,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors:  [
+                        CommonStyles.primaryTextColor,
+                        const Color.fromARGB(255, 110, 6, 228)
+                        ],),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Are you sure you want to Logout?',
+                    style: CommonStyles.text16white,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Cancel Button
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 10.0),
+                        child:Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(20.0), // Rounded corners
+                            gradient: const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0xFFCCCCCC), // Start color (light gray)
+                                Color(0xFFFFFFFF), // Center color (white)
+                                Color(0xFFCCCCCC), // End color (light gray)
+                              ],
+                            ),
+                            border: Border.all(
+                              color: const Color(
+                                  0xFFe86100), // Orange border color
+                              width: 2.0,
+                            ),
+                          ),
+                          child: SizedBox(
+                            height: 30.0, // Set the desired height
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'Cancel',
+                                style:  CommonStyles.txSty_16p_f5,
+                              ),
+                            ),
+                          ),
+
+
+                        ),
+
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 10.0),
+                        child:Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.circular(20.0), // Rounded corners
+                            gradient: const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0xFFCCCCCC), // Start color (light gray)
+                                Color(0xFFFFFFFF), // Center color (white)
+                                Color(0xFFCCCCCC), // End color (light gray)
+                              ],
+                            ),
+                            border: Border.all(
+                              color: const Color(
+                                  0xFFe86100), // Orange border color
+                              width: 2.0,
+                            ),
+                          ),
+                          child: SizedBox(
+                            height: 30.0, // Set the desired height
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                               onConfirmLogout(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'OK',
+                                style: CommonStyles.txSty_16p_f5,
+                              ),
+                            ),
+                          ),
+
+
+                        ),
+
+                      )
+
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
-          content: const Text('Are you sure you want to Logout?',
-              style: CommonStyles.txSty_12b_fb),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: CommonStyles.txSty_12b_fb,
-              ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack, // Customize the animation curve here
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onConfirmLogout(context);
-              },
-              child: const Text(
-                'Logout',
-                style: CommonStyles.txSty_12b_fb,
-              ),
-            ),
-          ],
+          ),
+          child: child,
         );
       },
     );
   }
+
+
 
   Future<void> onConfirmLogout(BuildContext context) async {
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -491,4 +732,4 @@ class MainScreen extends StatelessWidget {
       ),
     );
   }
-}
+
