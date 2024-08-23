@@ -5,12 +5,13 @@ import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/models/banner_model.dart';
 import 'package:akshaya_flutter/models/learning_model.dart';
 import 'package:akshaya_flutter/models/service_model.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
@@ -26,11 +27,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<int>> servicesData;
   late Future<List<String?>> learningsData;
+  late Future<List<BannerModel>> bannersAndMarqueeTextData;
   @override
   void initState() {
     super.initState();
     servicesData = getServicesData();
     learningsData = getLearningsData();
+    bannersAndMarqueeTextData = getBannersAndMarqueeText();
   }
 
   List<String> bannersList = [
@@ -52,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<int>> getServicesData() async {
     final apiUrl = '$baseUrl${getServices}AP';
-    print('getServicesData apiUrl: $apiUrl');
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -107,85 +109,163 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: const Color(0xfff4f3f1),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  menuSection(size),
-                  servicesSection(size, 'Services'),
-                  Container(
-                    color: Colors.transparent,
-                    height: 20,
-                  ),
-                  learningSection(size, 'Learnings',
-                      backgroundColor: Colors.grey.shade300),
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        print('onPopInvokedWithResult Home: $didPop, $result');
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xfff4f3f1),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    menuSection(size),
+                    servicesSection(size, 'Services'),
+                    Container(
+                      color: Colors.transparent,
+                      height: 20,
+                    ),
+                    learningSection(size, 'Learnings',
+                        backgroundColor: Colors.grey.shade300),
+                  ],
+                ),
               ),
             ),
-          ),
-          Container(
-            color: Colors.green,
-            height: 20,
-            child: Marquee(
-                text:
-                    '  ged_boost_gpu_freq, level 100, eOrigin 2, final_idx 29, oppidx_max 29, oppidx_min 0   '),
-          ),
-          banners(size),
-        ],
+            marqueeText(),
+            banners(size),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget marqueeText() {
+    return FutureBuilder(
+      future: bannersAndMarqueeTextData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final marquee = snapshot.data as List<BannerModel>;
+          return SizedBox(
+            // color: Colors.green,
+            height: 25,
+            child: Marquee(
+                text: marquee[0].description!,
+                style: CommonStyles.txSty_12b_f5),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        return const CircularProgressIndicator.adaptive();
+      },
     );
   }
 
   Widget banners(Size size) {
-    return FlutterCarousel(
-      options: CarouselOptions(
-        height: size.height * 0.2,
-        showIndicator: true,
-        autoPlay: true,
-        floatingIndicator: true,
-        autoPlayCurve: Curves.linear,
-        slideIndicator: const CircularSlideIndicator(
-            slideIndicatorOptions: SlideIndicatorOptions(
-          indicatorBorderColor: Colors.grey,
-          currentIndicatorColor: CommonStyles.whiteColor,
-          indicatorRadius: 2,
-        )),
-      ),
-      items: bannersList.map((item) {
-        return Builder(
-          builder: (BuildContext context) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 4,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    item,
-                    height: 100,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return const Center(
-                          child: CircularProgressIndicator.adaptive());
-                    },
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      }).toList(),
+    return FutureBuilder(
+      future: bannersAndMarqueeTextData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final banners = snapshot.data as List<BannerModel>;
+
+          return CarouselSlider(
+            options: CarouselOptions(
+              height: size.height * 0.2,
+              viewportFraction: 1.0, // Occupy full width
+              autoPlay: true, // Enable auto-play
+            ),
+            items: banners.map((url) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    width:
+                        MediaQuery.of(context).size.width, // Occupy full width
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(url.imageName!),
+                        fit: BoxFit
+                            .fill, // Ensure the image covers the entire area
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        return const CircularProgressIndicator.adaptive();
+      },
     );
   }
 
+/* 
+  Widget banners(Size size) {
+    return FutureBuilder(
+      future: bannersAndMarqueeTextData,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final banners = snapshot.data as List<BannerModel>;
+
+          return FlutterCarousel(
+            options: CarouselOptions(
+              height: size.height * 0.2,
+              showIndicator: true,
+              autoPlay: true,
+              viewportFraction: 1,
+              floatingIndicator: true,
+              autoPlayCurve: Curves.linear,
+              slideIndicator: const CircularSlideIndicator(
+                slideIndicatorOptions: SlideIndicatorOptions(
+                  indicatorBorderColor: Colors.grey,
+                  currentIndicatorColor: CommonStyles.whiteColor,
+                  indicatorRadius: 2,
+                ),
+              ),
+            ),
+            items: banners.map((item) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 4,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          item.imageName!,
+                          width: MediaQuery.of(context)
+                              .size
+                              .width, // Set image width
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        return const CircularProgressIndicator.adaptive();
+      },
+    );
+  }
+ */
   Container servicesSection(Size size, String title, {Color? backgroundColor}) {
     return Container(
       color: backgroundColor,
@@ -566,6 +646,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
       default:
         return result.map((item) => item.updatedBy).toList();
+    }
+  }
+
+//MARK: Marqee API
+
+  Future<List<BannerModel>> getBannersAndMarqueeText() async {
+    final apiUrl = '$baseUrl$getbanners/AP';
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      if (jsonResponse.statusCode == 200) {
+        List<dynamic> response = json.decode(jsonResponse.body)['listResult'];
+        return response.map((item) => BannerModel.fromJson(item)).toList();
+      } else {
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

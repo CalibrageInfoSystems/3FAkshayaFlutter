@@ -1,237 +1,239 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
+
+import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
-import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
+import 'package:akshaya_flutter/models/banner_model.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common_utils/Constants.dart';
 import '../common_utils/SharedPreferencesHelper.dart';
 import '../navigation/app_routes.dart';
-import 'customer_care_screen.dart/customer_care_screen.dart';
-import 'home_screen/home_screen.dart';
-import 'my3f_screen.dart/my3f_screen.dart';
+import 'package:http/http.dart' as http;
 
-// class MainScreen extends StatefulWidget {
-//   final StatefulNavigationShell navigationShell;
-//
-//   const MainScreen({super.key, required this.navigationShell});
-  class MainScreen extends StatefulWidget {
-    final StatefulNavigationShell navigationShell;
-    const MainScreen({super.key, required this.navigationShell});
+class MainScreen extends StatefulWidget {
+  final StatefulNavigationShell navigationShell;
+  const MainScreen({super.key, required this.navigationShell});
+
   @override
-  _MainScreenPageState createState() => _MainScreenPageState();
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  late Future<FarmerModel> farmerData;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.navigationShell.currentIndex;
+    farmerData = getSharedPrefData();
   }
 
-  class _MainScreenPageState extends State<MainScreen> {
-    int _selectedIndex = 0;
-
-    @override
-    void initState() {
-      super.initState();
-      _selectedIndex = widget.navigationShell.currentIndex; // Sync with initial index
-    }
-
-    Future<bool> _onWillPop() async {
-      if (_selectedIndex != 0) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        widget.navigationShell.goBranch(0, initialLocation: false);
-        return Future.value(false); // Prevent the app from closing
-      } else {
-        bool confirmClose = await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Confirm Exit'),
-              content: const Text('Are You Sure You Want to Close The App?'),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false); // Don't exit
-                  },
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    side: const BorderSide(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
+  Future<bool> _onWillPop() async {
+    if (_selectedIndex != 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      widget.navigationShell.goBranch(0, initialLocation: false);
+      return Future.value(false); // Prevent the app from closing
+    } else {
+      bool confirmClose = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Confirm Exit'),
+            content: const Text('Are You Sure You Want to Close The App?'),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false); // Don't exit
+                },
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(
+                    color: CommonStyles.primaryTextColor,
                   ),
-                  child: const Text(
-                    'No',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CommonStyles.primaryTextColor,
-                      fontFamily: 'Outfit',
+                  side: const BorderSide(
+                    color: CommonStyles.primaryTextColor,
+                  ),
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(true), // Exit the app
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    side: const BorderSide(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    backgroundColor: CommonStyles.primaryTextColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
+                child: const Text(
+                  'No',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: CommonStyles.primaryTextColor,
+                    fontFamily: 'Outfit',
                   ),
-                  child: const Text(
-                    'Yes',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontFamily: 'Outfit',
+                ),
+              ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(true), // Exit the app
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(
+                    color: CommonStyles.primaryTextColor,
+                  ),
+                  side: const BorderSide(
+                    color: CommonStyles.primaryTextColor,
+                  ),
+                  backgroundColor: CommonStyles.primaryTextColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-        );
-        if (confirmClose == true) {
-          SystemNavigator.pop(); // Close the app
-        }
-        return Future.value(false); // Prevent the default back action
-      }
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          appBar: appBar(),
-          drawer: drawer(context),
-          backgroundColor: Colors.transparent,
-          body: SafeArea(child: widget.navigationShell),
-          bottomNavigationBar: bottomNavigationBar(),
-        ),
-      );
-    }
-
-    BottomNavigationBar bottomNavigationBar() {
-      return BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          widget.navigationShell.goBranch(
-            index,
-            initialLocation: index == _selectedIndex,
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontFamily: 'Outfit',
+                  ),
+                ),
+              ),
+            ],
           );
         },
-        selectedItemColor: CommonStyles.primaryTextColor,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/ic_home.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-            activeIcon: SvgPicture.asset(
-              'assets/images/ic_home.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: CommonStyles.primaryTextColor,
-            ),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/ic_myprofile.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-            activeIcon: SvgPicture.asset(
-              'assets/images/ic_myprofile.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: CommonStyles.primaryTextColor,
-            ),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/ic_my.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-            activeIcon: SvgPicture.asset(
-              'assets/images/ic_my.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: CommonStyles.primaryTextColor,
-            ),
-            label: 'My 3F',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/ic_request.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-            activeIcon: SvgPicture.asset(
-              'assets/images/ic_request.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: CommonStyles.primaryTextColor,
-            ),
-            label: 'Requests',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              'assets/images/ic_care.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-            ),
-            activeIcon: SvgPicture.asset(
-              'assets/images/ic_care.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: CommonStyles.primaryTextColor,
-            ),
-            label: 'Customer Care',
-          ),
-        ],
       );
+      if (confirmClose == true) {
+        SystemNavigator.pop(); // Close the app
+      }
+      return Future.value(false); // Prevent the default back action
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar(),
+      drawer: drawer(context),
+      backgroundColor: Colors.transparent,
+      body: SafeArea(child: widget.navigationShell),
+      bottomNavigationBar: bottomNavigationBar(),
+    );
+  }
+
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      onTap: (index) {
+        setState(() {
+          _selectedIndex = index;
+        });
+        widget.navigationShell.goBranch(
+          index,
+          initialLocation: index == _selectedIndex,
+        );
+      },
+      selectedItemColor: CommonStyles.primaryTextColor,
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_home.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_home.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_myprofile.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_myprofile.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_my.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_my.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'My 3F',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_request.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_request.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Requests',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_care.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_care.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Customer Care',
+        ),
+      ],
+    );
+  }
 
   AppBar appBar() {
     return AppBar(
       backgroundColor: const Color(0xffe46f5d),
+      elevation: 0,
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(
@@ -250,212 +252,226 @@ import 'my3f_screen.dart/my3f_screen.dart';
   Drawer drawer(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.black,
-      child: ListView(
-        children: [
-          DrawerHeader(
-              child: Container(
-                width: 120.0,
-                height: 120.0,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Image.asset(
-                    'assets/images/ic_user.png',
-                    fit: BoxFit.fill,
+      child: FutureBuilder(
+          future: farmerData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (!snapshot.hasData) {
+              return const Text('No data available');
+            } else {
+              final farmer = snapshot.data as FarmerModel;
+              return ListView(
+                children: [
+                  const SizedBox(height: 10),
+                  Container(
+                    width: 120.0,
+                    height: 120.0,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Image.asset(
+                        'assets/images/ic_user.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
-                ),
-              )),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'farmerName',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'hind_semibold',
-                  color: Colors.white,
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                'farmerlastname',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                  fontFamily: 'hind_semibold',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'address1',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                  fontFamily: 'hind_semibold',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Text(
-                'address2',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                  fontFamily: 'hind_semibold',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            height: 2.0,
-            width: 10.0,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFFFF4500),
-                  Color(0xFFA678EF),
-                  Color(0xFFFF4500),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${farmer.firstName}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'hind_semibold',
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Text(
+                        '${farmer.lastName}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontFamily: 'hind_semibold',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${farmer.addressLine1}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontFamily: 'hind_semibold',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Text(
+                        '${farmer.addressLine2}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontFamily: 'hind_semibold',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  Container(
+                    height: 2.0,
+                    width: 10.0,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFFFF4500),
+                          Color(0xFFA678EF),
+                          Color(0xFFFF4500),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.center,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icHome.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.home),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () {
+                      _onItemTapped(0);
+                    },
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icHome.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.choose_language_str),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        //   fontSize: 16,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () {
+                      openLanguageDialog(context);
+                    },
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icMyprofile.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.profile),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () {
+                      _onItemTapped(1);
+                    },
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icMy.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.fill,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.my3F),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () {
+                      _onItemTapped(2);
+                    },
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icRequest.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.requests),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () {
+                      _onItemTapped(3);
+                    },
+                  ),
+                  ListTile(
+                    leading: SvgPicture.asset(
+                      Assets.images.icHome.path,
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      tr(LocaleKeys.logout),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                    onTap: () async {
+                      logOutDialog(context);
+                    },
+                  ),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.center,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_home.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Home',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              _onItemTapped(0);
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_home.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Choose Language',
-              style: TextStyle(
-                color: Colors.white,
-                //   fontSize: 16,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              // Navigator.pop(context);
-
-              openLanguageDialog(context);
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_myprofile.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Profile',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              _onItemTapped(1);
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_my.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.fill,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'My3F',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              _onItemTapped(2);
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_request.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Request',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () {
-              _onItemTapped(3);
-            },
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'assets/images/ic_home.svg',
-              width: 20,
-              height: 20,
-              fit: BoxFit.contain,
-              color: Colors.white,
-            ),
-            title: const Text(
-              'Logout',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'hind_semibold',
-              ),
-            ),
-            onTap: () async {
-              logOutDialog(context);
-            },
-          ),
-        ],
-      ),
+              );
+            }
+          }),
     );
   }
 
@@ -469,7 +485,7 @@ import 'my3f_screen.dart/my3f_screen.dart';
     });
     Navigator.pop(context); // Close the drawer after selection
   }
-}
+
   void logOutDialog(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -495,19 +511,22 @@ import 'my3f_screen.dart/my3f_screen.dart';
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(tr(LocaleKeys.confirmation), style: CommonStyles.text18orange),
+                  Text(tr(LocaleKeys.confirmation),
+                      style: CommonStyles.text18orange),
                   const SizedBox(height: 10),
                   Container(
                     height: 0.5,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(colors:  [
-                        CommonStyles.primaryTextColor,
-                        const Color.fromARGB(255, 110, 6, 228)
-                        ],),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          CommonStyles.primaryTextColor,
+                          Color.fromARGB(255, 110, 6, 228)
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
+                  const Text(
                     'Are you sure you want to Logout?',
                     style: CommonStyles.text16white,
                     textAlign: TextAlign.center,
@@ -518,12 +537,11 @@ import 'my3f_screen.dart/my3f_screen.dart';
                     children: [
                       // Cancel Button
                       Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 10.0),
-                        child:Container(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius:
-                            BorderRadius.circular(20.0), // Rounded corners
+                                BorderRadius.circular(20.0), // Rounded corners
                             gradient: const LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -546,7 +564,8 @@ import 'my3f_screen.dart/my3f_screen.dart';
                                 Navigator.of(context).pop();
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35.0),
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
@@ -555,22 +574,18 @@ import 'my3f_screen.dart/my3f_screen.dart';
                               ),
                               child: const Text(
                                 'Cancel',
-                                style:  CommonStyles.txSty_16p_f5,
+                                style: CommonStyles.txSty_16p_f5,
                               ),
                             ),
                           ),
-
-
                         ),
-
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 10.0),
-                        child:Container(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius:
-                            BorderRadius.circular(20.0), // Rounded corners
+                                BorderRadius.circular(20.0), // Rounded corners
                             gradient: const LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
@@ -591,10 +606,11 @@ import 'my3f_screen.dart/my3f_screen.dart';
                             child: ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
-                               onConfirmLogout(context);
+                                onConfirmLogout(context);
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35.0),
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
@@ -607,12 +623,8 @@ import 'my3f_screen.dart/my3f_screen.dart';
                               ),
                             ),
                           ),
-
-
                         ),
-
                       )
-
                     ],
                   ),
                 ],
@@ -634,8 +646,6 @@ import 'my3f_screen.dart/my3f_screen.dart';
       },
     );
   }
-
-
 
   Future<void> onConfirmLogout(BuildContext context) async {
     //  SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -676,16 +686,19 @@ import 'my3f_screen.dart/my3f_screen.dart';
                     CommonStyles.primaryTextColor,
                     const Color.fromARGB(255, 110, 6, 228)
                   ], onPressed: () {
-                    Navigator.of(context).pop();
-                    context.setLocale(AppLocal.englishLocale);
+                    saveDataAndChangeLanguage(context,
+                        language: Constants.englishLanguage,
+                        locale: AppLocal.englishLocale);
                   }),
                   languageBox('తెలుగు', onPressed: () {
-                    Navigator.of(context).pop();
-                    context.setLocale(AppLocal.teluguLocale);
+                    saveDataAndChangeLanguage(context,
+                        language: Constants.teluguLanguage,
+                        locale: AppLocal.teluguLocale);
                   }),
                   languageBox('ಕನ್ನಡ', onPressed: () {
-                    Navigator.of(context).pop();
-                    context.setLocale(AppLocal.kannadaLocale);
+                    saveDataAndChangeLanguage(context,
+                        language: Constants.kannadaLanguage,
+                        locale: AppLocal.kannadaLocale);
                   }),
                 ],
               ),
@@ -733,3 +746,28 @@ import 'my3f_screen.dart/my3f_screen.dart';
     );
   }
 
+  Future<void> saveDataAndChangeLanguage(BuildContext context,
+      {required String language, required Locale locale}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(Constants.welcome, true);
+    prefs.setString(SharedPrefsKeys.language, language);
+    context.setLocale(locale);
+    Navigator.of(context).pop();
+    setState(() {});
+  }
+
+  Future<FarmerModel> getSharedPrefData() async {
+    print('getSharedPrefData() called');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? farmerData = prefs.getString(SharedPrefsKeys.farmerData);
+
+    if (farmerData != null && farmerData.isNotEmpty) {
+      Map<String, dynamic> response =
+          json.decode(farmerData)['result']['farmerDetails'][0];
+
+      return FarmerModel.fromJson(response);
+    } else {
+      throw Exception('No farmer is saved in shared preferences');
+    }
+  }
+}

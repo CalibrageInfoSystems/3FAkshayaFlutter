@@ -1,37 +1,38 @@
-import 'dart:developer';
+import 'dart:convert';
+
+BannerModel bannerModelFromJson(String str) =>
+    BannerModel.fromJson(json.decode(str));
+
+String bannerModelToJson(BannerModel data) => json.encode(data.toJson());
 
 class BannerModel {
-  final int id;
-  final String imageName;
+  final int? id;
+  final String? imageName;
   final String? description;
   final String? stateCode;
-  final bool isActive;
+  final bool? isActive;
 
   BannerModel({
-    required this.id,
-    required this.imageName,
-    required this.description,
-    required this.stateCode,
-    required this.isActive,
+    this.id,
+    this.imageName,
+    this.description,
+    this.stateCode,
+    this.isActive,
   });
 
-  factory BannerModel.fromJson(Map<String, dynamic> json) {
-    inspect(json);
-    return BannerModel(
-      id: json['result']['BannerModel'][0]['id'],
-      imageName: json['result']['BannerModel'][0]['imageName'],
-      description: json['result']['BannerModel'][0]['description'],
-      stateCode: json['result']['BannerModel'][0]['stateCode'],
-      isActive: json['result']['BannerModel'][0]['isActive'],
-    );
-  }
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'imageName': imageName,
-      'description': description,
-      'stateCode': stateCode,
-      'isActive': isActive,
-    };
-  }
+  factory BannerModel.fromJson(Map<String, dynamic> json) => BannerModel(
+        id: json["id"],
+        imageName: json["imageName"],
+        description: json["description"],
+        stateCode: json["stateCode"],
+        isActive: json["isActive"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "imageName": imageName,
+        "description": description,
+        "stateCode": stateCode,
+        "isActive": isActive,
+      };
 }
