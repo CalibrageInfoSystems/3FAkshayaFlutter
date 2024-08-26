@@ -62,14 +62,26 @@ class _MainScreenPageState extends State<MainScreen> {
       },
       selectedItemColor: CommonStyles.primaryTextColor,
       items: <BottomNavigationBarItem>[
-        bottomNavItem(imagePath: Assets.images.icHome.path, label: 'Home'),
         bottomNavItem(
-            imagePath: Assets.images.icMyprofile.path, label: 'Profile'),
-        bottomNavItem(imagePath: Assets.images.icMy.path, label: 'My3f'),
+          imagePath: Assets.images.icHome.path,
+          label: tr(LocaleKeys.home),
+        ),
         bottomNavItem(
-            imagePath: Assets.images.icRequest.path, label: 'Requests'),
+          imagePath: Assets.images.icMyprofile.path,
+          label: tr(LocaleKeys.profile),
+        ),
         bottomNavItem(
-            imagePath: Assets.images.icCare.path, label: 'CustomerCare'),
+          imagePath: Assets.images.icMy.path,
+          label: tr(LocaleKeys.my3F),
+        ),
+        bottomNavItem(
+          imagePath: Assets.images.icRequest.path,
+          label: tr(LocaleKeys.requests),
+        ),
+        bottomNavItem(
+          imagePath: Assets.images.icCare.path,
+          label: tr(LocaleKeys.customer_care),
+        ),
       ],
     );
   }
@@ -209,7 +221,9 @@ class _MainScreenPageState extends State<MainScreen> {
           },
         ),
       ),
-      title: const Text('data'),
+      title: Text(
+        tr(LocaleKeys.app_name),
+      ),
     );
   }
 
@@ -318,9 +332,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'Home',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.home),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'hind_semibold',
                       ),
@@ -337,9 +351,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'Choose Language',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.choose_language_str),
+                      style: const TextStyle(
                         color: Colors.white,
                         //   fontSize: 16,
                         fontFamily: 'hind_semibold',
@@ -358,9 +372,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'Profile',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.profile),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'hind_semibold',
                       ),
@@ -377,9 +391,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.fill,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'My3F',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.my3F),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'hind_semibold',
                       ),
@@ -396,9 +410,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'Request',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.requests),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'hind_semibold',
                       ),
@@ -415,9 +429,9 @@ class _MainScreenPageState extends State<MainScreen> {
                       fit: BoxFit.contain,
                       color: Colors.white,
                     ),
-                    title: const Text(
-                      'Logout',
-                      style: TextStyle(
+                    title: Text(
+                      tr(LocaleKeys.logout),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'hind_semibold',
                       ),
