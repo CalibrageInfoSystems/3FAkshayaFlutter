@@ -19,7 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/Constants.dart';
 import '../common_utils/SharedPreferencesHelper.dart';
 import '../navigation/app_routes.dart';
-import 'package:http/http.dart' as http;
 
 class MainScreen extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -39,86 +38,6 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _selectedIndex = widget.navigationShell.currentIndex;
     farmerData = getSharedPrefData();
-  }
-
-  Future<bool> _onWillPop() async {
-    if (_selectedIndex != 0) {
-      setState(() {
-        _selectedIndex = 0;
-      });
-      widget.navigationShell.goBranch(0, initialLocation: false);
-      return Future.value(false); // Prevent the app from closing
-    } else {
-      bool confirmClose = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Confirm Exit'),
-            content: const Text('Are You Sure You Want to Close The App?'),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false); // Don't exit
-                },
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(
-                    color: CommonStyles.primaryTextColor,
-                  ),
-                  side: const BorderSide(
-                    color: CommonStyles.primaryTextColor,
-                  ),
-                  backgroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  'No',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: CommonStyles.primaryTextColor,
-                    fontFamily: 'Outfit',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () =>
-                    Navigator.of(context).pop(true), // Exit the app
-                style: ElevatedButton.styleFrom(
-                  textStyle: const TextStyle(
-                    color: CommonStyles.primaryTextColor,
-                  ),
-                  side: const BorderSide(
-                    color: CommonStyles.primaryTextColor,
-                  ),
-                  backgroundColor: CommonStyles.primaryTextColor,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                  ),
-                ),
-                child: const Text(
-                  'Yes',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontFamily: 'Outfit',
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-      if (confirmClose == true) {
-        SystemNavigator.pop(); // Close the app
-      }
-      return Future.value(false); // Prevent the default back action
-    }
   }
 
   @override

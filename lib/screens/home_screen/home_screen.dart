@@ -12,6 +12,7 @@ import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
@@ -106,13 +107,43 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<bool> showExitDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Exit App'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Return false
+                  },
+                ),
+                TextButton(
+                  child: const Text('Yes'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // Return true
+                  },
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        print('onPopInvokedWithResult Home: $didPop, $result');
+    return WillPopScope(
+      onWillPop: () async {
+        bool shouldClose = await showExitDialog(context);
+        if (shouldClose) {
+          SystemNavigator.pop(); // Close the app
+        }
+        return false; // Prevent the default back button behavior
       },
       child: Scaffold(
         backgroundColor: const Color(0xfff4f3f1),

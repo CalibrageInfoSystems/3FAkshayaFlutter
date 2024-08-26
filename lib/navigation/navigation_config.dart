@@ -14,6 +14,7 @@ import 'package:akshaya_flutter/screens/my3f_screen.dart/my3f_screen.dart';
 import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -43,6 +44,21 @@ final GoRouter router = GoRouter(
               GoRoute(
                 path: Routes.homeScreen.path,
                 name: Routes.homeScreen.name,
+                /* onExit: (context, state) {
+                  /* print('homeScreen onExit: ${state.topRoute}');
+                  return true; */
+                  SystemChannels.platform
+                      .setMethodCallHandler((MethodCall call) async {
+                    if (call.method == 'popRoute') {
+                      print('111111');
+                      return true;
+                    } else {
+                      print('22222');
+                      return false;
+                    }
+                  });
+                  return false;
+                }, */
                 builder: (context, state) => const HomeScreen(),
                 /* routes: <RouteBase>[
                   GoRoute(
