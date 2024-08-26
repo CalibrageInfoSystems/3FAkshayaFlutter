@@ -1,3 +1,4 @@
+import 'package:akshaya_flutter/authentication/login_otp_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/models/FarmerResponseModel.dart';
@@ -271,7 +272,12 @@ class _LoginScreenState extends State<LoginScreen> {
            _mobileNumber = farmerResponseModel.result!;
            print('mobile_number=== $_mobileNumber');
            CommonStyles.hideHorizontalDotsLoadingDialog(context);
-           context.go('${Routes.loginOtpScreen.path}/$_mobileNumber');
+           Navigator.of(context).push(
+             MaterialPageRoute(
+               builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
+             ),
+           );
+          // context.go('${Routes.loginOtpScreen.path}/$_mobileNumber');
          } else {
            CommonStyles.hideHorizontalDotsLoadingDialog(context);
            _showErrorDialog('No Registered Mobile Number to Send OTP');

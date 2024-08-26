@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../authentication/login_screen.dart';
 import '../common_utils/constants.dart';
 import '../navigation/app_routes.dart';
 
@@ -106,6 +107,11 @@ class LanguageScreen extends StatelessWidget {
     prefs.setBool(Constants.welcome, true);
     prefs.setString(SharedPrefsKeys.language, language);
     context.setLocale(locale);
-    context.go(Routes.loginScreen.path);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+    );
+ //   context.go(Routes.loginScreen.path);
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/Main_home.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:dio/dio.dart';
@@ -13,6 +14,7 @@ import '../common_utils/Constants.dart';
 import '../common_utils/api_config.dart';
 import '../models/FarmerResponseModel.dart';
 import '../navigation/app_routes.dart';
+import '../screens/main_screen.dart';
 
 class LoginOtpScreen extends StatefulWidget {
   final String mobile;
@@ -264,24 +266,43 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
               data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
-          context.go(Routes.homeScreen.path);
+
+          // Hide loading dialog and stop loading before navigating
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          setState(() {
+            isLoading = false;
+          });
+          try {
+            print("Attempting to navigate to MainScreen");
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => MainScreen(),
+              ),
+            );
+            print("Navigation to MainScreen succeeded");
+          } catch (e) {
+            print("Navigation to MainScreen failed: $e");
+          }
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => MainScreen(),
+          //   ),
+          // );
         } else {
           print("OTP validation failed: ${data['endUserMessage']}");
-          //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
           _showErrorDialog(data['endUserMessage']);
         }
       } else {
         print("Server error: Status code ${response.statusCode}");
-        //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
         _showErrorDialog('Server error');
       }
     } catch (e) {
       print("Exception caught: $e");
-      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       _showErrorDialog('Failed to load data');
     } finally {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       setState(() {
-        CommonStyles.hideHorizontalDotsLoadingDialog(context);
         isLoading = false;
       });
     }
