@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class LocaleKeys {
   static const String App_version = "App_version";
   static const String Avb_subcd_amt = "Avb_subcd_amt";

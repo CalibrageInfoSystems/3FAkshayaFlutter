@@ -83,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<String?>> getLearningsData() async {
     final apiUrl = '$baseUrl$getlearning';
 
-    print('getLearningsData apiUrl: $apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
@@ -92,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String language =
             prefs.getString(SharedPrefsKeys.language) ?? 'english';
-        print('getLearningsData language: $language');
         List<LearningModel> result =
             learningList.map((item) => LearningModel.fromJson(item)).toList();
         return getlearningString(language, result);
@@ -329,8 +327,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     itemCount: serviceTypeIdList.length,
                     itemBuilder: (context, index) {
-                      print(
-                          'serviceTypeIdList $index: ${serviceTypeIdList[index]}');
                       return serviceGridItem(index, serviceTypeIdList.length,
                           serviceTypeIdList[index]);
                     });
