@@ -42,14 +42,19 @@ class _MainScreenPageState extends State<Main_home> {
   Widget build(BuildContext context) {
 
     return WillPopScope(
-      onWillPop: () {
-        print('Backbutton pressed (device or appbar button), do whatever you want.');
+      onWillPop: () async {
+        // Show a confirmation dialog
+        if (_selectedIndex != 0) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          return Future.value(false);
+        } else {
 
-        //trigger leaving and use own data
-        Navigator.pop(context, false);
+            SystemNavigator.pop();
 
-        //we need to return a future
-        return Future.value(false);
+          return Future.value(false);
+        }
       },
 
 
@@ -201,7 +206,7 @@ class _MainScreenPageState extends State<Main_home> {
         return const RequestsScreen();
 
       default:
-        return HomeScreen();
+       return HomeScreen();
     }
   }
 

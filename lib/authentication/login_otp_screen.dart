@@ -276,7 +276,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             print("Attempting to navigate to MainScreen");
             await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => Main_home(),
+                builder: (context) => MainScreen(),
               ),
             );
             print("Navigation to MainScreen succeeded");

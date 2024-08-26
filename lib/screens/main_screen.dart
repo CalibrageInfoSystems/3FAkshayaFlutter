@@ -47,7 +47,7 @@ import 'my3f_screen.dart/my3f_screen.dart';
           appBar: appBar(),
           drawer: drawer(context),
           backgroundColor: Colors.transparent,
-    //     body:
+          body: _buildScreens(_selectedIndex, context),
           bottomNavigationBar: bottomNavigationBar(),
 
       );
@@ -393,6 +393,30 @@ import 'my3f_screen.dart/my3f_screen.dart';
     });
     Navigator.pop(context); // Close the drawer after selection
   }
+
+    Widget _buildScreens(int index, BuildContext context) {
+      switch (index) {
+        case 0:
+          return const HomeScreen();
+
+
+        case 1:
+        // Return the messages screen widget
+          return const ProfileScreen();
+
+        case 2:
+
+        // Return the settings screen widget
+          return const My3fScreen();
+        case 3:
+        // Return the settings screen widget
+          return const RequestsScreen();
+
+        default:
+          return HomeScreen();
+      }
+    }
+
 }
   void logOutDialog(BuildContext context) {
     showGeneralDialog(

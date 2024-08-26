@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:akshaya_flutter/Main_home.dart';
 import 'package:akshaya_flutter/app_enterance/language_screen.dart';
 import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
@@ -9,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home_screen/home_screen.dart';
+import '../screens/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -60,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
       // Navigate to home screen
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => MainScreen(),
         ),
       );
       context.go(Routes.homeScreen.path);
