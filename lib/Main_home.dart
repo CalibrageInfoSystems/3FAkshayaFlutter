@@ -55,73 +55,10 @@ class _MainScreenPageState extends State<Main_home> {
 
       child: Scaffold(
         appBar: appBar(),
-     //   drawer: drawer(context),
+       drawer: drawer(context),
         backgroundColor: Colors.transparent,
         body: _buildScreens(_selectedIndex, context),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          showSelectedLabels: true,
-          showUnselectedLabels: false,
-          backgroundColor: const Color(0xffffffff),
-          onTap: (index) => setState(() {
-            _selectedIndex = index;
-
-          }),
-          selectedItemColor:  Color(0xFF11528f),
-
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/home_new.svg',
-                width: 20,
-                height: 20,
-                color: Colors.black.withOpacity(0.6),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/home_new.svg',
-                width: 20,
-                height: 20,
-                color:  Color(0xFF11528f),
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/invite-alt.svg',
-                width: 20,
-                height: 20,
-                color: Colors.black.withOpacity(0.6),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/invite-alt.svg',
-                width: 20,
-                height: 20,
-                color: Color(0xFF11528f),
-              ),
-              label: 'Appointments',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/apps-add.svg',
-                width: 20,
-                height: 20,
-                color: Colors.black.withOpacity(0.6),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/apps-add.svg',
-                width: 20,
-                height: 20,
-                color: Color(0xFF11528f),
-              ),
-              label: 'Menu',
-            ),
-          ],
-          selectedLabelStyle: CommonStyles.txSty_16p_f5,
-          // unselectedLabelStyle: TextStyle(
-          //   fontSize: 14,
-          //   color: Colors.grey, // Customize the color as needed
-          // ),
-        ),
+        bottomNavigationBar: bottomNavigationBar(),
       ),
     );
   }
@@ -267,6 +204,321 @@ class _MainScreenPageState extends State<Main_home> {
         return HomeScreen();
     }
   }
+
+  Drawer drawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.black,
+      child: ListView(
+        children: [
+          DrawerHeader(
+              child: Container(
+                width: 120.0,
+                height: 120.0,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: Image.asset(
+                    'assets/images/ic_user.png',
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              )),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'farmerName',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'hind_semibold',
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Text(
+                'farmerlastname',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontFamily: 'hind_semibold',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'address1',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontFamily: 'hind_semibold',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Text(
+                'address2',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontFamily: 'hind_semibold',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 2.0,
+            width: 10.0,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFF4500),
+                  Color(0xFFA678EF),
+                  Color(0xFFFF4500),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.center,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Home',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              _onItemTapped(0);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Choose Language',
+              style: TextStyle(
+                color: Colors.white,
+                //   fontSize: 16,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              // Navigator.pop(context);
+
+              openLanguageDialog(context);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_myprofile.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              _onItemTapped(1);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_my.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.fill,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'My3F',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              _onItemTapped(2);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_request.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Request',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () {
+              _onItemTapped(3);
+            },
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'assets/images/ic_home.svg',
+              width: 20,
+              height: 20,
+              fit: BoxFit.contain,
+              color: Colors.white,
+            ),
+            title: const Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'hind_semibold',
+              ),
+            ),
+            onTap: () async {
+              logOutDialog(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onItemTapped(int i) {}
+
+  BottomNavigationBar bottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      onTap: (index) {
+        setState(() {
+
+          _selectedIndex = index;
+          print('_selectedIndex==143$_selectedIndex');
+        });
+        // widget.navigationShell.goBranch(
+        //   index,
+        //   initialLocation: index == _selectedIndex,
+        // );
+      },
+      selectedItemColor: CommonStyles.primaryTextColor,
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_home.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_home.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_myprofile.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_myprofile.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_my.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_my.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'My 3F',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_request.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_request.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Requests',
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            'assets/images/ic_care.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+          ),
+          activeIcon: SvgPicture.asset(
+            'assets/images/ic_care.svg',
+            width: 20,
+            height: 20,
+            fit: BoxFit.contain,
+            color: CommonStyles.primaryTextColor,
+          ),
+          label: 'Customer Care',
+        ),
+      ],
+    );
+  }
+
 
 
 
