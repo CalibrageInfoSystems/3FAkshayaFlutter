@@ -11,6 +11,8 @@ var getServices = "StateService/GetServicesByStateCode/";
 var getlearning = "Encyclopedia/GetActiveEncyclopediaCategoryDetails";
 var Farmer_otp = "Farmer/";
 var Farmer_ID_CHECK = "farmer/SendOTP/";
+var  getcollection ="Collection";
+var getCollectionInfoById ="Collection/CollectionInfoById/";
 
 //MARK: Banners
 var getActiveBannerByStateCode = "Banner/GetActiveBannerByStateCode/API";
