@@ -1,10 +1,16 @@
 import 'dart:async';
+import 'package:akshaya_flutter/Main_home.dart';
+import 'package:akshaya_flutter/app_enterance/language_screen.dart';
+import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../screens/home_screen/home_screen.dart';
+import '../screens/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -54,13 +60,27 @@ class _SplashScreenState extends State<SplashScreen>
   void navigateToNextScreen() {
     if (isLogin) {
       // Navigate to home screen
-
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+      );
       context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
-        context.go(Routes.loginScreen.path);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+        );
+   //     context.go(Routes.loginScreen.path);
       } else {
-        context.go(Routes.languageScreen.path);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => LanguageScreen(),
+          ),
+        );
+       // context.go(Routes.languageScreen.path);
       }
     }
   }

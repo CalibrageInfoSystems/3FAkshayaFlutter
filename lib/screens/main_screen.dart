@@ -23,8 +23,7 @@ import 'my3f_screen.dart/my3f_screen.dart';
 //
 //   const MainScreen({super.key, required this.navigationShell});
   class MainScreen extends StatefulWidget {
-    final StatefulNavigationShell navigationShell;
-    const MainScreen({super.key, required this.navigationShell});
+
   @override
   _MainScreenPageState createState() => _MainScreenPageState();
   }
@@ -35,99 +34,22 @@ import 'my3f_screen.dart/my3f_screen.dart';
     @override
     void initState() {
       super.initState();
-      _selectedIndex = widget.navigationShell.currentIndex; // Sync with initial index
+
+    //  _selectedIndex = widget.navigationShell.currentIndex;
+      print('_selectedIndex==$_selectedIndex');// Sync with initial index
     }
 
-    Future<bool> _onWillPop() async {
-      if (_selectedIndex != 0) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        widget.navigationShell.goBranch(0, initialLocation: false);
-        return Future.value(false); // Prevent the app from closing
-      } else {
-        bool confirmClose = await showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Confirm Exit'),
-              content: const Text('Are You Sure You Want to Close The App?'),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false); // Don't exit
-                  },
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    side: const BorderSide(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'No',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: CommonStyles.primaryTextColor,
-                      fontFamily: 'Outfit',
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(true), // Exit the app
-                  style: ElevatedButton.styleFrom(
-                    textStyle: const TextStyle(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    side: const BorderSide(
-                      color: CommonStyles.primaryTextColor,
-                    ),
-                    backgroundColor: CommonStyles.primaryTextColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'Yes',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontFamily: 'Outfit',
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-        if (confirmClose == true) {
-          SystemNavigator.pop(); // Close the app
-        }
-        return Future.value(false); // Prevent the default back action
-      }
-    }
+
 
     @override
     Widget build(BuildContext context) {
-      return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
+        return  Scaffold(
           appBar: appBar(),
           drawer: drawer(context),
           backgroundColor: Colors.transparent,
-          body: SafeArea(child: widget.navigationShell),
+          body: _buildScreens(_selectedIndex, context),
           bottomNavigationBar: bottomNavigationBar(),
-        ),
+
       );
     }
 
@@ -136,12 +58,14 @@ import 'my3f_screen.dart/my3f_screen.dart';
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
+
             _selectedIndex = index;
+            print('_selectedIndex==143$_selectedIndex');
           });
-          widget.navigationShell.goBranch(
-            index,
-            initialLocation: index == _selectedIndex,
-          );
+          // widget.navigationShell.goBranch(
+          //   index,
+          //   initialLocation: index == _selectedIndex,
+          // );
         },
         selectedItemColor: CommonStyles.primaryTextColor,
         items: <BottomNavigationBarItem>[
@@ -462,13 +386,37 @@ import 'my3f_screen.dart/my3f_screen.dart';
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      widget.navigationShell.goBranch(
-        index,
-        initialLocation: index == widget.navigationShell.currentIndex,
-      );
+      // widget.navigationShell.goBranch(
+      //   index,
+      //   initialLocation: index == widget.navigationShell.currentIndex,
+      // );
     });
     Navigator.pop(context); // Close the drawer after selection
   }
+
+    Widget _buildScreens(int index, BuildContext context) {
+      switch (index) {
+        case 0:
+          return const HomeScreen();
+
+
+        case 1:
+        // Return the messages screen widget
+          return const ProfileScreen();
+
+        case 2:
+
+        // Return the settings screen widget
+          return const My3fScreen();
+        case 3:
+        // Return the settings screen widget
+          return const RequestsScreen();
+
+        default:
+          return HomeScreen();
+      }
+    }
+
 }
   void logOutDialog(BuildContext context) {
     showGeneralDialog(
