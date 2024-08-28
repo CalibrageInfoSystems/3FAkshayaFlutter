@@ -90,7 +90,7 @@ class _MainScreenPageState extends State<MainScreen> {
           label: tr(LocaleKeys.profile),
         ),
         bottomNavItem(
-          imagePath: Assets.images.icMy.path,
+          imagePath: Assets.images.icMySvg.path,
           label: tr(LocaleKeys.my3F),
         ),
         bottomNavItem(
