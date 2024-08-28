@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:akshaya_flutter/common_utils/SharedPreferencesHelper.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/models/CollectionReceipt.dart';
 import 'package:akshaya_flutter/models/CollectionResponse.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 //import 'package:akshayaflutter/CommonUtils/Commonclass.dart';
@@ -13,6 +15,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../localization/locale_keys.dart';
 // import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/api_config.dart';
 // import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/model_class/CollectionReceipt.dart';
 // import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/model_class/CollectionResponse.dart';
@@ -56,12 +61,12 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   bool isLoading = false;
   List<Collection> collectionlist = [];
   List<CollectionReceipt> collectionreceiptlist = [];
-
+  String? userId;
   //final url,request;
   @override
   void initState() {
     listofdetails();
-    get30days();
+   // get30days();
   }
 
   String formatDate(String inputDate) {
@@ -75,19 +80,14 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   }
 
   listofdetails() async {
-    final loadedData = await SharedPreferencesHelper.getCategories();
-    if (loadedData != null) {
-      final farmerDetails = loadedData['result']['farmerDetails'];
-      final loadedfarmercode = farmerDetails[0]['code'];
-      setState(() {
-        fc = loadedfarmercode;
-        print('fcinplotdetails--$fc');
-        selectedPosition = 0; //// Initialize selectedPosition to 0
-        callApiMethod(selectedPosition!);
-        get30days();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('user_id');
+      print('FarmerCode -==$userId');
+      selectedPosition = 0; //// Initialize selectedPosition to 0
+      callApiMethod(selectedPosition!);
+    });
 
-      });
-    }
   }
 
   String formatDateToApi(DateTime date) {
@@ -159,6 +159,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
 
       // Calculate the date range for the "Last 30 Days" option
       DateTime currentDate = DateTime.now();
+      print('currentDate: $currentDate');
       DateTime startDate = currentDate.subtract(Duration(days: 30));
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       startDateString = dateFormat.format(startDate);
@@ -218,9 +219,13 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("FFB Collections"),
+          titleSpacing:0.0,
+          title:Text(
+            tr(LocaleKeys.collection),
+            style: CommonStyles.text16white,
+          ),
           leading: IconButton(
-            icon: Image.asset('assets/ic_left.png'),
+            icon: Image.asset('assets/images/ic_left.png'),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -258,13 +263,15 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 border: Border.all(color: Colors.white, width: 1.0),
                                 borderRadius: BorderRadius.circular(6.0),
                               ),
-                              child: DropdownButton<int>(
-                                alignment: Alignment.center,
+                              child:
+                              DropdownButton<int>(
+                                alignment: Alignment.centerRight,
                                 value: selectedPosition ?? 0,
-                                iconSize: 22,
-                                icon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Colors.white,
+
+                                icon: Image.asset(
+                                  Assets.images.arrowDown.path,
+                                  width: 20.0,
+                                  height: 20.0,
                                 ),
                                 style: TextStyle(
                                   color: Colors.black,
@@ -272,7 +279,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 onChanged: (position) {
                                   setState(() {
                                     selectedPosition = position;
-                                    print('selectedposition $selectedPosition');
+                                    print('selectedPosition $selectedPosition');
                                   });
 
                                   // Now, call your API method based on the selected position
@@ -284,10 +291,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Last 30 Days',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                        tr(LocaleKeys.thirty_days),
+                                        style: CommonStyles.text16white,
                                       ),
                                     ),
                                   ),
@@ -296,10 +301,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Current Financial Year',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                        tr(LocaleKeys.currentfinicial),
+                                        style: CommonStyles.text16white,
                                       ),
                                     ),
                                   ),
@@ -308,16 +311,15 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        'Select Time Period',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                        tr(LocaleKeys.selected),
+                                        style: CommonStyles.text16white,
                                       ),
                                     ),
                                   ),
                                 ],
-                                dropdownColor: Colors.grey, // Set the dropdown background color to grey
-                              ),
+                                dropdownColor:Color(0x8D000000) // Set the dropdown background color to grey
+                              )
+
                             ),
                           ),
                         ),
@@ -1085,7 +1087,12 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   Future<void> get30days() async {
     final url = Uri.parse(baseUrl + getcollection);
     print('url==>890: $url');
-    final request = {"farmerCode": fc, "fromDate": startDateString, "toDate": endDateString};
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+   userId = prefs.getString('user_id');
+      print('FarmerCode -==$userId');
+    });
+    final request = {"farmerCode": userId!, "fromDate": startDateString, "toDate": endDateString};
     print('request of the 30 days: $request');
     try {
       final response = await http.post(
@@ -1151,7 +1158,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     collectionlist.clear();
     final url = Uri.parse(baseUrl + getcollection);
     print('url==>000: $url');
-    final request = {"farmerCode": fc, "fromDate": financialYearFrom, "toDate": financialYearTo};
+    final request = {"farmerCode": userId, "fromDate": financialYearFrom, "toDate": financialYearTo};
     print('request of the financialYear  : $request');
     try {
       final response = await http.post(
@@ -1235,7 +1242,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     final String toFormattedDateApi = formatDateToApi(toDate!);
     print('fromFormattedDateApi: $fromFormattedDateApi');
     print('toFormattedDateApi: $toFormattedDateApi');
-    final request = {"farmerCode": fc, "fromDate": fromFormattedDateApi, "toDate": toFormattedDateApi};
+    final request = {"farmerCode": userId, "fromDate": fromFormattedDateApi, "toDate": toFormattedDateApi};
     print('request of the 30 days: $request');
     try {
       final response = await http.post(

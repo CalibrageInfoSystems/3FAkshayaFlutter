@@ -13,7 +13,7 @@ class PlotDetailsModel {
   final double? plotArea;
   final double? plotAreainAcres;
   final double? palmAreainAcres;
-  final DateTime? dateOfPlanting;
+  final String? dateOfPlanting;
   final String? landMark;
   final int? villageId;
   final String? villageCode;
@@ -79,9 +79,7 @@ class PlotDetailsModel {
         plotArea: json["plotArea"]?.toDouble(),
         plotAreainAcres: json["plotAreainAcres"]?.toDouble(),
         palmAreainAcres: json["palmAreainAcres"]?.toDouble(),
-        dateOfPlanting: json["dateOfPlanting"] == null
-            ? null
-            : DateTime.parse(json["dateOfPlanting"]),
+        dateOfPlanting: json["dateOfPlanting"],
         landMark: json["landMark"],
         villageId: json["villageId"],
         villageCode: json["villageCode"],
@@ -114,7 +112,7 @@ class PlotDetailsModel {
         "plotArea": plotArea,
         "plotAreainAcres": plotAreainAcres,
         "palmAreainAcres": palmAreainAcres,
-        "dateOfPlanting": dateOfPlanting?.toIso8601String(),
+        "dateOfPlanting": dateOfPlanting,
         "landMark": landMark,
         "villageId": villageId,
         "villageCode": villageCode,

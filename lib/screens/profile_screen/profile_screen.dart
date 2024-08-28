@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,18 +24,26 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<FarmerModel> farmerData;
   late Future<List<PlotDetailsModel>> plotsData;
-
+  String? userId;
+  String? stateCode;
+  int? districtId;
+  String? districtName;
   @override
   void initState() {
     super.initState();
+    _loadUserData();
     farmerData = getFarmerInfoFromSharedPrefs();
     plotsData = getPlotDetails();
   }
 
   Future<List<PlotDetailsModel>> getPlotDetails() async {
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
-    // final apiUrl = '$baseUrl${getActivePlotsByFarmerCode}APWGBDAB00010005';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('user_id');
+      print('FarmerCode -==$userId');
+    });
+    //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
+     final apiUrl = '$baseUrl${getActivePlotsByFarmerCode}$userId';
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -61,7 +70,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
     return FarmerModel.fromJson(farmerResult);
   }
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    EasyLocalization.of(context)?.locale;
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -141,6 +154,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('user_id');
+      stateCode = prefs.getString('statecode');
+      districtId = prefs.getInt('districtId');
+      districtName = prefs.getString('districtName');
+      print('FarmerCode -==$userId');
+      print('stateCode -==$stateCode');
+      print('districtId -==$districtId');
+      print('districtName -==$districtName');
+    });
+  }
+
 }
 
 class FarmerProfile extends StatelessWidget {
@@ -183,15 +211,15 @@ class FarmerProfile extends StatelessWidget {
               textColor: CommonStyles.primaryTextColor),
           farmerInfoBox(
             label: tr(LocaleKeys.farmer_name),
-            data: '${farmerData.firstName}',
+            data: '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
           ),
           farmerInfoBox(
             label: tr(LocaleKeys.fa_hu_name),
             data: '${farmerData.guardianName}',
           ),
-          farmerInfoBox(
+          farmerdialInfoBox(
               label: tr(LocaleKeys.mobile),
-              data: '${farmerData.mobileNumber}',
+              data: '${farmerData.contactNumber}',
               textColor: Colors.green),
           const SizedBox(height: 20),
           Text(tr(LocaleKeys.res_address),
@@ -258,11 +286,51 @@ class FarmerProfile extends StatelessWidget {
       ],
     );
   }
+
+  farmerdialInfoBox({required String label, required String data, required MaterialColor textColor}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                flex: 5,
+                child: Text(
+                  label,
+                  style: CommonStyles.txSty_14b_f5,
+                )),
+    Expanded(
+    flex: 6,
+    child: InkWell(
+    onTap: () async {
+    final url = 'tel:+91$data';
+    if (await canLaunch(url)) {
+    await launch(url);
+    } else {
+    throw 'Could not launch $url';
+    }
+    },
+    child: Text(
+    ':   $data',
+    style: CommonStyles.txSty_14b_f5.copyWith(
+    color:Color(0xFF34A350), // Use blue or custom color
+   // Optional: underline to indicate clickable
+    ),
+    ),
+    ),
+    ),
+    ],
+    ),
+
+        const SizedBox(height: 5),
+      ],
+    );
+  }
 }
 
 class PlotDetails extends StatelessWidget {
   final PlotDetailsModel plotdata;
   final int index;
+
   const PlotDetails({super.key, required this.plotdata, required this.index});
 
   @override
@@ -277,6 +345,11 @@ class PlotDetails extends StatelessWidget {
   }
 
   Container plot() {
+    final df = NumberFormat("#,##0.00");
+    String? dateOfPlanting = plotdata.dateOfPlanting;
+    DateTime parsedDate = DateTime.parse(dateOfPlanting!);
+    String year = parsedDate.year.toString();// Example number format
+    print('year=======$year');
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -293,7 +366,7 @@ class PlotDetails extends StatelessWidget {
               dataTextColor: CommonStyles.primaryTextColor),
           plotDetailsBox(
             label: tr(LocaleKeys.plaod_hect),
-            data: 'plaod_hect',
+            data: '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.sur_num),
@@ -321,7 +394,7 @@ class PlotDetails extends StatelessWidget {
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.yop),
-            data: '${plotdata.surveyNumber}',
+            data: '${year}',
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.address),

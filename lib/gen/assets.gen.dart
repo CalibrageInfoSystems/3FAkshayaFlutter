@@ -18,6 +18,16 @@ class $AssetsImagesGen {
   /// File path: assets/images/appbg.png
   AssetGenImage get appbg => const AssetGenImage('assets/images/appbg.png');
 
+  /// File path: assets/images/arrow_down.png
+  AssetGenImage get arrowDown =>
+      const AssetGenImage('assets/images/arrow_down.png');
+
+  /// File path: assets/images/cancel.png
+  AssetGenImage get cancel => const AssetGenImage('assets/images/cancel.png');
+
+  /// File path: assets/images/cart.png
+  AssetGenImage get cart => const AssetGenImage('assets/images/cart.png');
+
   /// File path: assets/images/ediableoils.png
   AssetGenImage get ediableoils =>
       const AssetGenImage('assets/images/ediableoils.png');
@@ -56,8 +66,23 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_care.svg
   SvgGenImage get icCare => const SvgGenImage('assets/images/ic_care.svg');
 
+  /// File path: assets/images/ic_collection_list.png
+  AssetGenImage get icCollectionList =>
+      const AssetGenImage('assets/images/ic_collection_list.png');
+
+  /// File path: assets/images/ic_godown.png
+  AssetGenImage get icGodown =>
+      const AssetGenImage('assets/images/ic_godown.png');
+
   /// File path: assets/images/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/images/ic_home.svg');
+
+  /// File path: assets/images/ic_imp_contacts.png
+  AssetGenImage get icImpContacts =>
+      const AssetGenImage('assets/images/ic_imp_contacts.png');
+
+  /// File path: assets/images/ic_lang.png
+  AssetGenImage get icLang => const AssetGenImage('assets/images/ic_lang.png');
 
   /// File path: assets/images/ic_left.png
   AssetGenImage get icLeft => const AssetGenImage('assets/images/ic_left.png');
@@ -69,8 +94,27 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_logo.png
   AssetGenImage get icLogo => const AssetGenImage('assets/images/ic_logo.png');
 
+  /// File path: assets/images/ic_logout.png
+  AssetGenImage get icLogout =>
+      const AssetGenImage('assets/images/ic_logout.png');
+
+  /// File path: assets/images/ic_map_list.png
+  AssetGenImage get icMapList =>
+      const AssetGenImage('assets/images/ic_map_list.png');
+
+  /// File path: assets/images/ic_microphone.png
+  AssetGenImage get icMicrophone =>
+      const AssetGenImage('assets/images/ic_microphone.png');
+
+  /// File path: assets/images/ic_mill_list.png
+  AssetGenImage get icMillList =>
+      const AssetGenImage('assets/images/ic_mill_list.png');
+
+  /// File path: assets/images/ic_my.png
+  AssetGenImage get icMyPng => const AssetGenImage('assets/images/ic_my.png');
+
   /// File path: assets/images/ic_my.svg
-  SvgGenImage get icMy => const SvgGenImage('assets/images/ic_my.svg');
+  SvgGenImage get icMySvg => const SvgGenImage('assets/images/ic_my.svg');
 
   /// File path: assets/images/ic_myprofile.svg
   SvgGenImage get icMyprofile =>
@@ -83,15 +127,27 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_user.png
   AssetGenImage get icUser => const AssetGenImage('assets/images/ic_user.png');
 
+  /// File path: assets/images/info_icon.png
+  AssetGenImage get infoIcon =>
+      const AssetGenImage('assets/images/info_icon.png');
+
   /// File path: assets/images/labour.png
   AssetGenImage get labour => const AssetGenImage('assets/images/labour.png');
 
   /// File path: assets/images/loan.png
   AssetGenImage get loan => const AssetGenImage('assets/images/loan.png');
 
+  /// File path: assets/images/logo_final.png
+  AssetGenImage get logoFinal =>
+      const AssetGenImage('assets/images/logo_final.png');
+
   /// File path: assets/images/main_visit.png
   AssetGenImage get mainVisit =>
       const AssetGenImage('assets/images/main_visit.png');
+
+  /// File path: assets/images/nurseries_icon.png
+  AssetGenImage get nurseriesIcon =>
+      const AssetGenImage('assets/images/nurseries_icon.png');
 
   /// File path: assets/images/oilpalm.png
   AssetGenImage get oilpalm => const AssetGenImage('assets/images/oilpalm.png');
@@ -113,6 +169,9 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
         appbg,
+        arrowDown,
+        cancel,
+        cart,
         ediableoils,
         equipment,
         fertilizers,
@@ -123,17 +182,29 @@ class $AssetsImagesGen {
         icBankWhite,
         icCalender,
         icCare,
+        icCollectionList,
+        icGodown,
         icHome,
+        icImpContacts,
+        icLang,
         icLeft,
         icLernin,
         icLogo,
-        icMy,
+        icLogout,
+        icMapList,
+        icMicrophone,
+        icMillList,
+        icMyPng,
+        icMySvg,
         icMyprofile,
         icRequest,
         icUser,
+        infoIcon,
         labour,
         loan,
+        logoFinal,
         mainVisit,
+        nurseriesIcon,
         oilpalm,
         passbook,
         pest,

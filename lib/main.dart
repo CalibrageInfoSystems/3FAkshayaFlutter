@@ -29,6 +29,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+   //   key: ValueKey(context.locale.toString()),  // Add this line
+    builder: (context, child) {
+      final originalTextScaleFactor = MediaQuery.of(context).textScaleFactor;
+      final boldText = MediaQuery.boldTextOf(context);
+
+      final newMediaQueryData = MediaQuery.of(context).copyWith(
+        textScaleFactor: originalTextScaleFactor.clamp(0.8, 1.0),
+        boldText: boldText,
+      );
+
+      return MediaQuery(
+        data: newMediaQueryData,
+        child: child!,
+      );
+    },
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
@@ -36,14 +51,7 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
     );
 
-    // return MaterialApp.router(
-    //   localizationsDelegates: context.localizationDelegates,
-    //   supportedLocales: context.supportedLocales,
-    //   locale: context.locale,
-    //   debugShowCheckedModeBanner: false,
-    //   routerDelegate: router.routerDelegate,
-    //   routeInformationParser: router.routeInformationParser,
-    //   routeInformationProvider: router.routeInformationProvider,
-    // );
+
   }
+
 }

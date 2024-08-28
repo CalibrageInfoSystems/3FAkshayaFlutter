@@ -9,6 +9,8 @@ import 'package:akshaya_flutter/models/banner_model.dart';
 import 'package:akshaya_flutter/models/learning_model.dart';
 import 'package:akshaya_flutter/models/service_model.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collections.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<int>> servicesData;
   late Future<List<String?>> learningsData;
   late Future<List<BannerModel>> bannersAndMarqueeTextData;
+
   @override
   void initState() {
     super.initState();
@@ -37,22 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     bannersAndMarqueeTextData = getBannersAndMarqueeText();
   }
 
-  List<String> bannersList = [
-    'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
-    'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
-    'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
-  ];
 
-  List<GridItem> gridItems = [
-    GridItem(imagePath: Assets.images.fertilizers.path, title: 'Fertilizer'),
-    GridItem(imagePath: Assets.images.equipment.path, title: 'Equipment'),
-    GridItem(imagePath: Assets.images.fertilizers1.path, title: 'Bio Lab'),
-    GridItem(imagePath: Assets.images.labour.path, title: 'Labour'),
-    GridItem(imagePath: Assets.images.quickPay.path, title: 'QuickPay'),
-    GridItem(imagePath: Assets.images.visit.path, title: 'Visit'),
-    GridItem(imagePath: Assets.images.loan.path, title: 'Loan'),
-    GridItem(imagePath: Assets.images.passbook.path, title: 'Edible Oil'),
-  ];
 
   Future<List<int>> getServicesData() async {
     final apiUrl = '$baseUrl${getServices}AP';
@@ -80,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   Future<List<String?>> getLearningsData() async {
     final apiUrl = '$baseUrl$getlearning';
 
@@ -88,15 +77,25 @@ class _HomeScreenState extends State<HomeScreen> {
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> learningList = response['listResult'];
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        String language =
-            prefs.getString(SharedPrefsKeys.language) ?? 'english';
-        List<LearningModel> result =
-            learningList.map((item) => LearningModel.fromJson(item)).toList();
-        return getlearningString(language, result);
-        /*  return learningList
-            .map((item) => LearningModel.fromJson(item))
-            .toList(); */
+
+        // Extract language-specific names based on the current locale
+        List<LearningModel> result = learningList.map((item) => LearningModel.fromJson(item)).toList();
+        Locale currentLocale = EasyLocalization.of(context)?.locale ?? Locale('en');
+        print('currentLocale==$currentLocale');
+
+        // Map names based on the locale
+        return result.map((item) {
+          switch (currentLocale.toString()) {
+            case 'te_IN': // Telugu
+              return item.teluguName ?? item.name;
+            case 'hi_IN': // Hindi
+              return item.hindiName ?? item.name;
+            case 'kn_IN': // Kannada
+              return item.kannadaName ?? item.name;
+            default: // Default to English
+              return item.name; // Updated to return item.name for default case
+          }
+        }).toList();
       } else {
         throw Exception('Failed to get services data');
       }
@@ -105,42 +104,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<bool> showExitDialog(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Exit App'),
-              content: const Text('Are you sure you want to exit the app?'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('No'),
-                  onPressed: () {
-                    Navigator.of(context).pop(false); // Return false
-                  },
-                ),
-                TextButton(
-                  child: const Text('Yes'),
-                  onPressed: () {
-                    Navigator.of(context).pop(true); // Return true
-                  },
-                ),
-              ],
-            );
-          },
-        ) ??
-        false;
-  }
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    EasyLocalization.of(context)?.locale;
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        bool shouldClose = await showExitDialog(context);
-        if (shouldClose) {
+
           SystemNavigator.pop(); // Close the app
-        }
+
         return false; // Prevent the default back button behavior
       },
       child: Scaffold(
@@ -152,12 +130,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     menuSection(size),
-                    servicesSection(size, 'Services'),
-                    Container(
-                      color: Colors.transparent,
-                      height: 20,
-                    ),
-                    learningSection(size, 'Learnings',
+                    SizedBox(height: 5.0,),
+                    servicesSection(size, tr(LocaleKeys.req_services),),
+                    // Container(
+                    //   color: Colors.transparent,
+                    //   height: 30,
+                    // ),
+                  SizedBox(height: 5.0,),
+                    learningSection(size,  tr(LocaleKeys.learning),
                         backgroundColor: Colors.grey.shade300),
                   ],
                 ),
@@ -181,8 +161,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // color: Colors.green,
             height: 25,
             child: Marquee(
-                text: marquee[0].description!,
-                style: CommonStyles.txSty_12b_f5),
+                text: marquee[0].description! + "                                        " + marquee[0].description! +"                                        ",
+                style: CommonStyles.txSty_14black),
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -231,70 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-/* 
-  Widget banners(Size size) {
-    return FutureBuilder(
-      future: bannersAndMarqueeTextData,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final banners = snapshot.data as List<BannerModel>;
 
-          return FlutterCarousel(
-            options: CarouselOptions(
-              height: size.height * 0.2,
-              showIndicator: true,
-              autoPlay: true,
-              viewportFraction: 1,
-              floatingIndicator: true,
-              autoPlayCurve: Curves.linear,
-              slideIndicator: const CircularSlideIndicator(
-                slideIndicatorOptions: SlideIndicatorOptions(
-                  indicatorBorderColor: Colors.grey,
-                  currentIndicatorColor: CommonStyles.whiteColor,
-                  indicatorRadius: 2,
-                ),
-              ),
-            ),
-            items: banners.map((item) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 4,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          item.imageName!,
-                          width: MediaQuery.of(context)
-                              .size
-                              .width, // Set image width
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          );
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        }
-        return const CircularProgressIndicator.adaptive();
-      },
-    );
-  }
- */
   Container servicesSection(Size size, String title, {Color? backgroundColor}) {
     return Container(
       color: backgroundColor,
@@ -303,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             title,
-            style: CommonStyles.txSty_16b_fb,
+            style: CommonStyles.txSty_16b6_fb,
           ),
           const SizedBox(height: 10),
           FutureBuilder(
@@ -339,18 +256,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Container learningSection(Size size, String title, {Color? backgroundColor}) {
+
     return Container(
       color: backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 5.0,),
           Text(
             title,
-            style: CommonStyles.txSty_16b_fb,
+            style: CommonStyles.txSty_16b6_fb,
           ),
           const SizedBox(height: 10),
           FutureBuilder(
-            future: learningsData,
+            future: getLearningsData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator.adaptive();
@@ -370,24 +289,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   itemCount: learningsList.length,
                   itemBuilder: (context, index) {
-                    //MARK: Work
+                    print('learningsList===${learningsList[index]}');
+
                     return learningGridItem(
-                        index: index,
-                        learningsList: learningsList.length,
-                        title: learningsList[index]!);
-                    // return learningGridItem(index, learningsList.length, learningsList[index]);
+                      index: index,
+                      learningsList: learningsList.length,
+                      title: learningsList[index] ?? '',
+                    );
                   },
                 );
               }
             },
-          ),
+          )
+
+
         ],
       ),
     );
   }
 
   Container menuSection(Size size) {
-    return Container(
+    return
+      Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -399,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         children: [
           Text(
-            'Views',
+            tr(LocaleKeys.view),
             style: CommonStyles.txSty_16b_fb
                 .copyWith(color: CommonStyles.whiteColor),
           ),
@@ -408,18 +331,23 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               viewOption(
-                  size, Assets.images.ffbCollection.path, 'FFB Collection',
+                  size, Assets.images.ffbCollection.path,  tr(LocaleKeys.collection),
                   onTap: () {
-                context.push(
-                    context.namedLocation(Routes.ffbCollectionScreen.name));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FfbCollectionScreen(),
+                      ),
+                    );
+                // context.push(
+                //     context.namedLocation(Routes.ffbCollectionScreen.name));
               }),
-              viewOption(size, Assets.images.passbook.path, 'Farmer Passbook',
+              viewOption(size, Assets.images.passbook.path, tr(LocaleKeys.payments),
                   onTap: () {
                 context.push(
                     context.namedLocation(Routes.farmerPassbookScreen.name));
               }),
               viewOption(
-                  size, Assets.images.mainVisit.path, 'Crop Maintenance Visits',
+                  size, Assets.images.mainVisit.path,tr(LocaleKeys.recommendationss),
                   onTap: () {
                 context.push(context
                     .namedLocation(Routes.cropMaintenanceVisitsScreen.name));
@@ -451,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: 120,
-                height: 30,
+                height: 35,
                 alignment: Alignment.center,
                 child: Text(
                   title,
@@ -635,46 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String getLearningName(int serviceTypeId) {
-    // 12 10 107 11 13 14 28 108 116
-    switch (serviceTypeId) {
-      case 10: // Pole Request
-        return tr(LocaleKeys.pole);
-      case 11: // Labour Request
-        return tr(LocaleKeys.select_labour_type);
-      case 12: // Fertilizer Request
-        return tr(LocaleKeys.fertilizer);
-      case 13: // QuickPay Request
-        return tr(LocaleKeys.quick);
-      case 14: // Visit Request
-        return tr(LocaleKeys.visit);
-      case 28: // Loan Request
-        return tr(LocaleKeys.loan);
-      case 107: // Bio Lab Request
-        return tr(LocaleKeys.labproducts);
-      case 108: // Transport Request
-        return tr(LocaleKeys.App_version);
-      case 116: // Edible Oils Request
-        return tr(LocaleKeys.edibleoils);
 
-      default:
-        return Assets.images.mainVisit.path;
-    }
-  }
-
-  List<String?> getlearningString(String language, List<LearningModel> result) {
-    switch (language) {
-      case 'english':
-        return result.map((item) => item.name).toList();
-      case 'telugu':
-        return result.map((item) => item.teluguName).toList();
-      case 'kannada':
-        return result.map((item) => item.kannadaName).toList();
-
-      default:
-        return result.map((item) => item.updatedBy).toList();
-    }
-  }
 
 //MARK: Marqee API
 

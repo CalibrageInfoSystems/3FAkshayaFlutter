@@ -65,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
           builder: (context) => MainScreen(),
         ),
       );
-      context.go(Routes.homeScreen.path);
+    //  context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
         Navigator.of(context).push(

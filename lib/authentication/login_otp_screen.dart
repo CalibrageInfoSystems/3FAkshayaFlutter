@@ -256,14 +256,10 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           print("OTP validation successful");
 
           prefs.setBool(Constants.isLogin, true);
-          prefs.setString(
-              'user_id', data['result']['farmerDetails'][0]['code']);
-          prefs.setString(
-              'statecode', data['result']['farmerDetails'][0]['stateCode']);
-          prefs.setInt(
-              'districtId', data['result']['farmerDetails'][0]['districtId']);
-          prefs.setString('districtName',
-              data['result']['farmerDetails'][0]['districtName']);
+          prefs.setString('user_id', data['result']['farmerDetails'][0]['code']);
+          prefs.setString('statecode', data['result']['farmerDetails'][0]['stateCode']);
+          prefs.setInt('districtId', data['result']['farmerDetails'][0]['districtId']);
+          prefs.setString('districtName', data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
 
@@ -293,7 +289,8 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           print("OTP validation failed: ${data['endUserMessage']}");
           _showErrorDialog(data['endUserMessage']);
         }
-      } else {
+      }
+      else {
         print("Server error: Status code ${response.statusCode}");
         _showErrorDialog('Server error');
       }

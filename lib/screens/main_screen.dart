@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
@@ -11,6 +12,7 @@ import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,13 +44,30 @@ class _MainScreenPageState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      // Show a confirmation dialog
+      if (_selectedIndex != 0) {
+        setState(() {
+          _selectedIndex = 0;
+        });
+        return Future.value(false);
+      } else {
+
+        SystemNavigator.pop();
+
+        return Future.value(false);
+      }
+    },
+
+
+    child:  Scaffold(
       appBar: appBar(),
       drawer: drawer(context),
       backgroundColor: Colors.transparent,
       body: _buildScreens(_selectedIndex, context),
       bottomNavigationBar: bottomNavigationBar(),
-    );
+    ));
   }
 
   BottomNavigationBar bottomNavigationBar() {
@@ -106,126 +125,80 @@ class _MainScreenPageState extends State<MainScreen> {
     );
   }
 
-/* 
-  BottomNavigationBar bottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: (index) {
-        setState(() {
-          _selectedIndex = index;
-          print('_selectedIndex==143$_selectedIndex');
-        });
-        // widget.navigationShell.goBranch(
-        //   index,
-        //   initialLocation: index == _selectedIndex,
-        // );
-      },
-      selectedItemColor: CommonStyles.primaryTextColor,
-      items: <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_home.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_home.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_myprofile.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_myprofile.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_my.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_my.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'My 3F',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_request.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_request.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Requests',
-        ),
-        BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            'assets/images/ic_care.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-          ),
-          activeIcon: SvgPicture.asset(
-            'assets/images/ic_care.svg',
-            width: 20,
-            height: 20,
-            fit: BoxFit.contain,
-            color: CommonStyles.primaryTextColor,
-          ),
-          label: 'Customer Care',
-        ),
-      ],
-    );
-  }
- */
-
   AppBar appBar() {
     return AppBar(
+      elevation: 0,
       backgroundColor: const Color(0xffe46f5d),
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(
             Icons.menu,
             color: CommonStyles.whiteColor,
-          ), // Replace with your custom icon or widget
+          ),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
         ),
       ),
-      title: Text(
-        tr(LocaleKeys.app_name),
+      titleSpacing:0.0,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start, // Aligns children to the start
+        children: [
+          Image.asset(
+            'assets/images/logo_final.png',
+            width: 40.0,
+            height: 40.0,
+          ),
+          const SizedBox(width: 8.0), // Space adjustment if needed
+          Expanded(
+            child: Text(
+              tr(LocaleKeys.app_name),
+              style: CommonStyles.txSty_20w_fb,
+            ),
+          ),
+        ],
       ),
     );
   }
+
+
+  // AppBar appBar() {
+  //   return AppBar(
+  //     backgroundColor: const Color(0xffe46f5d),
+  //     leading: SizedBox(
+  //      width: 0.0, // Adjust width as needed to match the icon size
+  //       child: IconButton(
+  //         icon: const Icon(
+  //           Icons.menu,
+  //           color: CommonStyles.whiteColor,
+  //         ),
+  //         onPressed: () {
+  //           Scaffold.of(context).openDrawer();
+  //         },
+  //       ),
+  //     ),
+  //     title: Row(
+  //       children: [
+  //         // App icon with no additional space before it
+  //         Image.asset(
+  //           'assets/images/logo_final.png', // Path to your app icon
+  //           width: 40.0, // Adjust size as needed
+  //           height: 40.0, // Adjust size as needed
+  //         ),
+  //         const SizedBox(width: 8.0), // Space between icon and text
+  //         Expanded(
+  //           child: Text(
+  //             tr(LocaleKeys.app_name),
+  //             style: CommonStyles.txSty_20w_fb,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //    // toolbarHeight: 60.0, // Adjust if you need to control the height of the AppBar
+  //   );
+  // }
+
+
 
   Widget drawer(BuildContext context) {
     return FutureBuilder(
@@ -344,8 +317,8 @@ class _MainScreenPageState extends State<MainScreen> {
                     },
                   ),
                   ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_home.svg',
+                    leading: Image.asset(
+                      'assets/images/ic_lang.png',
                       width: 20,
                       height: 20,
                       fit: BoxFit.contain,
@@ -355,15 +328,16 @@ class _MainScreenPageState extends State<MainScreen> {
                       tr(LocaleKeys.choose_language_str),
                       style: const TextStyle(
                         color: Colors.white,
-                        //   fontSize: 16,
+                        fontSize: 16,  // Uncommented to include font size
                         fontFamily: 'hind_semibold',
                       ),
                     ),
                     onTap: () {
-                      // Navigator.pop(context);
+                    //  Navigator.pop(context);  // Uncommented to pop the current screen
                       openLanguageDialog(context);
                     },
                   ),
+
                   ListTile(
                     leading: SvgPicture.asset(
                       'assets/images/ic_myprofile.svg',
@@ -422,8 +396,8 @@ class _MainScreenPageState extends State<MainScreen> {
                     },
                   ),
                   ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_home.svg',
+                    leading: Image.asset(
+                      'assets/images/ic_logout.png',
                       width: 20,
                       height: 20,
                       fit: BoxFit.contain,
@@ -649,7 +623,12 @@ class _MainScreenPageState extends State<MainScreen> {
 
   Future<void> onConfirmLogout(BuildContext context) async {
     SharedPreferencesHelper.putBool(Constants.isLogin, false);
-    context.go(Routes.loginScreen.path);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+    );
+    //context.go(Routes.loginScreen.path);
   }
 
   void openLanguageDialog(BuildContext context) {
@@ -703,7 +682,7 @@ class _MainScreenPageState extends State<MainScreen> {
           scale: Tween<double>(begin: 0.0, end: 1.0).animate(
             CurvedAnimation(
               parent: animation1,
-              curve: Curves.easeOutBack, // Customize the animation curve here
+              curve: Curves.easeOutBack,
             ),
           ),
           child: child,
@@ -712,11 +691,15 @@ class _MainScreenPageState extends State<MainScreen> {
     );
   }
 
+
   void changeLocaleLanguage(BuildContext context, Locale locale) {
     setState(() {
-      Navigator.of(context).pop();
       context.setLocale(locale);
+
+// Change the locale
     });
+    Navigator.of(context).pop();  // Close the popup
+    Navigator.of(context).pop();  // Close the side menu  // Trigger a rebuild
   }
 
   Container languageBox(String language,

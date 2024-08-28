@@ -60,7 +60,13 @@ class CommonStyles {
   static const TextStyle txSty_14b_f5 = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
+    color: blackColor,
+  );
+  static const TextStyle txSty_14black = TextStyle(
+    fontSize: 14,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w700,
     color: blackColor,
   );
   static const TextStyle txSty_22b_f5 = TextStyle(
@@ -120,7 +126,7 @@ class CommonStyles {
   static const TextStyle txSty_16b6_fb = TextStyle(
     fontSize: 16,
     color: Colors.black,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w600,
     fontFamily: 'hind_semibold',
   );
   static const TextStyle txSty_16b_fb = TextStyle(
@@ -187,6 +193,7 @@ class CommonStyles {
     fontFamily: 'hind_semibold',
     fontSize: 12,
     color: whiteColor,
+      fontWeight: FontWeight.w600
   );
   static const TextStyle txSty_12blu_fb = TextStyle(
     fontFamily: 'hind_semibold',
@@ -208,6 +215,7 @@ class CommonStyles {
     fontSize: 20,
     fontFamily: "hind_semibold",
     color: whiteColor,
+    fontWeight: FontWeight.w600,
   );
   static const TextStyle text16white = TextStyle(
     fontSize: 16,
