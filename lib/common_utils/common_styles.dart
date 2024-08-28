@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -138,7 +137,7 @@ class CommonStyles {
   static const TextStyle txSty_14b_fb = TextStyle(
     fontSize: 14,
     color: Colors.black,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w700,
     fontFamily: 'hind_semibold',
   );
   static const TextStyle header_Styles = TextStyle(
@@ -190,11 +189,10 @@ class CommonStyles {
     color: Color(0xA1000000),
   );
   static const TextStyle txSty_12W_fb = TextStyle(
-    fontFamily: 'hind_semibold',
-    fontSize: 12,
-    color: whiteColor,
-      fontWeight: FontWeight.w600
-  );
+      fontFamily: 'hind_semibold',
+      fontSize: 12,
+      color: whiteColor,
+      fontWeight: FontWeight.w600);
   static const TextStyle txSty_12blu_fb = TextStyle(
     fontFamily: 'hind_semibold',
     fontSize: 12,
@@ -250,95 +248,89 @@ class CommonStyles {
     }
   }
 
-
   static void showCustomDialog(BuildContext context, String msg) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0),
-            side: BorderSide(color: Color(0x8D000000), width: 2.0), // Adding border to the dialog
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+            side: const BorderSide(
+                color: Color(0x8D000000),
+                width: 2.0), // Adding border to the dialog
           ),
-
           child: Container(
             color: blackColor,
-            padding: EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 // Header with "X" icon and "Error" text
                 Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(10.0),
                   color: RedColor,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.close, color: Colors.white),
-                      Text(
-                        '  Error',
-                        style: txSty_20w_fb
-                      ),
-                      SizedBox(width: 24.0), // Spacer to align text in the center
+                      Text('  Error', style: txSty_20w_fb),
+                      SizedBox(
+                          width: 24.0), // Spacer to align text in the center
                     ],
                   ),
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 // Message Text
                 Text(
                   msg,
                   textAlign: TextAlign.center,
                   style: text16white,
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 // OK Button
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 10.0),
-            child:Container(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                    BorderRadius.circular(20.0), // Rounded corners
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFFCCCCCC), // Start color (light gray)
-                        Color(0xFFFFFFFF), // Center color (white)
-                        Color(0xFFCCCCCC), // End color (light gray)
-                      ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(20.0), // Rounded corners
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFCCCCCC), // Start color (light gray)
+                          Color(0xFFFFFFFF), // Center color (white)
+                          Color(0xFFCCCCCC), // End color (light gray)
+                        ],
+                      ),
+                      border: Border.all(
+                        color: const Color(0xFFe86100), // Orange border color
+                        width: 2.0,
+                      ),
                     ),
-                    border: Border.all(
-                      color: const Color(
-                          0xFFe86100), // Orange border color
-                      width: 2.0,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 30.0, // Set the desired height
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 35.0),
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                    child: SizedBox(
+                      height: 30.0, // Set the desired height
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        child: const Text(
+                          'OK',
+                          style: txSty_16b_fb,
                         ),
                       ),
-                      child: const Text(
-                        'OK',
-                        style: txSty_16b_fb,
-                      ),
                     ),
                   ),
-
-           
-                ),
-              
-          )
+                )
               ],
             ),
           ),
@@ -347,7 +339,8 @@ class CommonStyles {
     );
   }
 
-  static void showHorizontalDotsLoadingDialog(BuildContext context, {String message = "Please Wait...", int dotCount =5 }) {
+  static void showHorizontalDotsLoadingDialog(BuildContext context,
+      {String message = "Please Wait...", int dotCount = 5}) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -355,31 +348,27 @@ class CommonStyles {
         return Dialog(
             backgroundColor: Colors.transparent,
             child: Container(
-              width: MediaQuery.of(context).size.width/1.5,
+              width: MediaQuery.of(context).size.width / 1.5,
               height: 100.0,
               color: Colors.black,
-              child:   Column(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Text(
                     message,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
-
+                  const SizedBox(height: 20),
                   SpinKitHorizontalDots(
-                    color: Color(0xFFe86100),
+                    color: const Color(0xFFe86100),
 
                     dotCount: dotCount, // Number of dots
                   ),
-
                 ],
               ),
-            )
-
-        );
+            ));
       },
     );
   }
@@ -387,7 +376,6 @@ class CommonStyles {
   static void hideHorizontalDotsLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
   }
-
 }
 
 class SpinKitHorizontalDots extends StatefulWidget {
@@ -396,7 +384,8 @@ class SpinKitHorizontalDots extends StatefulWidget {
   final int dotCount;
   final double dotSpacing;
 
-  SpinKitHorizontalDots({
+  const SpinKitHorizontalDots({
+    super.key,
     required this.color,
     this.size = 30.0,
     this.dotSpacing = 8.0,
@@ -431,11 +420,11 @@ class SpinKitHorizontalDotsState extends State<SpinKitHorizontalDots>
 
   @override
   Widget build(BuildContext context) {
-    final totalWidth = widget.size + (widget.dotSpacing * (widget.dotCount - 1));
+    final totalWidth =
+        widget.size + (widget.dotSpacing * (widget.dotCount - 1));
     final dotSize = widget.size / widget.dotCount;
 
     return SizedBox(
-
       width: totalWidth,
       height: dotSize,
       child: AnimatedBuilder(
@@ -444,7 +433,9 @@ class SpinKitHorizontalDotsState extends State<SpinKitHorizontalDots>
           return Stack(
             children: List.generate(widget.dotCount, (index) {
               final offset = _animation.value * (totalWidth + dotSize);
-              final double position = (offset - index * (dotSize + widget.dotSpacing)) % (totalWidth + dotSize);
+              final double position =
+                  (offset - index * (dotSize + widget.dotSpacing)) %
+                      (totalWidth + dotSize);
 
               return Positioned(
                 left: position - dotSize,
