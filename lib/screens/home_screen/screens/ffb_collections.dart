@@ -62,6 +62,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   List<Collection> collectionlist = [];
   List<CollectionReceipt> collectionreceiptlist = [];
   String? userId;
+  String dropdownValue = 'Last 30 days';
   //final url,request;
   @override
   void initState() {
@@ -214,7 +215,78 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
       });
     }
   }
-
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       leading: IconButton(
+  //         icon: Icon(Icons.arrow_back),
+  //         onPressed: () {
+  //           // Handle back action
+  //         },
+  //       ),
+  //       title: Text('FFB Collections'),
+  //       actions: [
+  //         IconButton(
+  //           icon: Icon(Icons.home),
+  //           onPressed: () {
+  //             // Handle home button press
+  //           },
+  //         ),
+  //       ],
+  //       backgroundColor: Colors.orangeAccent,
+  //       elevation: 0,
+  //     ),
+  //     body: Column(
+  //       children: [
+  //         Container(
+  //           width: double.infinity,
+  //           color: Colors.orangeAccent,
+  //           padding: EdgeInsets.all(8.0),
+  //           child: Center(
+  //             child: DropdownButton<String>(
+  //               value: dropdownValue,
+  //               icon: Icon(Icons.arrow_drop_down),
+  //               iconSize: 24,
+  //               elevation: 16,
+  //               style: TextStyle(color: Colors.white),
+  //               underline: Container(
+  //                 height: 2,
+  //                 color: Colors.transparent, // No underline
+  //               ),
+  //               onChanged: (String? newValue) {
+  //                 setState(() {
+  //                   dropdownValue = newValue!;
+  //                 });
+  //               },
+  //               items: <String>[
+  //                 'Last 30 days',
+  //                 'Last 60 days',
+  //                 'Last 90 days'
+  //               ].map<DropdownMenuItem<String>>((String value) {
+  //                 return DropdownMenuItem<String>(
+  //                   value: value,
+  //                   child: Center(child: Text(value)),
+  //                 );
+  //               }).toList(),
+  //             ),
+  //           ),
+  //         ),
+  //         Expanded(
+  //           child: Center(
+  //             child: Text(
+  //               'No Collections Available',
+  //               style: TextStyle(
+  //                 color: Colors.orangeAccent,
+  //                 fontSize: 16,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //     backgroundColor: Colors.white,
+  //   );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,6 +303,14 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
             },
           ),
           elevation: 0,
+          actions: [
+            IconButton(
+              icon:Image.asset(Assets.images.icHome.path),
+              onPressed: () {
+                // Handle home button press
+              },
+            ),
+          ],
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -720,15 +800,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                     ),
                     Visibility(
                       visible: nodatavisibility,
-                      child: Text(
-                        " No Collection Data Found",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'hind_semibold',
+                     child:  Expanded(
+                        child: Center(
+                          child: Text(
+                            'No Collections Available',
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      // child: Text(
+                      //   " No Collection Data Found",
+                      //   style: TextStyle(
+                      //     color: Colors.black,
+                      //     fontWeight: FontWeight.bold,
+                      //     fontFamily: 'hind_semibold',
+                      //   ),
+                      // ),
+                    )),
                     isLoading
                         ? Center(
                             child: CircularProgressIndicator(),
