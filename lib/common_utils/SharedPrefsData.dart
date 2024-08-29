@@ -1,22 +1,18 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SharedPrefsData {
-  static final String S3FAkshayaData = "srikarapp";
-  static final String userIdKey = "user_id";
-  static final String categoriesKey = "categories";
-  static final String bankDetailsKey = "bank_details";
+  static const String S3FAkshayaData = "srikarapp";
+  static const String userIdKey = "user_id";
+  static const String categoriesKey = "categories";
+  static const String bankDetailsKey = "bank_details";
 
   static SharedPreferences? _sharedPrefs; // Make it nullable
 
   static Future<SharedPreferences?> get _instance async {
-    if (_sharedPrefs == null) {
-      _sharedPrefs = await SharedPreferences.getInstance();
-    }
+    _sharedPrefs ??= await SharedPreferences.getInstance();
     return _sharedPrefs;
   }
-
 
   static Future<void> saveUserId(String userId) async {
     final SharedPreferences? prefs = await _instance;
@@ -70,7 +66,8 @@ class SharedPrefsData {
 
   static Future<String> getStringFromSharedPrefs(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key) ?? ""; // Return an empty string if the value is not present
+    return prefs.getString(key) ??
+        ""; // Return an empty string if the value is not present
   }
 
   static Future<int> getIntFromSharedPrefs(String key) async {
@@ -80,5 +77,4 @@ class SharedPrefsData {
 // Similarly, implement methods for bank details saving and retrieval
 
 // ...
-
 }

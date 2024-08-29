@@ -40,8 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     bannersAndMarqueeTextData = getBannersAndMarqueeText();
   }
 
-
-
   Future<List<int>> getServicesData() async {
     final apiUrl = '$baseUrl${getServices}AP';
 
@@ -68,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
   Future<List<String?>> getLearningsData() async {
     final apiUrl = '$baseUrl$getlearning';
 
@@ -79,8 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
         List<dynamic> learningList = response['listResult'];
 
         // Extract language-specific names based on the current locale
-        List<LearningModel> result = learningList.map((item) => LearningModel.fromJson(item)).toList();
-        Locale currentLocale = EasyLocalization.of(context)?.locale ?? Locale('en');
+        List<LearningModel> result =
+            learningList.map((item) => LearningModel.fromJson(item)).toList();
+        Locale currentLocale =
+            EasyLocalization.of(context)?.locale ?? const Locale('en');
         print('currentLocale==$currentLocale');
 
         // Map names based on the locale
@@ -104,20 +103,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     EasyLocalization.of(context)?.locale;
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-
-          SystemNavigator.pop(); // Close the app
+        SystemNavigator.pop(); // Close the app
 
         return false; // Prevent the default back button behavior
       },
@@ -130,14 +127,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     menuSection(size),
-                    SizedBox(height: 5.0,),
-                    servicesSection(size, tr(LocaleKeys.req_services),),
+                    const SizedBox(
+                      height: 5.0,
+                    ),
+                    servicesSection(
+                      size,
+                      tr(LocaleKeys.req_services),
+                    ),
                     // Container(
                     //   color: Colors.transparent,
                     //   height: 30,
                     // ),
-                  SizedBox(height: 5.0,),
-                    learningSection(size,  tr(LocaleKeys.learning),
+                    const SizedBox(
+                      height: 5.0,
+                    ),
+                    learningSection(size, tr(LocaleKeys.learning),
                         backgroundColor: Colors.grey.shade300),
                   ],
                 ),
@@ -161,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
             // color: Colors.green,
             height: 25,
             child: Marquee(
-                text: marquee[0].description! + "                                        " + marquee[0].description! +"                                        ",
+                text:
+                    "${marquee[0].description!}                                        ${marquee[0].description!}                                        ",
                 style: CommonStyles.txSty_14black),
           );
         } else if (snapshot.hasError) {
@@ -211,7 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Container servicesSection(Size size, String title, {Color? backgroundColor}) {
     return Container(
       color: backgroundColor,
@@ -256,13 +260,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Container learningSection(Size size, String title, {Color? backgroundColor}) {
-
     return Container(
       color: backgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 5.0,),
+          const SizedBox(
+            height: 5.0,
+          ),
           Text(
             title,
             style: CommonStyles.txSty_16b6_fb,
@@ -301,16 +306,13 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           )
-
-
         ],
       ),
     );
   }
 
   Container menuSection(Size size) {
-    return
-      Container(
+    return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -330,25 +332,24 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              viewOption(
-                  size, Assets.images.ffbCollection.path,  tr(LocaleKeys.collection),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => FfbCollectionScreen(),
-                      ),
-                    );
+              viewOption(size, Assets.images.ffbCollection.path,
+                  tr(LocaleKeys.collection), onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FfbCollectionScreen(),
+                  ),
+                );
                 // context.push(
                 //     context.namedLocation(Routes.ffbCollectionScreen.name));
               }),
-              viewOption(size, Assets.images.passbook.path, tr(LocaleKeys.payments),
+              viewOption(
+                  size, Assets.images.passbook.path, tr(LocaleKeys.payments),
                   onTap: () {
                 context.push(
                     context.namedLocation(Routes.farmerPassbookScreen.name));
               }),
-              viewOption(
-                  size, Assets.images.mainVisit.path,tr(LocaleKeys.recommendationss),
-                  onTap: () {
+              viewOption(size, Assets.images.mainVisit.path,
+                  tr(LocaleKeys.recommendationss), onTap: () {
                 context.push(context
                     .namedLocation(Routes.cropMaintenanceVisitsScreen.name));
               }),
@@ -562,8 +563,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return Assets.images.mainVisit.path;
     }
   }
-
-
 
 //MARK: Marqee API
 

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/Main_home.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/constants.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +12,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../common_utils/Constants.dart';
 import '../common_utils/api_config.dart';
 import '../models/FarmerResponseModel.dart';
 import '../navigation/app_routes.dart';
@@ -256,10 +257,14 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           print("OTP validation successful");
 
           prefs.setBool(Constants.isLogin, true);
-          prefs.setString('user_id', data['result']['farmerDetails'][0]['code']);
-          prefs.setString('statecode', data['result']['farmerDetails'][0]['stateCode']);
-          prefs.setInt('districtId', data['result']['farmerDetails'][0]['districtId']);
-          prefs.setString('districtName', data['result']['farmerDetails'][0]['districtName']);
+          prefs.setString(SharedPrefsKeys.farmerCode,
+              data['result']['farmerDetails'][0]['code']);
+          prefs.setString(
+              'statecode', data['result']['farmerDetails'][0]['stateCode']);
+          prefs.setInt(
+              'districtId', data['result']['farmerDetails'][0]['districtId']);
+          prefs.setString('districtName',
+              data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
 
@@ -272,7 +277,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             print("Attempting to navigate to MainScreen");
             await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => MainScreen(),
+                builder: (context) => const MainScreen(),
               ),
             );
             print("Navigation to MainScreen succeeded");
@@ -289,8 +294,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           print("OTP validation failed: ${data['endUserMessage']}");
           _showErrorDialog(data['endUserMessage']);
         }
-      }
-      else {
+      } else {
         print("Server error: Status code ${response.statusCode}");
         _showErrorDialog('Server error');
       }

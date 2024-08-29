@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 
 class CommonStyles {
   // colors
+  static const gradientColor1 = Color(0xffDB5D4B);
+  static const gradientColor2 = Color(0xffE39A63);
   static const statusBlueBg = Color(0xffc3c8cc);
   static const statusBlueText = Color(0xFF11528f);
   static const statusGreenBg = Color(0xFFe5ffeb);
@@ -38,6 +41,14 @@ class CommonStyles {
     fontWeight: FontWeight.w500,
     color: Colors.grey,
   );
+
+  static const TextStyle txF14Fw5Cb = TextStyle(
+    fontSize: 14,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w500,
+    color: Color.fromARGB(255, 71, 71, 71),
+  );
+
   static const TextStyle texterrorstyle = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",
@@ -334,6 +345,46 @@ class CommonStyles {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  static String? formateDate(String? formateDate) {
+    if (formateDate != null) {
+      DateFormat formatter = DateFormat('dd-MM-yyyy');
+      DateTime date = DateTime.parse(formateDate);
+      return formatter.format(date);
+    } else {
+      return formateDate;
+    }
+  }
+
+  static void customDialog(BuildContext context, Widget child) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              child: child),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack,
+            ),
+          ),
+          child: child,
         );
       },
     );

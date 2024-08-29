@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/SharedPrefsData.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
@@ -43,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('FarmerCode -==$userId');
     });
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
-     final apiUrl = '$baseUrl${getActivePlotsByFarmerCode}$userId';
+    final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -70,11 +72,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
     return FarmerModel.fromJson(farmerResult);
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     EasyLocalization.of(context)?.locale;
   }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -168,7 +172,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('districtName -==$districtName');
     });
   }
-
 }
 
 class FarmerProfile extends StatelessWidget {
@@ -211,7 +214,8 @@ class FarmerProfile extends StatelessWidget {
               textColor: CommonStyles.primaryTextColor),
           farmerInfoBox(
             label: tr(LocaleKeys.farmer_name),
-            data: '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
+            data:
+                '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
           ),
           farmerInfoBox(
             label: tr(LocaleKeys.fa_hu_name),
@@ -287,7 +291,10 @@ class FarmerProfile extends StatelessWidget {
     );
   }
 
-  farmerdialInfoBox({required String label, required String data, required MaterialColor textColor}) {
+  farmerdialInfoBox(
+      {required String label,
+      required String data,
+      required MaterialColor textColor}) {
     return Column(
       children: [
         Row(
@@ -298,29 +305,28 @@ class FarmerProfile extends StatelessWidget {
                   label,
                   style: CommonStyles.txSty_14b_f5,
                 )),
-    Expanded(
-    flex: 6,
-    child: InkWell(
-    onTap: () async {
-    final url = 'tel:+91$data';
-    if (await canLaunch(url)) {
-    await launch(url);
-    } else {
-    throw 'Could not launch $url';
-    }
-    },
-    child: Text(
-    ':   $data',
-    style: CommonStyles.txSty_14b_f5.copyWith(
-    color:Color(0xFF34A350), // Use blue or custom color
-   // Optional: underline to indicate clickable
-    ),
-    ),
-    ),
-    ),
-    ],
-    ),
-
+            Expanded(
+              flex: 6,
+              child: InkWell(
+                onTap: () async {
+                  final url = 'tel:+91$data';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                child: Text(
+                  ':   $data',
+                  style: CommonStyles.txSty_14b_f5.copyWith(
+                    color: const Color(0xFF34A350), // Use blue or custom color
+                    // Optional: underline to indicate clickable
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 5),
       ],
     );
@@ -348,7 +354,7 @@ class PlotDetails extends StatelessWidget {
     final df = NumberFormat("#,##0.00");
     String? dateOfPlanting = plotdata.dateOfPlanting;
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
-    String year = parsedDate.year.toString();// Example number format
+    String year = parsedDate.year.toString(); // Example number format
     print('year=======$year');
     return Container(
       padding: const EdgeInsets.all(8),
@@ -366,7 +372,8 @@ class PlotDetails extends StatelessWidget {
               dataTextColor: CommonStyles.primaryTextColor),
           plotDetailsBox(
             label: tr(LocaleKeys.plaod_hect),
-            data: '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
+            data:
+                '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.sur_num),
@@ -394,7 +401,7 @@ class PlotDetails extends StatelessWidget {
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.yop),
-            data: '${year}',
+            data: year,
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.address),

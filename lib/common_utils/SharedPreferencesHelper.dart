@@ -6,8 +6,6 @@ class SharedPreferencesHelper {
   static const String CataGories = 'categories';
   String isLogin = "islogin";
 
-//set data into shared preferences like this
-//+
   static const String Akshaya_DATA = "Akshaya_data";
 
   static Future<bool> getBool(String key) async {

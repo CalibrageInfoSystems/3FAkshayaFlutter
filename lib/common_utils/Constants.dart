@@ -38,8 +38,3 @@ class Constants {
     }
   }
 }
-
-class SharedPrefsKeys {
-  static const String language = "language";
-  static const String farmerData = "farmerData";
-}

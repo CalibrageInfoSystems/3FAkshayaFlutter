@@ -1,34 +1,25 @@
-import 'dart:convert';
-import 'package:akshaya_flutter/common_utils/SharedPreferencesHelper.dart';
+/* import 'dart:convert';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/CollectionReceipt.dart';
-import 'package:akshaya_flutter/models/CollectionResponse.dart';
+import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-//import 'package:akshayaflutter/CommonUtils/Commonclass.dart';
-//import 'package:akshayaflutter/SharedPreferencesHelper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../localization/locale_keys.dart';
-// import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/api_config.dart';
-// import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/model_class/CollectionReceipt.dart';
-// import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/model_class/CollectionResponse.dart';
-// import '../../../../../drive_projects/My Projects/3FAkshaya_Flutter/lib/model_class/FarmerDetails_Model.dart';
+class FfbCollectionScreenXXXX extends StatefulWidget {
+  const FfbCollectionScreenXXXX({super.key});
 
-class FfbCollectionScreen extends StatefulWidget {
   @override
-  _ffb_collectionsState createState() => _ffb_collectionsState();
+  State<FfbCollectionScreenXXXX> createState() =>
+      _FfbCollectionScreenXXXXState();
 }
 
-class _ffb_collectionsState extends State<FfbCollectionScreen> {
+class _FfbCollectionScreenXXXXState extends State<FfbCollectionScreenXXXX> {
   String? selectedValue,
       startDateString,
       fc,
@@ -45,7 +36,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
       datefromapi,
       weightfromapi,
       nodata,
-      u_colnidtext; // Declare selectedValue as a nullable String
+      u_colnidtext;
   List<dynamic> dropdownItems = [];
   String fromFormattedDate = ''; // Declare fromFormattedDate
   String toFormattedDate = '';
@@ -63,11 +54,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   List<CollectionReceipt> collectionreceiptlist = [];
   String? userId;
   String dropdownValue = 'Last 30 days';
-  //final url,request;
+
   @override
   void initState() {
+    super.initState();
     listofdetails();
-   // get30days();
   }
 
   String formatDate(String inputDate) {
@@ -85,10 +76,9 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     setState(() {
       userId = prefs.getString('user_id');
       print('FarmerCode -==$userId');
-      selectedPosition = 0; //// Initialize selectedPosition to 0
+      selectedPosition = 0;
       callApiMethod(selectedPosition!);
     });
-
   }
 
   String formatDateToApi(DateTime date) {
@@ -96,7 +86,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     return apiDateFormat.format(date);
   }
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
     DateTime initialDate = DateTime.now(); // Default value
 
     if (controller == fromDateController && fromDate != null) {
@@ -126,19 +117,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
       setState(() {
         if (controller == fromDateController) {
           fromDate = dateWithoutTime;
-          fromFormattedDate = formattedDate; // Store the formatted date for fromDate
-          String formattedDateForApi = formatDateToApi(dateWithoutTime); // Format for API
-          print('--$fromFormattedDate'); // Print the formatted date for fromDate
+          fromFormattedDate =
+              formattedDate; // Store the formatted date for fromDate
+          String formattedDateForApi =
+              formatDateToApi(dateWithoutTime); // Format for API
+          print(
+              '--$fromFormattedDate'); // Print the formatted date for fromDate
           print('--$formattedDateForApi'); // Print the formatted date for API
         } else {
           toDate = dateWithoutTime;
-          toFormattedDate = formattedDate; // Store the formatted date for toDate
-          String formattedDateForApi = formatDateToApi(dateWithoutTime); // Format for API
+          toFormattedDate =
+              formattedDate; // Store the formatted date for toDate
+          String formattedDateForApi =
+              formatDateToApi(dateWithoutTime); // Format for API
           print('--$toFormattedDate'); // Print the formatted date for toDate
           print('--$formattedDateForApi'); // Print the formatted date for API
         }
 
-        controller.text = formattedDate; // Format and set the selected date as a string
+        controller.text =
+            formattedDate; // Format and set the selected date as a string
       });
     }
   }
@@ -161,7 +158,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
       // Calculate the date range for the "Last 30 Days" option
       DateTime currentDate = DateTime.now();
       print('currentDate: $currentDate');
-      DateTime startDate = currentDate.subtract(Duration(days: 30));
+      DateTime startDate = currentDate.subtract(const Duration(days: 30));
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       startDateString = dateFormat.format(startDate);
       endDateString = dateFormat.format(currentDate);
@@ -215,84 +212,13 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
       });
     }
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       leading: IconButton(
-  //         icon: Icon(Icons.arrow_back),
-  //         onPressed: () {
-  //           // Handle back action
-  //         },
-  //       ),
-  //       title: Text('FFB Collections'),
-  //       actions: [
-  //         IconButton(
-  //           icon: Icon(Icons.home),
-  //           onPressed: () {
-  //             // Handle home button press
-  //           },
-  //         ),
-  //       ],
-  //       backgroundColor: Colors.orangeAccent,
-  //       elevation: 0,
-  //     ),
-  //     body: Column(
-  //       children: [
-  //         Container(
-  //           width: double.infinity,
-  //           color: Colors.orangeAccent,
-  //           padding: EdgeInsets.all(8.0),
-  //           child: Center(
-  //             child: DropdownButton<String>(
-  //               value: dropdownValue,
-  //               icon: Icon(Icons.arrow_drop_down),
-  //               iconSize: 24,
-  //               elevation: 16,
-  //               style: TextStyle(color: Colors.white),
-  //               underline: Container(
-  //                 height: 2,
-  //                 color: Colors.transparent, // No underline
-  //               ),
-  //               onChanged: (String? newValue) {
-  //                 setState(() {
-  //                   dropdownValue = newValue!;
-  //                 });
-  //               },
-  //               items: <String>[
-  //                 'Last 30 days',
-  //                 'Last 60 days',
-  //                 'Last 90 days'
-  //               ].map<DropdownMenuItem<String>>((String value) {
-  //                 return DropdownMenuItem<String>(
-  //                   value: value,
-  //                   child: Center(child: Text(value)),
-  //                 );
-  //               }).toList(),
-  //             ),
-  //           ),
-  //         ),
-  //         Expanded(
-  //           child: Center(
-  //             child: Text(
-  //               'No Collections Available',
-  //               style: TextStyle(
-  //                 color: Colors.orangeAccent,
-  //                 fontSize: 16,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //     backgroundColor: Colors.white,
-  //   );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          titleSpacing:0.0,
-          title:Text(
+          titleSpacing: 0.0,
+          title: Text(
             tr(LocaleKeys.collection),
             style: CommonStyles.text16white,
           ),
@@ -305,14 +231,12 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
           elevation: 0,
           actions: [
             IconButton(
-              icon:Image.asset(Assets.images.icHome.path),
-              onPressed: () {
-                // Handle home button press
-              },
+              icon: Image.asset(Assets.images.icHome.path),
+              onPressed: () {},
             ),
           ],
           flexibleSpace: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -323,105 +247,124 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
           ),
         ),
         body: isLoading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.0126, 0.244, 0.4444, 0.2],
+                    colors: [
+                      Color(0xFFDB5D4B),
+                      Color(0xFFE39A63),
+                      Color(0xFFE39A63),
+                      Color(0x0fffffff)
+                    ],
+                  ),
+                ),
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: double.infinity,
                       child: Container(
                         alignment: Alignment.topCenter,
-                        padding: EdgeInsets.only(top: 20.0, left: 12.0, right: 12.0),
+                        padding: const EdgeInsets.only(
+                            top: 20.0, left: 12.0, right: 12.0),
                         child: DropdownButtonHideUnderline(
                           child: ButtonTheme(
                             alignedDropdown: true,
                             child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.white, width: 1.0),
-                                borderRadius: BorderRadius.circular(6.0),
-                              ),
-                              child:
-                              DropdownButton<int>(
-                                alignment: Alignment.centerRight,
-                                value: selectedPosition ?? 0,
-
-                                icon: Image.asset(
-                                  Assets.images.arrowDown.path,
-                                  width: 20.0,
-                                  height: 20.0,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.white, width: 1.0),
+                                  borderRadius: BorderRadius.circular(6.0),
                                 ),
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                onChanged: (position) {
-                                  setState(() {
-                                    selectedPosition = position;
-                                    print('selectedPosition $selectedPosition');
-                                  });
+                                child: DropdownButton<int>(
+                                    alignment: Alignment.centerRight,
+                                    value: selectedPosition ?? 0,
+                                    icon: Image.asset(
+                                      Assets.images.arrowDown.path,
+                                      width: 20.0,
+                                      height: 20.0,
+                                    ),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    onChanged: (position) {
+                                      setState(() {
+                                        selectedPosition = position;
+                                        print(
+                                            'selectedPosition $selectedPosition');
+                                      });
 
-                                  // Now, call your API method based on the selected position
-                                  callApiMethod(selectedPosition!);
-                                },
-                                items: [
-                                  DropdownMenuItem<int>(
-                                    value: 0,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        tr(LocaleKeys.thirty_days),
-                                        style: CommonStyles.text16white,
+                                      // Now, call your API method based on the selected position
+                                      callApiMethod(selectedPosition!);
+                                    },
+                                    items: [
+                                      DropdownMenuItem<int>(
+                                        value: 0,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            tr(LocaleKeys.thirty_days),
+                                            style: CommonStyles.text16white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  DropdownMenuItem<int>(
-                                    value: 1,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        tr(LocaleKeys.currentfinicial),
-                                        style: CommonStyles.text16white,
+                                      DropdownMenuItem<int>(
+                                        value: 1,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            tr(LocaleKeys.currentfinicial),
+                                            style: CommonStyles.text16white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  DropdownMenuItem<int>(
-                                    value: 2,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        tr(LocaleKeys.selected),
-                                        style: CommonStyles.text16white,
+                                      DropdownMenuItem<int>(
+                                        value: 2,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            tr(LocaleKeys.selected),
+                                            style: CommonStyles.text16white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                                dropdownColor:Color(0x8D000000) // Set the dropdown background color to grey
-                              )
-
-                            ),
+                                    ],
+                                    dropdownColor: const Color(
+                                        0x8D000000) // Set the dropdown background color to grey
+                                    )),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     isLoading
-                        ? Center(
+                        ? const Center(
                             child: CircularProgressIndicator(),
                           )
                         : Visibility(
                             visible: datesavaiablity,
                             child: Padding(
-                              padding: EdgeInsets.only(top: 4.0, left: 12.0, right: 12.0),
+                              padding: const EdgeInsets.only(
+                                  top: 4.0, left: 12.0, right: 12.0),
                               child: Column(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0, bottom: 10.0),
+                                    padding: const EdgeInsets.only(
+                                        top: 10.0,
+                                        left: 12.0,
+                                        right: 12.0,
+                                        bottom: 10.0),
                                     decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white, width: 1.0),
+                                      border: Border.all(
+                                          color: Colors.white, width: 1.0),
                                       borderRadius: BorderRadius.circular(6.0),
                                     ),
                                     child: Flex(
@@ -432,12 +375,13 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                           child: GestureDetector(
                                             onTap: () {
                                               print('clickedonfromdate');
-                                              _selectDate(context, fromDateController);
+                                              _selectDate(
+                                                  context, fromDateController);
                                               // Handle From Date tap
                                             },
                                             child: TextField(
                                               controller: fromDateController,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 hintText: 'From Date',
                                                 hintStyle: TextStyle(
                                                   fontSize: 16,
@@ -446,7 +390,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                 ),
                                                 enabled: false,
                                               ),
-                                              style: TextStyle(color: Colors.white),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
@@ -456,11 +401,12 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                             onTap: () {
                                               // Handle To Date tap
                                               print('clickedontodate');
-                                              _selectDate(context, toDateController);
+                                              _selectDate(
+                                                  context, toDateController);
                                             },
                                             child: TextField(
                                               controller: toDateController,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 hintText: 'To Date',
                                                 hintStyle: TextStyle(
                                                   fontSize: 16,
@@ -469,13 +415,14 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                 ),
                                                 enabled: false,
                                               ),
-                                              style: TextStyle(color: Colors.white),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            gradient: LinearGradient(
+                                            gradient: const LinearGradient(
                                               colors: [
                                                 Color(0xFFCCCCCC),
                                                 Color(0xFFFFFFFF),
@@ -484,10 +431,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                               begin: Alignment.topCenter,
                                               end: Alignment.bottomCenter,
                                             ),
-                                            borderRadius: BorderRadius.circular(10.0),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
                                             border: Border.all(
                                               width: 2.0,
-                                              color: Color(0xFFe86100),
+                                              color: const Color(0xFFe86100),
                                             ),
                                           ),
                                           child: ElevatedButton(
@@ -495,19 +443,21 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                               print('Submit button is clicked');
                                               datevalidation();
                                             },
-                                            child: Text(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              elevation: 0,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                            ),
+                                            child: const Text(
                                               'Submit',
                                               style: TextStyle(
                                                 color: Color(0xFFe86100),
                                                 fontSize: 16,
                                                 fontFamily: 'hind_semibold',
-                                              ),
-                                            ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.transparent,
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10.0),
                                               ),
                                             ),
                                           ),
@@ -519,59 +469,70 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                               ),
                             ),
                           ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     isLoading
-                        ? Center(
+                        ? const Center(
                             child: CircularProgressIndicator(),
                           )
                         : Visibility(
                             visible: isInfoVisible,
                             child: Padding(
-                                padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                                padding: const EdgeInsets.only(
+                                    left: 12.0, right: 12.0),
                                 child: Container(
                                     decoration: BoxDecoration(
-                                      color: Color(0x8D000000),
+                                      color: const Color(0x8D000000),
                                       borderRadius: BorderRadius.circular(6.0),
                                     ),
                                     child: Column(
                                       children: [
                                         Row(
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               flex: 5,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(8, 10, 12, 0),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            8, 10, 12, 0),
                                                     child: Text(
                                                       "Total Collections",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
+                                            const Expanded(
                                               flex: 1,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            0, 0, 0, 0),
                                                     child: Text(
                                                       ":",
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -581,18 +542,23 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                             Expanded(
                                               flex: 4,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 0, 0, 0),
                                                     child: Text(
-                                                      '${totalcollections??''}',
-                                                      style: TextStyle(
+                                                      totalcollections ?? '',
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -603,39 +569,49 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                         ),
                                         Row(
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               flex: 5,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(8, 10, 12, 0),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            8, 10, 12, 0),
                                                     child: Text(
                                                       "Total Net Weight",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
+                                            const Expanded(
                                               flex: 1,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            0, 0, 0, 0),
                                                     child: Text(
                                                       ":",
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -645,18 +621,23 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                             Expanded(
                                               flex: 4,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 0, 0, 0),
                                                     child: Text(
-                                                      '${totalnetweight??''}',
-                                                      style: TextStyle(
+                                                      totalnetweight ?? '',
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -667,39 +648,49 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                         ),
                                         Row(
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               flex: 6,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            8, 10, 0, 0),
                                                     child: Text(
                                                       "Unapid Collections Weight",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
+                                            const Expanded(
                                               flex: 1,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(4, 0, 0, 0),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            4, 0, 0, 0),
                                                     child: Text(
                                                       ":",
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -709,18 +700,23 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                             Expanded(
                                               flex: 5,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(5, 0, 0, 0),
                                                     child: Text(
-                                                      '${unpaidcollections??''}',
-                                                      style: TextStyle(
+                                                      unpaidcollections ?? '',
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -731,39 +727,49 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                         ),
                                         Row(
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               flex: 5,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(8, 10, 12, 5),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            8, 10, 12, 5),
                                                     child: Text(
                                                       "Paid Collections Weight",
                                                       style: TextStyle(
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
+                                            const Expanded(
                                               flex: 1,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            0, 0, 0, 5),
                                                     child: Text(
                                                       ":",
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -773,18 +779,23 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                             Expanded(
                                               flex: 4,
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 0, 0, 5),
                                                     child: Text(
-                                                      '${paidcollections??''}',
-                                                      style: TextStyle(
+                                                      paidcollections ?? '',
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'hind_semibold',
                                                       ),
                                                     ),
                                                   ),
@@ -795,32 +806,32 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                         ),
                                       ],
                                     )))),
-                    SizedBox(
+                    const SizedBox(
                       height: 50.0,
                     ),
                     Visibility(
-                      visible: nodatavisibility,
-                     child:  Expanded(
-                        child: Center(
-                          child: Text(
-                            'No Collections Available',
-                            style: TextStyle(
-                              color: Colors.orangeAccent,
-                              fontSize: 16,
+                        visible: nodatavisibility,
+                        child: const Expanded(
+                          child: Center(
+                            child: Text(
+                              'No Collections Available',
+                              style: TextStyle(
+                                color: Colors.orangeAccent,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
-                        ),
-                      // child: Text(
-                      //   " No Collection Data Found",
-                      //   style: TextStyle(
-                      //     color: Colors.black,
-                      //     fontWeight: FontWeight.bold,
-                      //     fontFamily: 'hind_semibold',
-                      //   ),
-                      // ),
-                    )),
+                          // child: Text(
+                          //   " No Collection Data Found",
+                          //   style: TextStyle(
+                          //     color: Colors.black,
+                          //     fontWeight: FontWeight.bold,
+                          //     fontFamily: 'hind_semibold',
+                          //   ),
+                          // ),
+                        )),
                     isLoading
-                        ? Center(
+                        ? const Center(
                             child: CircularProgressIndicator(),
                           )
                         : Expanded(
@@ -829,14 +840,19 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                               shrinkWrap: true,
                               itemCount: collectionlist.length,
                               itemBuilder: (context, index) {
-                                List<Color> cardColors = [Colors.white, Color(0xFFDFDFDF)];
-                                Color backgroundColor = cardColors[index % cardColors.length];
+                                List<Color> cardColors = [
+                                  Colors.white,
+                                  const Color(0xFFDFDFDF)
+                                ];
+                                Color backgroundColor =
+                                    cardColors[index % cardColors.length];
                                 Collection collect = collectionlist[index];
                                 late Color textColor;
                                 String status = "";
-                                String formattedDate = collect.docDate.toString();
+                                String formattedDate =
+                                    collect.docDate.toString();
                                 datefromapi = formatDate(formattedDate);
-                                String weight = collect.quantity.toString() + "Kg";
+                                String weight = "${collect.quantity}Kg";
                                 status = collect.uApaystat.toString();
                                 if (status == "Payment Pending") {
                                   textColor = Colors.red;
@@ -844,44 +860,61 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                   textColor = Colors.green;
                                 }
                                 return Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0, vertical: 0.0),
                                   child: Card(
                                     color: backgroundColor,
                                     shadowColor: Colors.transparent,
                                     surfaceTintColor: Colors.transparent,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12.0),
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
                                       ),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Expanded(
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: 15.0),
+                                              padding: const EdgeInsets.only(
+                                                  left: 15.0),
                                               child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     //        crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Padding(
-                                                        padding: EdgeInsets.only(top: 15.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                top: 15.0),
                                                         child: Text(
-                                                          '${collect.uColnid}',
-                                                          style: TextStyle(
+                                                          collect.uColnid,
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 18,
-                                                            color: Color(0xFFFB4110),
-                                                            fontWeight: FontWeight.bold,
-                                                            fontFamily: 'Calibri',
+                                                            color: Color(
+                                                                0xFFFB4110),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontFamily:
+                                                                'Calibri',
                                                           ),
                                                         ),
                                                       ),
                                                       GestureDetector(
                                                           onTap: () {
-                                                            collectionapi(collect.uColnid);
+                                                            collectionapi(
+                                                                collect
+                                                                    .uColnid);
                                                           },
                                                           child: Image.asset(
                                                             'assets/images/info_icon.png',
@@ -890,44 +923,72 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                           ))
                                                     ],
                                                   ),
-                                                  SizedBox(height: 4.0),
+                                                  const SizedBox(height: 4.0),
                                                   Row(
                                                     children: [
-                                                      Expanded(
+                                                      const Expanded(
                                                         flex: -1,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          0,
+                                                                          8,
+                                                                          0,
+                                                                          0),
                                                               child: Text(
                                                                 "Date",
-                                                                style: TextStyle(
-                                                                  color: Colors.black,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                      Expanded(
+                                                      const Expanded(
                                                         flex: 0,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          40,
+                                                                          8,
+                                                                          5,
+                                                                          0),
                                                               child: Text(
                                                                 ":",
-                                                                style: TextStyle(
-                                                                  color: Colors.black54,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black54,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                               ),
                                                             ),
@@ -937,60 +998,104 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                       Expanded(
                                                         flex: 2,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .fromLTRB(
+                                                                      0,
+                                                                      8,
+                                                                      0,
+                                                                      0),
                                                               child: Text(
                                                                 '$datefromapi',
-                                                                style: TextStyle(
-                                                                  color: Colors.black54,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black54,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                      SizedBox(width: 8.0),
-                                                      Expanded(
+                                                      const SizedBox(
+                                                          width: 8.0),
+                                                      const Expanded(
                                                         flex: 0,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          0,
+                                                                          8,
+                                                                          0,
+                                                                          0),
                                                               child: Text(
                                                                 'Weight',
-                                                                style: TextStyle(
-                                                                  color: Colors.black,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                      Expanded(
+                                                      const Expanded(
                                                         flex: 0,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(10, 8, 5, 0),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          10,
+                                                                          8,
+                                                                          5,
+                                                                          0),
                                                               child: Text(
                                                                 ":",
-                                                                style: TextStyle(
-                                                                  color: Colors.black54,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black54,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                               ),
                                                             ),
@@ -1000,18 +1105,33 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                       Expanded(
                                                         flex: 2,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .fromLTRB(
+                                                                      0,
+                                                                      8,
+                                                                      0,
+                                                                      0),
                                                               child: Text(
-                                                                '$weight',
-                                                                style: TextStyle(
-                                                                  color: Colors.black54,
+                                                                weight,
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .black54,
                                                                   fontSize: 14,
-                                                                  fontWeight: FontWeight.bold,
-                                                                  fontFamily: 'hind_semibold',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontFamily:
+                                                                      'hind_semibold',
                                                                 ),
                                                                 //  controller: weightController, // Use a TextEditingController for weight
                                                               ),
@@ -1022,41 +1142,59 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                     ],
                                                   ),
                                                   Row(children: [
-                                                    Expanded(
+                                                    const Expanded(
                                                       flex: -1,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(
+                                                                    0, 5, 0, 0),
                                                             child: Text(
                                                               "CC",
                                                               style: TextStyle(
-                                                                color: Colors.black,
+                                                                color: Colors
+                                                                    .black,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    Expanded(
+                                                    const Expanded(
                                                       flex: 0,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(51, 5, 5, 0),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(51, 5,
+                                                                    5, 0),
                                                             child: Text(
                                                               ":",
                                                               style: TextStyle(
-                                                                color: Colors.black54,
+                                                                color: Colors
+                                                                    .black54,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
@@ -1066,18 +1204,30 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                     Expanded(
                                                       flex: 2,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0, 5, 0, 0),
                                                             child: Text(
-                                                              '${collect.whsName}',
-                                                              style: TextStyle(
-                                                                color: Colors.black54,
+                                                              collect.whsName,
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .black54,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
@@ -1086,41 +1236,59 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                     ),
                                                   ]),
                                                   Row(children: [
-                                                    Expanded(
+                                                    const Expanded(
                                                       flex: -1,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 5, 0, 8),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(
+                                                                    0, 5, 0, 8),
                                                             child: Text(
                                                               "Status",
                                                               style: TextStyle(
-                                                                color: Colors.black,
+                                                                color: Colors
+                                                                    .black,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    Expanded(
+                                                    const Expanded(
                                                       flex: 0,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(32, 5, 5, 8),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(32, 5,
+                                                                    5, 8),
                                                             child: Text(
                                                               ":",
                                                               style: TextStyle(
-                                                                color: Colors.black54,
+                                                                color: Colors
+                                                                    .black54,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
@@ -1130,18 +1298,29 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                                     Expanded(
                                                       flex: 2,
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
                                                         children: [
                                                           Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 5, 0, 8),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .fromLTRB(
+                                                                    0, 5, 0, 8),
                                                             child: Text(
-                                                              '$status',
+                                                              status,
                                                               style: TextStyle(
-                                                                color: textColor,
+                                                                color:
+                                                                    textColor,
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.bold,
-                                                                fontFamily: 'hind_semibold',
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontFamily:
+                                                                    'hind_semibold',
                                                               ),
                                                             ),
                                                           ),
@@ -1163,14 +1342,6 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                           ),
                   ],
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.0126, 0.244, 0.4444, 0.2],
-                    colors: [Color(0xFFDB5D4B), Color(0xFFE39A63), Color(0xFFE39A63), Color(0xFFFFFFF)],
-                  ),
-                ),
               ));
   }
 
@@ -1179,10 +1350,14 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     print('url==>890: $url');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-   userId = prefs.getString('user_id');
+      userId = prefs.getString('user_id');
       print('FarmerCode -==$userId');
     });
-    final request = {"farmerCode": userId!, "fromDate": startDateString, "toDate": endDateString};
+    final request = {
+      "farmerCode": userId!,
+      "fromDate": startDateString,
+      "toDate": endDateString
+    };
     print('request of the 30 days: $request');
     try {
       final response = await http.post(
@@ -1197,8 +1372,12 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         print('responseData: $responseData');
         if (responseData['result'] != null) {
-          List<Collection> collections = (responseData['result']['collectioData'] as List).map((item) => Collection.fromJson(item)).toList();
-          CollectionCount collectionCount = CollectionCount.fromJson(responseData['result']['collectionCount'][0]);
+          List<Collection> collections =
+              (responseData['result']['collectioData'] as List)
+                  .map((item) => Collection.fromJson(item))
+                  .toList();
+          CollectionCount collectionCount = CollectionCount.fromJson(
+              responseData['result']['collectionCount'][0]);
 
           // Now, you can access the data within collections and collectionCount
           for (Collection collection in collections) {
@@ -1206,8 +1385,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
             u_colnidtext = collection.uColnid.toString();
             String formattedDate = collection.docDate.toString();
             datefromapi = formatDate(formattedDate);
-            print('u_colnidtext30days: ${u_colnidtext}');
-            print('u_colniddatefromapi30days: ${formattedDate}');
+            print('u_colnidtext30days: $u_colnidtext');
+            print('u_colniddatefromapi30days: $formattedDate');
             // Access other properties as needed
             setState(() {
               collectionlist = collections;
@@ -1232,7 +1411,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
           nodatavisibility = true;
         }
       } else {
-        print('Failed to send the request. Status code: ${response.statusCode}');
+        print(
+            'Failed to send the request. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -1240,15 +1420,18 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   }
 
   Future<void> getfinancialyear() async {
-
     setState(() {
       isLoading = true;
-     // CommonStyles.showHorizontalDotsLoadingDialog(context);
+      // CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
     collectionlist.clear();
     final url = Uri.parse(baseUrl + getcollection);
     print('url==>000: $url');
-    final request = {"farmerCode": userId, "fromDate": financialYearFrom, "toDate": financialYearTo};
+    final request = {
+      "farmerCode": userId,
+      "fromDate": financialYearFrom,
+      "toDate": financialYearTo
+    };
     print('request of the financialYear  : $request');
     try {
       final response = await http.post(
@@ -1263,17 +1446,21 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         print('responseDataFY: $responseData');
         if (responseData['result'] != null) {
-          List<Collection> collections = (responseData['result']['collectioData'] as List).map((item) => Collection.fromJson(item)).toList();
-          CollectionCount collectionCount = CollectionCount.fromJson(responseData['result']['collectionCount'][0]);
+          List<Collection> collections =
+              (responseData['result']['collectioData'] as List)
+                  .map((item) => Collection.fromJson(item))
+                  .toList();
+          CollectionCount collectionCount = CollectionCount.fromJson(
+              responseData['result']['collectionCount'][0]);
 
           for (Collection collection in collections) {
             print('uColnid: ${collection.uColnid}');
             u_colnidtext = collection.uColnid.toString();
-            print('u_colnidtextFY: ${u_colnidtext}');
+            print('u_colnidtextFY: $u_colnidtext');
             // Access other properties as needed
             setState(() {
               collectionlist = collections;
-            //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
+              //  CommonStyles.hideHorizontalDotsLoadingDialog(context);
               isLoading = false;
             });
           }
@@ -1287,21 +1474,19 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
           print('unpaidcollectionsFY-$unpaidcollections');
         } else {
           setState(() {
-
             isLoading = false;
           });
           print('Request was not successfulFY');
         }
       } else {
         setState(() {
-
           isLoading = false;
         });
-        print('Failed to send the request. Status code: ${response.statusCode}');
+        print(
+            'Failed to send the request. Status code: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
-
         isLoading = false;
       });
       print('Error FY: $e');
@@ -1310,7 +1495,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
 
   void datevalidation() {
     if (fromDate == null || toDate == null) {
-    //  showCustomToastMessageLong("Please select both FromDate and ToDate", context, 1, 5);
+      //  showCustomToastMessageLong("Please select both FromDate and ToDate", context, 1, 5);
     } else if (toDate!.compareTo(fromDate!) < 0) {
       //showCustomToastMessageLong("To Date is less than From Date", context, 1, 5);
     } else {
@@ -1332,7 +1517,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     final String toFormattedDateApi = formatDateToApi(toDate!);
     print('fromFormattedDateApi: $fromFormattedDateApi');
     print('toFormattedDateApi: $toFormattedDateApi');
-    final request = {"farmerCode": userId, "fromDate": fromFormattedDateApi, "toDate": toFormattedDateApi};
+    final request = {
+      "farmerCode": userId,
+      "fromDate": fromFormattedDateApi,
+      "toDate": toFormattedDateApi
+    };
     print('request of the 30 days: $request');
     try {
       final response = await http.post(
@@ -1347,14 +1536,18 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         print('response_Customcollections: $responseData');
         if (responseData['result'] != null) {
-          List<Collection> collections = (responseData['result']['collectioData'] as List).map((item) => Collection.fromJson(item)).toList();
-          CollectionCount collectionCount = CollectionCount.fromJson(responseData['result']['collectionCount'][0]);
+          List<Collection> collections =
+              (responseData['result']['collectioData'] as List)
+                  .map((item) => Collection.fromJson(item))
+                  .toList();
+          CollectionCount collectionCount = CollectionCount.fromJson(
+              responseData['result']['collectionCount'][0]);
 
           // Now, you can access the data within collections and collectionCount
           for (Collection collection in collections) {
             print('uColnid: ${collection.uColnid}');
             u_colnidtext = collection.uColnid.toString();
-            print('u_colnidtextcustom: ${u_colnidtext}');
+            print('u_colnidtextcustom: $u_colnidtext');
             // Access other properties as needed
             setState(() {
               collectionlist = collections;
@@ -1376,7 +1569,8 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
           print('Request was not successful');
         }
       } else {
-        print('Failed to send the request. Status code: ${response.statusCode}');
+        print(
+            'Failed to send the request. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -1384,8 +1578,7 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
   }
 
   void collectionapi(String collectionid) async {
-
-    final url = Uri.parse(baseUrl + getCollectionInfoById+"$collectionid");
+    final url = Uri.parse("$baseUrl$getCollectionInfoById$collectionid");
     print('url==>555: $url');
     print('collectionid: $collectionid');
 
@@ -1402,17 +1595,18 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
         print('response_collectionid: $responseData');
         if (responseData['result'] != null) {
           List<dynamic> listResult = responseData['result'];
-          collectionreceiptlist =
-              listResult.map((item) => CollectionReceipt.fromJson(item)).toList();
+          collectionreceiptlist = listResult
+              .map((item) => CollectionReceipt.fromJson(item))
+              .toList();
           // if(responseData['isSuccess']==true){
           //   Showdialogforicon(collectionreceiptlist);
           // }
-
         } else {
           print('Request was not successful');
         }
       } else {
-        print('Failed to send the request. Status code: ${response.statusCode}');
+        print(
+            'Failed to send the request. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -1440,35 +1634,39 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.fromLTRB(12, 10, 0, 0),
-                    child: Text(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 0, 0),
+                    child: const Text(
                       'Comments',
                       textAlign: TextAlign.start,
-                      style: TextStyle(color: Color(0xFFe86100), fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Color(0xFFe86100),
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
-
-                  for(var receipt in receiptList)
+                  for (var receipt in receiptList)
                     Column(
                       children: [
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Driver Name",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1494,10 +1692,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
-                                      '${receipt.driverName}',
-                                      style: TextStyle(
+                                      receipt.driverName,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1512,22 +1711,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Vehicle Number",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1553,10 +1755,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
-                                      '${receipt.vehicleNumber}',
-                                      style: TextStyle(
+                                      receipt.vehicleNumber,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1571,22 +1774,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Collection Center",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1612,10 +1818,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
                                       ' ${receipt.collectionCenter}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1630,22 +1837,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Gross Weight",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1671,10 +1881,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
                                       '${receipt.grossWeight}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1689,22 +1900,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Tara Weight",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1730,10 +1944,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
                                       '${receipt.tareWeight}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1748,22 +1963,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Net Weight",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1789,10 +2007,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
                                       '${receipt.netWeight}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1807,22 +2026,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Date",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1848,10 +2070,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
                                       '${receipt.receiptGeneratedDate}',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1866,22 +2089,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "3F OP Collection Officer Name",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1907,10 +2133,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
-                                      '${receipt.operatorName}',
-                                      style: TextStyle(
+                                      receipt.operatorName,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1925,22 +2152,25 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                         Row(
                           children: [
-                            Expanded(
+                            const Expanded(
                               flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
                                     child: Text(
                                       "Comments",
-                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'hind_semibold'),
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'hind_semibold'),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -1966,10 +2196,11 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     child: Text(
-                                      '${receipt.comments}',
-                                      style: TextStyle(
+                                      receipt.comments,
+                                      style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -1984,33 +2215,30 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
                         ),
                       ],
                     ),
-
-
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   GestureDetector(
-                    onTap: (){
-
-                    },
-                    child: Container(
+                    onTap: () {},
+                    child: SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      child: Text(
+                      child: const Text(
                         'Click Here to See Receipt',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFFe86100), fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            color: Color(0xFFe86100),
+                            fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
-
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('Close'))
+                      child: const Text('Close'))
                 ],
               ),
             ));
@@ -2018,3 +2246,4 @@ class _ffb_collectionsState extends State<FfbCollectionScreen> {
     );
   }
 }
+ */

@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../authentication/login_screen.dart';
 import '../common_utils/constants.dart';
-import '../navigation/app_routes.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({super.key});
@@ -109,9 +108,9 @@ class LanguageScreen extends StatelessWidget {
     context.setLocale(locale);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => LoginScreen(),
+        builder: (context) => const LoginScreen(),
       ),
     );
- //   context.go(Routes.loginScreen.path);
+    //   context.go(Routes.loginScreen.path);
   }
 }

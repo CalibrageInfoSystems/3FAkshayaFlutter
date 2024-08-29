@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
@@ -46,28 +47,25 @@ class _MainScreenPageState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-      // Show a confirmation dialog
-      if (_selectedIndex != 0) {
-        setState(() {
-          _selectedIndex = 0;
-        });
-        return Future.value(false);
-      } else {
+          // Show a confirmation dialog
+          if (_selectedIndex != 0) {
+            setState(() {
+              _selectedIndex = 0;
+            });
+            return Future.value(false);
+          } else {
+            SystemNavigator.pop();
 
-        SystemNavigator.pop();
-
-        return Future.value(false);
-      }
-    },
-
-
-    child:  Scaffold(
-      appBar: appBar(),
-      drawer: drawer(context),
-      backgroundColor: Colors.transparent,
-      body: _buildScreens(_selectedIndex, context),
-      bottomNavigationBar: bottomNavigationBar(),
-    ));
+            return Future.value(false);
+          }
+        },
+        child: Scaffold(
+          appBar: appBar(),
+          drawer: drawer(context),
+          backgroundColor: Colors.transparent,
+          body: _buildScreens(_selectedIndex, context),
+          bottomNavigationBar: bottomNavigationBar(),
+        ));
   }
 
   BottomNavigationBar bottomNavigationBar() {
@@ -140,9 +138,10 @@ class _MainScreenPageState extends State<MainScreen> {
           },
         ),
       ),
-      titleSpacing:0.0,
+      titleSpacing: 0.0,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.start, // Aligns children to the start
+        mainAxisAlignment:
+            MainAxisAlignment.start, // Aligns children to the start
         children: [
           Image.asset(
             'assets/images/logo_final.png',
@@ -160,7 +159,6 @@ class _MainScreenPageState extends State<MainScreen> {
       ),
     );
   }
-
 
   // AppBar appBar() {
   //   return AppBar(
@@ -197,8 +195,6 @@ class _MainScreenPageState extends State<MainScreen> {
   //    // toolbarHeight: 60.0, // Adjust if you need to control the height of the AppBar
   //   );
   // }
-
-
 
   Widget drawer(BuildContext context) {
     return FutureBuilder(
@@ -328,16 +324,15 @@ class _MainScreenPageState extends State<MainScreen> {
                       tr(LocaleKeys.choose_language_str),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16,  // Uncommented to include font size
+                        fontSize: 16, // Uncommented to include font size
                         fontFamily: 'hind_semibold',
                       ),
                     ),
                     onTap: () {
-                    //  Navigator.pop(context);  // Uncommented to pop the current screen
+                      //  Navigator.pop(context);  // Uncommented to pop the current screen
                       openLanguageDialog(context);
                     },
                   ),
-
                   ListTile(
                     leading: SvgPicture.asset(
                       'assets/images/ic_myprofile.svg',
@@ -625,7 +620,7 @@ class _MainScreenPageState extends State<MainScreen> {
     SharedPreferencesHelper.putBool(Constants.isLogin, false);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => LoginScreen(),
+        builder: (context) => const LoginScreen(),
       ),
     );
     //context.go(Routes.loginScreen.path);
@@ -691,15 +686,14 @@ class _MainScreenPageState extends State<MainScreen> {
     );
   }
 
-
   void changeLocaleLanguage(BuildContext context, Locale locale) {
     setState(() {
       context.setLocale(locale);
 
 // Change the locale
     });
-    Navigator.of(context).pop();  // Close the popup
-    Navigator.of(context).pop();  // Close the side menu  // Trigger a rebuild
+    Navigator.of(context).pop(); // Close the popup
+    Navigator.of(context).pop(); // Close the side menu  // Trigger a rebuild
   }
 
   Container languageBox(String language,
