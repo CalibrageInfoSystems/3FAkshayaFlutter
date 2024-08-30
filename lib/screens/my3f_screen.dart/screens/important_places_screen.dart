@@ -4,7 +4,10 @@ import 'package:akshaya_flutter/screens/my3f_screen.dart/screens/godowns_content
 import 'package:akshaya_flutter/screens/my3f_screen.dart/screens/collection_content_screen.dart';
 import 'package:akshaya_flutter/screens/my3f_screen.dart/screens/mills_content_screen.dart';
 import 'package:akshaya_flutter/screens/my3f_screen.dart/screens/nurseries_content_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../localization/locale_keys.dart';
 
 class ImportantPlacesScreen extends StatefulWidget {
   final ImportantPlaces data;
@@ -53,26 +56,36 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
                         selectedTab = tab;
                       });
                     },
-                    labelStyle: const TextStyle(
-                      fontSize: 12,
-                    ),
-                    tabs: const [
+                    labelStyle:  CommonStyles.txSty_12p_f5,
+                    tabs:  [
                       Tab(
                         child: Text(
-                          'Fertilizer Godowns',
+                          tr(LocaleKeys.fertgodown),
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,
+                         // style: CommonStyles.txSty_12p_f5,
                         ),
                       ),
                       Tab(
                         child: Text(
-                          'Collection Centers',
+                          tr(LocaleKeys.collection_centres),
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.visible,
+                         // style: CommonStyles.txSty_12p_f5,
                         ),
                       ),
-                      Tab(text: 'Mills'),
-                      Tab(text: 'Nurseries'),
+                      Tab( child: Text(
+                        tr(LocaleKeys.Mills),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                      //  style: CommonStyles.txSty_12p_f5,
+                      ),),
+                      Tab(child: Text(
+                        tr(LocaleKeys.Nurseries),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.visible,
+                      //  style: CommonStyles.txSty_12p_f5,
+                      ),),
                     ],
                   ),
                   Positioned.fill(

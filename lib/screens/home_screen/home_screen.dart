@@ -23,6 +23,8 @@ import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Services/GodownSelectionScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -403,28 +405,73 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
     );
   }
-
   Widget gridServiceItem(int serviceTypeId) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          getServiceImagePath(serviceTypeId),
-          width: 35,
-          height: 35,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(height: 5),
-        Text(
-          getServiceName(serviceTypeId),
-          textAlign: TextAlign.center,
-          style: CommonStyles.txSty_12W_fb.copyWith(
-              color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
-        ),
-      ],
+    return GestureDetector(
+      onTap: () {
+        switch (serviceTypeId) {
+          case 12: // Fertilizer Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
+            );
+            break;
+          case 10: // Pole Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
+            );
+            break;
+        // Add more cases for other serviceTypeIds
+        // ...
+          default:
+          // Handle default case or do nothing
+            break;
+        }
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            getServiceImagePath(serviceTypeId),
+            width: 35,
+            height: 35,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 5),
+          Text(
+            getServiceName(serviceTypeId),
+            textAlign: TextAlign.center,
+            style: CommonStyles.txSty_12W_fb.copyWith(
+              color: CommonStyles.blackColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
     );
   }
+  // Widget gridServiceItem(int serviceTypeId) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: [
+  //       Image.asset(
+  //         getServiceImagePath(serviceTypeId),
+  //         width: 35,
+  //         height: 35,
+  //         fit: BoxFit.cover,
+  //       ),
+  //       const SizedBox(height: 5),
+  //       Text(
+  //         getServiceName(serviceTypeId),
+  //         textAlign: TextAlign.center,
+  //         style: CommonStyles.txSty_12W_fb.copyWith(
+  //             color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget gridLearningItem(int index, String title) {
     return Column(

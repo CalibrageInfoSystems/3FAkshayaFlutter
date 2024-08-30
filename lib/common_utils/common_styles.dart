@@ -151,6 +151,12 @@ class CommonStyles {
     fontWeight: FontWeight.w700,
     fontFamily: 'hind_semibold',
   );
+  static const TextStyle txSty_12p_f5 = TextStyle(
+    fontSize: 12,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w500,
+    color: primaryTextColor,
+  );
   static const TextStyle header_Styles = TextStyle(
     fontSize: 26,
     fontFamily: "hind_semibold",

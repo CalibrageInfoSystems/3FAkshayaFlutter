@@ -433,4 +433,5 @@ class LocaleKeys {
   static const String whats_number = "whats_number";
   static const String yes = "yes";
   static const String yop = "yop";
+  static const String Nurseries = "Nurseries";
 }

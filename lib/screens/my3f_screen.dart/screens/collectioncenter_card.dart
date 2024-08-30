@@ -2,7 +2,10 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/models/important_places_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../localization/locale_keys.dart';
 
 class CollectionCenterCard extends StatelessWidget {
   final CollectionCenter data;
@@ -39,15 +42,15 @@ class CollectionCenterCard extends StatelessWidget {
                       style: CommonStyles.txSty_14b_f5),
                   const Divider(),
                   contentBox(
-                    label: 'Village',
+                    label:  tr(LocaleKeys.village),
                     data: '${data.villageName}',
                   ),
                   contentBox(
-                    label: 'Mandal',
+                    label: tr(LocaleKeys.mandal),
                     data: '${data.mandalName}',
                   ),
                   contentBox(
-                    label: 'District',
+                    label:  tr(LocaleKeys.dist),
                     data: '${data.districtName}',
                   ),
                   GestureDetector(
@@ -58,7 +61,7 @@ class CollectionCenterCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text('View in Map',
+                         Text( tr(LocaleKeys.view_in_map),
                             style: CommonStyles.txSty_12b_f5),
                         Image.asset(
                           Assets.images.icMapList.path,

@@ -2,7 +2,10 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/models/important_places_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import '../../../localization/locale_keys.dart';
 
 class GoDownsScreen extends StatelessWidget {
   final List<Godown> godowns;
@@ -52,8 +55,8 @@ class GoDownsCard extends StatelessWidget {
                 children: [
                   Text('${godown.godown}', style: CommonStyles.txSty_14b_f5),
                   const Divider(),
-                  contentBox(label: 'Location', data: '${godown.location}'),
-                  contentBox(label: 'Address', data: '${godown.address}'),
+                  contentBox(label: tr(LocaleKeys.location), data: '${godown.location}'),
+                  contentBox(label: tr(LocaleKeys.address), data: '${godown.address}'),
                   GestureDetector(
                     onTap: () {
                       Constants.launchMap(

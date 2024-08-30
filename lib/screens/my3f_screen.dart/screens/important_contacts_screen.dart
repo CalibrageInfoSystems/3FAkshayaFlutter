@@ -1,7 +1,11 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/models/important_contacts_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../localization/locale_keys.dart';
 
 class ImportantContactsScreen extends StatelessWidget {
   final ImportantContacts data;
@@ -19,29 +23,29 @@ class ImportantContactsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Image.asset(Assets.images.icImpContacts.path),
             const SizedBox(height: 10),
-            const Text('Important Contacts', style: CommonStyles.txSty_16p_fb),
+             Text(tr(LocaleKeys.important_contacts), style: CommonStyles.txSty_16p_fb),
             const SizedBox(height: 20),
-            contactForm(
-                label: 'Cluster Officer Name', data: data.clusterOfficerName),
-            contactForm(
-                label: 'Cluster Officer Contact Number',
-                data: data.clusterOfficerContactNumber,
+            contactForm(label:tr(LocaleKeys.officer_name), data: data.clusterOfficerName ?? 'N/A'),
+            contactFormclick(
+                label: tr(LocaleKeys.officer_mobile),
+                data: data.clusterOfficerContactNumber ?? 'N/A',
                 datatextColor: Colors.green),
             contactForm(
-                label: 'Cluster Manager Name',
-                data: data.clusterOfficerManagerName),
-            contactForm(
-                label: 'Cluster Manager Contact Number',
-                data: data.clusterOfficerManagerContactNumber,
+                label: tr(LocaleKeys.manager_name),
+
+                data: data.clusterOfficerManagerName ?? 'N/A'),
+            contactFormclick(
+                label: tr(LocaleKeys.manager_num),
+                data: data.clusterOfficerManagerContactNumber ?? 'N/A',
                 datatextColor: Colors.green),
-            contactForm(label: 'State Head Name', data: data.stateHeadName),
-            contactForm(
-                label: 'Customer Care Number',
-                data: 'xxxxxx',
+            contactForm(label: tr(LocaleKeys.head_name), data: data.stateHeadName ?? 'N/A'),
+            contactFormclick(
+                label: tr(LocaleKeys.customer_care),
+                data: '040 23324733',
                 datatextColor: Colors.green),
-            contactForm(
-                label: 'WhatsApp Number',
-                data: 'xxxxxx',
+            contactFormWhatsAppclick(
+                label:tr(LocaleKeys.whats_number),
+                data: '9515103107',
                 datatextColor: Colors.green),
           ],
         ),
@@ -73,4 +77,98 @@ class ImportantContactsScreen extends StatelessWidget {
       ],
     );
   }
+
+  Widget contactFormclick(
+      {required String label, required String? data, Color? datatextColor}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                flex: 7, child: Text(label, style: CommonStyles.txSty_14b_fb)),
+            const Text(':  '),
+            Expanded(
+              flex: 4,
+              child: InkWell(
+                onTap: () async {
+                  final url = 'tel:$data';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                child: Text(
+                  '$data',
+                  style: CommonStyles.txSty_14b_f5.copyWith(
+                    color:Color(0xFF34A350), // Use blue or custom color
+                    // Optional: underline to indicate clickable
+                  ),
+                ),
+              ),
+            ),
+            // Expanded(
+            //   flex: 4,
+            //   child: Text(
+            //     '$data',
+            //     style: CommonStyles.txSty_14b_fb.copyWith(
+            //       color: datatextColor,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+
+  Widget contactFormWhatsAppclick(
+      {required String label, required String? data, Color? datatextColor}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                flex: 7, child: Text(label, style: CommonStyles.txSty_14b_fb)),
+            const Text(':  '),
+            Expanded(
+              flex: 4,
+              child: InkWell(
+                onTap: () async {
+    const phoneNumber = '+91 9515103107';
+    final url = 'https://api.whatsapp.com/send?phone=$phoneNumber';
+    if (await canLaunch(url)) {
+    await launch(url);
+    } else {
+    throw 'Could not launch $url';
+    }
+
+                },
+                child: Text(
+                  '$data',
+                  style: CommonStyles.txSty_14b_f5.copyWith(
+                    color:Color(0xFF34A350), // Use blue or custom color
+                    // Optional: underline to indicate clickable
+                  ),
+                ),
+              ),
+            ),
+            // Expanded(
+            //   flex: 4,
+            //   child: Text(
+            //     '$data',
+            //     style: CommonStyles.txSty_14b_fb.copyWith(
+            //       color: datatextColor,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
 }
