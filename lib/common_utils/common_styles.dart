@@ -70,7 +70,7 @@ class CommonStyles {
   static const TextStyle txSty_14b_f5 = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
     color: blackColor,
   );
   static const TextStyle txSty_14black = TextStyle(

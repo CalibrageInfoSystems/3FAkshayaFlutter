@@ -21,7 +21,14 @@ Widget custombox({
                     color: labelTextColor,
                   ),
                 )),
-            const Expanded(flex: 1, child: Text(':')),
+            Expanded(
+                flex: 1,
+                child: Text(
+                  ':',
+                  style: CommonStyles.txF14Fw5Cb.copyWith(
+                    color: dataTextColor,
+                  ),
+                )),
             Expanded(
                 flex: 5,
                 child: Text(

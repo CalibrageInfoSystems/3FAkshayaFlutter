@@ -56,10 +56,15 @@ class CropMaintenanceVisitsScreen extends StatelessWidget {
                       labelTextColor: CommonStyles.whiteColor),
                   Text(
                     tr(LocaleKeys.Frequency),
+                    style: CommonStyles.txSty_16w_fb,
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    tr(LocaleKeys.static_data),
+                    tr(
+                      LocaleKeys.static_data,
+                    ),
+                    style:
+                        CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
                   ),
                 ],
               ),
