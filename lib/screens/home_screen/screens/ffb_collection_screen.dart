@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/collection_count.dart';
 import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/collection_info_model.dart';
@@ -24,11 +26,24 @@ class FfbCollectionScreen extends StatefulWidget {
 
 class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   final List<String> dropdownItems = [
+    tr(LocaleKeys.thirty_days),
+    tr(LocaleKeys.currentfinicial),
+    tr(LocaleKeys.selected),
+  ];
+
+/*   final List<String> dropdownItems = [
     'Last 30 days',
     'Current Financial Year',
     'Select Time Period',
-  ];
-  String? selectedDropDownValue = 'Last 30 days';
+  ]; */
+
+  Map<String, String> dropdownValues = {
+    'Last 30 days': tr(LocaleKeys.thirty_days),
+    'Current Financial Year': tr(LocaleKeys.currentfinicial),
+    'Select Time Period': tr(LocaleKeys.selected),
+  };
+
+  String? selectedDropDownValue = tr(LocaleKeys.thirty_days);
   bool isTimePeriod = false;
   late Future<CollectionResponse> apiCollectionData;
 
@@ -110,7 +125,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: appBar(),
+      appBar: CustomAppBar(
+        title: tr(LocaleKeys.collection),
+      ),
       body: Column(
         children: [
           Container(
@@ -128,7 +145,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                selectedDropDownValue != 'Select Time Period'
+                // selectedDropDownValue != 'Select Time Period'
+                dropdownItems.indexOf(selectedDropDownValue!) != 2
                     ? dropdownSelector()
                     : timePeriodSelector(),
                 const SizedBox(height: 10),
@@ -181,9 +199,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: Text(
-                      'Date',
+                      tr(LocaleKeys.only_date),
                       style: CommonStyles.txSty_14b_f5,
                     )),
                     const Text(
@@ -202,9 +220,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: Text(
-                      'Weight',
+                      tr(LocaleKeys.weight),
+                      // 'Weight',
                       style: CommonStyles.txSty_14b_f5,
                     )),
                     const Text(
@@ -224,8 +243,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           const SizedBox(height: 5),
           Row(
             children: [
-              const Text(
-                'CC',
+              Text(
+                tr(LocaleKeys.cc),
+                // 'CC',
                 style: CommonStyles.txSty_14b_f5,
               ),
               const SizedBox(width: 60),
@@ -240,42 +260,16 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               const Spacer(),
             ],
           ),
-
-          /* Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    const Expanded(
-                        child: Text(
-                      'CC',
-                      style: CommonStyles.txSty_14b_f5,
-                    )),
-                    const Text(
-                      ':  ',
-                      style: CommonStyles.txF14Fw5Cb,
-                    ),
-                    Expanded(
-                        child: Text(
-                      '${data.uColnid}',
-                      style: CommonStyles.txF14Fw5Cb,
-                    )),
-                  ],
-                ),
-              ),
-              const Spacer(),
-            ],
-          ), */
-
           const SizedBox(height: 5),
           Row(
             children: [
               Expanded(
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: Text(
-                      'Status',
+                      tr(LocaleKeys.status),
+                      // 'Status',
                       style: CommonStyles.txSty_14b_f5,
                     )),
                     const Text(
@@ -321,9 +315,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     },
                   );
                 } else {
-                  return const Center(
+                  return Center(
                       child: Text(
-                    'No Collections Available',
+                    tr(LocaleKeys.no_collections_found),
                     style: CommonStyles.txSty_16p_fb,
                   ));
                 }
@@ -355,16 +349,19 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                 child: Column(
                   children: [
                     listRow(
-                        title: 'Total Collections',
+                        title: tr(LocaleKeys.collectionsCount),
                         value: data.collectionsCount.toString()),
                     listRow(
-                        title: 'Total New Weight',
+                        title: tr(LocaleKeys.collectionsWeight),
+                        // title: 'Total Net Weight',
                         value: data.collectionsWeight.toString()),
                     listRow(
-                        title: 'Unpaid Collections Weight',
+                        title: tr(LocaleKeys.unPaidCollectionsWeight),
+                        // title: 'Unpaid Collections Weight',
                         value: data.paidCollectionsWeight.toString()),
                     listRow(
-                        title: 'Paid Collections Weight',
+                        title: tr(LocaleKeys.paidCollectionsWeight),
+                        // title: 'Paid Collections Weight',
                         value: data.unPaidCollectionsWeight.toString()),
                   ],
                 ),
@@ -466,15 +463,18 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             setState(() {
               selectedDropDownValue = value;
               print('selectedDropDownValue: $selectedDropDownValue');
-              getCollectionAccordingToDropDownSelection(selectedDropDownValue!);
+              getCollectionAccordingToDropDownSelection(
+                  dropdownItems.indexOf(selectedDropDownValue!));
 
-              if (selectedDropDownValue == 'Select Time Period') {
+              if (dropdownItems.indexOf(selectedDropDownValue!) == 2) {
                 setState(() {
                   isTimePeriod = true;
                 });
               } else {
                 setState(() {
                   isTimePeriod = false;
+                  displayFromDate = null;
+                  displayToDate = null;
                 });
               }
             });
@@ -498,136 +498,16 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         ),
       ),
     );
-    /*  
-        DropdownButtonHideUnderline(
-          child: DropdownButton2<String>(
-            iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.white,
-              ),
-            ),
-            isExpanded: true,
-            hint: const Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Select Item',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: dropdownItems
-                .map((String item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedDropDownValue,
-            onChanged: (String? value) {
-              setState(() {
-                selectedDropDownValue = value;
-                print('selectedDropDownValue: $selectedDropDownValue');
-                getCollectionAccordingToDropDownSelection(
-                    selectedDropDownValue!);
-
-                if (selectedDropDownValue == 'Select Time Period') {
-                  setState(() {
-                    isTimePeriod = true;
-                  });
-                } else {
-                  setState(() {
-                    isTimePeriod = false;
-                  });
-                }
-                // getCollectionData(fromDate: fromDate);
-              });
-            },
-            dropdownStyleData: DropdownStyleData(
-              // maxHeight: 200,
-              // width: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: Colors.grey,
-              ),
-              offset: const Offset(0, 0),
-              scrollbarTheme: ScrollbarThemeData(
-                radius: const Radius.circular(40),
-                thickness: WidgetStateProperty.all<double>(6),
-                thumbVisibility: WidgetStateProperty.all<bool>(true),
-              ),
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 40,
-              padding: EdgeInsets.only(left: 20, right: 20),
-            ),
-          ),
-        ));
-  */
   }
 
-  AppBar appBar() {
-    return AppBar(
-      backgroundColor: CommonStyles.gradientColor1,
-      leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Image.asset(Assets.images.icLeft.path)),
-      elevation: 0,
-      title: Text(
-        "FFB Collections",
-        style: CommonStyles.txSty_14black_f5
-            .copyWith(color: CommonStyles.whiteColor),
-      ),
-      actions: [
-        SvgPicture.asset(
-          Assets.images.icHome.path,
-          width: 20,
-          height: 20,
-          color: Colors.black,
-          fit: BoxFit.contain,
-        ),
-        const SizedBox(width: 10)
-      ],
-    );
-  }
-
-/*   String? formateDate(String? formateDate) {
-    if (formateDate != null) {
-      DateFormat formatter = DateFormat('dd-MM-yyyy');
-      DateTime date = DateTime.parse(formateDate);
-      return formatter.format(date);
-    } else {
-      return formateDate;
-    }
-  } */
-
-  void getCollectionAccordingToDropDownSelection(String selectedDropDownValue) {
-/* 'Last 30 days',
-    'Current Financial Year',
-    'Select Time Period', */
-
-    switch (selectedDropDownValue) {
-      case 'Last 30 days':
+  void getCollectionAccordingToDropDownSelection(
+      int selectedDropDownValueIndex) {
+    switch (selectedDropDownValueIndex) {
+      case 0:
         apiCollectionData = getInitialData();
         break;
 
-      case 'Current Financial Year':
+      case 1:
         apiCollectionData =
             getCollectionData(fromDate: getCurrentFinancialDate());
         break;
@@ -676,7 +556,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         children: [
           Expanded(
             child: datePickerBox(
-              dateLabel: 'From Date',
+              dateLabel: tr(LocaleKeys.from_date),
+              // dateLabel: 'From Date',
               displaydate: displayFromDate,
               onTap: () {
                 final DateTime currentDate = DateTime.now();
@@ -692,7 +573,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           const SizedBox(width: 10),
           Expanded(
               child: datePickerBox(
-            dateLabel: 'To Date',
+            dateLabel: tr(LocaleKeys.to_date),
+            // dateLabel: 'To Date',
             displaydate: displayToDate,
             onTap: () {
               final DateTime currentDate = DateTime.now();
@@ -705,7 +587,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           )),
           const SizedBox(width: 10),
           CustomBtn(
-              label: 'Submit',
+              label: tr(LocaleKeys.submit),
+              // label: 'Submit',
               onPressed: () {
                 validateAndSubmit(selectedFromDate, selectedToDate);
               }),
@@ -728,7 +611,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
-  void errorDialog(BuildContext context) {
+  void errorDialog(BuildContext context, {required String errorMessage}) {
+    final size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -741,7 +625,53 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6)),
-              child: errorDialogContent()),
+              child: SizedBox(
+                width: size.width * 0.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        height: 60,
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(12.0),
+                        color: CommonStyles.primaryTextColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.error_outline,
+                                color: Colors.white),
+                            const SizedBox(width: 5),
+                            Text(tr(LocaleKeys.error),
+                                style: CommonStyles.txSty_16w_fb),
+                          ],
+                        )),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(12.0),
+                      // height: 120,
+                      color: CommonStyles.blackColor,
+                      child: Column(
+                        children: [
+                          Text(
+                            errorMessage,
+                            // tr(LocaleKeys.enter_Date),
+                            // tr(LocaleKeys.datevalidation),
+                            style: CommonStyles.txSty_14b_f5
+                                .copyWith(color: Colors.white),
+                          ),
+                          const SizedBox(height: 20),
+                          CustomBtn(
+                              label: tr(LocaleKeys.ok),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              }),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )),
         );
       },
       transitionBuilder: (context, animation1, animation2, child) {
@@ -773,8 +703,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     Text(dateLabel,
                         style: CommonStyles.txSty_14black
                             .copyWith(color: CommonStyles.whiteColor)),
-                    const SizedBox(width: 5),
-                    const Text('*', style: TextStyle(color: Colors.red)),
+                    // const SizedBox(width: 5),
+                    // const Text('*', style: TextStyle(color: Colors.red)),
                   ],
                 )
               : Text(displaydate,
@@ -804,7 +734,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // Check if pickedDay is not in the future
       setState(() {
         selectedFromDate = pickedDay;
-        print('datepicker selectedFromDate $selectedFromDate');
         displayFromDate = DateFormat('dd-MM-yyyy').format(selectedFromDate!);
       });
     }
@@ -830,7 +759,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // Check if pickedDay is not in the future
       setState(() {
         selectedToDate = pickedDay;
-        print('datepicker selectedToDate $selectedToDate');
         displayToDate = DateFormat('dd-MM-yyyy').format(selectedToDate!);
       });
     }
@@ -839,7 +767,15 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   void validateAndSubmit(DateTime? selectedFromDate, DateTime? selectedToDate) {
     if (selectedFromDate == null || selectedToDate == null) {
-      return errorDialog(context);
+      return errorDialog(
+        context,
+        errorMessage: tr(LocaleKeys.enter_Date),
+      );
+    } else if (selectedToDate.isBefore(selectedFromDate)) {
+      return errorDialog(
+        context,
+        errorMessage: tr(LocaleKeys.datevalidation),
+      );
     }
     apiCollectionData = getCollectionData(
       fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
@@ -847,7 +783,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
-  Widget errorDialogContent() {
+  Widget errorDialogContent({required String errorMessage}) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * 0.7,
@@ -860,29 +796,31 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(12.0),
               color: CommonStyles.primaryTextColor,
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, color: Colors.white),
-                  SizedBox(width: 5),
-                  Text('Error', style: CommonStyles.txSty_16w_fb),
+                  const Icon(Icons.error_outline, color: Colors.white),
+                  const SizedBox(width: 5),
+                  Text(tr(LocaleKeys.error), style: CommonStyles.txSty_16w_fb),
                 ],
               )),
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(12.0),
-            height: 120,
+            // height: 120,
             color: CommonStyles.blackColor,
             child: Column(
               children: [
                 Text(
-                  'Please Enter From Date and To Date',
+                  errorMessage,
+                  // tr(LocaleKeys.enter_Date),
+                  // tr(LocaleKeys.datevalidation),
                   style:
                       CommonStyles.txSty_14b_f5.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 20),
                 CustomBtn(
-                    label: 'Ok',
+                    label: tr(LocaleKeys.ok),
                     onPressed: () {
                       Navigator.of(context).pop();
                     }),
@@ -947,16 +885,16 @@ class InfoDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-          buildInfoRow('Driver Name', info.driverName),
-          buildInfoRow('Vehicle Number', info.vehicleNumber),
-          buildInfoRow('Collection Center', info.collectionCenter),
-          buildInfoRow('Gross Weight', info.grossWeight.toString()),
-          buildInfoRow('Tare Weight', info.tareWeight.toString()),
-          buildInfoRow('Net Weight', info.netWeight.toString()),
-          buildInfoRow(
-              'Date', CommonStyles.formateDate(info.receiptGeneratedDate)),
-          buildInfoRow('3F OP Collection Officer Name', info.operatorName),
-          buildInfoRow('Comments', info.comments),
+          buildInfoRow(tr(LocaleKeys.driver_name), info.driverName),
+          buildInfoRow(tr(LocaleKeys.vehicle_Number), info.vehicleNumber),
+          buildInfoRow(tr(LocaleKeys.collectionCenter), info.collectionCenter),
+          buildInfoRow(tr(LocaleKeys.grossWeight), info.grossWeight.toString()),
+          buildInfoRow(tr(LocaleKeys.tareWeight), info.tareWeight.toString()),
+          buildInfoRow(tr(LocaleKeys.net_weight), info.netWeight.toString()),
+          buildInfoRow(tr(LocaleKeys.only_date),
+              CommonStyles.formateDate(info.receiptGeneratedDate)),
+          buildInfoRow(tr(LocaleKeys.operatorName), info.operatorName),
+          buildInfoRow(tr(LocaleKeys.comments), info.comments),
           const SizedBox(height: 20),
           Center(
             child: TextButton(
@@ -971,9 +909,9 @@ class InfoDialog extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text(
-                'Click Here to See Receipt',
-                style: TextStyle(
+              child: Text(
+                tr(LocaleKeys.recept),
+                style: const TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.bold,
                 ),
@@ -993,7 +931,7 @@ class InfoDialog extends StatelessWidget {
                   side: const BorderSide(color: Colors.orange, width: 2),
                 ),
               ),
-              child: const Text('Close'),
+              child: Text(tr(LocaleKeys.close)),
             ),
           ),
         ],

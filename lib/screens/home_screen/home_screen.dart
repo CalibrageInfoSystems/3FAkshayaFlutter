@@ -9,8 +9,11 @@ import 'package:akshaya_flutter/models/banner_model.dart';
 import 'package:akshaya_flutter/models/learning_model.dart';
 import 'package:akshaya_flutter/models/service_model.dart';
 import 'package:akshaya_flutter/navigation/app_routes.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collections.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -345,13 +348,19 @@ class _HomeScreenState extends State<HomeScreen> {
               viewOption(
                   size, Assets.images.passbook.path, tr(LocaleKeys.payments),
                   onTap: () {
-                context.push(
-                    context.namedLocation(Routes.farmerPassbookScreen.name));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FarmerPassbookScreen(),
+                  ),
+                );
               }),
               viewOption(size, Assets.images.mainVisit.path,
                   tr(LocaleKeys.recommendationss), onTap: () {
-                context.push(context
-                    .namedLocation(Routes.cropMaintenanceVisitsScreen.name));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PlotSelectionScreen(),
+                  ),
+                );
               }),
             ],
           ),

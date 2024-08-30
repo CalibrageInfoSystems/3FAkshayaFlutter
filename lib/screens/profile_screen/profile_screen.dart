@@ -26,24 +26,19 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<FarmerModel> farmerData;
   late Future<List<PlotDetailsModel>> plotsData;
-  String? userId;
   String? stateCode;
   int? districtId;
   String? districtName;
   @override
   void initState() {
     super.initState();
-    _loadUserData();
     farmerData = getFarmerInfoFromSharedPrefs();
     plotsData = getPlotDetails();
   }
 
   Future<List<PlotDetailsModel>> getPlotDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString('user_id');
-      print('FarmerCode -==$userId');
-    });
+    final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
     final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
 
@@ -53,8 +48,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('jsonResponse: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
-        List<dynamic> plotList = response['listResult'];
-        return plotList.map((item) => PlotDetailsModel.fromJson(item)).toList();
+        if (response['listResult'] != null) {
+          List<dynamic> plotList = response['listResult'];
+          return plotList
+              .map((item) => PlotDetailsModel.fromJson(item))
+              .toList();
+        }
+        throw Exception('list is empty');
       } else {
         throw Exception(
             'Request failed with status: ${jsonResponse.statusCode}');
@@ -157,20 +157,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userId = prefs.getString('user_id');
-      stateCode = prefs.getString('statecode');
-      districtId = prefs.getInt('districtId');
-      districtName = prefs.getString('districtName');
-      print('FarmerCode -==$userId');
-      print('stateCode -==$stateCode');
-      print('districtId -==$districtId');
-      print('districtName -==$districtName');
-    });
   }
 }
 
