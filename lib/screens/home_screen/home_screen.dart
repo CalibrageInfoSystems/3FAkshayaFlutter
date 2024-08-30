@@ -23,6 +23,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Services/GodownSelectionScreen.dart';
+import 'screens/farmer_passbook.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -351,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const FarmerPassbookScreen(),
+                    builder: (context) =>  FarmerPassbookScreen_1(),
                   ),
                 );
               }),

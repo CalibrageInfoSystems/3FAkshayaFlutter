@@ -1,6 +1,8 @@
 import 'package:akshaya_flutter/localization/app_locale.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'app_enterance/splash_screen.dart';
 
@@ -8,6 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   runApp(
+
     EasyLocalization(
         supportedLocales: const [
           AppLocal.teluguLocale,
@@ -18,7 +21,9 @@ void main() async {
         saveLocale: true,
         fallbackLocale: AppLocal.englishLocale,
         startLocale: AppLocal.englishLocale,
-        child: const MyApp()),
+        child:  MyApp()
+
+    ),
   );
 }
 

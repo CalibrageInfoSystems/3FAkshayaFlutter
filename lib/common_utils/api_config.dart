@@ -17,6 +17,9 @@ var getActivePlotsByFarmerCode = "Farmer/GetActivePlotsByFarmerCode/";
 // http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005
 //MARK: Banners
 var getActiveBannerByStateCode = "Banner/GetActiveBannerByStateCode/API";
+var getbankdetails ="Farmer/GetBankDetailsByFarmerCode/";
+var getvendordata='Payment/GetVendorLedger';
+var getfarmerreimbursement='Payment/GetTranspotationChargesByFarmerCode';
 // APWGBDAB00010005
 
 
