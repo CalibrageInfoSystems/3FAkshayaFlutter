@@ -546,7 +546,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   }
 
   Widget datePickerSection() {
-    return Container(
+    return
+      Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

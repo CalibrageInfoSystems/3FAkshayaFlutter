@@ -4,13 +4,15 @@ import 'package:akshaya_flutter/common_utils/SharedPreferencesHelper.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/PaymentDetailsResponse.dart';
 import 'package:akshaya_flutter/models/TransportationCharge.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
-import 'package:device_info/device_info.dart';
+// import 'package:device_info/device_info.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:http/http.dart' as http;
@@ -23,10 +25,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 import 'package:open_filex/open_filex.dart';
-
-
 
 class farmer_passbook_2 extends StatefulWidget {
   //  FarmerInfo farmerinfo;
@@ -75,10 +74,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   List<PaymentResponse> paymentDetailsResponse_list = [];
   String totalquantityffb = '';
   String closingbalance = '';
-  late double totalBalance, totalQuanitity, totalGRAmount, totalAdjusted, totalAmount;
+   double totalBalance=0.0, totalQuanitity=0.0, totalGRAmount=0.0, totalAdjusted=0.0, totalAmount=0.0;
   String? fromdatetosendtab2;
   String? todatetosendtab2;
-  String?   farmercode;
+  String? farmercode;
   String? modifiedCode;
   List<TransportationCharge> _transportationCharges = [];
   List<TransportRate> _transportRates = [];
@@ -89,15 +88,17 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     checkStoragePermission();
   }
 
-  listofdetails() async{
+  listofdetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     setState(() {
       farmercode = farmerCode;
-       modifiedCode = "V" + farmercode!.substring(2);
+      modifiedCode = "V" + farmercode!.substring(2);
       print('modifiedCode$modifiedCode');
+      callApiMethod(selectedPosition!, modifiedCode!);
     });
   }
+
   // listofdetails() async {
   //   final loadedData = await SharedPreferencesHelper.getCategories();
   //   if (loadedData != null) {
@@ -151,7 +152,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         todatetosendtab2 = startDateString;
         _transportRates.clear();
         _transportationCharges.clear();
-        Provider.of<DataProvider>(context, listen: false).updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false)
+            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
         closingbalance = '';
         totalquantityffb = '';
         paymentlistapi(currentDate, startDate, modifiedCode!);
@@ -178,7 +180,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       setState(() {
         fromdatetosendtab2 = strstartdate;
         todatetosendtab2 = strtodate;
-        Provider.of<DataProvider>(context, listen: false).updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false)
+            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
         print('Date range for Last 3 Months: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
         paymentDetailsResponse_list.clear();
         _transportRates.clear();
@@ -201,7 +204,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       setState(() {
         fromdatetosendtab2 = strfystartdate;
         todatetosendtab2 = strfytodate;
-        Provider.of<DataProvider>(context, listen: false).updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false)
+            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
         paymentDetailsResponse_list.clear();
         _transportRates.clear();
         _transportationCharges.clear();
@@ -256,216 +260,254 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         //     ),
         //   ),
         // ),
-        appBar: CustomAppBar(
-          title: tr(LocaleKeys.collection),
-        ),
-        body: SingleChildScrollView(
+              appBar:  CustomAppBar(title: 'Farmer Passbook'),
+
+    body: SingleChildScrollView(
             child: Container(
+          //height: MediaQuery.of(context).size.height,
           child: Column(children: [
             Container(
-              width: double.infinity,
-              child: Container(
-                alignment: Alignment.topCenter,
-                padding: EdgeInsets.only(top: 0.0, left: 12.0, right: 12.0),
-                child: DropdownButtonHideUnderline(
-                  child: ButtonTheme(
-                    alignedDropdown: true,
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.0),
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: DropdownButton<double>(
-                        alignment: Alignment.center,
-                        value: selectedPosition,
-                        iconSize: 22,
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.white,
-                        ),
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                        onChanged: (position) {
-                          setState(() {
-                            selectedPosition = position;
-                            print('selectedposition $selectedPosition');
-                          });
-                          callApiMethod(selectedPosition!, vendorcode);
-
-                          // Now, call your API method based on the selected position
-                        },
-                        isExpanded: true,
-                        items: [
-                          DropdownMenuItem<double>(
-                            value: 0.0,
-                            child: Center(
-                              //alignment: Alignment.center,
-                              child: Text(
-                                'Last One Month',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          DropdownMenuItem<double>(
-                            value: 1.0,
-                            child: Center(
-                              //alignment: Alignment.center,
-                              child: Text(
-                                'Last Three Months',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          DropdownMenuItem<double>(
-                            value: 2.0,
-                            child: Center(
-                              //alignment: Alignment.center,
-                              child: Text(
-                                'Last One Year',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          DropdownMenuItem<double>(
-                            value: 3.0,
-                            child: Center(
-                              //alignment: Alignment.center,
-                              child: Text(
-                                'Select Time Period',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                        dropdownColor: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: datesavaiablity,
-              child: Padding(
-                padding: EdgeInsets.only(top: 4.0, left: 12.0, right: 12.0),
+                width: double.infinity,
                 child: Column(
                   children: [
                     Container(
-                      padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0, bottom: 10.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.0),
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                print('clickedonfromdate');
-                                _selectDate(context, fromDateController);
-                                // Handle From Date tap
-                              },
-                              child: TextField(
-                                controller: fromDateController,
-                                decoration: InputDecoration(
-                                  hintText: 'From Date',
-                                  hintStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
-                                  ),
-                                  enabled: false,
-                                ),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () {
-                                // Handle To Date tap
-                                print('clickedontodate');
-                                _selectDate(context, toDateController);
-                              },
-                              child: TextField(
-                                controller: toDateController,
-                                decoration: InputDecoration(
-                                  hintText: 'To Date',
-                                  hintStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
-                                  ),
-                                  enabled: false,
-                                ),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          Container(
+                      alignment: Alignment.topCenter,
+                      padding: EdgeInsets.only(top: 0.0, left: 12.0, right: 12.0),
+                      child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: Container(
+                            width: double.infinity,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xFFCCCCCC),
-                                  Color(0xFFFFFFFF),
-                                  Color(0xFFCCCCCC),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: Border.all(
-                                width: 2.0,
-                                color: Color(0xFFe86100),
-                              ),
+                              border: Border.all(color: Colors.white, width: 1.0),
+                              borderRadius: BorderRadius.circular(6.0),
                             ),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                print('Submit button is clicked');
-                                // bool validation = await datevalidation();
-                                // if(validation){
-                                //   paymentlistapi(currentDate, startDate, vc);
-                                // }
+                            child: DropdownButton<double>(
+                              alignment: Alignment.center,
+                              value: selectedPosition,
+                              iconSize: 22,
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.white,
+                              ),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              onChanged: (position) {
+                                setState(() {
+                                  selectedPosition = position;
+                                  print('selectedposition $selectedPosition');
+                                });
+                                callApiMethod(selectedPosition!, vendorcode);
 
-                                datevalidation();
+                                // Now, call your API method based on the selected position
                               },
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                  color: Color(0xFFe86100),
-                                  fontSize: 16,
-                                  fontFamily: 'hind_semibold',
+                              isExpanded: true,
+                              items: [
+                                DropdownMenuItem<double>(
+                                  value: 0.0,
+                                  child: Center(
+                                    //alignment: Alignment.center,
+                                    child: Text(
+                                      'Last One Month',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                                DropdownMenuItem<double>(
+                                  value: 1.0,
+                                  child: Center(
+                                    //alignment: Alignment.center,
+                                    child: Text(
+                                      'Last Three Months',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                DropdownMenuItem<double>(
+                                  value: 2.0,
+                                  child: Center(
+                                    //alignment: Alignment.center,
+                                    child: Text(
+                                      'Last One Year',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem<double>(
+                                  value: 3.0,
+                                  child: Center(
+                                    //alignment: Alignment.center,
+                                    child: Text(
+                                      'Select Time Period',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              dropdownColor: Colors.grey,
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: datesavaiablity,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 4.0, left: 12.0, right: 12.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              //    padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0, bottom: 10.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: CommonStyles.whiteColor),
+                              ),
+                              child: Flex(
+                                direction: Axis.horizontal,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    // child:
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //
+                                    //     _selectDate(context, fromDateController);
+                                    //     // Handle From Date tap
+                                    //   },
+                                    child: TextFormField(
+                                      controller: fromDateController,
+                                      onTap: () {
+                                        _selectDate(context, fromDateController);
+                                        print('clickedonfromdate');
+                                      },
+                                      readOnly: true,
+                                      decoration: InputDecoration(
+                                        hintText: 'From Date *',
+                                        hintStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                        ),
+                                      ),
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    //  ),
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    // child: GestureDetector(
+                                    //   onTap: () {
+                                    //     // Handle To Date tap
+                                    //     print('clickedontodate');
+                                    //     _selectDate(context, toDateController);
+                                    //   },
+                                    child: TextFormField(
+                                      onTap: () {
+                                        print('clickedontodate');
+                                        _selectDate(context, toDateController);
+                                      },
+                                      readOnly: true,
+                                      controller: toDateController,
+                                      decoration: InputDecoration(
+                                        hintText: 'To Date *',
+                                        hintStyle: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.white),
+                                        ),
+                                      ),
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    //  ),
+                                  ),
+                                  CustomBtn(
+                                      label: tr(LocaleKeys.submit),
+                                      // label: 'Submit',
+                                      onPressed: () {
+                                        datevalidation();
+                                        //    validateAndSubmit(selectedFromDate, selectedToDate);
+                                      }),
+                                  // Container(
+                                  //   decoration: BoxDecoration(
+                                  //     gradient: LinearGradient(
+                                  //       colors: [
+                                  //         Color(0xFFCCCCCC),
+                                  //         Color(0xFFFFFFFF),
+                                  //         Color(0xFFCCCCCC),
+                                  //       ],
+                                  //       begin: Alignment.topCenter,
+                                  //       end: Alignment.bottomCenter,
+                                  //     ),
+                                  //     borderRadius: BorderRadius.circular(10.0),
+                                  //     border: Border.all(
+                                  //       width: 2.0,
+                                  //       color: Color(0xFFe86100),
+                                  //     ),
+                                  //   ),
+                                  //   child: ElevatedButton(
+                                  //     onPressed: () async {
+                                  //       print('Submit button is clicked');
+                                  //       // bool validation = await datevalidation();
+                                  //       // if(validation){
+                                  //       //   paymentlistapi(currentDate, startDate, vc);
+                                  //       // }
+                                  //
+                                  //
+                                  //     },
+                                  //     child: Text(
+                                  //       'Submit',
+                                  //       style: TextStyle(
+                                  //         color: Color(0xFFe86100),
+                                  //         fontSize: 16,
+                                  //         fontFamily: 'hind_semibold',
+                                  //       ),
+                                  //     ),
+                                  //     style: ElevatedButton.styleFrom(
+                                  //       backgroundColor: Colors.transparent,
+                                  //       elevation: 0,
+                                  //       shape: RoundedRectangleBorder(
+                                  //         borderRadius: BorderRadius.circular(10.0),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
+                )),
+
             DefaultTabController(
               length: 2,
               child: Column(
@@ -487,20 +529,30 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         ),
                       ),
                       tabs: [
-                        Tab(child:Container(
-width: MediaQuery.of(context).size.width,
-                        child:Text(
-                          'Farmer Details',textAlign: TextAlign.center,
-                        )
-                           )),
+                        Tab(
+                            child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  'Farmer Details',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'hind_semibold',
+                                  ),
+                                ))),
 
-                        Tab(child:Container(
-                            width: MediaQuery.of(context).size.width,
-                            child:Text(
-                                'Direct Farmer Transport Reimbursement',textAlign: TextAlign.center,
-                            )
-                        )),
-                       // Tab(text: 'Direct Farmer Transport Reimbursement'),
+                        Tab(
+                            child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  'Direct Farmer Transport Reimbursement',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'hind_semibold',
+                                  ),
+                                ))),
+                        // Tab(text: 'Direct Farmer Transport Reimbursement'),
                       ],
                     ),
                   ),
@@ -508,974 +560,38 @@ width: MediaQuery.of(context).size.width,
                   //   height: 10.0,
                   // ),
 
-                  SizedBox(
-                    height: 10.0,
-                  ),
+                  // SizedBox(
+                  //   height: 10.0,
+                  // ),
                   IntrinsicHeight(
                       child: Container(
-                          height: MediaQuery.of(context).size.height * 0.90,
+                          height: MediaQuery.of(context).size.height * 0.75,
                           color: Colors.white,
                           child: IntrinsicHeight(
                             child: TabBarView(
                               children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                        height: 65,
-                                        width: MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          // color:  Color(0xFFe86100),
-                                          borderRadius: BorderRadius.circular(6.0),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 6.0),
-                                          child: Container(
-                                            height: 50,
-                                            width: MediaQuery.of(context).size.width,
-                                            decoration: BoxDecoration(
-                                              color: Color(0x8D000000),
-                                              borderRadius: BorderRadius.circular(6.0),
-                                            ),
-                                            child: Column(children: [
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        const Padding(
-                                                          padding: EdgeInsets.fromLTRB(8, 4, 12, 0),
-                                                          child: Text(
-                                                            "Total FFB Qty (MT)",
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                                          child: Text(
-                                                            ":",
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 4,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                                          child: Text(
-                                                            '${totalquantityffb ?? ''}',
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 5,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        const Padding(
-                                                          padding: EdgeInsets.fromLTRB(8, 6, 12, 0),
-                                                          child: Text(
-                                                            "Closing Balance (Rs)",
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                                          child: Text(
-                                                            ":",
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    flex: 4,
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Padding(
-                                                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                                          child: Text(
-                                                            '${closingbalance ?? ''}',
-                                                            style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight: FontWeight.bold,
-                                                              fontFamily: 'hind_semibold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ]),
-                                          ),
-                                        )),
-                                    Expanded(
-                                      // flex: 3,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: paymentDetailsResponse_list.length,
-                                        itemBuilder: (context, index) {
-                                          //     BranchModel branch = brancheslist[index]; // Get the branch at the current index
-                                          //    DateTime dateTime = DateTime.parse(paymentDetailsResponse_list[index].refDate as String);
-
-                                          // Format the date to dd/MM/yyyy
-                                          String formattedDate = DateFormat('dd/MM/yyyy').format(paymentDetailsResponse_list[index].refDate);
-                                          if (paymentDetailsResponse_list.length != 0) {
-                                            return Padding(
-                                                //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                                                padding: EdgeInsets.only(left: 10, right: 10),
-                                                child: IntrinsicHeight(
-                                                  child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(12.0),
-                                                      child: GestureDetector(
-                                                        onTap: () {},
-                                                        child: Card(
-                                                          shadowColor: Colors.transparent,
-                                                          surfaceTintColor: Colors.transparent,
-                                                          child: ClipRRect(
-                                                            borderRadius: BorderRadius.circular(12.0),
-                                                            //surfaceTintColor : Colors.red,
-
-                                                            child: Container(
-                                                              color: Colors.white,
-                                                              child:
-                                                              Row(
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                children: [
-                                                                  Container(
-                                                                      padding: EdgeInsets.all(12),
-                                                                      child:Row(
-                                                                        children: [
-                                                                          Center(
-                                                                            child: Column(
-                                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              children: [
-                                                                                Container(
-                                                                                  //  margin: EdgeInsets.only(right: 10.0, left: 10),
-                                                                                  child: ClipRRect(
-                                                                                    borderRadius: BorderRadius.circular(7.0),
-                                                                                    // child: Image.asset(
-                                                                                    //   'assets/ic_calender.png',
-                                                                                    //   width: 30.0,
-                                                                                    //   height: 30.0,
-                                                                                    //   fit: BoxFit.cover,
-                                                                                    // ),
-                                                                                  ),
-                                                                                ),
-                                                                                SizedBox(height: 2.0),
-                                                                                // Add some spacing between the image and text
-                                                                                Text(
-                                                                                  '$formattedDate',
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.grey,
-                                                                                  ),
-                                                                                  textAlign: TextAlign.center,
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(width: 5.0),
-                                                                          Container(
-                                                                            width: 2.0,
-                                                                            padding: EdgeInsets.all(5),
-                                                                            // height: MediaQuery.of(context).size.height,
-                                                                            //  padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                                            decoration: BoxDecoration(
-                                                                              gradient: LinearGradient(
-                                                                                colors: [
-                                                                                  Color(0xFFFF4500),
-                                                                                  Color(0xFFA678EF),
-                                                                                  Color(0xFFFF4500),
-                                                                                ],
-                                                                                end: Alignment.topRight,
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      )
-                                                                  )
-                                                                 ,
-                                                                  Expanded(
-                                                                      child: Padding(
-                                                                    padding: EdgeInsets.only(left: 0.0),
-                                                                    child:
-                                                                        Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                                      Expanded(
-                                                                        child: Column(
-                                                                          children: [
-                                                                            paymentDetailsResponse_list[index].amount != null && paymentDetailsResponse_list[index].amount != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "Amount (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].amount?.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            paymentDetailsResponse_list[index].adjusted != null && paymentDetailsResponse_list[index].adjusted != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "Adjusted (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].adjusted.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            paymentDetailsResponse_list[index].grAmount != null && paymentDetailsResponse_list[index].grAmount != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "GB Amount (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].grAmount.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            paymentDetailsResponse_list[index].quantity != null && paymentDetailsResponse_list[index].quantity != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "FFB Qty (MT)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].quantity.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            paymentDetailsResponse_list[index].adhocRate != null &&
-                                                                                    paymentDetailsResponse_list[index].adhocRate != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "Adhoc Rate per MT (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].adhocRate.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            paymentDetailsResponse_list[index].invoiceRate != null &&
-                                                                                    paymentDetailsResponse_list[index].invoiceRate != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "Invoice Rate per MT (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].invoiceRate.toStringAsFixed(2) ?? ''}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                            Row(
-                                                                              children: [
-                                                                                Expanded(
-                                                                                  flex: 8,
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      const Padding(
-                                                                                        padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                        child: Text(
-                                                                                          "Description",
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.grey,
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                            fontSize: 14,
-                                                                                            fontFamily: 'hind_semibold',
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                                Expanded(
-                                                                                  flex: 1,
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                        child: Text(
-                                                                                          ":",
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.grey,
-                                                                                            fontSize: 14,
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                            fontFamily: 'hind_semibold',
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                                Expanded(
-                                                                                  flex: 8,
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                        child: Text(
-                                                                                          '${paymentDetailsResponse_list[index].memo}',
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.grey,
-                                                                                            fontSize: 14,
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                            fontFamily: 'hind_semibold',
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            paymentDetailsResponse_list[index].balance != null && paymentDetailsResponse_list[index].balance != 0
-                                                                                ? Row(
-                                                                                    children: [
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            const Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                                              child: Text(
-                                                                                                "Balance (Rs)",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontSize: 14,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 1,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                ":",
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                      Expanded(
-                                                                                        flex: 8,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Padding(
-                                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                                              child: Text(
-                                                                                                '${paymentDetailsResponse_list[index].balance.toStringAsFixed(2)}',
-                                                                                                style: TextStyle(
-                                                                                                  color: Colors.grey,
-                                                                                                  fontSize: 14,
-                                                                                                  fontWeight: FontWeight.bold,
-                                                                                                  fontFamily: 'hind_semibold',
-                                                                                                ),
-                                                                                              ),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : SizedBox.shrink(),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ]),
-                                                                  ))
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )),
-                                                ));
-                                          } else {
-                                            return Center(child: Text('No Farmer Passbook available'));
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    // Align(
-                                    //     alignment: Alignment.bottomCenter,
-                                    // child:
-                                    Expanded(
-                                        // height: 200,
-                                        child: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  //  width: 175,
-                                                  height: 75,
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        Color(0xFFCCCCCC),
-                                                        Color(0xFFFFFFFF),
-                                                        Color(0xFFCCCCCC),
-                                                      ],
-                                                      begin: Alignment.topCenter,
-                                                      end: Alignment.bottomCenter,
-                                                    ),
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                    border: Border.all(
-                                                      width: 2.0,
-                                                      color: Color(0xFFe86100),
-                                                    ),
-                                                  ),
-                                                  child: ElevatedButton(
-                                                    onPressed: () {
-                                                      print('button1clicked');
-                                                      //openFile();
-                                                    },
-                                                    child: Text(
-                                                      'Downloaded Files',
-                                                      style: TextStyle(
-                                                        color: Color(0xFFe86100),
-                                                        fontSize: 12,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
-                                                    ),
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: Colors.transparent,
-                                                      elevation: 0,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 8.0),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Container(
-                                                  width: MediaQuery.of(context).size.width,
-                                                  height: 75,
-                                                  decoration: BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        Color(0xFFCCCCCC),
-                                                        Color(0xFFFFFFFF),
-                                                        Color(0xFFCCCCCC),
-                                                      ],
-                                                      begin: Alignment.topCenter,
-                                                      end: Alignment.bottomCenter,
-                                                    ),
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                    border: Border.all(
-                                                      width: 2.0,
-                                                      color: Color(0xFFe86100),
-                                                    ),
-                                                  ),
-                                                  child: ElevatedButton(
-                                                    onPressed: () {
-                                                      print('button2clicked');
-                                                      exportPayments(paymentDetailsResponse_list, context);
-                                                    },
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: Colors.transparent,
-                                                      elevation: 0,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(10.0),
-                                                      ),
-                                                    ),
-                                                    child: Container(
-                                                      alignment: Alignment.center,
-                                                      child: Text(
-                                                        'Click Here to Download',
-                                                        style: TextStyle(
-                                                          color: Color(0xFFe86100),
-                                                          fontSize: 12,
-                                                          fontFamily: 'hind_semibold',
-                                                        ),
-                                                        maxLines: 1,
-                                                        textAlign: TextAlign.center,
-                                                        overflow: TextOverflow.ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 5.0),
-                                          Container(
-                                            /// flex: 1,
-
-                                            child: Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12.0),
-                                                side: BorderSide(
-                                                  color: Color(0xFFBE9747), // Border color
-                                                ),
-                                              ),
-                                              color: Color(0xFFFFFACB), // Background color
-                                              child: Column(
-                                                children: [
-                                                  ListTile(
-                                                    title: RichText(
-                                                      text: TextSpan(
-                                                        text: 'Note: \n',
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight: FontWeight.normal,
-                                                          color: Color(0xFFe86100), // Color for "Note: \n"
-                                                        ),
-                                                        children: [
-                                                          TextSpan(
-                                                            text: 'FFB Collections which are still payment pending will not show, after Payment only they will start showing',
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.normal,
-                                                              color: Colors.black, // Color for the rest of the text
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ))
-                                    //  )
-                                  ],
+                                //farmer_passbook( payemntlistresp: paymentDetailsResponse_list, totalffbcollections: '$totalquantityffb', closingbalance: '$closingbalance', accountHolderName: '',),
+                                farmer_passbook(
+                                  payemntlistresp: paymentDetailsResponse_list,
+                                  totalffbcollections: '$totalquantityffb',
+                                  closingbalance: closingbalance,
+                                  accountHolderName: '${widget.accountHolderName}',
+                                  accountNumber: '${widget.accountNumber}',
+                                  bankName: '${widget.bankName}',
+                                  district: '${widget.district}',
+                                  farmerCode: '${widget.farmerCode}',
+                                  guardianName: '${widget.guardianName}',
+                                  ifscCode: '${widget.ifscCode}',
+                                  mandal: '${widget.mandal}',
+                                  state: '${widget.state}',
+                                  village: '${widget.village}',
+                                  totalAdjusted: totalAdjusted,
+                                  totalAmount: totalAmount,
+                                  totalBalance: totalBalance,
+                                  totalGRAmount: totalGRAmount,
+                                  totalQuanitity: totalQuanitity,
+                                  branchname: '${widget.branchName}',
                                 ),
-
                                 // Center(
                                 //   child: Text('Tab 1 Content'),
                                 // ),
@@ -1510,18 +626,20 @@ width: MediaQuery.of(context).size.width,
           //     colors: [Color(0xFFDB5D4B), Color(0xFFE39A63), Color(0xFFE39A63), Color(0xFFFFFFF)],
           //   ),
           // ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    CommonStyles.gradientColor1,
-                    CommonStyles.gradientColor2,
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                CommonStyles.gradientColor1,
+                CommonStyles.gradientColor2,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
         )));
   }
+
+
 
   Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
@@ -1720,14 +838,18 @@ width: MediaQuery.of(context).size.width,
   bool datevalidation() {
     bool isValid = true;
     if (fromDate == null || toDate == null) {
-    //  showCustomToastMessageLong("Please select both FromDate and ToDate", context, 1, 5);
+      print('Please select both FromDate and ToDate');
+      //  showCustomToastMessageLong("Please select both FromDate and ToDate", context, 1, 5);
       isValid = false;
     } else if (toDate!.compareTo(fromDate!) < 0) {
+      print('To Date is less than From Date');
+
       //showCustomToastMessageLong("To Date is less than From Date", context, 1, 5);
       isValid = false;
     }
 
     if (isValid) {
+      print('the api hit');
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       String strcustomstartdate = dateFormat.format(fromDate!);
       String strcustomtodate = dateFormat.format(toDate!);
@@ -1735,7 +857,8 @@ width: MediaQuery.of(context).size.width,
       setState(() {
         fromdatetosendtab2 = strcustomstartdate;
         todatetosendtab2 = strcustomtodate;
-        Provider.of<DataProvider>(context, listen: false).updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false)
+            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
         transportlistapi(fromDate!, toDate!, modifiedCode!);
         paymentlistapi(fromDate!, toDate!, modifiedCode!);
       });
@@ -1766,8 +889,8 @@ width: MediaQuery.of(context).size.width,
     int currentMonth = currentDate.month;
     int currentYear = currentDate.year;
 
-      showMonthPicker(
-       context,
+    showMonthPicker(
+      context,
       onSelected: (selectedMonth, selectedYear) {
         setState(() {
           DateTime dateWithoutTime;
@@ -1787,7 +910,7 @@ width: MediaQuery.of(context).size.width,
             dateWithoutTime = DateTime(
               selectedYear,
               selectedMonth + 1,
-              0,  // This automatically sets the date to the last day of the selected month
+              0, // This automatically sets the date to the last day of the selected month
             );
             toDate = dateWithoutTime;
             toFormattedDate = DateFormat('dd/MM/yyyy').format(dateWithoutTime);
@@ -1795,7 +918,7 @@ width: MediaQuery.of(context).size.width,
           }
         });
       },
-        initialSelectedMonth: currentMonth,
+      initialSelectedMonth: currentMonth,
       initialSelectedYear: currentYear,
       firstEnabledMonth: 1,
       lastEnabledMonth: 12,
@@ -1808,11 +931,7 @@ width: MediaQuery.of(context).size.width,
       contentBackgroundColor: Colors.white,
       dialogBackgroundColor: Colors.grey[200],
     );
-
-
-    }
-
-
+  }
 
   // Future<void> _selectDate(BuildContext cc, TextEditingController controller) async {
   //   DateTime initialDate = DateTime.now(); // Default value
@@ -1977,8 +1096,8 @@ width: MediaQuery.of(context).size.width,
             totalGRAmount = responseData['result']['totalGRAmount'];
             totalAdjusted = responseData['result']['totalAdjusted'];
             totalAmount = responseData['result']['totalAmount'];
-            String formattedtotalBalance = totalBalance.toStringAsFixed(2);
-            String formattedtotalQuanitity = totalQuanitity.toStringAsFixed(2);
+            String formattedtotalBalance = totalBalance!.toStringAsFixed(2);
+            String formattedtotalQuanitity = totalQuanitity!.toStringAsFixed(2);
 
             print('paymentresponse: ${paymentresponse.length}');
             print('formattedtotalBalance: ${formattedtotalBalance}');
@@ -2265,7 +1384,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                       //surfaceTintColor : Colors.red,
 
                                       child: Container(
-                                        color: Colors.white,
+                                        color: index.isEven ? Colors.white : Colors.grey[300],
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
@@ -2319,254 +1438,259 @@ class DirectFarmerTransport extends StatelessWidget {
                                             Expanded(
                                                 child: Padding(
                                               padding: EdgeInsets.only(left: 5.0),
-                                              child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                                                        child: Card(
-                                                          //color: Colors.grey,
-                                                          shadowColor: Colors.transparent,
-                                                          surfaceTintColor: Colors.transparent,
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(12.0),
-                                                            ),
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Expanded(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(left: 0.0),
-                                                                    child: Column(
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Padding(
-                                                                          padding: const EdgeInsets.only(top: 15.0),
-                                                                          child: Text(
-                                                                            TransportationChargelistview[index].collectionCode,
-                                                                            style: TextStyle(
-                                                                              fontSize: 16,
-                                                                              color: Color(0xFFFB4110),
-                                                                              fontWeight: FontWeight.bold,
-                                                                              fontFamily: 'Calibri',
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                        const SizedBox(height: 4.0),
-                                                                        Row(
-                                                                          children: [
-                                                                            const Expanded(
-                                                                              flex: 3,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      "Transportation Charges/Ton (Rs)",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            const Expanded(
-                                                                              flex: 0,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                    child: Text(
-                                                                                      ":",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              flex: 2,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      TransportationChargelistview[index].tonnageCost.toStringAsFixed(2),
-                                                                                      style: const TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        Row(
-                                                                          children: [
-                                                                            const Expanded(
-                                                                              flex: 3,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      "Net Weight (Ton)",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            const Expanded(
-                                                                              flex: 0,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                    child: Text(
-                                                                                      ":",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              flex: 2,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      TransportationChargelistview[index].qty.toStringAsFixed(2),
-                                                                                      style: const TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        Row(
-                                                                          children: [
-                                                                            const Expanded(
-                                                                              flex: 3,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      "Total Amount (Rs)",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            const Expanded(
-                                                                              flex: 0,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                    child: Text(
-                                                                                      ":",
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                            Expanded(
-                                                                              flex: 2,
-                                                                              child: Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                children: [
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                    child: Text(
-                                                                                      TransportationChargelistview[index].rate.toStringAsFixed(2),
-                                                                                      style: const TextStyle(
-                                                                                        color: Colors.black54,
-                                                                                        fontSize: 14,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                        fontFamily: 'hind_semibold',
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
+                                              child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                                                            child: Card(
+                                                              //color: Colors.grey,
+                                                              shadowColor: Colors.transparent,
+                                                              surfaceTintColor: Colors.transparent,
+                                                              child: Container(
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(12.0),
                                                                 ),
-                                                              ],
+                                                                child: Row(
+                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                  children: [
+                                                                    Expanded(
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.only(left: 0.0),
+                                                                        child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.only(top: 15.0),
+                                                                              child: Text(
+                                                                                TransportationChargelistview[index].collectionCode,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: Color(0xFFFB4110),
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontFamily: 'Calibri',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            const SizedBox(height: 4.0),
+                                                                            Row(
+                                                                              children: [
+                                                                                const Expanded(
+                                                                                  flex: 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          "Transportation Charges/Ton (Rs)",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                const Expanded(
+                                                                                  flex: 0,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                        child: Text(
+                                                                                          ":",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                  flex: 2,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          TransportationChargelistview[index]
+                                                                                              .tonnageCost
+                                                                                              .toStringAsFixed(2),
+                                                                                          style: const TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                const Expanded(
+                                                                                  flex: 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          "Net Weight (Ton)",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                const Expanded(
+                                                                                  flex: 0,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                        child: Text(
+                                                                                          ":",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                  flex: 2,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          TransportationChargelistview[index].qty.toStringAsFixed(2),
+                                                                                          style: const TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                const Expanded(
+                                                                                  flex: 3,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          "Total Amount (Rs)",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                const Expanded(
+                                                                                  flex: 0,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                        child: Text(
+                                                                                          ":",
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                  flex: 2,
+                                                                                  child: Column(
+                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                                    children: [
+                                                                                      Padding(
+                                                                                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                        child: Text(
+                                                                                          TransportationChargelistview[index].rate.toStringAsFixed(2),
+                                                                                          style: const TextStyle(
+                                                                                            color: Colors.black54,
+                                                                                            fontSize: 14,
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                            fontFamily: 'hind_semibold',
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ]),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ]),
                                             ))
                                           ],
                                         ),
@@ -2735,7 +1859,8 @@ class DirectFarmerTransport extends StatelessWidget {
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: 'Unless Plot is declared during FFB Collection, all plots average transport rate is calculated based on age,size, & Expected FFB.',
+                                      text:
+                                          'Unless Plot is declared during FFB Collection, all plots average transport rate is calculated based on age,size, & Expected FFB.',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.normal,
@@ -3065,5 +2190,1232 @@ class DirectFarmerTransport extends StatelessWidget {
             )));
       },
     );
+  }
+}
+
+class farmer_passbook extends StatefulWidget {
+  // final String FarmerTransportfromdate;
+  // final String FarmerTransporttodate;
+  // final String farmercode;
+  final List<PaymentResponse> payemntlistresp;
+  final String totalffbcollections;
+  final String closingbalance;
+
+  final String accountHolderName;
+  final String accountNumber;
+  final String bankName;
+  final String branchname;
+  final String district;
+  final String farmerCode;
+  final String guardianName;
+  final String ifscCode;
+  final String mandal;
+  final String state;
+  final String village;
+  final double totalAdjusted;
+  final double totalAmount;
+  final double totalBalance;
+  final double totalGRAmount;
+  final double totalQuanitity;
+
+  farmer_passbook(
+      {required this.payemntlistresp,
+      required this.totalffbcollections,
+      required this.closingbalance,
+      required this.accountHolderName,
+      required this.accountNumber,
+      required this.bankName,
+      required this.branchname,
+      required this.district,
+      required this.farmerCode,
+      required this.guardianName,
+      required this.ifscCode,
+      required this.mandal,
+      required this.state,
+      required this.village,
+      required this.totalAdjusted,
+      required this.totalAmount,
+      required this.totalBalance,
+      required this.totalGRAmount,
+      required this.totalQuanitity});
+
+  @override
+  farmer_passbookscreenstate createState() => farmer_passbookscreenstate();
+}
+
+class farmer_passbookscreenstate extends State<farmer_passbook> {
+  @override
+  void initState() {}
+
+  String formatDateToApi(DateTime date) {
+    final DateFormat apiDateFormat = DateFormat('yyyy-MM-dd');
+    return apiDateFormat.format(date);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Consumer<DataProvider>(
+        builder: (context, dataProvider, child) {
+          // DateTime parsedDate = DateTime.parse(dataProvider.data1);
+          // DateTime parsedDate1 = DateTime.parse(dataProvider.data2);
+          //
+          // // Format the DateTime object into the desired format
+          // String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
+          // final String fromFormattedDateApi = formatDateToApi(dataProvider.data1);
+          // final String toFormattedDateApi = formatDateToApi(dataProvider.data2);
+          // transportlistapitabs(parsedDate, parsedDate1, dataProvider.data3);
+          return Container(
+              // height: MediaQuery.of(context).size.height,
+              child: Column(
+            children: [
+              Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          height: 65,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            // color:  Color(0xFFe86100),
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
+                            child: Container(
+                              height: 50,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(0x8D000000),
+                                borderRadius: BorderRadius.circular(6.0),
+                              ),
+                              child: Column(children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.fromLTRB(8, 7, 12, 0),
+                                            child: Text(
+                                              "Total FFB Qty (MT)",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                            child: Text(
+                                              ":",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                            child: Text(
+                                              '${widget.totalffbcollections ?? ''}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.fromLTRB(8, 6, 12, 0),
+                                            child: Text(
+                                              "Closing Balance (Rs)",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                            child: Text(
+                                              ":",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                            child: Text(
+                                              '${widget.closingbalance ?? ''}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'hind_semibold',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                            ),
+                          )),
+                      Container(
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: widget.payemntlistresp.length,
+                          itemBuilder: (context, index) {
+                            //     BranchModel branch = brancheslist[index]; // Get the branch at the current index
+                            //    DateTime dateTime = DateTime.parse(paymentDetailsResponse_list[index].refDate as String);
+
+                            // Format the date to dd/MM/yyyy
+                            String formattedDate = DateFormat('dd/MM/yyyy').format(widget.payemntlistresp[index].refDate);
+                            if (widget.payemntlistresp.length != 0) {
+                              return Padding(
+                                  //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                                  padding: EdgeInsets.only(left: 10, right: 10),
+                                  child: IntrinsicHeight(
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12.0),
+                                        child: GestureDetector(
+                                          onTap: () {},
+                                          child: Card(
+                                            shadowColor: Colors.transparent,
+                                            surfaceTintColor: Colors.transparent,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(12.0),
+                                              //surfaceTintColor : Colors.red,
+
+                                              child: Container(
+                                                color: index.isEven ? Colors.white : Colors.grey[300],
+                                                child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        padding: EdgeInsets.all(12),
+                                                        child: Row(
+                                                          children: [
+                                                            Center(
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                children: [
+                                                                  Container(
+                                                                    //  margin: EdgeInsets.only(right: 10.0, left: 10),
+                                                                    child: ClipRRect(
+                                                                      borderRadius: BorderRadius.circular(7.0),
+                                                                      // child: Image.asset(
+                                                                      //   'assets/ic_calender.png',
+                                                                      //   width: 30.0,
+                                                                      //   height: 30.0,
+                                                                      //   fit: BoxFit.cover,
+                                                                      // ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(height: 2.0),
+                                                                  // Add some spacing between the image and text
+                                                                  Text(
+                                                                    '$formattedDate',
+                                                                    style: TextStyle(
+                                                                      color: Colors.grey,
+                                                                    ),
+                                                                    textAlign: TextAlign.center,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(width: 5.0),
+                                                            Container(
+                                                              width: 2.0,
+                                                              padding: EdgeInsets.all(5),
+                                                              // height: MediaQuery.of(context).size.height,
+                                                              //  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                              decoration: BoxDecoration(
+                                                                gradient: LinearGradient(
+                                                                  colors: [
+                                                                    Color(0xFFFF4500),
+                                                                    Color(0xFFA678EF),
+                                                                    Color(0xFFFF4500),
+                                                                  ],
+                                                                  end: Alignment.topRight,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        )),
+                                                    Expanded(
+                                                        child: Padding(
+                                                      padding: EdgeInsets.only(left: 0.0),
+                                                      child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Expanded(
+                                                              child: Column(
+                                                                children: [
+                                                                  widget.payemntlistresp[index].amount != null &&
+                                                                          widget.payemntlistresp[index].amount != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "Amount (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].amount?.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  widget.payemntlistresp[index].adjusted != null &&
+                                                                          widget.payemntlistresp[index].adjusted != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "Adjusted (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  widget.payemntlistresp[index].grAmount != null && widget.payemntlistresp[index].grAmount != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "GB Amount (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  widget.payemntlistresp[index].quantity != null && widget.payemntlistresp[index].quantity != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "FFB Qty (MT)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  widget.payemntlistresp[index].adhocRate != null && widget.payemntlistresp[index].adhocRate != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "Adhoc Rate per MT (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  widget.payemntlistresp[index].invoiceRate != null &&
+                                                                      widget.payemntlistresp[index].invoiceRate != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "Invoice Rate per MT (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? ''}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                  Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        flex: 8,
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            const Padding(
+                                                                              padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                              child: Text(
+                                                                                "Description",
+                                                                                style: TextStyle(
+                                                                                  color: Colors.grey,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontSize: 14,
+                                                                                  fontFamily: 'hind_semibold',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        flex: 1,
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                          children: [
+                                                                            Padding(
+                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                              child: Text(
+                                                                                ":",
+                                                                                style: TextStyle(
+                                                                                  color: Colors.grey,
+                                                                                  fontSize: 14,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontFamily: 'hind_semibold',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        flex: 8,
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          children: [
+                                                                            Padding(
+                                                                              padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                              child: Text(
+                                                                                '${widget.payemntlistresp[index].memo}',
+                                                                                style: TextStyle(
+                                                                                  color: Colors.grey,
+                                                                                  fontSize: 14,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontFamily: 'hind_semibold',
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
+                                                                      ? Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  const Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                                    child: Text(
+                                                                                      "Balance (Rs)",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontSize: 14,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 1,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      ":",
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 8,
+                                                                              child: Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                                    child: Text(
+                                                                                      '${widget.payemntlistresp[index].balance.toStringAsFixed(2)}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.grey,
+                                                                                        fontSize: 14,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                        fontFamily: 'hind_semibold',
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ]),
+                                                    ))
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                  ));
+                            } else {
+                              return Center(child: Text('No Farmer Passbook available'));
+                            }
+                          },
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+
+
+                              // height: 200,
+                              child:   Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                  ///  padding: EdgeInsets.all(10),
+                                    padding: EdgeInsets.only(left: 10,right:10,bottom: 5),
+
+                                    child:  Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            //  width: 175,
+                                            height: 75,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFFCCCCCC),
+                                                  Color(0xFFFFFFFF),
+                                                  Color(0xFFCCCCCC),
+                                                ],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                              ),
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              border: Border.all(
+                                                width: 2.0,
+                                                color: Color(0xFFe86100),
+                                              ),
+                                            ),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                print('button1clicked');
+                                                //openFile();
+                                              },
+                                              child: Text(
+                                                'Downloaded Files',
+                                                style: TextStyle(
+                                                  color: Color(0xFFe86100),
+                                                  fontSize: 12,
+                                                  fontFamily: 'hind_semibold',
+                                                ),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.transparent,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 8.0),
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            height: 75,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  Color(0xFFCCCCCC),
+                                                  Color(0xFFFFFFFF),
+                                                  Color(0xFFCCCCCC),
+                                                ],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                              ),
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              border: Border.all(
+                                                width: 2.0,
+                                                color: Color(0xFFe86100),
+                                              ),
+                                            ),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                print('button2clicked');
+                                                exportPayments(widget.payemntlistresp, context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.transparent,
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(10.0),
+                                                ),
+                                              ),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  'Click Here to Download',
+                                                  style: TextStyle(
+                                                    color: Color(0xFFe86100),
+                                                    fontSize: 12,
+                                                    fontFamily: 'hind_semibold',
+                                                  ),
+                                                  maxLines: 1,
+                                                  textAlign: TextAlign.center,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  SizedBox(height: 5.0),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 8,right:8),
+
+                                    /// flex: 1,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        side: BorderSide(
+                                          color: Color(0xFFBE9747), // Border color
+                                        ),
+                                      ),
+                                      color: Color(0xFFFFFACB),
+                                      // Background color
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            title: RichText(
+                                              text: TextSpan(
+                                                text: 'Note: \n',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Color(0xFFe86100), // Color for "Note: \n"
+                                                ),
+                                                children: [
+                                                  TextSpan(
+                                                    text:
+                                                    'FFB Collections which are still payment pending will not show, after Payment only they will start showing',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.normal,
+                                                      color: Colors.black, // Color for the rest of the text
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),))
+                    ],
+                  )
+                ],
+              )
+            ],
+          ));
+        },
+      ),
+    );
+  }
+
+  // Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
+  //   // API URL
+  //   String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+  //
+  //   // List of payment responses
+  //   List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
+  //
+  //   // API body data
+  //   Map<String, dynamic> requestBody = {
+  //     "bankDetails": {
+  //       "accountHolderName": "${widget.accountHolderName}",
+  //       "accountNumber": "${widget.accountNumber}",
+  //       "bankName": "${widget.bankName}",
+  //       "branchName": "${widget.branchname}",
+  //       "district": "${widget.district}",
+  //       "farmerCode": "${widget.farmerCode}",
+  //       "guardianName": "${widget.guardianName}",
+  //       "ifscCode": "${widget.ifscCode}",
+  //       "mandal": "${widget.mandal}",
+  //       "state": "${widget.state}",
+  //       "village": "${widget.village}"
+  //     },
+  //     "paymentResponce": paymentResponseMaps,
+  //     "totalAdjusted": {widget.totalAdjusted},
+  //     "totalAmount": {widget.totalAmount},
+  //     "totalBalance": {widget.totalBalance},
+  //     "totalGRAmount": {widget.totalGRAmount},
+  //     "totalQuanitity": {widget.totalQuanitity}
+  //   };
+  //
+  //   // Convert the request body to JSON
+  //   String jsonBody = json.encode(requestBody);
+  //
+  //   try {
+  //     // Make the POST request
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonBody,
+  //     );
+  //
+  //     // Check if the request was successful
+  //     if (response.statusCode == 200) {
+  //       // Handle the response data here
+  //       print('Response body: ${response.body}');
+  //       String base64string = response.body;
+  //       convertBase64ToExcel(base64string, context);
+  //     } else {
+  //
+  //       // Handle the error
+  //       print('Failed to export payments. Status code: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     // Handle any exceptions that occur during the request
+  //     print('Error: $e');
+  //   }
+  // }
+  Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
+    // API URL
+    String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+
+    // List of payment responses
+    List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
+
+    // API body data
+    Map<String, dynamic> requestBody = {
+      "bankDetails": {
+        "accountHolderName": widget.accountHolderName,
+        "accountNumber": widget.accountNumber,
+        "bankName": widget.bankName,
+        "branchName": widget.branchname,
+        "district": widget.district,
+        "farmerCode": widget.farmerCode,
+        "guardianName": widget.guardianName,
+        "ifscCode": widget.ifscCode,
+        "mandal": widget.mandal,
+        "state": widget.state,
+        "village": widget.village,
+      },
+      "paymentResponce": paymentResponseMaps,
+      "totalAdjusted": widget.totalAdjusted,
+      "totalAmount": widget.totalAmount,
+      "totalBalance": widget.totalBalance,
+      "totalGRAmount": widget.totalGRAmount,
+      "totalQuanitity": widget.totalQuanitity,
+    };
+
+    // Convert the request body to JSON
+    String jsonBody = json.encode(requestBody);
+
+    try {
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonBody,
+      );
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Handle the response data here
+        print('Response body: ${response.body}');
+        String base64string = response.body;
+        convertBase64ToExcel(base64string, context);
+      } else {
+        // Handle the error
+        print('Failed to export payments. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any exceptions that occur during the request
+      print('Error: $e');
+    }
+  }
+
+ Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
+    String _base64String = sanitizeBase64(base64String);
+    print('_base64String${_base64String}');
+    // Decode the Base64 String
+    List<int> excelBytes = base64Decode(_base64String);
+
+    // Get the directory to save the file (external storage for visibility)
+    //  Directory? directory = await getExternalStorageDirectory()!;
+
+    // Define the folder and file path
+    //   String folderName = 'MyExcelFiles';
+    //   Directory newFolder = Directory('${directory!.path}/$folderName');
+    //   if (!await newFolder.exists()) {
+    //     await newFolder.create(recursive: true);
+    //     print('Folder created at ${newFolder.path}');
+    //   }
+    Directory directoryPath = Directory('/storage/emulated/0/Download/Excel_Groups/ledger');
+    if (!directoryPath.existsSync()) {
+      directoryPath.createSync(recursive: true);
+    }
+    String filePath = directoryPath.path;
+    String fileName = "Excel.xlsx";
+
+    final File file = File('$filePath/$fileName');
+    print('file${file}');
+    await file.create(recursive: true);
+    await file.writeAsBytes(excelBytes);
+
+    // String filePath = '${newFolder.path}/output.xlsx';
+    // print('filePath $filePath');
+    //
+    // // Write the data to the file
+    // File file = File(filePath);
+    // await file.writeAsBytes(excelBytes);
+    // print('File saved at $filePath');
+    //
+    // // Notify the media scanner (Android only)
+    // if (Platform.isAndroid) {
+    //   await Process.run('cmd', ['media', 'scan', filePath]);
+    // }
+
+    await openFile(filePath);
+  }
+
+  Future<void> openFile(String filePath) async {
+    final url = Uri.file(filePath).toString();
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Could not open the file');
+    }
+  }
+  String sanitizeBase64(String base64String) {
+    return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
   }
 }

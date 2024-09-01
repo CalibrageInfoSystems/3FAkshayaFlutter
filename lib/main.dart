@@ -21,7 +21,12 @@ void main() async {
         saveLocale: true,
         fallbackLocale: AppLocal.englishLocale,
         startLocale: AppLocal.englishLocale,
-        child:  MyApp()
+        child: ChangeNotifierProvider(
+          create: (context) => DataProvider(),
+          child: MyApp(),
+        ),
+
+     //   MyApp()
 
     ),
   );
