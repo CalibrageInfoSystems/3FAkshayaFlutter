@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
 import 'package:akshaya_flutter/Services/models/product_item_model.dart';
+import 'package:akshaya_flutter/Services/product_card_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'package:badges/badges.dart' as badges;
 
 class SelectProductsScreen extends StatefulWidget {
   const SelectProductsScreen({super.key});
@@ -22,6 +26,9 @@ class SelectProductsScreen extends StatefulWidget {
 class _SelectProductsScreenState extends State<SelectProductsScreen> {
   // tr(LocaleKeys.crop),
 
+  Map<int, int> productQuantities = {};
+  int badgeCount = 0;
+
   final List<String> dropdownItems = [
     tr(LocaleKeys.home),
     tr(LocaleKeys.home),
@@ -29,11 +36,25 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   ];
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
+  late List<ProductItem> copyProductsData;
 
   @override
   void initState() {
     super.initState();
     productsData = getProducts();
+    copyProducts();
+
+    print('productQuantities: $productQuantities');
+  }
+
+  void copyProducts() async {
+    copyProductsData = await productsData;
+  }
+
+  List<ProductItem> fetchCardProducts() {
+    return copyProductsData.where((product) {
+      return productQuantities.containsKey(product.id);
+    }).toList();
   }
 
   Future<List<CategoryItem>> getDropdownData() async {
@@ -78,20 +99,20 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          title: tr(LocaleKeys.select_product)),
-        //   actionIcon: Container(
-        //     padding: const EdgeInsets.all(5),
-        //     decoration: BoxDecoration(
-        //       border: Border.all(color: Colors.white),
-        //       borderRadius: BorderRadius.circular(6),
-        //     ),
-        //     child: Text(
-        //       tr(LocaleKeys.crop),
-        //       textAlign: TextAlign.center,
-        //       style: CommonStyles.txSty_12W_fb,
-        //     ),
-        //   ),
-        // ),
+          title: tr(LocaleKeys.select_product),
+          actionIcon: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              tr(LocaleKeys.crop),
+              textAlign: TextAlign.center,
+              style: CommonStyles.txSty_12W_fb,
+            ),
+          ),
+        ),
         body: Column(
           children: [
             headerSection(),
@@ -151,10 +172,20 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                             mainAxisSpacing: 10.0,
                             mainAxisExtent: 250,
                             childAspectRatio: 8 / 2),
-                    itemCount: 12,
+                    itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
-                      return ProductCard(product: product);
+                      final quantity = productQuantities[product.id] ?? 0;
+                      return ProductCard(
+                        product: product,
+                        quantity: quantity,
+                        onQuantityChanged: (newQuantity) {
+                          setState(() {
+                            productQuantities[product.id!] = newQuantity;
+                            updateBadgeCount();
+                          });
+                        },
+                      );
                     },
                   );
                 } else if (snapshot.hasError) {
@@ -272,31 +303,93 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     return Container(
       color: Colors.grey.shade300,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.shop),
+          badges.Badge(
+            badgeContent: Text(
+              '$badgeCount',
+              style: CommonStyles.txSty_12W_fb,
+            ),
+            badgeAnimation: const badges.BadgeAnimation.fade(
+              animationDuration: Duration(seconds: 1),
+              colorChangeAnimationDuration: Duration(seconds: 1),
+              loopAnimation: false,
+              curve: Curves.fastOutSlowIn,
+              colorChangeAnimationCurve: Curves.easeInCubic,
+            ),
+            child: Image.asset(
+              Assets.images.cart.path,
+              width: 30,
+              height: 30,
+            ),
+          ),
           CustomBtn(
             label: 'Next',
-            // borderColor: CommonStyles.primaryTextColor,
-            // backgroundColor: Colors.white,
+            borderColor: CommonStyles.primaryTextColor,
+            backgroundColor: Colors.white,
             borderRadius: 16,
+            onPressed: () {
+              if (fetchCardProducts().isNotEmpty) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProductCardScreen(products: fetchCardProducts()),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please add atleast one product.'),
+                  ),
+                );
+              }
+
+              // fetchCardProducts
+            },
           ),
         ],
       ),
     );
   }
+
+  void updateBadgeCount() {
+    badgeCount =
+        productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
+    print('productQuantities: $productQuantities');
+  }
 }
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final ProductItem product;
-  const ProductCard({super.key, required this.product});
+  final int quantity;
+  final Function(int)
+      onQuantityChanged; // Callback to notify parent about quantity change
+
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.quantity,
+    required this.onQuantityChanged,
+  });
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  late int productQuantity;
+
+  @override
+  void initState() {
+    super.initState();
+    productQuantity = widget.quantity;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      /* width: 220,
-      height: 300, */
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
@@ -309,12 +402,13 @@ class ProductCard extends StatelessWidget {
             children: [
               const SizedBox(),
               Text(
-                '${product.name}',
+                '${widget.product.name}',
                 style: CommonStyles.txSty_14p_f5,
               ),
-              const Icon(
-                Icons.info,
-                color: CommonStyles.primaryTextColor,
+              Image.asset(
+                Assets.images.infoIcon.path,
+                width: 20,
+                height: 20,
               ),
             ],
           ),
@@ -323,22 +417,34 @@ class ProductCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${product.priceInclGst}',
+                '${widget.product.priceInclGst}',
                 style: CommonStyles.txSty_14b_f5,
               ),
               Text(
-                '${product.size} ${product.uomType}',
+                '${widget.product.size} ${widget.product.uomType}',
                 style: CommonStyles.txSty_14p_f5,
               ),
             ],
           ),
           const SizedBox(height: 5),
           Expanded(
-              child: Center(
-                  child: Image.network(
-            '${product.imageUrl}',
-            fit: BoxFit.cover,
-          ))),
+            child: Center(
+              child: CachedNetworkImage(
+                imageUrl: '${widget.product.imageUrl}',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Image.asset(
+                  Assets.images.icLogo.path,
+                  fit: BoxFit.cover,
+                ),
+              ),
+
+              /* Image.network(
+                '${widget.product.imageUrl}',
+              ), */
+            ),
+          ),
+          const SizedBox(height: 3),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -353,11 +459,11 @@ class ProductCard extends StatelessWidget {
                       foregroundColor: CommonStyles.primaryTextColor,
                     ),
                     icon: const Icon(Icons.remove),
-                    onPressed: () {},
+                    onPressed: removeProduct,
                   ),
                   const SizedBox(width: 5),
-                  const Text(
-                    '0',
+                  Text(
+                    '$productQuantity',
                     style: CommonStyles.texthintstyle,
                   ),
                   const SizedBox(width: 5),
@@ -366,7 +472,7 @@ class ProductCard extends StatelessWidget {
                       foregroundColor: CommonStyles.statusGreenText,
                     ),
                     icon: const Icon(Icons.add),
-                    onPressed: () {},
+                    onPressed: addProduct,
                   ),
                 ],
               ),
@@ -384,5 +490,21 @@ class ProductCard extends StatelessWidget {
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(4.0),
         side: const BorderSide(color: Colors.grey));
+  }
+
+  void removeProduct() {
+    if (productQuantity > 0) {
+      setState(() {
+        productQuantity--;
+        widget.onQuantityChanged(productQuantity);
+      });
+    }
+  }
+
+  void addProduct() {
+    setState(() {
+      productQuantity++;
+      widget.onQuantityChanged(productQuantity); // Notify parent of the change
+    });
   }
 }
