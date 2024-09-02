@@ -10,6 +10,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/collection_count.dart';
 import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/collection_info_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -248,29 +249,59 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               Expanded(
                 child: Row(
                   children: [
-                    Text(
-                      tr(LocaleKeys.cc),
-                      style: CommonStyles.txSty_14b_f5,
-                    ),
-                    const SizedBox(width: 60),
+                    Expanded(
+                        child: Text(
+                          tr(LocaleKeys.cc),
+                          style: CommonStyles.txSty_14b_f5,
+                        )),
                     const Text(
-                      ' :  ',
+                      ':  ',
                       style: CommonStyles.txF14Fw5Cb,
                     ),
                     Expanded(
-                      child: Text(
-                        '${data.whsName}',
-                        style: CommonStyles.txF14Fw5Cb,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                        child: Text(
+                          '${data.whsName}',
+                          style: CommonStyles.txF14Fw5Cb,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )),
                   ],
                 ),
               ),
-           //   const Spacer(),
+              const Expanded(
+                child: SizedBox(),
+              ),
             ],
           ),
+          // Row(
+          //
+          //   children: [
+          //     Expanded(
+          //       child: Row(
+          //         children: [
+          //           Text(
+          //             tr(LocaleKeys.cc),
+          //             style: CommonStyles.txSty_14b_f5,
+          //           ),
+          //           const SizedBox(width: 60),
+          //           const Text(
+          //             ' :  ',
+          //             style: CommonStyles.txF14Fw5Cb,
+          //           ),
+          //           Expanded(
+          //             child: Text(
+          //               '${data.whsName}',
+          //               style: CommonStyles.txF14Fw5Cb,
+          //               maxLines: 1,
+          //               overflow: TextOverflow.ellipsis,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //  //   const Spacer(),
+          //   ],
+          // ),
 
           const SizedBox(height: 5),
           Row(
@@ -934,14 +965,22 @@ class InfoDialog extends StatelessWidget {
           Center(
             child: TextButton(
               onPressed: () {
-                CommonStyles.customDialog(
-                  context,
-                  Image.network(
-                    info.receiptImg!,
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
+                CommonStyles.customDialognew(
+                  context,CachedNetworkImage(
+                  imageUrl:   info.receiptImg!,
+                  placeholder: (context, url) =>
+                  const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset(
+                    Assets.images.icLogo.path,
+                    fit: BoxFit.cover,
                   ),
+                ),
+                  // Image.network(
+                  //   info.receiptImg!,
+                  //   width: 300,
+                  //   height: 300,
+                  //   fit: BoxFit.contain,
+                  // ),
                 );
               },
               child: Text(
