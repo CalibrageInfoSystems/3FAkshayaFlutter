@@ -136,6 +136,7 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/loan.png
   AssetGenImage get loan => const AssetGenImage('assets/images/loan.png');
+  AssetGenImage get delivery => const AssetGenImage('assets/images/delivery.png');
 
   /// File path: assets/images/logo_final.png
   AssetGenImage get logoFinal =>

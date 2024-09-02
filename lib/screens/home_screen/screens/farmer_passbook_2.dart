@@ -6,15 +6,18 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/PaymentDetailsResponse.dart';
 import 'package:akshaya_flutter/models/TransportationCharge.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 // import 'package:device_info/device_info.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/cupertino.dart';
@@ -272,92 +275,142 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                   children: [
                     Container(
                       alignment: Alignment.topCenter,
-                      padding: EdgeInsets.only(top: 0.0, left: 12.0, right: 12.0),
+margin: EdgeInsets.only(left: 12,right:12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: CommonStyles.whiteColor),
+                      ),
                       child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white, width: 1.0),
-                              borderRadius: BorderRadius.circular(6.0),
-                            ),
-                            child: DropdownButton<double>(
-                              alignment: Alignment.center,
-                              value: selectedPosition,
-                              iconSize: 22,
+                        child: DropdownButton2<double>(
+                            iconStyleData: const IconStyleData(
                               icon: Icon(
-                                Icons.arrow_drop_down,
+                                Icons.keyboard_arrow_down_rounded,
                                 color: Colors.white,
                               ),
-                              style: TextStyle(
-                                color: Colors.black,
-                              ),
-                              onChanged: (position) {
-                                setState(() {
-                                  selectedPosition = position;
-                                  print('selectedposition $selectedPosition');
-                                });
-                                callApiMethod(selectedPosition!, vendorcode);
+                            ),
+                          isExpanded: true,
+                                onChanged: (position) {
+                                  setState(() {
+                                    selectedPosition = position;
+                                    print('selectedposition $selectedPosition');
+                                  });
+                                  callApiMethod(selectedPosition!, vendorcode);
 
-                                // Now, call your API method based on the selected position
-                              },
-                              isExpanded: true,
-                              items: [
-                                DropdownMenuItem<double>(
-                                  value: 0.0,
-                                  child: Center(
-                                    //alignment: Alignment.center,
-                                    child: Text(
-                                      'Last One Month',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem<double>(
-                                  value: 1.0,
-                                  child: Center(
-                                    //alignment: Alignment.center,
-                                    child: Text(
-                                      'Last Three Months',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem<double>(
-                                  value: 2.0,
-                                  child: Center(
-                                    //alignment: Alignment.center,
-                                    child: Text(
-                                      'Last One Year',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem<double>(
-                                  value: 3.0,
-                                  child: Center(
-                                    //alignment: Alignment.center,
-                                    child: Text(
-                                      'Select Time Period',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              dropdownColor: Colors.grey,
+                                  // Now, call your API method based on the selected position
+                                },
+                          dropdownStyleData: DropdownStyleData(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: Colors.black87,
+                            ),
+                            offset: const Offset(0, 0),
+                            scrollbarTheme: ScrollbarThemeData(
+                              radius: const Radius.circular(40),
+                              thickness: WidgetStateProperty.all<double>(6),
+                              thumbVisibility: WidgetStateProperty.all<bool>(true),
                             ),
                           ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                          ),
+                          value: selectedPosition,
+                          items: [
+                            DropdownMenuItem<double>(
+                              value: 0.0,
+                              child: Center(
+                                //alignment: Alignment.center,
+                                child: Text(
+                                  tr(LocaleKeys.last_month),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "hind_semibold",
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                            DropdownMenuItem<double>(
+                              value: 1.0,
+                              child: Center(
+                                //alignment: Alignment.center,
+                                child: Text(
+                                  tr(LocaleKeys.last_threemonth),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "hind_semibold",
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DropdownMenuItem<double>(
+                              value: 2.0,
+                              child: Center(
+                                //alignment: Alignment.center,
+                                child: Text(
+                                  tr(LocaleKeys.currentfinicialP),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "hind_semibold",
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DropdownMenuItem<double>(
+                              value: 3.0,
+                              child: Center(
+                                //alignment: Alignment.center,
+                                child: Text(
+                                  tr(LocaleKeys.selectedP),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "hind_semibold",
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+
+                        // ButtonTheme(
+                        //   alignedDropdown: true,
+                        //   child: Container(
+                        //     width: double.infinity,
+                        //     decoration: BoxDecoration(
+                        //       border: Border.all(color: Colors.white, width: 1.0),
+                        //       borderRadius: BorderRadius.circular(6.0),
+                        //     ),
+                        //     child: DropdownButton<double>(
+                        //       alignment: Alignment.center,
+                        //       value: selectedPosition,
+                        //       iconSize: 22,
+                        //       icon: Icon(
+                        //         Icons.arrow_drop_down,
+                        //         color: Colors.white,
+                        //       ),
+                        //       style: TextStyle(
+                        //         color: Colors.black,
+                        //       ),
+                        //       onChanged: (position) {
+                        //         setState(() {
+                        //           selectedPosition = position;
+                        //           print('selectedposition $selectedPosition');
+                        //         });
+                        //         callApiMethod(selectedPosition!, vendorcode);
+                        //
+                        //         // Now, call your API method based on the selected position
+                        //       },
+                        //
+
+                        //
+                        //     ),
+                        //
+                        //   ),
+                        //
+                        // )
                         ),
+
                       ),
+
                     ),
                     Visibility(
                       visible: datesavaiablity,
@@ -392,7 +445,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                       },
                                       readOnly: true,
                                       decoration: InputDecoration(
-                                        hintText: 'From Date *',
+                                        hintText: tr(LocaleKeys.from_date),
                                         hintStyle: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -429,7 +482,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                       readOnly: true,
                                       controller: toDateController,
                                       decoration: InputDecoration(
-                                        hintText: 'To Date *',
+                                        hintText: tr(LocaleKeys.to_date),
                                         hintStyle: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -533,7 +586,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                             child: Container(
                                 width: MediaQuery.of(context).size.width,
                                 child: Text(
-                                  'Farmer Details',
+                                  tr(LocaleKeys.payments),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 14,
@@ -545,7 +598,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                             child: Container(
                                 width: MediaQuery.of(context).size.width,
                                 child: Text(
-                                  'Direct Farmer Transport Reimbursement',
+                                  tr(LocaleKeys.trans),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 14,
@@ -565,7 +618,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                   // ),
                   IntrinsicHeight(
                       child: Container(
-                          height: MediaQuery.of(context).size.height * 0.75,
+                          height: MediaQuery.of(context).size.height ,
                           color: Colors.white,
                           child: IntrinsicHeight(
                             child: TabBarView(
@@ -644,7 +697,9 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
     String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
-
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
     // List of payment responses
     List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
 
@@ -690,11 +745,16 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         print('Response body: ${response.body}');
         String base64string = response.body;
         convertBase64ToExcel(base64string, context);
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
       } else {
         // Handle the error
         print('Failed to export payments. Status code: ${response.statusCode}');
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
       }
     } catch (e) {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       // Handle any exceptions that occur during the request
       print('Error: $e');
     }
@@ -776,12 +836,12 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     //     await newFolder.create(recursive: true);
     //     print('Folder created at ${newFolder.path}');
     //   }
-    Directory directoryPath = Directory('/storage/emulated/0/Download/Excel_Groups/ledger');
+    Directory directoryPath = Directory('/storage/emulated/0/Download/3F_Akshaya');
     if (!directoryPath.existsSync()) {
       directoryPath.createSync(recursive: true);
     }
     String filePath = directoryPath.path;
-    String fileName = "Excel.xlsx";
+    String fileName = "3F_Akshaya.xlsx";
 
     final File file = File('$filePath/$fileName');
     print('file${file}');
@@ -1060,6 +1120,9 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   void paymentlistapi(DateTime fromDate, DateTime toDate, String farmervendorCode) async {
     final url = Uri.parse(baseUrl + getvendordata);
     print('url==>555: $url');
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
     final String fromFormattedDateApi = formatDateToApi(fromDate);
     final String toFormattedDateApi = formatDateToApi(toDate);
     print('fromFormattedDateApi: $fromFormattedDateApi');
@@ -1107,6 +1170,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
               closingbalance = formattedtotalBalance;
               totalquantityffb = formattedtotalQuanitity;
               paymentDetailsResponse_list = paymentresponse;
+              CommonStyles.hideHorizontalDotsLoadingDialog(context);
             });
           } else {
             print('Key paymentResponce not found in result');
@@ -1121,12 +1185,15 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
           // }
         } else {
           print('Key result not found in response data');
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
         }
       } else {
         print('Request was not successful. Status code: ${response.statusCode}');
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
       }
     } catch (e) {
       print('Error: $e');
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
     }
   }
 
@@ -1247,9 +1314,18 @@ class DirectFarmerTransport extends StatelessWidget {
   List<TransportationCharge> TransportationChargelistview = [];
 
   @override
-  void initState() {}
+  void initState() {
+    // super.initState();
 
-  void transportlistapitabs(DateTime fromDate, DateTime toDate, String farmervendorCode) async {
+
+  }
+
+  void transportlistapitabs(DateTime fromDate, DateTime toDate, String farmervendorCode,BuildContext context) async {
+
+
+
+
+
     //  String url_ = 'http://103.241.144.240:9096/api/Payment/GetTranspotationChargesByFarmerCode';
     String url_ = baseUrl + getfarmerreimbursement;
     final url = Uri.parse(url_);
@@ -1258,6 +1334,7 @@ class DirectFarmerTransport extends StatelessWidget {
     final String toFormattedDateApi = formatDateToApi(toDate);
     print('fromFormattedDateApi: $fromFormattedDateApi');
     print('toFormattedDateApi: $toFormattedDateApi');
+    CommonStyles.showHorizontalDotsLoadingDialog(context);
 
     final request = {
       "fromDate": fromFormattedDateApi,
@@ -1284,6 +1361,7 @@ class DirectFarmerTransport extends StatelessWidget {
 
         // Create an ApiResponse object from the JSON data
         final apiResponse = ApiResponse.fromJson(jsonData);
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
         //     print('transportationCharges ${apiResponse.transportationCharges}');
         // Print transportationCharges
         // print('Transportation Charges:');
@@ -1310,9 +1388,12 @@ class DirectFarmerTransport extends StatelessWidget {
         TransportationChargelistview = apiResponse.transportationCharges;
         transportlistview = apiResponse.transportRates;
       } else {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+
         print('Request was not successful. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       print('Error: $e');
     }
   }
@@ -1324,7 +1405,9 @@ class DirectFarmerTransport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
+      height: MediaQuery.of(context).size.height,
       child: Consumer<DataProvider>(
         builder: (context, dataProvider, child) {
           DateTime parsedDate = DateTime.parse(dataProvider.data1);
@@ -1334,7 +1417,7 @@ class DirectFarmerTransport extends StatelessWidget {
           String formattedDate = DateFormat('dd/MM/yyyy').format(parsedDate);
           // final String fromFormattedDateApi = formatDateToApi(dataProvider.data1);
           // final String toFormattedDateApi = formatDateToApi(dataProvider.data2);
-          transportlistapitabs(parsedDate, parsedDate1, dataProvider.data3);
+          transportlistapitabs(parsedDate, parsedDate1, dataProvider.data3,context);
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -1399,11 +1482,10 @@ class DirectFarmerTransport extends StatelessWidget {
                                                       margin: EdgeInsets.only(right: 10.0, left: 10),
                                                       child: ClipRRect(
                                                         borderRadius: BorderRadius.circular(7.0),
-                                                        child: Image.asset(
-                                                          'assets/ic_calender.png',
-                                                          width: 30.0,
-                                                          height: 30.0,
-                                                          fit: BoxFit.cover,
+                                                        child: Image.asset( Assets.images.icCalender.path,
+                                                          //  color: CommonStyles.primaryTextColor,
+                                                          height: 25,
+                                                          width: 25,
                                                         ),
                                                       ),
                                                     ),
@@ -1413,6 +1495,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                       '$formattedDate',
                                                       style: TextStyle(
                                                         color: Colors.grey,
+                                                        fontFamily: "hind_semibold",
                                                       ),
                                                       textAlign: TextAlign.center,
                                                     ),
@@ -1473,14 +1556,14 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                                   fontSize: 16,
                                                                                   color: Color(0xFFFB4110),
                                                                                   fontWeight: FontWeight.bold,
-                                                                                  fontFamily: 'Calibri',
+                                                                                  fontFamily: "hind_semibold",
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                            const SizedBox(height: 4.0),
+                                                                             SizedBox(height: 4.0),
                                                                             Row(
                                                                               children: [
-                                                                                const Expanded(
+                                                                                 Expanded(
                                                                                   flex: 3,
                                                                                   child: Column(
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1488,7 +1571,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                                       Padding(
                                                                                         padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                         child: Text(
-                                                                                          "Transportation Charges/Ton (Rs)",
+                                                                                       tr(LocaleKeys.trans_charges),
                                                                                           style: TextStyle(
                                                                                             color: Colors.black,
                                                                                             fontSize: 14,
@@ -1548,7 +1631,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                             ),
                                                                             Row(
                                                                               children: [
-                                                                                const Expanded(
+                                                                                 Expanded(
                                                                                   flex: 3,
                                                                                   child: Column(
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1556,8 +1639,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                                       Padding(
                                                                                         padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                         child: Text(
-                                                                                          "Net Weight (Ton)",
-                                                                                          style: TextStyle(
+                                                                                          tr(LocaleKeys.net_weightt),                                                                                          style: TextStyle(
                                                                                             color: Colors.black,
                                                                                             fontSize: 14,
                                                                                             fontWeight: FontWeight.bold,
@@ -1614,7 +1696,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                             ),
                                                                             Row(
                                                                               children: [
-                                                                                const Expanded(
+                                                                                 Expanded(
                                                                                   flex: 3,
                                                                                   child: Column(
                                                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1622,8 +1704,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                                                                       Padding(
                                                                                         padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                         child: Text(
-                                                                                          "Total Amount (Rs)",
-                                                                                          style: TextStyle(
+                                                                                          tr(LocaleKeys.total_amt),                                                                                            style: TextStyle(
                                                                                             color: Colors.black,
                                                                                             fontSize: 14,
                                                                                             fontWeight: FontWeight.bold,
@@ -1709,7 +1790,7 @@ class DirectFarmerTransport extends StatelessWidget {
                             height: MediaQuery.of(context).size.height / 2,
                             child: Center(
                                 child: Text(
-                              'No Direct Farmer Transport Reimbursement Found',
+                              tr(LocaleKeys.no_trans_found),
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xFFFB4110),
@@ -1730,9 +1811,10 @@ class DirectFarmerTransport extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 1,
-                          child: Container(
+                          child:
+                          IntrinsicHeight(
                             //  width: 175,
-                            height: 45,
+                          //  height: 45,
                             // decoration: BoxDecoration(
                             //   gradient: LinearGradient(
                             //     colors: [
@@ -1773,11 +1855,15 @@ class DirectFarmerTransport extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 8.0),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 45,
+                        IntrinsicWidth(
+                          //flex: 2,
+                          child:
+                          IntrinsicHeight(
+                            // width: MediaQuery.of(context).size.width,
+                            // height: 45,
+                            child:Container(
+                              padding: EdgeInsets.all(5),
+                             // width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -1811,12 +1897,16 @@ class DirectFarmerTransport extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Image.asset('assets/delivery.png', height: 20, width: 20),
+                                      Image.asset( Assets.images.icCalender.path,
+                                        //  color: CommonStyles.primaryTextColor,
+                                        height: 20,
+                                        width:20,
+                                      ),
                                       SizedBox(
                                         width: 5,
                                       ),
                                       Text(
-                                        'Transportation Rates',
+                                        tr(LocaleKeys.transportationrates),
                                         style: TextStyle(
                                           color: Color(0xFFe86100),
                                           fontSize: 12,
@@ -1831,7 +1921,7 @@ class DirectFarmerTransport extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ],
+                        ),],
                     ),
 
                     ///  SizedBox(height: 5.0),
@@ -1847,30 +1937,51 @@ class DirectFarmerTransport extends StatelessWidget {
                         ),
                         color: Color(0xFFFFFACB), // Background color
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ListTile(
-                              title: RichText(
-                                text: TextSpan(
-                                  text: 'Note: \n',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                    color: Color(0xFFe86100), // Color for "Note: \n"
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          'Unless Plot is declared during FFB Collection, all plots average transport rate is calculated based on age,size, & Expected FFB.',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                        color: Colors.black, // Color for the rest of the text
-                                      ),
-                                    ),
-                                  ],
+                            Padding(    padding: EdgeInsets.only(left: 10,right:4),
+
+                              child: Text(
+                                tr(LocaleKeys.notee),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: "hind_semibold",
+                                  color: Color(0xFFe86100), // Color for "Note: \n"
                                 ),
                               ),
                             ),
+                            Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
+                              // style: TextStyle(
+                              //   fontSize: 14,
+                              //   fontWeight: FontWeight.normal,
+                              //   color: Colors.black, // Color for the rest of the text
+                              // ),
+                              style: CommonStyles.txSty_14b_f5,),)
+                            // ListTile(
+                            //   title: RichText(
+                            //     text: TextSpan(
+                            //       text: tr(LocaleKeys.notee),
+                            //       style: TextStyle(
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.normal,
+                            //         color: Color(0xFFe86100), // Color for "Note: \n"
+                            //       ),
+                            //       children: [
+                            //         TextSpan(
+                            //           text:
+                            //              tr(LocaleKeys.tansportation_note),
+                            //           // style: TextStyle(
+                            //           //   fontSize: 14,
+                            //           //   fontWeight: FontWeight.normal,
+                            //           //   color: Colors.black, // Color for the rest of the text
+                            //           // ),
+                            //           style: CommonStyles.txSty_14b_f5,
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -1944,7 +2055,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        const Expanded(
+                                         Expanded(
                                           flex: 3,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1952,8 +2063,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                 child: Text(
-                                                  "Village",
-                                                  style: TextStyle(
+tr(LocaleKeys.village),                                                  style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
@@ -2010,7 +2120,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        const Expanded(
+                                         Expanded(
                                           flex: 3,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2018,7 +2128,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                 child: Text(
-                                                  "Mandal",
+                                                  tr(LocaleKeys.mandal),
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -2076,7 +2186,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        const Expanded(
+                                         Expanded(
                                           flex: 3,
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2084,7 +2194,7 @@ class DirectFarmerTransport extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                 child: Text(
-                                                  "Rate per Ton (Rs)",
+                                                  tr(LocaleKeys.rate),
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,
@@ -2170,7 +2280,7 @@ class DirectFarmerTransport extends StatelessWidget {
                       print('button1clicked');
                     },
                     child: Text(
-                      'Ok',
+                      tr(LocaleKeys.ok),
                       style: TextStyle(
                         color: Color(0xFFe86100),
                         fontSize: 14,
@@ -2244,6 +2354,7 @@ class farmer_passbook extends StatefulWidget {
 }
 
 class farmer_passbookscreenstate extends State<farmer_passbook> {
+  String? _localFilePath;
   @override
   void initState() {}
 
@@ -2255,6 +2366,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height,
+      color: Colors.white,
       child: Consumer<DataProvider>(
         builder: (context, dataProvider, child) {
           // DateTime parsedDate = DateTime.parse(dataProvider.data1);
@@ -2274,9 +2387,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                          height: 65,
-                          width: MediaQuery.of(context).size.width,
+                      IntrinsicHeight(
+
+                          //width: MediaQuery.of(context).size.width,
+                        child: Container(
                           decoration: BoxDecoration(
                             // color:  Color(0xFFe86100),
                             borderRadius: BorderRadius.circular(6.0),
@@ -2284,7 +2398,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                           child: Padding(
                             padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
                             child: Container(
-                              height: 50,
+                            //  height: 50,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                 color: Color(0x8D000000),
@@ -2298,10 +2412,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Padding(
+                                           Padding(
                                             padding: EdgeInsets.fromLTRB(8, 7, 12, 0),
                                             child: Text(
-                                              "Total FFB Qty (MT)",
+                                             tr(LocaleKeys.ffb_qty),
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -2362,10 +2476,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Padding(
-                                            padding: EdgeInsets.fromLTRB(8, 6, 12, 0),
+                                           Padding(
+                                            padding: EdgeInsets.fromLTRB(8, 6, 12, 8),
                                             child: Text(
-                                              "Closing Balance (Rs)",
+                                             tr(LocaleKeys.totalBalance),
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -2382,7 +2496,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                                             child: Text(
                                               ":",
                                               style: TextStyle(
@@ -2403,7 +2517,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                            padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                                             child: Text(
                                               '${widget.closingbalance ?? ''}',
                                               style: TextStyle(
@@ -2421,7 +2535,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 ),
                               ]),
                             ),
-                          )),
+                          )),),
                       Container(
                         height: MediaQuery.of(context).size.height / 2.5,
                         child: ListView.builder(
@@ -2443,6 +2557,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                         child: GestureDetector(
                                           onTap: () {},
                                           child: Card(
+                                            elevation: 8,
                                             shadowColor: Colors.transparent,
                                             surfaceTintColor: Colors.transparent,
                                             child: ClipRRect(
@@ -2450,7 +2565,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                               //surfaceTintColor : Colors.red,
 
                                               child: Container(
-                                                color: index.isEven ? Colors.white : Colors.grey[300],
+                                                color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
                                                 child: Row(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
@@ -2467,12 +2582,11 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                     //  margin: EdgeInsets.only(right: 10.0, left: 10),
                                                                     child: ClipRRect(
                                                                       borderRadius: BorderRadius.circular(7.0),
-                                                                      // child: Image.asset(
-                                                                      //   'assets/ic_calender.png',
-                                                                      //   width: 30.0,
-                                                                      //   height: 30.0,
-                                                                      //   fit: BoxFit.cover,
-                                                                      // ),
+                                                                     child: Image.asset( Assets.images.icCalender.path,
+                                                                      //  color: CommonStyles.primaryTextColor,
+                                                                        height: 25,
+                                                                        width: 25,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                   SizedBox(height: 2.0),
@@ -2525,10 +2639,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "Amount (Rs)",
+                                                                                   tr(LocaleKeys.amount),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2593,10 +2707,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "Adjusted (Rs)",
+                                                                                      tr(LocaleKeys.adjusted),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2660,10 +2774,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "GB Amount (Rs)",
+                                                                                      tr(LocaleKeys.gr),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2727,10 +2841,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "FFB Qty (MT)",
+                                                                                     tr(LocaleKeys.ffb),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2794,10 +2908,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "Adhoc Rate per MT (Rs)",
+                                                                                      tr(LocaleKeys.adhoc_rate),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2865,7 +2979,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "Invoice Rate per MT (Rs)",
+                                                                                      tr(LocaleKeys.invoice_rate),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -2928,10 +3042,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                         child: Column(
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
-                                                                            const Padding(
+                                                                             Padding(
                                                                               padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                               child: Text(
-                                                                                "Description",
+                                                                                tr(LocaleKeys.descriptionn),
                                                                                 style: TextStyle(
                                                                                   color: Colors.grey,
                                                                                   fontWeight: FontWeight.bold,
@@ -2994,10 +3108,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                               child: Column(
                                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                                 children: [
-                                                                                  const Padding(
+                                                                                   Padding(
                                                                                     padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                                     child: Text(
-                                                                                      "Balance (Rs)",
+                                                                                      tr(LocaleKeys.balance),
                                                                                       style: TextStyle(
                                                                                         color: Colors.grey,
                                                                                         fontWeight: FontWeight.bold,
@@ -3113,10 +3227,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 print('button1clicked');
-                                                //openFile();
+                                                _openFile();
                                               },
                                               child: Text(
-                                                'Downloaded Files',
+                                                tr(LocaleKeys.download),
                                                 style: TextStyle(
                                                   color: Color(0xFFe86100),
                                                   fontSize: 12,
@@ -3170,7 +3284,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                               child: Container(
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  'Click Here to Download',
+                                                 tr(LocaleKeys.click_downlad),
                                                   style: TextStyle(
                                                     color: Color(0xFFe86100),
                                                     fontSize: 12,
@@ -3204,30 +3318,59 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                       color: Color(0xFFFFFACB),
                                       // Background color
                                       child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          ListTile(
-                                            title: RichText(
-                                              text: TextSpan(
-                                                text: 'Note: \n',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.normal,
-                                                  color: Color(0xFFe86100), // Color for "Note: \n"
-                                                ),
-                                                children: [
-                                                  TextSpan(
-                                                    text:
-                                                    'FFB Collections which are still payment pending will not show, after Payment only they will start showing',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.normal,
-                                                      color: Colors.black, // Color for the rest of the text
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                          Padding(    padding: EdgeInsets.only(left: 10,right:4,bottom: 5),
+
+                                          child: Text(
+                                          tr(LocaleKeys.notee),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.normal,
+                                        fontFamily: "hind_semibold",
+                                        color: Color(0xFFe86100), // Color for "Note: \n"
+                                      ),
+                                    ),
                                           ),
+Padding(padding:  EdgeInsets.only(left: 10,right:4) ,child:Text( tr(LocaleKeys.paymentnote_note),
+  // style: TextStyle(
+  //   fontSize: 14,
+  //   fontWeight: FontWeight.normal,
+  //   color: Colors.black, // Color for the rest of the text
+  // ),
+  style: CommonStyles.txSty_14b_f5,),)
+                                          // Text( tr(LocaleKeys.paymentnote_note),
+                                          //   // style: TextStyle(
+                                          //   //   fontSize: 14,
+                                          //   //   fontWeight: FontWeight.normal,
+                                          //   //   color: Colors.black, // Color for the rest of the text
+                                          //   // ),
+                                          //   style: CommonStyles.txSty_14b_f5,),
+                                          // ListTile(
+                                          //   title: RichText(
+                                          //     text: TextSpan(
+                                          //       text: tr(LocaleKeys.notee),
+                                          //       style: TextStyle(
+                                          //         fontSize: 14,
+                                          //         fontWeight: FontWeight.normal,
+                                          //         fontFamily: "hind_semibold",
+                                          //         color: Color(0xFFe86100), // Color for "Note: \n"
+                                          //       ),
+                                          //       children: [
+                                          //         TextSpan(
+                                          //           text:
+                                          //           tr(LocaleKeys.paymentnote_note),
+                                          //           // style: TextStyle(
+                                          //           //   fontSize: 14,
+                                          //           //   fontWeight: FontWeight.normal,
+                                          //           //   color: Colors.black, // Color for the rest of the text
+                                          //           // ),
+                                          //           style: CommonStyles.txSty_14b_f5,
+                                          //         ),
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -3243,6 +3386,13 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
         },
       ),
     );
+  }
+  void _openFile() {
+    if (_localFilePath != null) {
+      OpenFilex.open(_localFilePath!);
+    } else {
+      print("File not downloaded yet!");
+    }
   }
 
   // Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
@@ -3307,7 +3457,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
     String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
-
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
     // List of payment responses
     List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
 
@@ -3353,11 +3505,18 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
         print('Response body: ${response.body}');
         String base64string = response.body;
         convertBase64ToExcel(base64string, context);
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
       } else {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
         // Handle the error
         print('Failed to export payments. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       // Handle any exceptions that occur during the request
       print('Error: $e');
     }
@@ -3379,18 +3538,32 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
     //     await newFolder.create(recursive: true);
     //     print('Folder created at ${newFolder.path}');
     //   }
-    Directory directoryPath = Directory('/storage/emulated/0/Download/Excel_Groups/ledger');
+    Directory directoryPath = Directory('/storage/emulated/0/Download/3FAkshaya');
     if (!directoryPath.existsSync()) {
       directoryPath.createSync(recursive: true);
     }
     String filePath = directoryPath.path;
-    String fileName = "Excel.xlsx";
+    String fileName = "3FAkshaya.xlsx";
 
     final File file = File('$filePath/$fileName');
+
     print('file${file}');
     await file.create(recursive: true);
     await file.writeAsBytes(excelBytes);
 
+
+    setState(() {
+      _localFilePath=  file.path;
+      Fluttertoast.showToast(
+          msg: "Downloaded Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+
+    });
     // String filePath = '${newFolder.path}/output.xlsx';
     // print('filePath $filePath');
     //
@@ -3404,7 +3577,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
     //   await Process.run('cmd', ['media', 'scan', filePath]);
     // }
 
-    await openFile(filePath);
+   // await openFile(filePath);
   }
 
   Future<void> openFile(String filePath) async {
