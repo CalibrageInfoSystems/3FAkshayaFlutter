@@ -1,8 +1,7 @@
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
-
-import '../gen/assets.gen.dart';
 
 class CommonStyles {
   // colors
@@ -252,7 +251,6 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: CommonStyles.whiteColor,
   );
- // <color name="colorOrange_head">#DAF05F4E</color>
 
   static TextStyle dayTextStyle =
       const TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
@@ -269,6 +267,54 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: headercolor,
   );
+  static void customDialognew(BuildContext context, Widget child) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Stack(
+              children: [
+                child,
+                Positioned(
+                  top: 4.0,
+                  right: 4.0,
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Image.asset(
+                        Assets.images.cancel.path,
+                        height: 20,
+                        width: 20,
+                      )),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack,
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
+  }
 
   static Future<bool> checkInternetConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -380,51 +426,6 @@ class CommonStyles {
       return formateDate;
     }
   }
-  static void customDialognew(BuildContext context, Widget child) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: '',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation1, animation2) {
-        return Center(
-          child: Material(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Stack(
-              children: [
-                child,
-                Positioned(
-                  top: 4.0,
-                  right: 4.0,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Image.asset(Assets.images.cancel.path,height: 20,width: 20,)
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (context, animation1, animation2, child) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-              parent: animation1,
-              curve: Curves.easeOutBack,
-            ),
-          ),
-          child: child,
-        );
-      },
-    );
-  }
 
   static void customDialog(BuildContext context, Widget child) {
     showGeneralDialog(
@@ -490,6 +491,23 @@ class CommonStyles {
     );
   }
 
+  static Widget horizontalGradientDivider({List<Color>? colors}) {
+    return Container(
+      height: 0.5,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: colors ??
+              [
+                const Color(0xCBBEBEBE),
+                const Color(0xFFe86100),
+                const Color(0xCBBEBEBE),
+              ],
+        ),
+      ),
+    );
+  }
+
   static void hideHorizontalDotsLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
   }
@@ -499,9 +517,6 @@ class CommonStyles {
       CommonStyles.showCustomDialog(context, message);
     });
   }
-
-
-
 }
 
 class SpinKitHorizontalDots extends StatefulWidget {
