@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 
+import '../gen/assets.gen.dart';
+
 class CommonStyles {
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
@@ -377,6 +379,51 @@ class CommonStyles {
     } else {
       return formateDate;
     }
+  }
+  static void customDialognew(BuildContext context, Widget child) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Stack(
+              children: [
+                child,
+                Positioned(
+                  top: 4.0,
+                  right: 4.0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Image.asset(Assets.images.cancel.path,height: 20,width: 20,)
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack,
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
   }
 
   static void customDialog(BuildContext context, Widget child) {

@@ -25,6 +25,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Services/GodownSelectionScreen.dart';
+import 'Learning/EncyclopediaActivity.dart';
 import 'screens/farmer_passbook.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -455,26 +456,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 
-  Widget gridLearningItem(int index, String title) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          getLearningImagePath(index),
-          width: 35,
-          height: 35,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(height: 5),
-        Text(
-          title,
-          style: CommonStyles.txSty_12W_fb.copyWith(
-              color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
-        ),
-      ],
+  Widget gridLearningItem( int index, String title) {
+    return GestureDetector(
+      onTap: () {
+        print('index====$index');
+        List<String> tabnames;
+        if (index == 0) {
+          tabnames = ['Standard', 'PDF', 'Videos'];
+        } else {
+          tabnames = ['PDF', 'Videos'];
+        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EncyclopediaActivity(
+              tabNames: tabnames,
+              appBarTitle: title,
+            ),
+          ),
+        );
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            getLearningImagePath(index),
+            width: 35,
+            height: 35,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 5),
+          Text(
+            title,
+            style: CommonStyles.txSty_12W_fb.copyWith(
+                color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
     );
   }
+
 
   Widget serviceGridItem(int index, int gridSize, int serviceTypeId) {
     int totalColumns = 3;
