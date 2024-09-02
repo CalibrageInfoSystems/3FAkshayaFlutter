@@ -49,8 +49,8 @@ class FarmerPassbookScreen extends StatelessWidget {
                   children: [
                     CustomBtn(
                       label: 'Next',
-                      borderColor: CommonStyles.primaryTextColor,
-                      btnColor: CommonStyles.primaryTextColor,
+                      // borderColor: CommonStyles.primaryTextColor,
+                      // btnColor: CommonStyles.primaryTextColor,
                     ),
                   ],
                 ),

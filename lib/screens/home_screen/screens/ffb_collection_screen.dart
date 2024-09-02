@@ -151,11 +151,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     : timePeriodSelector(),
                 const SizedBox(height: 10),
                 isTimePeriod ? const SizedBox() : collectionCount(),
-                const SizedBox(height: 10),
+               //const SizedBox(height: 10),
               ],
             ),
           ),
-          isTimePeriod ? const SizedBox() : collectionData(),
+          isTimePeriod ? const SizedBox() : collectionData(context),
         ],
       ),
     );
@@ -166,34 +166,37 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     required CollectionData data,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: index % 2 == 0 ? Colors.white : Colors.grey.shade200,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
+      child:Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 '${data.uColnid}',
-                style: CommonStyles.txSty_14p_f5
-                    .copyWith(fontWeight: FontWeight.bold),
+                style: CommonStyles.txSty_14p_f5.copyWith(fontWeight: FontWeight.bold),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.info,
-                  color: CommonStyles.primaryTextColor,
-                ),
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   getInfoCollectionInfo(data.uColnid!);
                 },
+                child: Image.asset(
+                  Assets.images.infoIcon.path,
+                  color: CommonStyles.primaryTextColor,
+                  height: 25,
+                  width: 25,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
+
+
+          const SizedBox(height: 5),
           Row(
             children: [
               Expanded(
@@ -201,18 +204,18 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   children: [
                     Expanded(
                         child: Text(
-                      tr(LocaleKeys.only_date),
-                      style: CommonStyles.txSty_14b_f5,
-                    )),
+                          tr(LocaleKeys.only_date),
+                          style: CommonStyles.txSty_14b_f5,
+                        )),
                     const Text(
-                      ':  ',
+                      ' :  ',
                       style: CommonStyles.txF14Fw5Cb,
                     ),
                     Expanded(
                         child: Text(
-                      '${CommonStyles.formateDate(data.docDate)}', //'${data.docDate}',
-                      style: CommonStyles.txF14Fw5Cb,
-                    )),
+                          '${CommonStyles.formateDate(data.docDate)}',
+                          style: CommonStyles.txF14Fw5Cb,
+                        )),
                   ],
                 ),
               ),
@@ -222,42 +225,21 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   children: [
                     Expanded(
                         child: Text(
-                      tr(LocaleKeys.weight),
-                      // 'Weight',
-                      style: CommonStyles.txSty_14b_f5,
-                    )),
+                          tr(LocaleKeys.weight),
+                          style: CommonStyles.txSty_14b_f5,
+                        )),
                     const Text(
                       ':  ',
                       style: CommonStyles.txF14Fw5Cb,
                     ),
                     Expanded(
                         child: Text(
-                      '${data.quantity}',
-                      style: CommonStyles.txF14Fw5Cb,
-                    )),
+                          '${data.quantity}',
+                          style: CommonStyles.txF14Fw5Cb,
+                        )),
                   ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Text(
-                tr(LocaleKeys.cc),
-                // 'CC',
-                style: CommonStyles.txSty_14b_f5,
-              ),
-              const SizedBox(width: 60),
-              const Text(
-                ':  ',
-                style: CommonStyles.txF14Fw5Cb,
-              ),
-              Text(
-                '${data.uColnid}',
-                style: CommonStyles.txF14Fw5Cb,
-              ),
-              const Spacer(),
             ],
           ),
           const SizedBox(height: 5),
@@ -266,70 +248,120 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               Expanded(
                 child: Row(
                   children: [
+                    Text(
+                      tr(LocaleKeys.cc),
+                      style: CommonStyles.txSty_14b_f5,
+                    ),
+                    const SizedBox(width: 60),
+                    const Text(
+                      ' :  ',
+                      style: CommonStyles.txF14Fw5Cb,
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${data.whsName}',
+                        style: CommonStyles.txF14Fw5Cb,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+           //   const Spacer(),
+            ],
+          ),
+
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
                     Expanded(
                         child: Text(
-                      tr(LocaleKeys.status),
-                      // 'Status',
-                      style: CommonStyles.txSty_14b_f5,
-                    )),
+                          tr(LocaleKeys.status),
+                          style: CommonStyles.txSty_14b_f5,
+                        )),
                     const Text(
                       ':  ',
                       style: CommonStyles.txF14Fw5Cb,
                     ),
                     Expanded(
                         child: Text(
-                      '${data.uApaystat}',
-                      style: CommonStyles.txF14Fw5Cb,
-                    )),
+                          '${data.uApaystat}',
+                          style: CommonStyles.txF14Fw5Cb.copyWith(
+                            color: data.uApaystat == 'Paid' ? Colors.green : Colors.red,
+                          ),
+                        )),
                   ],
                 ),
               ),
               const Expanded(
                 child: SizedBox(),
-              )
+              ),
             ],
           ),
         ],
-      ),
+      )
+
+
     );
   }
-
-  Expanded collectionData() {
+  Expanded collectionData(BuildContext context) {
     return Expanded(
       child: Container(
         // color: Colors.teal,
-        padding: const EdgeInsets.fromLTRB(10, 12, 12, 0),
+        padding: const EdgeInsets.fromLTRB(10, 5, 12, 0),
         child: FutureBuilder(
-            future: apiCollectionData,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final collection = snapshot.data as CollectionResponse;
+          future: apiCollectionData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Show loading dialog
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                CommonStyles.showHorizontalDotsLoadingDialog(context);
+              });
+              return const SizedBox.shrink(); // Return an empty widget while loading
+            } else {
+              // Hide loading dialog
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                CommonStyles.hideHorizontalDotsLoadingDialog(context);
+              });
+            }
 
-                if (collection.collectionData != null) {
-                  return ListView.builder(
-                    itemCount: collection.collectionData!.length,
-                    itemBuilder: (context, index) {
-                      return collectionDataItem(
-                          index: index,
-                          data: collection.collectionData![index]);
-                    },
-                  );
-                } else {
-                  return Center(
-                      child: Text(
-                    tr(LocaleKeys.no_collections_found),
+            if (snapshot.hasData) {
+              final collection = snapshot.data as CollectionResponse;
+
+              if (collection.collectionData != null) {
+                return ListView.builder(
+                  itemCount: collection.collectionData!.length,
+                  itemBuilder: (context, index) {
+                    return collectionDataItem(
+                        index: index, data: collection.collectionData![index]);
+                  },
+                );
+              } else {
+                return const Center(
+                  child: Text(
+                    'No Collections Available',
                     style: CommonStyles.txSty_16p_fb,
-                  ));
-                }
+                  ),
+                );
               }
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
-              return const Center(child: CircularProgressIndicator());
-            }),
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }
+
+
 
   Widget collectionCount() {
     return FutureBuilder(
@@ -358,11 +390,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     listRow(
                         title: tr(LocaleKeys.unPaidCollectionsWeight),
                         // title: 'Unpaid Collections Weight',
-                        value: data.paidCollectionsWeight.toString()),
+                        value: data.unPaidCollectionsWeight.toString()),
                     listRow(
                         title: tr(LocaleKeys.paidCollectionsWeight),
                         // title: 'Paid Collections Weight',
-                        value: data.unPaidCollectionsWeight.toString()),
+                        value: data.paidCollectionsWeight.toString()),
                   ],
                 ),
               );
@@ -768,15 +800,15 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   void validateAndSubmit(DateTime? selectedFromDate, DateTime? selectedToDate) {
     if (selectedFromDate == null || selectedToDate == null) {
-      return errorDialog(
-        context,
-        errorMessage: tr(LocaleKeys.enter_Date),
-      );
+      return _showErrorDialog(tr(LocaleKeys.enter_Date));
+
+      // return errorDialog(
+      //   context,
+      //   errorMessage: tr(LocaleKeys.enter_Date),
+      // );
     } else if (selectedToDate.isBefore(selectedFromDate)) {
-      return errorDialog(
-        context,
-        errorMessage: tr(LocaleKeys.datevalidation),
-      );
+      return _showErrorDialog(tr(LocaleKeys.datevalidation));
+
     }
     apiCollectionData = getCollectionData(
       fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
@@ -834,8 +866,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   }
 
   Future<void> getInfoCollectionInfo(String code) async {
-    final apiUrl =
-        'http://103.241.144.240:9096/api/Collection/CollectionInfoById/$code';
+    final apiUrl = 'http://103.241.144.240:9096/api/Collection/CollectionInfoById/$code';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -848,6 +879,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       }
     }
   }
+  void _showErrorDialog(String message) {
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showCustomDialog(context, message);
+    });
+  }
+
 }
 
 class CollectionResponse {
@@ -865,7 +902,7 @@ class InfoDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.85,
+      width: size.width * 0.75,
       padding: const EdgeInsets.all(12.0),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -877,15 +914,11 @@ class InfoDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Comments',
-            style: TextStyle(
-              color: Colors.redAccent,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+           Text(
+              info.code!,
+            style: CommonStyles.text18orangeeader
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           buildInfoRow(tr(LocaleKeys.driver_name), info.driverName),
           buildInfoRow(tr(LocaleKeys.vehicle_Number), info.vehicleNumber),
           buildInfoRow(tr(LocaleKeys.collectionCenter), info.collectionCenter),
@@ -895,8 +928,9 @@ class InfoDialog extends StatelessWidget {
           buildInfoRow(tr(LocaleKeys.only_date),
               CommonStyles.formateDate(info.receiptGeneratedDate)),
           buildInfoRow(tr(LocaleKeys.operatorName), info.operatorName),
+          if(info.comments!.isNotEmpty)
           buildInfoRow(tr(LocaleKeys.comments), info.comments),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Center(
             child: TextButton(
               onPressed: () {
@@ -912,28 +946,31 @@ class InfoDialog extends StatelessWidget {
               },
               child: Text(
                 tr(LocaleKeys.recept),
-                style: const TextStyle(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                ),
+                  style: CommonStyles.text18orangeeader
               ),
             ),
           ),
           Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: const BorderSide(color: Colors.orange, width: 2),
-                ),
-              ),
-              child: Text(tr(LocaleKeys.close)),
-            ),
+            child: CustomBtn(
+                label: tr(LocaleKeys.close),
+                // label: 'Submit',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   style: ElevatedButton.styleFrom(
+            //     foregroundColor: Colors.black,
+            //     backgroundColor: Colors.white,
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //       side: const BorderSide(color: Colors.orange, width: 2),
+            //     ),
+            //   ),
+            //   child: Text(tr(LocaleKeys.close)),
+            // ),
           ),
         ],
       ),
@@ -942,31 +979,25 @@ class InfoDialog extends StatelessWidget {
 
   Widget buildInfoRow(String label, String? value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
         children: [
           Expanded(
             flex: 3,
             child: Text(
               label,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style:CommonStyles.txSty_14SB_fb
             ),
           ),
           const Expanded(
             flex: 1,
-            child: Text(':'),
+            child: Text(':',style: CommonStyles.txSty_14SB_fb,),
           ),
           Expanded(
             flex: 3,
             child: Text(
               '$value',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style:CommonStyles.txSty_14SB_fb
             ),
           ),
         ],
@@ -977,77 +1008,3 @@ class InfoDialog extends StatelessWidget {
 
 
 
-  /* ListView.builder(
-                  itemCount: 22,
-                  itemBuilder: (context, index) => const ListTile(
-                    title: Text('data'),
-                  ),
-                ), 
-
-  DropdownButtonHideUnderline dropdownSelector() {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
-        iconStyleData: const IconStyleData(
-          icon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: Colors.white,
-          ),
-        ),
-        isExpanded: true,
-        hint: const Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Select Item',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        items: items
-            .map((String item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Text(
-                    item,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ))
-            .toList(),
-        value: selectedDropDownValue,
-        onChanged: (String? value) {
-          setState(() {
-            selectedDropDownValue = value;
-          });
-        },
-        dropdownStyleData: DropdownStyleData(
-          // maxHeight: 200,
-          // width: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Colors.grey,
-          ),
-          offset: const Offset(0, 0),
-          scrollbarTheme: ScrollbarThemeData(
-            radius: const Radius.circular(40),
-            thickness: WidgetStateProperty.all<double>(6),
-            thumbVisibility: WidgetStateProperty.all<bool>(true),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          height: 40,
-          padding: EdgeInsets.only(left: 20, right: 20),
-        ),
-      ),
-    );
-  }
- */

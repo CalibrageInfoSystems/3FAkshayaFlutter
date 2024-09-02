@@ -280,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
           // context.go('${Routes.loginOtpScreen.path}/$_mobileNumber');
          } else {
            CommonStyles.hideHorizontalDotsLoadingDialog(context);
-           _showErrorDialog('No Registered Mobile Number to Send OTP');
+        _showErrorDialog('No Registered Mobile Number to Send OTP');
          }
        } else {
          CommonStyles.hideHorizontalDotsLoadingDialog(context);
@@ -301,11 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
    }
  }
 
- void _showErrorDialog(String message) {
-   Future.delayed(Duration.zero, () {
-     CommonStyles.showCustomDialog(context, message);
-   });
- }
+
 
 
 
@@ -343,5 +339,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
    return isValid; // Return true if validation is successful, false otherwise
  }
+
+  void _showErrorDialog(String message) {
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showCustomDialog(context, message);
+    });
+  }
+
+
 
 }

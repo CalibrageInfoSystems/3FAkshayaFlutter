@@ -26,19 +26,24 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<FarmerModel> farmerData;
   late Future<List<PlotDetailsModel>> plotsData;
+  String? userId;
   String? stateCode;
   int? districtId;
   String? districtName;
   @override
   void initState() {
     super.initState();
+    _loadUserData();
     farmerData = getFarmerInfoFromSharedPrefs();
     plotsData = getPlotDetails();
   }
 
   Future<List<PlotDetailsModel>> getPlotDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
+    setState(() {
+      userId = prefs.getString(SharedPrefsKeys.farmerCode);
+      print('FarmerCode -==$userId');
+    });
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
     final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
 
@@ -48,13 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print('jsonResponse: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
-        if (response['listResult'] != null) {
-          List<dynamic> plotList = response['listResult'];
-          return plotList
-              .map((item) => PlotDetailsModel.fromJson(item))
-              .toList();
-        }
-        throw Exception('list is empty');
+        List<dynamic> plotList = response['listResult'];
+        return plotList.map((item) => PlotDetailsModel.fromJson(item)).toList();
       } else {
         throw Exception(
             'Request failed with status: ${jsonResponse.statusCode}');
@@ -90,6 +90,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+  // AppBar tabBar() {
+  //   return AppBar(
+  //     automaticallyImplyLeading: false,
+  //     backgroundColor: const Color(0xffe46f5d),
+  //     bottom: PreferredSize(
+  //       preferredSize: const Size.fromHeight(1),
+  //       child: TabBar(
+  //         indicatorColor: Colors.transparent, // Set to transparent to use BoxDecoration
+  //         indicator: BoxDecoration(
+  //           color: CommonStyles.primaryColor, // Background color for the selected tab
+  //           borderRadius: BorderRadius.circular(10),
+  //         ),
+  //         labelColor: CommonStyles.primaryTextColor, // Text color for the selected tab
+  //         unselectedLabelColor: CommonStyles.whiteColor, // Text color for unselected tabs
+  //         tabs: [
+  //           Tab(text: tr(LocaleKeys.farmer_profile)),
+  //           Tab(text: tr(LocaleKeys.plot_details)),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   AppBar tabBar() {
     return AppBar(
@@ -103,7 +125,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: CommonStyles.primaryTextColor,
           unselectedLabelColor: CommonStyles.whiteColor,
+
           indicator: const BoxDecoration(
+
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
@@ -120,43 +144,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget tabView() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: TabBarView(
-        children: [
-          FutureBuilder(
-              future: farmerData,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  final farmer = snapshot.data as FarmerModel;
-                  return FarmerProfile(farmerData: farmer);
-                }
-                return const CircularProgressIndicator.adaptive();
-              }),
-          // const Center(child: Text('Plot Details')),
-          FutureBuilder(
-              future: plotsData,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (snapshot.hasData) {
-                  final plots = snapshot.data as List<PlotDetailsModel>;
-                  return ListView.builder(
-                    itemCount: plots.length,
-                    itemBuilder: (context, index) {
-                      return PlotDetails(plotdata: plots[index], index: index);
-                    },
-                  );
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive());
-                }
-              }),
-        ],
-      ),
-    );
+    return Container(
+        color: Color(0xFAF5F5F5),
+        child:Padding(
+
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+
+
+
+          child: TabBarView(
+            children: [
+              FutureBuilder(
+                  future: farmerData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      final farmer = snapshot.data as FarmerModel;
+                      return FarmerProfile(farmerData: farmer);
+                    }
+                    return const CircularProgressIndicator.adaptive();
+                  }),
+              // const Center(child: Text('Plot Details')),
+              FutureBuilder(
+                  future: plotsData,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      final plots = snapshot.data as List<PlotDetailsModel>;
+                      return ListView.builder(
+                        itemCount: plots.length,
+                        itemBuilder: (context, index) {
+                          return PlotDetails(plotdata: plots[index], index: index);
+                        },
+                      );
+                    } else {
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive());
+                    }
+                  }),
+            ],
+          ),
+        ));
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('user_id');
+      stateCode = prefs.getString('statecode');
+      districtId = prefs.getInt('districtId');
+      districtName = prefs.getString('districtName');
+      print('FarmerCode -==$userId');
+      print('stateCode -==$stateCode');
+      print('districtId -==$districtId');
+      print('districtName -==$districtName');
+    });
   }
 }
 
@@ -167,7 +211,9 @@ class FarmerProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+
       child: Column(
+
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
@@ -184,12 +230,12 @@ class FarmerProfile extends StatelessWidget {
                 ),
                 Expanded(
                     child: Center(
-                  child: QrImageView(
-                    data: '${farmerData.code}',
-                    version: QrVersions.auto,
-                    // size: 200.0,
-                  ),
-                )),
+                      child: QrImageView(
+                        data: '${farmerData.code}',
+                        version: QrVersions.auto,
+                        // size: 200.0,
+                      ),
+                    )),
               ],
             ),
           ),
@@ -201,7 +247,7 @@ class FarmerProfile extends StatelessWidget {
           farmerInfoBox(
             label: tr(LocaleKeys.farmer_name),
             data:
-                '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
+            '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
           ),
           farmerInfoBox(
             label: tr(LocaleKeys.fa_hu_name),
@@ -279,8 +325,8 @@ class FarmerProfile extends StatelessWidget {
 
   farmerdialInfoBox(
       {required String label,
-      required String data,
-      required MaterialColor textColor}) {
+        required String data,
+        required MaterialColor textColor}) {
     return Column(
       children: [
         Row(
@@ -345,8 +391,8 @@ class PlotDetails extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          // border:
-          //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
+        // border:
+        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
           borderRadius: BorderRadius.circular(10),
           color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
       child: Column(
@@ -359,7 +405,7 @@ class PlotDetails extends StatelessWidget {
           plotDetailsBox(
             label: tr(LocaleKeys.plaod_hect),
             data:
-                '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
+            '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
           ),
           plotDetailsBox(
             label: tr(LocaleKeys.sur_num),

@@ -12,6 +12,7 @@ import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
+
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -21,6 +22,7 @@ import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../Services/GodownSelectionScreen.dart';
 import 'screens/farmer_passbook.dart';
@@ -177,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        return const CircularProgressIndicator.adaptive();
+        return const ShimmerWidn();
       },
     );
   }
@@ -216,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        return const CircularProgressIndicator.adaptive();
+        return const ShimmerWidn();;
       },
     );
   }
@@ -236,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
             future: servicesData,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator.adaptive();
+                return const ShimmerWidn();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -282,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
             future: getLearningsData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator.adaptive();
+                return const ShimmerWidn();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
@@ -405,7 +407,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
     );
   }
-
   Widget gridServiceItem(int serviceTypeId) {
     return GestureDetector(
       onTap: () {
@@ -413,21 +414,19 @@ class _HomeScreenState extends State<HomeScreen> {
           case 12: // Fertilizer Request
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const GodownSelectionScreen()),
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
             );
             break;
           case 10: // Pole Request
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const GodownSelectionScreen()),
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
             );
             break;
-          // Add more cases for other serviceTypeIds
-          // ...
+        // Add more cases for other serviceTypeIds
+        // ...
           default:
-            // Handle default case or do nothing
+          // Handle default case or do nothing
             break;
         }
       },
@@ -454,27 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  // Widget gridServiceItem(int serviceTypeId) {
-  //   return Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     crossAxisAlignment: CrossAxisAlignment.center,
-  //     children: [
-  //       Image.asset(
-  //         getServiceImagePath(serviceTypeId),
-  //         width: 35,
-  //         height: 35,
-  //         fit: BoxFit.cover,
-  //       ),
-  //       const SizedBox(height: 5),
-  //       Text(
-  //         getServiceName(serviceTypeId),
-  //         textAlign: TextAlign.center,
-  //         style: CommonStyles.txSty_12W_fb.copyWith(
-  //             color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
-  //       ),
-  //     ],
-  //   );
-  // }
+
 
   Widget gridLearningItem(int index, String title) {
     return Column(
@@ -642,6 +621,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class ShimmerWidn extends StatelessWidget {
+  const ShimmerWidn({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        width: double.infinity,
+        height: 25.0,
+        color: Colors.white,
+      ),
+    );
+  }
+}
 class GridItem {
   final String imagePath;
   final String title;

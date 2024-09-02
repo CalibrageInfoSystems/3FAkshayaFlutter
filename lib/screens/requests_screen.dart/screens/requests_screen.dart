@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../common_utils/api_config.dart';
 import '../../../common_utils/common_styles.dart';
+import '../../../common_utils/shimmer.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/service_model.dart';
@@ -56,6 +57,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    EasyLocalization.of(context)?.locale;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CommonStyles.primaryColor,
@@ -64,7 +71,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
         future: servicesData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator.adaptive();
+            return const ShimmerWid();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {

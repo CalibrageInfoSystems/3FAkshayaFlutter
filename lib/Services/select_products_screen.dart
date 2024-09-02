@@ -78,20 +78,20 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          title: tr(LocaleKeys.select_product),
-          actionIcon: Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              tr(LocaleKeys.crop),
-              textAlign: TextAlign.center,
-              style: CommonStyles.txSty_12W_fb,
-            ),
-          ),
-        ),
+          title: tr(LocaleKeys.select_product)),
+        //   actionIcon: Container(
+        //     padding: const EdgeInsets.all(5),
+        //     decoration: BoxDecoration(
+        //       border: Border.all(color: Colors.white),
+        //       borderRadius: BorderRadius.circular(6),
+        //     ),
+        //     child: Text(
+        //       tr(LocaleKeys.crop),
+        //       textAlign: TextAlign.center,
+        //       style: CommonStyles.txSty_12W_fb,
+        //     ),
+        //   ),
+        // ),
         body: Column(
           children: [
             headerSection(),
@@ -278,8 +278,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           Icon(Icons.shop),
           CustomBtn(
             label: 'Next',
-            borderColor: CommonStyles.primaryTextColor,
-            backgroundColor: Colors.white,
+            // borderColor: CommonStyles.primaryTextColor,
+            // backgroundColor: Colors.white,
             borderRadius: 16,
           ),
         ],

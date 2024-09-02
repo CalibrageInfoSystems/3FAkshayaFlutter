@@ -18,7 +18,7 @@ class CommonStyles {
 
   static const blackColor = Colors.black;
   static const blackColorShade = Color(0xFF5f5f5f);
-  static const primaryColor = Color(0xFFf7ebff);
+  static const primaryColor = Color(0xFAF5F5F5);
   static const primaryTextColor = Color(0xFFe86100);
   static const formFieldErrorBorderColor = Color(0xFFff0000);
   static const blueColor = Color(0xFF0f75bc);
@@ -27,6 +27,7 @@ class CommonStyles {
   static const greenColor = Colors.greenAccent;
   static const whiteColor = Colors.white;
   static const hintTextColor = Color(0xCBBEBEBE);
+  static const headercolor = Color(0xDAF05F4E);
   // styles
   static const RedColor = Color(0xFFC93437);
   static const TextStyle txSty_12b_f5 = TextStyle(
@@ -200,6 +201,11 @@ class CommonStyles {
       fontSize: 12,
       color: Color(0xFF000000),
       fontWeight: FontWeight.w500);
+  static const TextStyle txSty_14SB_fb = TextStyle(
+      fontFamily: 'hind_semibold',
+      fontSize: 12,
+      color: Color(0xFF000000),
+      fontWeight: FontWeight.w600);
   static const TextStyle txSty_12bl_fb = TextStyle(
     fontFamily: 'hind_semibold',
     fontSize: 12,
@@ -244,6 +250,7 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: CommonStyles.whiteColor,
   );
+ // <color name="colorOrange_head">#DAF05F4E</color>
 
   static TextStyle dayTextStyle =
       const TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
@@ -253,6 +260,12 @@ class CommonStyles {
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w600,
     color: primaryTextColor,
+  );
+  static const TextStyle text18orangeeader = TextStyle(
+    fontSize: 14,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w600,
+    color: headercolor,
   );
 
   static Future<bool> checkInternetConnectivity() async {
@@ -433,6 +446,15 @@ class CommonStyles {
   static void hideHorizontalDotsLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
   }
+
+  static void _showErrorDialog(BuildContext context, String message) {
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showCustomDialog(context, message);
+    });
+  }
+
+
+
 }
 
 class SpinKitHorizontalDots extends StatefulWidget {

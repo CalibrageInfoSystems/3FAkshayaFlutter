@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../common_utils/Constants.dart';
 import '../common_utils/SharedPreferencesHelper.dart';
@@ -72,10 +73,14 @@ class _MainScreenPageState extends State<MainScreen> {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
       onTap: (index) {
-        setState(() {
-          _selectedIndex = index;
-          print('_selectedIndex==143$_selectedIndex');
-        });
+        if (index == 4) {
+          _careDial(context);
+        } else {
+          setState(() {
+            _selectedIndex = index;
+            print('_selectedIndex==143 $_selectedIndex');
+          });
+        }
       },
       selectedItemColor: CommonStyles.primaryTextColor,
       items: <BottomNavigationBarItem>[
@@ -111,6 +116,7 @@ class _MainScreenPageState extends State<MainScreen> {
         width: 20,
         height: 20,
         fit: BoxFit.contain,
+        color: Colors.black.withOpacity(0.6),
       ),
       activeIcon: SvgPicture.asset(
         imagePath,
@@ -720,5 +726,24 @@ class _MainScreenPageState extends State<MainScreen> {
         ],
       ),
     );
+  }
+
+  void _careDial(BuildContext context) async {
+    const phoneNumber = '040 23324733';
+    final Uri uri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    try {
+      if (await canLaunch(uri.toString())) {
+        await launch(uri.toString());
+      } else {
+        throw 'Could not launch $uri';
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('SecurityException: $e')),
+      );
+    }
   }
 }
