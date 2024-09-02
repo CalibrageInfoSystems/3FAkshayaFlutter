@@ -2,18 +2,17 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? actionIcon;
-  final void Function()? onTap;
+  final void Function()? onPressed;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.actionIcon,
-    this.onTap,
+    this.onPressed,
   });
 
   @override
@@ -39,14 +38,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Icons.home,
             color: Colors.white,
           ),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
-          },
+          onPressed: onPressed ??
+              () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
+              },
         ),
       ],
     );

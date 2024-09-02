@@ -43,18 +43,38 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     super.initState();
     productsData = getProducts();
     copyProducts();
+  }
 
-    print('productQuantities: $productQuantities');
+  Future<void> filterProductsByCatogary(int catogaryId) async {
+    // print('filterProductsByCatogary: $catogaryId');
+
+    /*   productsData = Future.value(
+      copyProductsData.where((item) => if (catogaryId != -1) {
+          return item.categoryId == catogaryId;
+        }).toList(),
+    ); */
+
+    productsData = Future.value(
+      catogaryId == -1
+          ? copyProductsData
+          : copyProductsData
+              .where((item) => item.categoryId == catogaryId)
+              .toList(),
+    );
   }
 
   void copyProducts() async {
     copyProductsData = await productsData;
   }
 
-  List<ProductItem> fetchCardProducts() {
-    return copyProductsData.where((product) {
-      return productQuantities.containsKey(product.id);
-    }).toList();
+  List<ProductWithQuantity> fetchCardProducts() {
+    return copyProductsData
+        .where((product) => productQuantities.containsKey(product.id))
+        .map((product) => ProductWithQuantity(
+              product: product,
+              quantity: productQuantities[product.id] ?? 0,
+            ))
+        .toList();
   }
 
   Future<List<CategoryItem>> getDropdownData() async {
@@ -67,7 +87,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       final response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null) {
         List<dynamic> listResult = response['listResult'];
-        return listResult.map((item) => CategoryItem.fromJson(item)).toList();
+        List<CategoryItem> categoryItems =
+            listResult.map((item) => CategoryItem.fromJson(item)).toList();
+        categoryItems.insert(0, CategoryItem(categoryId: -1, name: 'All'));
+        return categoryItems;
       } else {
         throw Exception('list result is null');
       }
@@ -162,36 +185,45 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             child: FutureBuilder(
               future: productsData,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final products = snapshot.data as List<ProductItem>;
-                  return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10.0,
-                            mainAxisSpacing: 10.0,
-                            mainAxisExtent: 250,
-                            childAspectRatio: 8 / 2),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      final quantity = productQuantities[product.id] ?? 0;
-                      return ProductCard(
-                        product: product,
-                        quantity: quantity,
-                        onQuantityChanged: (newQuantity) {
-                          setState(() {
-                            productQuantities[product.id!] = newQuantity;
-                            updateBadgeCount();
-                          });
-                        },
-                      );
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return shimmerLoading();
                 }
-                return shimmerLoading();
+                if (snapshot.hasError) {
+                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                } else {
+                  final products = snapshot.data as List<ProductItem>;
+                  // print('xxx: ${products.length}');
+                  if (products.isNotEmpty) {
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10.0,
+                              mainAxisSpacing: 10.0,
+                              mainAxisExtent: 250,
+                              childAspectRatio: 8 / 2),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        final quantity = productQuantities[product.id] ?? 0;
+                        return ProductCard(
+                          product: product,
+                          quantity: quantity,
+                          onQuantityChanged: (newQuantity) {
+                            setState(() {
+                              productQuantities[product.id!] = newQuantity;
+                              updateBadgeCount();
+                            });
+                          },
+                        );
+                      },
+                    );
+                  } else {
+                    return const Center(
+                      child: Text('No products found'),
+                    );
+                  }
+                }
               },
             ),
           ),
@@ -278,6 +310,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           setState(() {
             selectedDropDownValue = value;
           });
+          filterProductsByCatogary(
+            categories.where((item) => item.name == value).first.categoryId ??
+                0,
+          );
         },
         dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
@@ -327,15 +363,15 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           CustomBtn(
             label: 'Next',
             borderColor: CommonStyles.primaryTextColor,
-            backgroundColor: Colors.white,
             borderRadius: 16,
             onPressed: () {
               if (fetchCardProducts().isNotEmpty) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ProductCardScreen(products: fetchCardProducts()),
+                    builder: (context) => ProductCardScreen(
+                      products: fetchCardProducts(),
+                    ),
                   ),
                 );
               } else {
@@ -364,8 +400,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
 class ProductCard extends StatefulWidget {
   final ProductItem product;
   final int quantity;
-  final Function(int)
-      onQuantityChanged; // Callback to notify parent about quantity change
+  final Function(int) onQuantityChanged;
 
   const ProductCard({
     super.key,
@@ -504,7 +539,14 @@ class _ProductCardState extends State<ProductCard> {
   void addProduct() {
     setState(() {
       productQuantity++;
-      widget.onQuantityChanged(productQuantity); // Notify parent of the change
+      widget.onQuantityChanged(productQuantity);
     });
   }
+}
+
+class ProductWithQuantity {
+  final ProductItem product;
+  final int quantity;
+
+  ProductWithQuantity({required this.product, required this.quantity});
 }
