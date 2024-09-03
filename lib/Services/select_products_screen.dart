@@ -493,6 +493,7 @@ class _ProductCardState extends State<ProductCard> {
                 style: CommonStyles.txSty_14b_f5,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
                     style: iconBtnStyle(
@@ -501,12 +502,10 @@ class _ProductCardState extends State<ProductCard> {
                     icon: const Icon(Icons.remove),
                     onPressed: removeProduct,
                   ),
-                  const SizedBox(width: 5),
                   Text(
                     '$productQuantity',
                     style: CommonStyles.texthintstyle,
                   ),
-                  const SizedBox(width: 5),
                   IconButton(
                     style: iconBtnStyle(
                       foregroundColor: CommonStyles.statusGreenText,
