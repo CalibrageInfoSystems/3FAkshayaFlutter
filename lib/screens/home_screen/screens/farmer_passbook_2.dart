@@ -273,16 +273,16 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       children: [
         Positioned(
           top: -90,
-          bottom: 350, // Adjust as needed
+          bottom: 500, // Adjust as needed
           left: -60,
-          right: -60,
+          right: -1000,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter, // 90 degrees
                 end: Alignment.bottomCenter,
                 colors: [
-                  //Color(0xffDB5D4B),.
+
                   Color(0xFFDB5D4B),
                   Color(0xFFE39A63), // startColor
                   // endColor
@@ -303,7 +303,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
               ),
               elevation: 0,
               title: Text(
-                "Farmer PassBook",
+                tr(LocaleKeys.payments),
                 style: CommonStyles.txSty_14black_f5.copyWith(
                   color: CommonStyles.whiteColor,
                 ),
@@ -720,571 +720,523 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                           // DirectFarmerTransport(FarmerTransportfromdate: '$fromdatetosendtab2', FarmerTransporttodate: '$todatetosendtab2', farmercode: '$fc',)
 
 
-                          Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: Consumer<DataProvider>(
-                              builder: (context, dataProvider, child) {
+                          Expanded(
+                         //   height: MediaQuery.of(context).size.height,
+                            child:
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_transportationCharges != null && _transportationCharges.isNotEmpty)
+                                  Expanded(
+                                    // flex: 3,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
 
+                                      ///     itemCount: dataProvider.transportchargelist.length,_transportRates
+                                      itemCount: _transportationCharges.length,
+                                      itemBuilder: (context, index) {
+                                        print('fffffffff${_transportationCharges[index].receiptGeneratedDate}');
+                                        String formattedDate = DateFormat('dd/MM/yyyy').format(_transportationCharges[index].receiptGeneratedDate);
 
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    if (_transportationCharges != null && _transportationCharges.isNotEmpty)
-                                      Expanded(
-                                        // flex: 3,
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
+                                        return
+                                          Padding(
+                                            //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                                              padding: EdgeInsets.only(left: 10, right: 10),
+                                              child: IntrinsicHeight(
+                                                child: ClipRRect(
+                                                    borderRadius: BorderRadius.circular(12.0),
+                                                    child: GestureDetector(
+                                                      onTap: () {},
+                                                      child: Card(
+                                                        shadowColor: Colors.transparent,
+                                                        surfaceTintColor: Colors.transparent,
+                                                        child: ClipRRect(
+                                                          borderRadius: BorderRadius.circular(12.0),
+                                                          //surfaceTintColor : Colors.red,
 
-                                          ///     itemCount: dataProvider.transportchargelist.length,_transportRates
-                                          itemCount: _transportationCharges.length,
-                                          itemBuilder: (context, index) {
-                                            print('fffffffff${_transportationCharges[index].receiptGeneratedDate}');
-                                            String formattedDate = DateFormat('dd/MM/yyyy').format(_transportationCharges[index].receiptGeneratedDate);
-
-                                            return
-                                              Padding(
-                                                //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                                  child: IntrinsicHeight(
-                                                    child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(12.0),
-                                                        child: GestureDetector(
-                                                          onTap: () {},
-                                                          child: Card(
-                                                            shadowColor: Colors.transparent,
-                                                            surfaceTintColor: Colors.transparent,
-                                                            child: ClipRRect(
-                                                              borderRadius: BorderRadius.circular(12.0),
-                                                              //surfaceTintColor : Colors.red,
-
-                                                              child: Container(
-                                                                color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
-                                                                // color:    Colors.white,
-                                                                child: Row(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(left: 5.0, right: 5),
-                                                                      child: Center(
-                                                                        child: Column(
-                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          child: Container(
+                                                            color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+                                                            // color:    Colors.white,
+                                                            child: Row(
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                Padding(
+                                                                  padding: EdgeInsets.only(left: 5.0, right: 5),
+                                                                  child: Center(
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                                      children: [
+                                                                        Container(
+                                                                          margin: EdgeInsets.only(right: 10.0, left: 10),
+                                                                          child: ClipRRect(
+                                                                            borderRadius: BorderRadius.circular(7.0),
+                                                                            child: Image.asset( Assets.images.icCalender.path,
+                                                                              //  color: CommonStyles.primaryTextColor,
+                                                                              height: 25,
+                                                                              width: 25,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        SizedBox(height: 2.0),
+                                                                        // Add some spacing between the image and text
+                                                                        Text(
+                                                                          '$formattedDate',
+                                                                          style: TextStyle(
+                                                                            color: Colors.grey,
+                                                                            fontFamily: "hind_semibold",
+                                                                          ),
+                                                                          textAlign: TextAlign.center,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  width: 2.0,
+                                                                  // height: MediaQuery.of(context).size.height,
+                                                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                                  decoration: BoxDecoration(
+                                                                    gradient: LinearGradient(
+                                                                      colors: [
+                                                                        Color(0xFFFF4500),
+                                                                        Color(0xFFA678EF),
+                                                                        Color(0xFFFF4500),
+                                                                      ],
+                                                                      end: Alignment.topRight,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                    child: Padding(
+                                                                      padding: EdgeInsets.only(left: 5.0),
+                                                                      child: Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(right: 10.0, left: 10),
-                                                                              child: ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(7.0),
-                                                                                child: Image.asset( Assets.images.icCalender.path,
-                                                                                  //  color: CommonStyles.primaryTextColor,
-                                                                                  height: 25,
-                                                                                  width: 25,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                            SizedBox(height: 2.0),
-                                                                            // Add some spacing between the image and text
-                                                                            Text(
-                                                                              '$formattedDate',
-                                                                              style: TextStyle(
-                                                                                color: Colors.grey,
-                                                                                fontFamily: "hind_semibold",
-                                                                              ),
-                                                                              textAlign: TextAlign.center,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Container(
-                                                                      width: 2.0,
-                                                                      // height: MediaQuery.of(context).size.height,
-                                                                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                                      decoration: BoxDecoration(
-                                                                        gradient: LinearGradient(
-                                                                          colors: [
-                                                                            Color(0xFFFF4500),
-                                                                            Color(0xFFA678EF),
-                                                                            Color(0xFFFF4500),
-                                                                          ],
-                                                                          end: Alignment.topRight,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                        child: Padding(
-                                                                          padding: EdgeInsets.only(left: 5.0),
-                                                                          child: Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                              children: [
-                                                                                Expanded(
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      Padding(
-                                                                                        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                                                                                        child: Card(
-                                                                                          color: index.isEven ? Colors.white : Color(0xFFDFDFDF),                                                                           shadowColor: Colors.transparent,
-                                                                                          surfaceTintColor: Colors.transparent,
-                                                                                          child: Container(
-                                                                                            decoration: BoxDecoration(
-                                                                                              borderRadius: BorderRadius.circular(12.0),
-                                                                                            ),
-                                                                                            child: Row(
-                                                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                              children: [
-                                                                                                Expanded(
-                                                                                                  child: Padding(
-                                                                                                    padding: const EdgeInsets.only(left: 0.0),
-                                                                                                    child: Column(
-                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            Expanded(
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                                                                                    child: Card(
+                                                                                      color: index.isEven ? Colors.white : Color(0xFFDFDFDF),                                                                           shadowColor: Colors.transparent,
+                                                                                      surfaceTintColor: Colors.transparent,
+                                                                                      child: Container(
+                                                                                        decoration: BoxDecoration(
+                                                                                          borderRadius: BorderRadius.circular(12.0),
+                                                                                        ),
+                                                                                        child: Row(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                          children: [
+                                                                                            Expanded(
+                                                                                              child: Padding(
+                                                                                                padding: const EdgeInsets.only(left: 0.0),
+                                                                                                child: Column(
+                                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                  children: [
+                                                                                                    Padding(
+                                                                                                      padding: const EdgeInsets.only(top: 15.0),
+                                                                                                      child: Text(
+                                                                                                        _transportationCharges[index].collectionCode,
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 14,
+                                                                                                          color: Color(0xFFFB4110),
+                                                                                                          fontWeight: FontWeight.bold,
+                                                                                                          fontFamily: "hind_semibold",
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                    SizedBox(height: 4.0),
+                                                                                                    Row(
                                                                                                       children: [
-                                                                                                        Padding(
-                                                                                                          padding: const EdgeInsets.only(top: 15.0),
-                                                                                                          child: Text(
-                                                                                                            _transportationCharges[index].collectionCode,
-                                                                                                            style: TextStyle(
-                                                                                                              fontSize: 16,
-                                                                                                              color: Color(0xFFFB4110),
-                                                                                                              fontWeight: FontWeight.bold,
-                                                                                                              fontFamily: "hind_semibold",
-                                                                                                            ),
+                                                                                                        Expanded(
+                                                                                                          flex: 3,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    tr(LocaleKeys.trans_charges),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
                                                                                                           ),
                                                                                                         ),
-                                                                                                        SizedBox(height: 4.0),
-                                                                                                        Row(
-                                                                                                          children: [
-                                                                                                            Expanded(
-                                                                                                              flex: 3,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      tr(LocaleKeys.trans_charges),
-                                                                                                                      style: TextStyle(
-                                                                                                                        color: Colors.black,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
+                                                                                                        const Expanded(
+                                                                                                          flex: 0,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.end,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                                                child: Text(
+                                                                                                                    ":",
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
                                                                                                               ),
-                                                                                                            ),
-                                                                                                            const Expanded(
-                                                                                                              flex: 0,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                    child: Text(
-                                                                                                                      ":",
-                                                                                                                      style: TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            Expanded(
-                                                                                                              flex: 2,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      _transportationCharges[index]
-                                                                                                                          .tonnageCost
-                                                                                                                          .toStringAsFixed(2),
-                                                                                                                      style: const TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          ],
+                                                                                                            ],
+                                                                                                          ),
                                                                                                         ),
-                                                                                                        Row(
-                                                                                                          children: [
-                                                                                                            Expanded(
-                                                                                                              flex: 3,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      tr(LocaleKeys.net_weightt),                                                                                          style: TextStyle(
-                                                                                                                      color: Colors.black,
-                                                                                                                      fontSize: 14,
-                                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                                      fontFamily: 'hind_semibold',
-                                                                                                                    ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
+                                                                                                        Expanded(
+                                                                                                          flex: 2,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    _transportationCharges[index]
+                                                                                                                        .tonnageCost
+                                                                                                                        .toStringAsFixed(2),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
                                                                                                               ),
-                                                                                                            ),
-                                                                                                            const Expanded(
-                                                                                                              flex: 0,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                    child: Text(
-                                                                                                                      ":",
-                                                                                                                      style: TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            Expanded(
-                                                                                                              flex: 2,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      _transportationCharges[index].qty.toStringAsFixed(2),
-                                                                                                                      style: const TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          ],
-                                                                                                        ),
-                                                                                                        Row(
-                                                                                                          children: [
-                                                                                                            Expanded(
-                                                                                                              flex: 3,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      tr(LocaleKeys.total_amt),                                                                                            style: TextStyle(
-                                                                                                                      color: Colors.black,
-                                                                                                                      fontSize: 14,
-                                                                                                                      fontWeight: FontWeight.bold,
-                                                                                                                      fontFamily: 'hind_semibold',
-                                                                                                                    ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            const Expanded(
-                                                                                                              flex: 0,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                    child: Text(
-                                                                                                                      ":",
-                                                                                                                      style: TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                            Expanded(
-                                                                                                              flex: 2,
-                                                                                                              child: Column(
-                                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                                                                children: [
-                                                                                                                  Padding(
-                                                                                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                    child: Text(
-                                                                                                                      _transportationCharges[index].rate.toStringAsFixed(2),
-                                                                                                                      style: const TextStyle(
-                                                                                                                        color: Colors.black54,
-                                                                                                                        fontSize: 14,
-                                                                                                                        fontWeight: FontWeight.bold,
-                                                                                                                        fontFamily: 'hind_semibold',
-                                                                                                                      ),
-                                                                                                                    ),
-                                                                                                                  ),
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            ),
-                                                                                                          ],
+                                                                                                            ],
+                                                                                                          ),
                                                                                                         ),
                                                                                                       ],
                                                                                                     ),
-                                                                                                  ),
+                                                                                                    Row(
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          flex: 3,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    tr(LocaleKeys.net_weightt),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        const Expanded(
+                                                                                                          flex: 0,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.end,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                                                child: Text(
+                                                                                                                    ":",
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        Expanded(
+                                                                                                          flex: 2,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    _transportationCharges[index].qty.toStringAsFixed(2),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                    Row(
+                                                                                                      children: [
+                                                                                                        Expanded(
+                                                                                                          flex: 3,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    tr(LocaleKeys.total_amt),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        const Expanded(
+                                                                                                          flex: 0,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.end,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
+                                                                                                                child: Text(
+                                                                                                                    ":",
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                        Expanded(
+                                                                                                          flex: 2,
+                                                                                                          child: Column(
+                                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                            children: [
+                                                                                                              Padding(
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                child: Text(
+                                                                                                                    _transportationCharges[index].rate.toStringAsFixed(2),
+                                                                                                                    style:CommonStyles.txSty_14SB_fb
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ],
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ],
                                                                                                 ),
-                                                                                              ],
+                                                                                              ),
                                                                                             ),
-                                                                                          ),
+                                                                                          ],
                                                                                         ),
-                                                                                      )
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-                                                                              ]),
-                                                                        ))
-                                                                  ],
-                                                                ),
-                                                              ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ]),
+                                                                    ))
+                                                              ],
                                                             ),
-                                                          ),
-                                                        )),
-                                                  ));
-                                          },
-                                        ),
-                                      ),
-                                    if (_transportationCharges == null || _transportationCharges.isEmpty)
-                                      Expanded(
-                                          child: Center(
-                                              child: Container(
-                                                  height: MediaQuery.of(context).size.height / 2,
-                                                  child: Center(
-                                                      child: Text(
-                                                        tr(LocaleKeys.no_trans_found),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Color(0xFFFB4110),
-                                                          fontWeight: FontWeight.bold,
-                                                          fontFamily: 'Calibri',
-                                                        ),
-                                                      ))))),
-
-                                    Expanded(
-                                      // height: 200,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child:
-                                                    IntrinsicHeight(
-                                                      //  width: 175,
-                                                      //  height: 45,
-                                                      // decoration: BoxDecoration(
-                                                      //   gradient: LinearGradient(
-                                                      //     colors: [
-                                                      //       Color(0xFFCCCCCC),
-                                                      //       Color(0xFFFFFFFF),
-                                                      //       Color(0xFFCCCCCC),
-                                                      //     ],
-                                                      //     begin: Alignment.topCenter,
-                                                      //     end: Alignment.bottomCenter,
-                                                      //   ),
-                                                      //   borderRadius: BorderRadius.circular(10.0),
-                                                      //   border: Border.all(
-                                                      //     width: 2.0,
-                                                      //     color: Color(0xFFe86100),
-                                                      //   ),
-                                                      //    ),
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          print('button1clicked');
-                                                          //openFile();
-                                                        },
-                                                        child: Text(
-                                                          '',
-                                                          style: TextStyle(
-                                                            // color: Color(0xFFe86100),
-                                                            fontSize: 12,
-                                                            fontFamily: 'hind_semibold',
-                                                          ),
-                                                        ),
-                                                        style: ElevatedButton.styleFrom(
-                                                          backgroundColor: Colors.transparent,
-                                                          elevation: 0,
-                                                          shape: RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(10.0),
                                                           ),
                                                         ),
                                                       ),
+                                                    )),
+                                              ));
+                                      },
+                                    ),
+                                  ),
+                                if (_transportationCharges == null || _transportationCharges.isEmpty)
+                                  Expanded(
+                                      child: Center(
+                                          child: Container(
+                                              height: MediaQuery.of(context).size.height / 2,
+                                              child: Center(
+                                                  child: Text(
+                                                    tr(LocaleKeys.no_trans_found),
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Color(0xFFFB4110),
+                                                    //  fontWeight: FontWeight.bold,
+                                                      fontFamily: 'Calibri',
                                                     ),
+                                                  ))))),
+
+                                Padding(
+                                  padding: EdgeInsets.only(top:10.0,left: 10,right:10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child:
+                                            IntrinsicHeight(
+                                              //  width: 175,
+                                              //  height: 45,
+                                              // decoration: BoxDecoration(
+                                              //   gradient: LinearGradient(
+                                              //     colors: [
+                                              //       Color(0xFFCCCCCC),
+                                              //       Color(0xFFFFFFFF),
+                                              //       Color(0xFFCCCCCC),
+                                              //     ],
+                                              //     begin: Alignment.topCenter,
+                                              //     end: Alignment.bottomCenter,
+                                              //   ),
+                                              //   borderRadius: BorderRadius.circular(10.0),
+                                              //   border: Border.all(
+                                              //     width: 2.0,
+                                              //     color: Color(0xFFe86100),
+                                              //   ),
+                                              //    ),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  print('button1clicked');
+                                                  //openFile();
+                                                },
+                                                child: Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                    // color: Color(0xFFe86100),
+                                                    fontSize: 12,
+                                                    fontFamily: 'hind_semibold',
                                                   ),
-                                                  SizedBox(width: 8.0),
-                                                  IntrinsicWidth(
-                                                    //flex: 2,
-                                                    child:
-                                                    IntrinsicHeight(
-                                                      // width: MediaQuery.of(context).size.width,
-                                                      // height: 45,
-                                                      child:Container(
-                                                        padding: EdgeInsets.all(5),
-                                                        // width: MediaQuery.of(context).size.width,
-                                                        decoration: BoxDecoration(
-                                                          gradient: LinearGradient(
-                                                            colors: [
-                                                              Color(0xFFCCCCCC),
-                                                              Color(0xFFFFFFFF),
-                                                              Color(0xFFCCCCCC),
-                                                            ],
-                                                            begin: Alignment.topCenter,
-                                                            end: Alignment.bottomCenter,
-                                                          ),
-                                                          borderRadius: BorderRadius.circular(10.0),
-                                                          border: Border.all(
-                                                            width: 2.0,
-                                                            color: Color(0xFFe86100),
-                                                          ),
-                                                        ),
-                                                        child: ElevatedButton(
-                                                          onPressed: () {
-                                                            print('transportlistview ${_transportRates.length}');
-                                                            Showdialogtransportrates(_transportRates, context);
-                                                          },
-                                                          style: ElevatedButton.styleFrom(
-                                                            backgroundColor: Colors.transparent,
-                                                            elevation: 0,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(10.0),
-                                                            ),
-                                                          ),
-                                                          child: Container(
-                                                              alignment: Alignment.center,
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                children: [
-                                                                  Image.asset( Assets.images.icCalender.path,
-                                                                    //  color: CommonStyles.primaryTextColor,
-                                                                    height: 20,
-                                                                    width:20,
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    tr(LocaleKeys.transportationrates),
-                                                                    style: TextStyle(
-                                                                      color: Color(0xFFe86100),
-                                                                      fontSize: 12,
-                                                                      fontFamily: 'hind_semibold',
-                                                                    ),
-                                                                    maxLines: 1,
-                                                                    textAlign: TextAlign.center,
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                  ),
-                                                                ],
-                                                              )),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),],
-                                              ),
-
-                                              ///  SizedBox(height: 5.0),
-                                              Container(
-                                                /// flex: 1,
-
-                                                child: Card(
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.transparent,
+                                                  elevation: 0,
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(12.0),
-                                                    side: BorderSide(
-                                                      color: Color(0xFFBE9747), // Border color
-                                                    ),
-                                                  ),
-                                                  color: Color(0xFFFFFACB), // Background color
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Padding(    padding: EdgeInsets.only(left: 10,right:4),
-
-                                                        child: Text(
-                                                          tr(LocaleKeys.notee),
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight: FontWeight.normal,
-                                                            fontFamily: "hind_semibold",
-                                                            color: Color(0xFFe86100), // Color for "Note: \n"
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
-                                                        // style: TextStyle(
-                                                        //   fontSize: 14,
-                                                        //   fontWeight: FontWeight.normal,
-                                                        //   color: Colors.black, // Color for the rest of the text
-                                                        // ),
-                                                        style: CommonStyles.txSty_14b_f5,),)
-                                                      // ListTile(
-                                                      //   title: RichText(
-                                                      //     text: TextSpan(
-                                                      //       text: tr(LocaleKeys.notee),
-                                                      //       style: TextStyle(
-                                                      //         fontSize: 14,
-                                                      //         fontWeight: FontWeight.normal,
-                                                      //         color: Color(0xFFe86100), // Color for "Note: \n"
-                                                      //       ),
-                                                      //       children: [
-                                                      //         TextSpan(
-                                                      //           text:
-                                                      //              tr(LocaleKeys.tansportation_note),
-                                                      //           // style: TextStyle(
-                                                      //           //   fontSize: 14,
-                                                      //           //   fontWeight: FontWeight.normal,
-                                                      //           //   color: Colors.black, // Color for the rest of the text
-                                                      //           // ),
-                                                      //           style: CommonStyles.txSty_14b_f5,
-                                                      //         ),
-                                                      //       ],
-                                                      //     ),
-                                                      //   ),
-                                                      // ),
-                                                    ],
+                                                    borderRadius: BorderRadius.circular(10.0),
                                                   ),
                                                 ),
                                               ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.0),
+                                          IntrinsicWidth(
+                                            //flex: 2,
+                                            child:
+                                            IntrinsicHeight(
+                                              // width: MediaQuery.of(context).size.width,
+                                              // height: 45,
+                                              child:Container(
+                                                padding: EdgeInsets.all(7),
+                                                // width: MediaQuery.of(context).size.width,
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      Color(0xFFCCCCCC),
+                                                      Color(0xFFFFFFFF),
+                                                      Color(0xFFCCCCCC),
+                                                    ],
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(20.0),
+                                                  border: Border.all(
+                                                    width: 2.0,
+                                                    color: Color(0xFFe86100),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset( Assets.images.delivery.path,
+                                                      //  color: CommonStyles.primaryTextColor,
+                                                      height: 20,
+                                                      width:20,
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Text(
+                                                      tr(LocaleKeys.transportationrates),
+                                                      style: TextStyle(
+                                                        color: Color(0xFFe86100),
+                                                        fontSize: 12,
+                                                        fontFamily: 'hind_semibold',
+                                                      ),
+                                                      maxLines: 1,
+                                                      textAlign: TextAlign.center,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ],
+                                                )
+                                                // ElevatedButton(
+                                                //   onPressed: () {
+                                                //     print('transportlistview ${_transportRates.length}');
+                                                //     Showdialogtransportrates(_transportRates, context);
+                                                //   },
+                                                //   style: ElevatedButton.styleFrom(
+                                                //     backgroundColor: Colors.transparent,
+                                                //     elevation: 0,
+                                                //     shape: RoundedRectangleBorder(
+                                                //       borderRadius: BorderRadius.circular(10.0),
+                                                //     ),
+                                                //   ),
+                                                //   child: Container(
+                                                //       alignment: Alignment.center,
+                                                //       child: ),
+                                                // ),
+                                              ),
+                                            ),
+                                          ),],
+                                      ),
+
+                                      ///  SizedBox(height: 5.0),
+                                      Container(
+                                        /// flex: 1,
+
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12.0),
+                                            side: BorderSide(
+                                              color: Color(0xFFBE9747), // Border color
+                                            ),
+                                          ),
+                                          color: Color(0xFFFFFACB), // Background color
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 10,right:4,top: 4),
+
+                                                child: Text(
+                                                  tr(LocaleKeys.notee),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.normal,
+                                                    fontFamily: "hind_semibold",
+                                                    color: Color(0xFFe86100), // Color for "Note: \n"
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
+                                                // style: TextStyle(
+                                                //   fontSize: 14,
+                                                //   fontWeight: FontWeight.normal,
+                                                //   color: Colors.black, // Color for the rest of the text
+                                                // ),
+                                                style: CommonStyles.txSty_14b_f5,),)
+                                              // ListTile(
+                                              //   title: RichText(
+                                              //     text: TextSpan(
+                                              //       text: tr(LocaleKeys.notee),
+                                              //       style: TextStyle(
+                                              //         fontSize: 14,
+                                              //         fontWeight: FontWeight.normal,
+                                              //         color: Color(0xFFe86100), // Color for "Note: \n"
+                                              //       ),
+                                              //       children: [
+                                              //         TextSpan(
+                                              //           text:
+                                              //              tr(LocaleKeys.tansportation_note),
+                                              //           // style: TextStyle(
+                                              //           //   fontSize: 14,
+                                              //           //   fontWeight: FontWeight.normal,
+                                              //           //   color: Colors.black, // Color for the rest of the text
+                                              //           // ),
+                                              //           style: CommonStyles.txSty_14b_f5,
+                                              //         ),
+                                              //       ],
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
-                                        ))
-                                    //  )
-                                  ],
-                                );
-                              },
-                            ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                                //  )
+                              ],
+                            )
                           )
                           //   _DirectFarmerTransport(transportlistview: _transportRates, TransportationChargelistview:_transportationCharges,)
                         ],
@@ -1407,12 +1359,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                   Padding(
                                                     padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
-                                                      tr(LocaleKeys.village),                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontFamily: 'hind_semibold',
-                                                    ),
+                                                      tr(LocaleKeys.village),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1428,12 +1376,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: EdgeInsets.fromLTRB(5, 8, 5, 0),
                                                     child: Text(
                                                       ":",
-                                                      style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1449,12 +1392,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
                                                     child: Text(
                                                       transportratelist[index].village,
-                                                      style: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1473,12 +1411,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
                                                       tr(LocaleKeys.mandal),
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1494,12 +1427,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: EdgeInsets.fromLTRB(5, 8, 0, 0),
                                                     child: Text(
                                                       ":",
-                                                      style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1515,12 +1443,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
                                                     child: Text(
                                                       transportratelist[index].mandal,
-                                                      style: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1539,12 +1462,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
                                                       tr(LocaleKeys.rate),
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1560,12 +1478,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: EdgeInsets.fromLTRB(5, 8, 0, 0),
                                                     child: Text(
                                                       ":",
-                                                      style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1581,12 +1494,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
                                                     child: Text(
                                                       transportratelist[index].rate,
-                                                      style: const TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
+                                                        style:CommonStyles.txSty_14SB_fb
                                                     ),
                                                   ),
                                                 ],
@@ -1629,7 +1537,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                           tr(LocaleKeys.ok),
                           style: TextStyle(
                             color: Color(0xFFe86100),
-                            fontSize: 14,
+                            fontSize: 12,
                             fontFamily: 'hind_semibold',
                           ),
                         ),
@@ -1848,15 +1756,23 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     // return [0.1225, doublePosition + 0.0325, doublePosition + 0.0545, doublePosition + 0.0765];
   }
 
+  void _showErrorDialog(String message) {
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showCustomDialog(context, message);
+    });
+  }
+
+
   bool datevalidation() {
     bool isValid = true;
     if (fromDate == null || toDate == null) {
       print('Please select both FromDate and ToDate');
+      _showErrorDialog('Please select both FromDate and ToDate');
       //  showCustomToastMessageLong("Please select both FromDate and ToDate", context, 1, 5);
       isValid = false;
     } else if (toDate!.compareTo(fromDate!) < 0) {
       print('To Date is less than From Date');
-
+      _showErrorDialog('To Date is less than From Date');
       //showCustomToastMessageLong("To Date is less than From Date", context, 1, 5);
       isValid = false;
     }
@@ -2484,10 +2400,11 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                     ]),
                   ),
                 )),),
-          Expanded(child:
-          Container(
+
+          Expanded(
             //  height: MediaQuery.of(context).size.height / 2.5,
-            child: ListView.builder(
+            child:
+            ListView.builder(
               shrinkWrap: true,
               itemCount: widget.payemntlistresp.length,
               itemBuilder: (context, index) {
@@ -2506,7 +2423,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                             child: GestureDetector(
                               onTap: () {},
                               child: Card(
-                                elevation: 8,
+                                //elevation: 8,
+                                color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+
                                 shadowColor: Colors.transparent,
                                 surfaceTintColor: Colors.transparent,
                                 child: ClipRRect(
@@ -2514,7 +2433,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                   //surfaceTintColor : Colors.red,
 
                                   child: Container(
-                                    color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+
+                                    padding: EdgeInsets.only(left: 0, right: 5,bottom: 7),
+
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
@@ -2592,12 +2513,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.amount),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2612,12 +2528,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2633,12 +2544,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].amount?.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2660,12 +2566,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.adjusted),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2680,12 +2581,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2701,12 +2597,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2727,12 +2618,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.gr),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2747,12 +2633,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2768,12 +2649,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2794,12 +2670,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.ffb),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2814,12 +2685,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2835,12 +2701,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2861,12 +2722,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.adhoc_rate),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2881,12 +2737,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2902,12 +2753,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2929,12 +2775,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.invoice_rate),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2949,12 +2790,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2970,12 +2806,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? ''}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -2995,12 +2826,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.descriptionn),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -3015,12 +2841,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -3036,21 +2857,28 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                       padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].memo}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
                                                             ],
-                                                          ),
-                                                          widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
-                                                              ? Row(
+                                                          ),SizedBox(height: 3,),
+                                                          // widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
+                                                          //     ?
+                                                              Container(
+                                                                padding: EdgeInsets.only(right: 8),
+                                                                  decoration: BoxDecoration(
+                                                                    //color: Colors.white, // Background color
+                                                                    border: Border.all(
+                                                                      color: Colors.white, // Border color
+                                                                      width: 1.0, // Border width
+                                                                    ),
+                                                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                                                  ),
+                                                                  child:
+                                                          Row(
                                                             children: [
                                                               Expanded(
                                                                 flex: 8,
@@ -3058,15 +2886,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 8),
                                                                       child: Text(
                                                                         tr(LocaleKeys.balance),
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontSize: 14,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -3078,15 +2901,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: EdgeInsets.fromLTRB(5, 5, 0, 8),
                                                                       child: Text(
                                                                         ":",
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
@@ -3099,23 +2917,18 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: EdgeInsets.fromLTRB(5, 5, 0, 8),
                                                                       child: Text(
                                                                         '${widget.payemntlistresp[index].balance.toStringAsFixed(2)}',
-                                                                        style: TextStyle(
-                                                                          color: Colors.grey,
-                                                                          fontSize: 14,
-                                                                          fontWeight: FontWeight.bold,
-                                                                          fontFamily: 'hind_semibold',
-                                                                        ),
+                                                                          style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 ),
                                                               ),
                                                             ],
-                                                          )
-                                                              : SizedBox.shrink(),
+                                                          ))
+                                                             /// : SizedBox.shrink(),
                                                         ],
                                                       ),
                                                     ),
@@ -3133,8 +2946,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                 }
               },
             ),
-          )),
-          Expanded(child:
+          ),
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
@@ -3147,7 +2959,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                   children: [
                     Container(
                       ///  padding: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(left: 10,right:10,bottom: 5),
+                      padding: EdgeInsets.only(left: 10,right:10,bottom: 0),
 
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -3252,9 +3064,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                       ),
                     ),
 
-                    SizedBox(height: 5.0),
+                    SizedBox(height: 0.0),
                     Container(
-                      padding: EdgeInsets.only(left: 8,right:8),
+                      padding: EdgeInsets.only(left: 8,right:8,bottom: 0,),
 
                       /// flex: 1,
                       width: MediaQuery.of(context).size.width,
@@ -3270,7 +3082,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(    padding: EdgeInsets.only(left: 10,right:4,bottom: 5),
+                            Padding(    padding: EdgeInsets.only(left: 10,right:4,bottom: 0,top: 4),
 
                               child: Text(
                                 tr(LocaleKeys.notee),
@@ -3282,7 +3094,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 ),
                               ),
                             ),
-                            Padding(padding:  EdgeInsets.only(left: 10,right:4) ,child:Text( tr(LocaleKeys.paymentnote_note),
+                            Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 4) ,child:Text( tr(LocaleKeys.paymentnote_note),
                               // style: TextStyle(
                               //   fontSize: 14,
                               //   fontWeight: FontWeight.normal,
@@ -3326,7 +3138,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                       ),
                     ),
                   ],
-                ),)))
+                ),))
         ],
       )
 

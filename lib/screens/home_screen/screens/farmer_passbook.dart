@@ -5,8 +5,10 @@ import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/FarmerInfo.dart';
+import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_2.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -74,7 +76,39 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
         //     },
         //   ),
         // ),
-        appBar:  CustomAppBar(title: 'Farmer Passbook'),
+        appBar:   AppBar(
+      backgroundColor: Color(0xFFDAF05F4E),
+      leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Image.asset(Assets.images.icLeft.path),
+      ),
+      elevation: 0,
+      title: Text(
+        tr(LocaleKeys.payments),
+        style: CommonStyles.txSty_14black_f5.copyWith(
+          color: CommonStyles.whiteColor,
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          onPressed:
+                  () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
+              },
+        ),
+      ],
+    ),
 
         body: Center(
           child: Card(
@@ -84,8 +118,12 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
             child: IntrinsicHeight(child:
             Container(
               width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.only(left: 10,right:10),
+              decoration: BoxDecoration(
+                  color: Color(0x8D000000),
+                  borderRadius: BorderRadius.all(Radius.circular(8))),
               //height: MediaQuery.of(context).size.height/1.8,
-              color: Color(0x8D000000),
+
               child: Column(
                 children: [
                   // Align(
@@ -96,15 +134,15 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                   //   ),
                   // ),
                   SizedBox(height: 12,),
-                  Icon(
-                    Icons.account_balance,
-                    size: 50,
-                    color: Colors.white,
+                  Image.asset( Assets.images.icBankWhite.path,
+                    //  color: CommonStyles.primaryTextColor,
+                    height: 75,
+                    width: 75,
                   ),
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         tr(LocaleKeys.bank_details),
                         style: TextStyle(
@@ -130,6 +168,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 8,),
                   Row(
                     children: [
                       Expanded(
@@ -388,54 +427,58 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 18.0, top: 10.0,bottom: 12),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFFCCCCCC),
-                              Color(0xFFFFFFFF),
-                              Color(0xFFCCCCCC),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.circular(10.0),
-                          border: Border.all(
-                            width: 2.0,
-                            color: Color(0xFFe86100),
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print('Next');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => farmer_passbook_2(accountHolderName: farmerinfolist[0].accountHolderName, accountNumber: farmerinfolist[0].accountNumber, bankName: farmerinfolist[0].bankName,
-                                        branchName: farmerinfolist[0].branchName, district: farmerinfolist[0].district, farmerCode: farmerinfolist[0].farmerCode,
-                                        guardianName: farmerinfolist[0].guardianName, ifscCode: farmerinfolist[0].ifscCode, mandal: farmerinfolist[0].mandal,
-                                        state: farmerinfolist[0].state, village: farmerinfolist[0].village)));
-                          },
-                          child: Text(
-                        tr(LocaleKeys.next),
-                            style: TextStyle(
+                    child: IntrinsicWidth(
+                      child: Padding(
+                        padding:  EdgeInsets.only(right: 15.0, top: 10.0,bottom: 8),
+                        child: Container(
+
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFFCCCCCC),
+                                Color(0xFFFFFFFF),
+                                Color(0xFFCCCCCC),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0),
+                            border: Border.all(
+                              width: 2.0,
                               color: Color(0xFFe86100),
-                              fontSize: 14,
-                              fontFamily: 'hind_semibold',
                             ),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print('Next');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => farmer_passbook_2(accountHolderName: farmerinfolist[0].accountHolderName, accountNumber: farmerinfolist[0].accountNumber, bankName: farmerinfolist[0].bankName,
+                                          branchName: farmerinfolist[0].branchName, district: farmerinfolist[0].district, farmerCode: farmerinfolist[0].farmerCode,
+                                          guardianName: farmerinfolist[0].guardianName, ifscCode: farmerinfolist[0].ifscCode, mandal: farmerinfolist[0].mandal,
+                                          state: farmerinfolist[0].state, village: farmerinfolist[0].village)));
+                            },
+                            child: Text(
+                              tr(LocaleKeys.next),
+                              style: TextStyle(
+                                color: Color(0xFFe86100),
+                                fontSize: 14,
+                                fontFamily: 'hind_semibold',
+                              ),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                    )
+
                   )
                 ],
               ),
