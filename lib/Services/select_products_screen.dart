@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class SelectProductsScreen extends StatefulWidget {
   const SelectProductsScreen({super.key});
@@ -440,10 +442,13 @@ class _ProductCardState extends State<ProductCard> {
                 '${widget.product.name}',
                 style: CommonStyles.txSty_14p_f5,
               ),
-              Image.asset(
-                Assets.images.infoIcon.path,
-                width: 20,
-                height: 20,
+              GestureDetector(
+                onTap: openProductInfoDialog,
+                child: Image.asset(
+                  Assets.images.infoIcon.path,
+                  width: 20,
+                  height: 20,
+                ),
               ),
             ],
           ),
@@ -541,6 +546,232 @@ class _ProductCardState extends State<ProductCard> {
       productQuantity++;
       widget.onQuantityChanged(productQuantity);
     });
+  }
+
+  void openProductInfoDialog() {
+    CommonStyles.customDialog(context, infoDialogContent(widget.product));
+  }
+
+  Widget infoDialogContent(ProductItem product) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      width: size.width * 0.75,
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: CommonStyles.primaryTextColor, width: 2),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Name',
+                style: CommonStyles.txSty_16b_fb,
+              ),
+              const Text(
+                '     : ',
+                style: CommonStyles.txSty_14b_fb,
+              ),
+              Text(
+                '${product.name}',
+                style: CommonStyles.txSty_16p_fb,
+              ),
+              const Spacer(),
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  padding: const EdgeInsets.all(0),
+                  icon: const Icon(
+                    Icons.close,
+                    color: CommonStyles.primaryTextColor,
+                    size: 24,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Center(
+            child: GestureDetector(
+              onTap: () => showZoomedAttachment('${product.imageUrl}'),
+              child: CachedNetworkImage(
+                imageUrl: '${product.imageUrl}',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Image.asset(
+                  Assets.images.icLogo.path,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Description:',
+            style: CommonStyles.txSty_14b_fb,
+          ),
+          Text(
+            '${product.description}',
+            style: CommonStyles.txSty_14b_fb,
+          ),
+          CommonStyles.horizontalGradientDivider(),
+          infoRow(
+            label1: 'Price (Rs)',
+            data1: '${product.actualPriceInclGst}',
+            label2: 'GST (%)',
+            data2: '${product.gstPercentage}',
+          ),
+          CommonStyles.horizontalGradientDivider(),
+          infoRow(
+              label1: 'Size',
+              data1: '${product.size}',
+              label2: 'label2',
+              data2: '${product.description}',
+              isSingle: true),
+        ],
+      ),
+    );
+  }
+
+  Widget infoRow({
+    required String label1,
+    required String data1,
+    required String label2,
+    required String data2,
+    bool isSingle = false,
+  }) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+                child: Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Text(
+                    label1,
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+                const Expanded(
+                  flex: 1,
+                  child: Text(
+                    ':',
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text(
+                    data1,
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+              ],
+            )),
+            const SizedBox(width: 10),
+            isSingle
+                ? const Expanded(
+                    child: SizedBox(),
+                  )
+                : Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            label2,
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 1,
+                          child: Text(
+                            ':',
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            data2,
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void showZoomedAttachment(String imageString) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: Colors.white),
+            width: double.infinity,
+            height: 500,
+            child: Stack(
+              children: [
+                Center(
+                  child: PhotoViewGallery.builder(
+                    itemCount: 1,
+                    builder: (context, index) {
+                      return PhotoViewGalleryPageOptions(
+                        imageProvider: NetworkImage(imageString),
+                        minScale: PhotoViewComputedScale.covered,
+                        maxScale: PhotoViewComputedScale.covered,
+                      );
+                    },
+                    scrollDirection: Axis.vertical,
+                    scrollPhysics: const PageScrollPhysics(),
+                    allowImplicitScrolling: true,
+                    backgroundDecoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.red,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

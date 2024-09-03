@@ -267,6 +267,7 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: headercolor,
   );
+
   static void customDialognew(BuildContext context, Widget child) {
     showGeneralDialog(
       context: context,
@@ -439,7 +440,7 @@ class CommonStyles {
           child: Material(
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+                  borderRadius: BorderRadius.circular(10)),
               child: child),
         );
       },
