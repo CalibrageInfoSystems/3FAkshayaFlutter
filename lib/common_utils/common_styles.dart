@@ -75,6 +75,12 @@ class CommonStyles {
     fontWeight: FontWeight.w500,
     color: blackColor,
   );
+  static const TextStyle txSty_14b_f6 = TextStyle(
+    fontSize: 14,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w600,
+    color: blackColor,
+  );
   static const TextStyle txSty_14black = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",

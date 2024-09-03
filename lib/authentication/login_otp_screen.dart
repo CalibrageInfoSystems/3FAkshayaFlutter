@@ -127,18 +127,18 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          "Didn't receive code? ",
-                          style: CommonStyles.text14white.copyWith(
-                            color: const Color.fromARGB(255, 240, 237, 237),
-                          ),
-                        ),
+                        // Text(
+                        //   "Didn't receive code? ",
+                        //   style: CommonStyles.text14white.copyWith(
+                        //     color: const Color.fromARGB(255, 240, 237, 237),
+                        //   ),
+                        // ),
                         GestureDetector(
                           onTap: () {
                             resendOTP(); // Call your resendOTP method here
                           },
                           child: Text(
-                            "Resend OTP",
+                            "RESEND OTP",
                             style: CommonStyles.text14white.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

@@ -119,7 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: const Color(0xffe46f5d),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: TabBar(
+        child:
+        TabBar(
           indicatorColor: CommonStyles.primaryTextColor,
           indicatorWeight: 2.0,
           indicatorSize: TabBarIndicatorSize.tab,
