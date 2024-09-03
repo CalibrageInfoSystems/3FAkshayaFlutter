@@ -152,7 +152,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     : timePeriodSelector(),
                 const SizedBox(height: 10),
                 isTimePeriod ? const SizedBox() : collectionCount(),
-               //const SizedBox(height: 10),
+                //const SizedBox(height: 10),
               ],
             ),
           ),
@@ -167,178 +167,178 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     required CollectionData data,
   }) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: index % 2 == 0 ? Colors.white : Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child:Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${data.uColnid}',
-                style: CommonStyles.txSty_14p_f5.copyWith(fontWeight: FontWeight.bold),
-              ),
-              GestureDetector(
-                onTap: () {
-                  getInfoCollectionInfo(data.uColnid!);
-                },
-                child: Image.asset(
-                  Assets.images.infoIcon.path,
-                  color: CommonStyles.primaryTextColor,
-                  height: 25,
-                  width: 25,
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: index % 2 == 0 ? Colors.white : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${data.uColnid}',
+                  style: CommonStyles.txSty_14p_f5
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
-              ),
-            ],
-          ),
-
-
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                          tr(LocaleKeys.only_date),
-                          style: CommonStyles.txSty_14b_f5,
-                        )),
-                    const Text(
-                      ' :  ',
-                      style: CommonStyles.txF14Fw5Cb,
-                    ),
-                    Expanded(
-                        child: Text(
-                          '${CommonStyles.formateDate(data.docDate)}',
-                          style: CommonStyles.txF14Fw5Cb,
-                        )),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    getInfoCollectionInfo(data.uColnid!);
+                  },
+                  child: Image.asset(
+                    Assets.images.infoIcon.path,
+                    color: CommonStyles.primaryTextColor,
+                    height: 25,
+                    width: 25,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                          tr(LocaleKeys.weight),
-                          style: CommonStyles.txSty_14b_f5,
-                        )),
-                    const Text(
-                      ':  ',
-                      style: CommonStyles.txF14Fw5Cb,
-                    ),
-                    Expanded(
-                        child: Text(
-                          '${data.quantity}',
-                          style: CommonStyles.txF14Fw5Cb,
-                        )),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                          tr(LocaleKeys.cc),
-                          style: CommonStyles.txSty_14b_f5,
-                        )),
-                    const Text(
-                      ':  ',
-                      style: CommonStyles.txF14Fw5Cb,
-                    ),
-                    Expanded(
-                        child: Text(
-                          '${data.whsName}',
-                          style: CommonStyles.txF14Fw5Cb,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                  ],
-                ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              ),
-            ],
-          ),
-          // Row(
-          //
-          //   children: [
-          //     Expanded(
-          //       child: Row(
-          //         children: [
-          //           Text(
-          //             tr(LocaleKeys.cc),
-          //             style: CommonStyles.txSty_14b_f5,
-          //           ),
-          //           const SizedBox(width: 60),
-          //           const Text(
-          //             ' :  ',
-          //             style: CommonStyles.txF14Fw5Cb,
-          //           ),
-          //           Expanded(
-          //             child: Text(
-          //               '${data.whsName}',
-          //               style: CommonStyles.txF14Fw5Cb,
-          //               maxLines: 1,
-          //               overflow: TextOverflow.ellipsis,
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //  //   const Spacer(),
-          //   ],
-          // ),
+              ],
+            ),
 
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                        child: Text(
-                          tr(LocaleKeys.status),
-                          style: CommonStyles.txSty_14b_f5,
-                        )),
-                    const Text(
-                      ':  ',
-                      style: CommonStyles.txF14Fw5Cb,
-                    ),
-                    Expanded(
-                        child: Text(
-                          '${data.uApaystat}',
-                          style: CommonStyles.txF14Fw5Cb.copyWith(
-                            color: data.uApaystat == 'Paid' ? Colors.green : Colors.red,
-                          ),
-                        )),
-                  ],
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        tr(LocaleKeys.only_date),
+                        style: CommonStyles.txSty_14b_f5,
+                      )),
+                      const Text(
+                        ' :  ',
+                        style: CommonStyles.txF14Fw5Cb,
+                      ),
+                      Expanded(
+                          child: Text(
+                        '${CommonStyles.formateDate(data.docDate)}',
+                        style: CommonStyles.txF14Fw5Cb,
+                      )),
+                    ],
+                  ),
                 ),
-              ),
-              const Expanded(
-                child: SizedBox(),
-              ),
-            ],
-          ),
-        ],
-      )
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        tr(LocaleKeys.weight),
+                        style: CommonStyles.txSty_14b_f5,
+                      )),
+                      const Text(
+                        ':  ',
+                        style: CommonStyles.txF14Fw5Cb,
+                      ),
+                      Expanded(
+                          child: Text(
+                        '${data.quantity}',
+                        style: CommonStyles.txF14Fw5Cb,
+                      )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        tr(LocaleKeys.cc),
+                        style: CommonStyles.txSty_14b_f5,
+                      )),
+                      const Text(
+                        ':  ',
+                        style: CommonStyles.txF14Fw5Cb,
+                      ),
+                      Expanded(
+                          child: Text(
+                        '${data.whsName}',
+                        style: CommonStyles.txF14Fw5Cb,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      )),
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  child: SizedBox(),
+                ),
+              ],
+            ),
+            // Row(
+            //
+            //   children: [
+            //     Expanded(
+            //       child: Row(
+            //         children: [
+            //           Text(
+            //             tr(LocaleKeys.cc),
+            //             style: CommonStyles.txSty_14b_f5,
+            //           ),
+            //           const SizedBox(width: 60),
+            //           const Text(
+            //             ' :  ',
+            //             style: CommonStyles.txF14Fw5Cb,
+            //           ),
+            //           Expanded(
+            //             child: Text(
+            //               '${data.whsName}',
+            //               style: CommonStyles.txF14Fw5Cb,
+            //               maxLines: 1,
+            //               overflow: TextOverflow.ellipsis,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //  //   const Spacer(),
+            //   ],
+            // ),
 
-
-    );
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        tr(LocaleKeys.status),
+                        style: CommonStyles.txSty_14b_f5,
+                      )),
+                      const Text(
+                        ':  ',
+                        style: CommonStyles.txF14Fw5Cb,
+                      ),
+                      Expanded(
+                          child: Text(
+                        '${data.uApaystat}',
+                        style: CommonStyles.txF14Fw5Cb.copyWith(
+                          color: data.uApaystat == 'Paid'
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  child: SizedBox(),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
+
   Expanded collectionData(BuildContext context) {
     return Expanded(
       child: Container(
@@ -352,7 +352,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 CommonStyles.showHorizontalDotsLoadingDialog(context);
               });
-              return const SizedBox.shrink(); // Return an empty widget while loading
+              return const SizedBox
+                  .shrink(); // Return an empty widget while loading
             } else {
               // Hide loading dialog
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -391,8 +392,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       ),
     );
   }
-
-
 
   Widget collectionCount() {
     return FutureBuilder(
@@ -609,8 +608,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   }
 
   Widget datePickerSection() {
-    return
-      Container(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -839,7 +837,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // );
     } else if (selectedToDate.isBefore(selectedFromDate)) {
       return _showErrorDialog(tr(LocaleKeys.datevalidation));
-
     }
     apiCollectionData = getCollectionData(
       fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
@@ -897,7 +894,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   }
 
   Future<void> getInfoCollectionInfo(String code) async {
-    final apiUrl = 'http://103.241.144.240:9096/api/Collection/CollectionInfoById/$code';
+    final apiUrl =
+        'http://103.241.144.240:9096/api/Collection/CollectionInfoById/$code';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -910,12 +908,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       }
     }
   }
+
   void _showErrorDialog(String message) {
     Future.delayed(Duration.zero, () {
       CommonStyles.showCustomDialog(context, message);
     });
   }
-
 }
 
 class CollectionResponse {
@@ -945,10 +943,7 @@ class InfoDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
-              info.code!,
-            style: CommonStyles.text18orangeeader
-          ),
+          Text(info.code!, style: CommonStyles.text18orangeeader),
           const SizedBox(height: 10),
           buildInfoRow(tr(LocaleKeys.driver_name), info.driverName),
           buildInfoRow(tr(LocaleKeys.vehicle_Number), info.vehicleNumber),
@@ -959,22 +954,23 @@ class InfoDialog extends StatelessWidget {
           buildInfoRow(tr(LocaleKeys.only_date),
               CommonStyles.formateDate(info.receiptGeneratedDate)),
           buildInfoRow(tr(LocaleKeys.operatorName), info.operatorName),
-          if(info.comments!.isNotEmpty)
-          buildInfoRow(tr(LocaleKeys.comments), info.comments),
+          if (info.comments!.isNotEmpty)
+            buildInfoRow(tr(LocaleKeys.comments), info.comments),
           const SizedBox(height: 10),
           Center(
             child: TextButton(
               onPressed: () {
                 CommonStyles.customDialognew(
-                  context,CachedNetworkImage(
-                  imageUrl:   info.receiptImg!,
-                  placeholder: (context, url) =>
-                  const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Image.asset(
-                    Assets.images.icLogo.path,
-                    fit: BoxFit.cover,
+                  context,
+                  CachedNetworkImage(
+                    imageUrl: info.receiptImg!,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Image.asset(
+                      Assets.images.icLogo.path,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
                   // Image.network(
                   //   info.receiptImg!,
                   //   width: 300,
@@ -983,10 +979,8 @@ class InfoDialog extends StatelessWidget {
                   // ),
                 );
               },
-              child: Text(
-                tr(LocaleKeys.recept),
-                  style: CommonStyles.text18orangeeader
-              ),
+              child: Text(tr(LocaleKeys.recept),
+                  style: CommonStyles.text18orangeeader),
             ),
           ),
           Center(
@@ -1023,27 +1017,21 @@ class InfoDialog extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: Text(
-              label,
-              style:CommonStyles.txSty_14SB_fb
-            ),
+            child: Text(label, style: CommonStyles.txSty_14SB_fb),
           ),
           const Expanded(
             flex: 1,
-            child: Text(':',style: CommonStyles.txSty_14SB_fb,),
+            child: Text(
+              ':',
+              style: CommonStyles.txSty_14SB_fb,
+            ),
           ),
           Expanded(
             flex: 3,
-            child: Text(
-              '$value',
-              style:CommonStyles.txSty_14SB_fb
-            ),
+            child: Text('$value', style: CommonStyles.txSty_14SB_fb),
           ),
         ],
       ),
     );
   }
 }
-
-
-

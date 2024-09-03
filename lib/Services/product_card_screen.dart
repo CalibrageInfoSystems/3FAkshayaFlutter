@@ -159,7 +159,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 231, 224, 148),
+        color: const Color(0xfffefacb),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
