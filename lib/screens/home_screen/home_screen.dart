@@ -88,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
             learningList.map((item) => LearningModel.fromJson(item)).toList();
         Locale currentLocale =
             EasyLocalization.of(context)?.locale ?? const Locale('en');
-        print('currentLocale==$currentLocale');
 
         // Map names based on the locale
         return result.map((item) {
@@ -219,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        return const ShimmerWidn();;
+        return const ShimmerWidn();
       },
     );
   }
@@ -302,8 +301,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   itemCount: learningsList.length,
                   itemBuilder: (context, index) {
-                    print('learningsList===${learningsList[index]}');
-
                     return learningGridItem(
                       index: index,
                       learningsList: learningsList.length,
@@ -355,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>  FarmerPassbookScreen_1(),
+                    builder: (context) => FarmerPassbookScreen_1(),
                   ),
                 );
               }),
@@ -408,6 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
     );
   }
+
   Widget gridServiceItem(int serviceTypeId) {
     return GestureDetector(
       onTap: () {
@@ -415,19 +413,21 @@ class _HomeScreenState extends State<HomeScreen> {
           case 12: // Fertilizer Request
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const GodownSelectionScreen()),
             );
             break;
           case 10: // Pole Request
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => GodownSelectionScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const GodownSelectionScreen()),
             );
             break;
-        // Add more cases for other serviceTypeIds
-        // ...
+          // Add more cases for other serviceTypeIds
+          // ...
           default:
-          // Handle default case or do nothing
+            // Handle default case or do nothing
             break;
         }
       },
@@ -455,24 +455,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-  Widget gridLearningItem( int index, String title) {
+  Widget gridLearningItem(int index, String title) {
     return GestureDetector(
       onTap: () {
-        print('index====$index');
-        List<String> tabnames;
-        if (index == 0) {
-          tabnames = ['Standard', 'PDF', 'Videos'];
-        } else {
-          tabnames = ['PDF', 'Videos'];
-        }
+        print('gridItemIndex: $index');
+        List<String> tabnames = (index + 1) == 1
+            ? ['Standard', 'PDF', 'Videos']
+            : ['PDF', 'Videos'];
 
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => EncyclopediaActivity(
-              tabNames: tabnames,
               appBarTitle: title,
+              index: (index + 1),
             ),
           ),
         );
@@ -497,7 +493,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   Widget serviceGridItem(int index, int gridSize, int serviceTypeId) {
     int totalColumns = 3;
@@ -645,7 +640,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ShimmerWidn extends StatelessWidget {
-  const ShimmerWidn({Key? key}) : super(key: key);
+  const ShimmerWidn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -660,6 +655,7 @@ class ShimmerWidn extends StatelessWidget {
     );
   }
 }
+
 class GridItem {
   final String imagePath;
   final String title;
