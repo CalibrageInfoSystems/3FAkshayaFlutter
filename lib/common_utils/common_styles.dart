@@ -19,6 +19,7 @@ class CommonStyles {
 
   static const blackColor = Colors.black;
   static const blackColorShade = Color(0xFF5f5f5f);
+  static const dropdownbg = Color(0x8D000000);
   static const primaryColor = Color(0xFAF5F5F5);
   static const primaryTextColor = Color(0xFFe86100);
   static const formFieldErrorBorderColor = Color(0xFFff0000);
@@ -120,7 +121,7 @@ class CommonStyles {
   static const TextStyle txSty_16black_f5 = TextStyle(
     fontSize: 16,
     fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w600,
     color: Color(0xFF5f5f5f),
   );
   static const TextStyle txSty_14black_f5 = TextStyle(
@@ -501,7 +502,7 @@ class CommonStyles {
   static Widget horizontalGradientDivider({List<Color>? colors}) {
     return Container(
       height: 0.5,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: colors ??

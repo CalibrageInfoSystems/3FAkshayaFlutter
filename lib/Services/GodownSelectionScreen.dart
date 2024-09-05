@@ -14,7 +14,9 @@ import 'models/Godowndata.dart';
 import 'package:http/http.dart' as http;
 
 class GodownSelectionScreen extends StatefulWidget {
-  const GodownSelectionScreen({super.key});
+  final String keyName;
+
+  GodownSelectionScreen({required this.keyName});
 
   @override
   GodownSelection createState() => GodownSelection();
@@ -45,13 +47,14 @@ class GodownSelection extends State<GodownSelectionScreen> {
               onTap: () {
                 setState(() {
                   selectedIndex = index;
+                  print('===navigate from ${widget.keyName}');
                 });
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SelectProductsScreen()),
-                );
+                navigateBasedOnKey(context, widget.keyName,godowndata[index].code!,godowndata[index].id!);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => const SelectProductsScreen()),
+                // );
               },
               child: GoDownsCard(
                 godown: godowndata[index],
@@ -63,47 +66,10 @@ class GodownSelection extends State<GodownSelectionScreen> {
       ),
     );
   }
-/* 
-  AppBar _appBar(BuildContext context) {
-    return AppBar(
-      titleSpacing: 0.0,
-      title: Text(
-        tr(LocaleKeys.select_godown),
-        style: CommonStyles.text16white,
-      ),
-      leading: IconButton(
-        icon: Image.asset('assets/images/ic_left.png'),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-      elevation: 0,
-      actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-          onPressed: () { },
-        ),
-      ],
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [1.0, 0.4],
-            colors: [Color(0xFFDB5D4B), Color(0xFFE39A63)],
-          ),
-        ),
-      ),
-    );
-  }
- */
+
 
   Future<void> _fetchGodowndata() async {
-    final response = await http.get(Uri.parse(
-        'http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP'));
+    final response = await http.get(Uri.parse('http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -118,7 +84,23 @@ class GodownSelection extends State<GodownSelectionScreen> {
       throw Exception('Failed to load locations');
     }
   }
+
+  void navigateBasedOnKey(BuildContext context, String keyName, String godownCode, int godownid) {
+    if (keyName == 'Fertilizer') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SelectProductsScreen(godownCode: godownCode,godownid : godownid)),
+      );
+    } else if (keyName == 'otherKey') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SelectProductsScreen(godownCode: godownCode,godownid : godownid)),
+      );
+    }
+    // Add more conditions as needed for different keys.
+  }
 }
+
 
 class GoDownsCard extends StatelessWidget {
   final Godowndata godown;

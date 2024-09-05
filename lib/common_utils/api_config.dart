@@ -21,10 +21,12 @@ var getbankdetails = "Farmer/GetBankDetailsByFarmerCode/";
 var getvendordata = 'Payment/GetVendorLedger';
 var getfarmerreimbursement = 'Payment/GetTranspotationChargesByFarmerCode';
 var encyclopedia = 'Encyclopedia/GetEncyclopediaDetails/'; // 1/AP/true
-var getbankdetails ="Farmer/GetBankDetailsByFarmerCode/";
-var getvendordata='Payment/GetVendorLedger';
-var getfarmerreimbursement='Payment/GetTranspotationChargesByFarmerCode';
 var getCropMaintenanceHistoryDetailsByPlotCode='GetCropMaintenanceHistoryDetailsByPlotCode';
+var GetCategoriesByParentCategory = "Categories/GetCategoriesByParentCategory/1";
+var GetPaymentsTypeByFarmerCode ="Farmer/GetPaymentsTypeByFarmerCode/";
+
+
+
 // APWGBDAB00010005
 
 

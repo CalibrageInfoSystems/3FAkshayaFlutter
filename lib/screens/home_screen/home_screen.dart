@@ -405,7 +405,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
     );
   }
-
   Widget gridServiceItem(int serviceTypeId) {
     return GestureDetector(
       onTap: () {
@@ -413,21 +412,19 @@ class _HomeScreenState extends State<HomeScreen> {
           case 12: // Fertilizer Request
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const GodownSelectionScreen()),
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen(keyName: 'Fertilizer')),
             );
             break;
           case 10: // Pole Request
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => const GodownSelectionScreen()),
+              MaterialPageRoute(builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
             );
             break;
-          // Add more cases for other serviceTypeIds
-          // ...
+        // Add more cases for other serviceTypeIds
+        // ...
           default:
-            // Handle default case or do nothing
+          // Handle default case or do nothing
             break;
         }
       },
@@ -454,6 +451,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
 
   Widget gridLearningItem(int index, String title) {
     return GestureDetector(

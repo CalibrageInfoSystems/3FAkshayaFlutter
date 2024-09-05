@@ -755,7 +755,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                           //surfaceTintColor : Colors.red,
 
                                                           child: Container(
-                                                            color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+
+                                                            color: index.isEven ?Color(0xFFFAF5F5F5) : Color(0xFFDFDFDF),
                                                             // color:    Colors.white,
                                                             child: Row(
                                                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -2424,9 +2425,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               onTap: () {},
                               child: Card(
                                 //elevation: 8,
-                                color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+                                color: index.isEven ?Color(0xFFFAF5F5F5) : Color(0xFFDFDFDF),
+                                // #FAF5F5F5
+                                // #DFDFDF
 
-                                shadowColor: Colors.transparent,
                                 surfaceTintColor: Colors.transparent,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12.0),

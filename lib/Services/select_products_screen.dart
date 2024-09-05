@@ -18,8 +18,13 @@ import 'package:badges/badges.dart' as badges;
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../common_utils/api_config.dart';
+
 class SelectProductsScreen extends StatefulWidget {
-  const SelectProductsScreen({super.key});
+  final String godownCode;
+  final int godownid;
+
+  SelectProductsScreen({required this.godownCode, required  this.godownid});
 
   @override
   State<SelectProductsScreen> createState() => _SelectProductsScreenState();
@@ -31,19 +36,16 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   Map<int, int> productQuantities = {};
   int badgeCount = 0;
 
-  final List<String> dropdownItems = [
-    tr(LocaleKeys.home),
-    tr(LocaleKeys.home),
-    tr(LocaleKeys.home),
-  ];
+
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
-  late List<ProductItem> copyProductsData;
-
+ late List<ProductItem> copyProductsData = [];
+ // List<ProductWithQuantity>? copyProductsData;
   @override
   void initState() {
     super.initState();
     productsData = getProducts();
+
     copyProducts();
   }
 
@@ -80,8 +82,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
   Future<List<CategoryItem>> getDropdownData() async {
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Categories/GetCategoriesByParentCategory/1';
+ final apiUrl = '$baseUrl$GetCategoriesByParentCategory';
+   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Categories/GetCategoriesByParentCategory/1';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -91,7 +93,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         List<dynamic> listResult = response['listResult'];
         List<CategoryItem> categoryItems =
             listResult.map((item) => CategoryItem.fromJson(item)).toList();
-        categoryItems.insert(0, CategoryItem(categoryId: -1, name: 'All'));
+        categoryItems.insert(0, CategoryItem(categoryId: -1, name: 'Select'));
         return categoryItems;
       } else {
         throw Exception('list result is null');
@@ -102,8 +104,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
   Future<List<ProductItem>> getProducts() async {
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
+    const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -222,7 +223,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                     );
                   } else {
                     return const Center(
-                      child: Text('No products found'),
+                      child: Text('No products found',   style: CommonStyles.txSty_14b_f6,),
                     );
                   }
                 }
@@ -261,6 +262,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     );
   }
 
+
   Widget filterDropDown(List<CategoryItem> categories) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
@@ -277,12 +279,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Select Item',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                  'Select',
+                  style: CommonStyles.txSty_14b_f6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -296,11 +294,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   child: Center(
                     child: Text(
                       '${category.name}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      style: CommonStyles.txSty_14b_f6,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -319,7 +313,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         },
         dropdownStyleData: DropdownStyleData(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+        //    borderRadius: BorderRadius.circular(14),
             color: Colors.grey,
           ),
           offset: const Offset(0, 0),
@@ -336,34 +330,43 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       ),
     );
   }
-
   Container headerSection() {
     return Container(
       color: Colors.grey.shade300,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Row(
+      child:
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          badges.Badge(
-            badgeContent: Text(
-              '$badgeCount',
-              style: CommonStyles.txSty_12W_fb,
-            ),
-            badgeAnimation: const badges.BadgeAnimation.fade(
-              animationDuration: Duration(seconds: 1),
-              colorChangeAnimationDuration: Duration(seconds: 1),
-              loopAnimation: false,
-              curve: Curves.fastOutSlowIn,
-              colorChangeAnimationCurve: Curves.easeInCubic,
-            ),
-            child: Image.asset(
-              Assets.images.cart.path,
-              width: 30,
-              height: 30,
-            ),
+          Row(
+            children: [
+              badges.Badge(
+                badgeContent: Text(
+                  '$badgeCount',
+                  style: CommonStyles.txSty_12W_fb,
+                ),
+                badgeAnimation: const badges.BadgeAnimation.fade(
+                  animationDuration: Duration(seconds: 1),
+                  colorChangeAnimationDuration: Duration(seconds: 1),
+                  loopAnimation: false,
+                  curve: Curves.fastOutSlowIn,
+                  colorChangeAnimationCurve: Curves.easeInCubic,
+                ),
+                child: Image.asset(
+                  Assets.images.cart.path,
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+              const SizedBox(width: 10), // Spacing between cart icon and text
+              Text(
+                ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
+                style: CommonStyles.text16white,
+              ),
+            ],
           ),
           CustomBtn(
-            label: 'Next',
+            label:tr(LocaleKeys.next),
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
@@ -372,31 +375,38 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductCardScreen(
-                      products: fetchCardProducts(),
+                      products: fetchCardProducts(),godownCode: widget.godownCode,godownid: widget.godownid
                     ),
                   ),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Please add atleast one product.'),
+                    content: Text('Please add at least one product.'),
                   ),
                 );
               }
-
-              // fetchCardProducts
             },
           ),
         ],
       ),
+
     );
   }
 
+
+
   void updateBadgeCount() {
-    badgeCount =
-        productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
+    badgeCount = productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
     print('productQuantities: $productQuantities');
   }
+
+  double calculateTotalAmount() {
+    return fetchCardProducts()
+        .map((productWithQuantity) => productWithQuantity.totalPrice)
+        .fold(0.0, (previousValue, element) => previousValue + element);
+  }
+
 }
 
 class ProductCard extends StatefulWidget {
@@ -489,25 +499,28 @@ class _ProductCardState extends State<ProductCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Qty: ',
+                'Qty:',
                 style: CommonStyles.txSty_14b_f5,
               ),
               Row(
                 children: [
                   IconButton(
+                    iconSize: 16,
                     style: iconBtnStyle(
                       foregroundColor: CommonStyles.primaryTextColor,
                     ),
+
                     icon: const Icon(Icons.remove),
                     onPressed: removeProduct,
                   ),
-                  const SizedBox(width: 5),
+                 const SizedBox(width: 2),
                   Text(
                     '$productQuantity',
                     style: CommonStyles.texthintstyle,
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 2),
                   IconButton(
+                    iconSize: 16,
                     style: iconBtnStyle(
                       foregroundColor: CommonStyles.statusGreenText,
                     ),
@@ -528,7 +541,7 @@ class _ProductCardState extends State<ProductCard> {
     return IconButton.styleFrom(
         foregroundColor: foregroundColor,
         shape: const CircleBorder(),
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(1.0),
         side: const BorderSide(color: Colors.grey));
   }
 
@@ -774,10 +787,21 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 }
-
 class ProductWithQuantity {
   final ProductItem product;
   final int quantity;
 
-  ProductWithQuantity({required this.product, required this.quantity});
+  ProductWithQuantity({
+    required this.product,
+    required this.quantity,
+  });
+
+  double get totalPrice => product.priceInclGst! * quantity;
 }
+
+// class ProductWithQuantity {
+//   final ProductItem product;
+//   final int quantity;
+//
+//   ProductWithQuantity({required this.product, required this.quantity});
+// }
