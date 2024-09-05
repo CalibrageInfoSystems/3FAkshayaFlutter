@@ -79,7 +79,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   List<PaymentResponse> paymentDetailsResponse_list = [];
   String totalquantityffb = '';
   String closingbalance = '';
-   double totalBalance=0.0, totalQuanitity=0.0, totalGRAmount=0.0, totalAdjusted=0.0, totalAmount=0.0;
+   double? totalBalance;
+  double totalQuanitity=0.0, totalGRAmount=0.0, totalAdjusted=0.0, totalAmount=0.0;
   String? fromdatetosendtab2;
   String? todatetosendtab2;
   String? farmercode;
@@ -2024,7 +2025,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
           // Parsing paymentResponse list
           if (result.containsKey('paymentResponce')) {
             List<PaymentResponse> paymentresponse = (result['paymentResponce'] as List).map((item) => PaymentResponse.fromJson(item)).toList();
-            totalBalance = responseData['result']['totalBalance'];
+            totalBalance = responseData['result']['totalBalance']??0.0;
             totalQuanitity = responseData['result']['totalQuanitity'];
             totalGRAmount = responseData['result']['totalGRAmount'];
             totalAdjusted = responseData['result']['totalAdjusted'];
@@ -2206,7 +2207,7 @@ class farmer_passbook extends StatefulWidget {
   final String village;
   final double totalAdjusted;
   final double totalAmount;
-  final double totalBalance;
+  final double? totalBalance;
   final double totalGRAmount;
   final double totalQuanitity;
 
@@ -2320,7 +2321,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
                                   child: Text(
-                                    '${widget.totalffbcollections ?? ''}',
+                                    '${widget.totalffbcollections ?? 0.0}',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -2384,7 +2385,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
                                   child: Text(
-                                    '${widget.closingbalance ?? ''}',
+                                    '${widget.closingbalance ?? 0.0}',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,

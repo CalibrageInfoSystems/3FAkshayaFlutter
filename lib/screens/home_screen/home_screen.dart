@@ -14,10 +14,10 @@ import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_scre
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
@@ -185,40 +185,138 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget banners(Size size) {
-    return FutureBuilder(
+    return  FutureBuilder(
       future: bannersAndMarqueeTextData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final banners = snapshot.data as List<BannerModel>;
+          int _current = 0;
+          return
+            Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                // padding: const EdgeInsets.symmetric(
+                //     horizontal: 10.0, vertical: 10.0),
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child:
 
-          return CarouselSlider(
-            options: CarouselOptions(
-              height: size.height * 0.2,
-              viewportFraction: 1.0, // Occupy full width
-              autoPlay: true, // Enable auto-play
-            ),
-            items: banners.map((url) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width:
-                        MediaQuery.of(context).size.width, // Occupy full width
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(url.imageName!),
-                        fit: BoxFit
-                            .fill, // Ensure the image covers the entire area
+                    FlutterCarousel(
+                  options: CarouselOptions(
+                    floatingIndicator: true,
+                    height: 200,
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: true,
+                    autoPlay: true,
+                    aspectRatio: 16 / 9,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enableInfiniteScroll: true,
+                    slideIndicator: const CircularSlideIndicator(
+                      slideIndicatorOptions:
+                      SlideIndicatorOptions(
+                        itemSpacing: 10,
+                        padding: EdgeInsets.only(bottom: 10.0),
+                        indicatorBorderColor: Colors.grey,
+                        currentIndicatorColor:Colors.white
+
+                        ,
+                        indicatorRadius: 4,
                       ),
                     ),
-                  );
-                },
-              );
-            }).toList(),
+                    autoPlayAnimationDuration:
+                    const Duration(milliseconds: 800),
+                  ),
+                  items: banners.map((item) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return SizedBox(
+                          width:
+                          MediaQuery.of(context).size.width,
+                          child: Card(
+                            shadowColor: Colors.transparent,
+                            surfaceTintColor: Colors.transparent,
+                            // shape: RoundedRectangleBorder(
+                            //   borderRadius:
+                            //   BorderRadius.circular(10),
+                            // ),
+                            elevation: 4,
+                            child: ClipRRect(
+                              borderRadius:
+                              BorderRadius.circular(0),
+                              child: Image.network(
+                                item.imageName!,
+                                height: 200,
+                                fit: BoxFit.fill,
+                                loadingBuilder: (context, child,
+                                    loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return const Center(
+                                      child:
+                                      CircularProgressIndicator
+                                          .adaptive());
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              // CarouselSlider(
+              //   options: CarouselOptions(
+              //     height: size.height * 0.2,
+              //     viewportFraction: 1.0, // Occupy full width
+              //     autoPlay: true,
+              //     onPageChanged: (index, reason) {
+              //       setState(() {
+              //         _current = index; // Update the state to reflect the current slide
+              //       });
+              //     }, // Enable auto-play
+              //   ),
+              //   items: banners.map((url) {
+              //     return Builder(
+              //       builder: (BuildContext context) {
+              //         return Container(
+              //           width: MediaQuery.of(context).size.width, // Occupy full width
+              //           decoration: BoxDecoration(
+              //             image: DecorationImage(
+              //               image: NetworkImage(url.imageName!),
+              //               fit: BoxFit.fill, // Ensure the image covers the entire area
+              //             ),
+              //           ),
+              //         );
+              //       },
+              //     );
+              //   }).toList(),
+              // ),
+              // Positioned(
+              //   bottom: 10.0, // Position the indicators at the bottom of the image
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: banners.asMap().entries.map((entry) {
+              //       return Container(
+              //         width: 8.0,
+              //         height: 8.0,
+              //         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+              //         decoration: BoxDecoration(
+              //           shape: BoxShape.circle,
+              //           color: _current == entry.key ? Colors.white : Colors.grey, // Highlight the active indicator
+              //         ),
+              //       );
+              //     }).toList(),
+              //   ),
+              // ),
+            ],
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        return const ShimmerWidn();
+        return const ShimmerWidn(); // Placeholder when loading
       },
     );
   }
