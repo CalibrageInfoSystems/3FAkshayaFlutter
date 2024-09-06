@@ -13,7 +13,7 @@ class GoDownsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: ListView.builder(
         itemCount: godowns.length,
         itemBuilder: (context, index) {
@@ -38,7 +38,8 @@ class GoDownsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.0),
         ),
         margin: const EdgeInsets.only(bottom: 10),
-        child: Row(
+        child:
+        Row(
           children: [
             Expanded(
               flex: 3,

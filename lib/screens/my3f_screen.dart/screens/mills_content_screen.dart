@@ -9,7 +9,7 @@ class MillsContentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: ListView.builder(
         itemCount: mills.length,
         itemBuilder: (context, index) {

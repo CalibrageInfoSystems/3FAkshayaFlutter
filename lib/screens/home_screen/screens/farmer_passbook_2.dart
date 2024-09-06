@@ -328,13 +328,11 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
 
             ),
          body:
-         Expanded(
+         Container(
 
          // startColor,
           //height: MediaQuery.of(context).size.height,
-          child:
-          Column(children: [
-
+          child: Column(children: [
 
             Container(
               alignment: Alignment.topCenter,
@@ -687,8 +685,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                   Container(
                      // height: MediaQuery.of(context).size.height,
                       color: Colors.white,
-                      child:
-                      Expanded(child:
+
+                          child:
                       TabBarView(
                         children: [
                           //farmer_passbook( payemntlistresp: paymentDetailsResponse_list, totalffbcollections: '$totalquantityffb', closingbalance: '$closingbalance', accountHolderName: '',),
@@ -713,15 +711,9 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                             totalQuanitity: totalQuanitity,
                             branchname: '${widget.branchName}',
                           ),
-                          // Center(
-                          //   child: Text('Tab 1 Content'),
-                          // ),
-
-                          ///this is tab 2 code
-                          // DirectFarmerTransport(FarmerTransportfromdate: '$fromdatetosendtab2', FarmerTransporttodate: '$todatetosendtab2', farmercode: '$fc',)
 
 
-                          Expanded(
+                          Container(
                          //   height: MediaQuery.of(context).size.height,
                             child:
                             Column(
@@ -1058,24 +1050,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                             flex: 1,
                                             child:
                                             IntrinsicHeight(
-                                              //  width: 175,
-                                              //  height: 45,
-                                              // decoration: BoxDecoration(
-                                              //   gradient: LinearGradient(
-                                              //     colors: [
-                                              //       Color(0xFFCCCCCC),
-                                              //       Color(0xFFFFFFFF),
-                                              //       Color(0xFFCCCCCC),
-                                              //     ],
-                                              //     begin: Alignment.topCenter,
-                                              //     end: Alignment.bottomCenter,
-                                              //   ),
-                                              //   borderRadius: BorderRadius.circular(10.0),
-                                              //   border: Border.all(
-                                              //     width: 2.0,
-                                              //     color: Color(0xFFe86100),
-                                              //   ),
-                                              //    ),
+
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   print('button1clicked');
@@ -1149,22 +1124,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     ),
                                                   ],
                                                 )
-                                                // ElevatedButton(
-                                                //   onPressed: () {
-                                                //     print('transportlistview ${_transportRates.length}');
-                                                //     Showdialogtransportrates(_transportRates, context);
-                                                //   },
-                                                //   style: ElevatedButton.styleFrom(
-                                                //     backgroundColor: Colors.transparent,
-                                                //     elevation: 0,
-                                                //     shape: RoundedRectangleBorder(
-                                                //       borderRadius: BorderRadius.circular(10.0),
-                                                //     ),
-                                                //   ),
-                                                //   child: Container(
-                                                //       alignment: Alignment.center,
-                                                //       child: ),
-                                                // ),
+
                                               ),
                                             ),
                                           ),],
@@ -1205,30 +1165,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                 //   color: Colors.black, // Color for the rest of the text
                                                 // ),
                                                 style: CommonStyles.txSty_14b_f5,),)
-                                              // ListTile(
-                                              //   title: RichText(
-                                              //     text: TextSpan(
-                                              //       text: tr(LocaleKeys.notee),
-                                              //       style: TextStyle(
-                                              //         fontSize: 14,
-                                              //         fontWeight: FontWeight.normal,
-                                              //         color: Color(0xFFe86100), // Color for "Note: \n"
-                                              //       ),
-                                              //       children: [
-                                              //         TextSpan(
-                                              //           text:
-                                              //              tr(LocaleKeys.tansportation_note),
-                                              //           // style: TextStyle(
-                                              //           //   fontSize: 14,
-                                              //           //   fontWeight: FontWeight.normal,
-                                              //           //   color: Colors.black, // Color for the rest of the text
-                                              //           // ),
-                                              //           style: CommonStyles.txSty_14b_f5,
-                                              //         ),
-                                              //       ],
-                                              //     ),
-                                              //   ),
-                                              // ),
+
                                             ],
                                           ),
                                         ),
@@ -1243,44 +1180,18 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                           //   _DirectFarmerTransport(transportlistview: _transportRates, TransportationChargelistview:_transportationCharges,)
                         ],
                       )
-                      ),)
-                  )],
+                      ),
+
+                  )
+                ],
               ),
             ),
 
 
 
-            // Expanded(
-            //   //  child: SingleChildScrollView(
-            //   child: Column(
-            //     children: [
-            //
-            //
-            //       Expanded(child:
-            //      ),
-            //     ],
-            //   ),
-            //   // ),
-            // ),
+
             )]),
-          // decoration: BoxDecoration(
-          //   gradient: LinearGradient(
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter,
-          //     stops: dynamicStops,
-          //     colors: [Color(0xFFDB5D4B), Color(0xFFE39A63), Color(0xFFE39A63), Color(0xFFFFFFF)],
-          //   ),
-          // ),
-          // decoration: const BoxDecoration(
-          //   gradient: LinearGradient(
-          //     colors: [
-          //       CommonStyles.gradientColor1,
-          //       CommonStyles.gradientColor2,
-          //     ],
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter,
-          //   ),
-          // ),
+
         )
           )],
 
@@ -1623,36 +1534,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     }
   }
 
-  // Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
-  //   // Decode the Base64 String
-  //   List<int> excelBytes = base64Decode(base64String);
-  //
-  //   // Get the directory to save the file (external storage for visibility)
-  //   Directory? directory = await getExternalStorageDirectory();
-  //
-  //   // Define the folder and file path
-  //   String folderName = 'MyExcelFiles';
-  //   Directory newFolder = Directory('${directory!.path}/$folderName');
-  //   if (!await newFolder.exists()) {
-  //     await newFolder.create(recursive: true);
-  //     print('Folder created at ${newFolder.path}');
-  //   }
-  //
-  //   String filePath = '${newFolder.path}/output.xlsx';
-  //   print('filePath $filePath');
-  //
-  //   // Write the data to the file
-  //   File file = File(filePath);
-  //   await file.writeAsBytes(excelBytes);
-  //   print('File saved at $filePath');
-  //
-  //   // Notify the media scanner (Android only)
-  //   if (Platform.isAndroid) {
-  //     await Process.run('cmd', ['media', 'scan', filePath]);
-  //   }
-  //
-  //   await openFile(filePath);
-  // }
+
   String sanitizeBase64(String base64String) {
     return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
   }

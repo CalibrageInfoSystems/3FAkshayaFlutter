@@ -19,6 +19,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../main_screen.dart';
+
 
 class FarmerPassbookScreen_1 extends StatefulWidget {
   @override
@@ -102,7 +104,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const HomeScreen(),
+                    builder: (context) => const MainScreen(),
                   ),
                 );
               },

@@ -6,24 +6,34 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
+import '../gen/assets.gen.dart';
 import '../models/farmer_model.dart';
 import '../screens/home_screen/home_screen.dart';
+import '../screens/main_screen.dart';
+import 'models/Godowndata.dart';
 import 'models/RequestProductDetails.dart';
 import 'models/SubsidyResponse.dart';
 
 class ProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
-  final String godownCode;
-  final int godownid;
-  const ProductCardScreen({super.key, required this.products, required this.godownCode,required this.godownid});
+  final Godowndata godown;
+
+  const ProductCardScreen({
+    Key? key,
+    required this.products,
+    required this.godown,
+  }) : super(key: key);
+
 
   @override
   State<ProductCardScreen> createState() => _ProductCardScreenState();
@@ -39,13 +49,38 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   bool _isCheckboxChecked = false;
   int _selectedPaymentType = -1;
   late int  paymentmodeId = 0;
+  List<String> selectedList = [];
+  String? selectedName;
+  double displayamountWithoutGst  = 0.0;
+  double displaytotalProductCostGst = 0.0;
+  double displaytotalGst = 0.0;
+  double displayTransportamountWithoutGst = 0.0;
+  double displayTransportamountWithGst = 0.0;
+  double displaytotaltransportGst = 0.0;
+
+  double totalProductCostGst = 0.0;
+  double totalCGST = 0.0;
+  double totalSGST = 0.0;
+  double totalTransportCostwithgst = 0.0;
+  double totalAmountWithGST = 0.0;
+  double amountWithoutGst = 0.0;
+  double totalGST = 0.0;
+  double TransportamountWithoutGst = 0.0;
+  double totalTransportGST = 0.0;
+  double totalTransCGST = 0.0;
+  double totalTrasSGST = 0.0;
+  List<RequestProductDetails> productDetailsList = [];
+  bool _isLoading = false; // Track loading state
+
   // Initial value to indicate no selection
   @override
   void initState() {
     super.initState();
     farmerData = getFarmerInfoFromSharedPrefs();
-    print('godownCode==${widget.godownCode}');
-    print('godownid==${widget.godownid}');
+    print('Selected Godown name: ${widget.godown.name}');
+    print('Selected Godown ID: ${widget.godown.id}');
+    print('Selected Godown code: ${widget.godown.code}');
+
     farmerData.then((farmer) {
       print('farmerData==${farmer.code}');
       farmerCode = '${farmer.code}';
@@ -56,7 +91,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
 
     });
-
+    calculateCosts();
   }
 
   Future<List<dynamic>> getDropdownData() async {
@@ -79,73 +114,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       throw Exception('Failed to load data');
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
-    double totalProductCostGst = 0.0;
-    double totalCGST = 0.0;
-    double totalSGST = 0.0;
-    double totalTransportCostwithgst = 0.0;
-    double totalAmountWithGST = 0.0;
-    double amountWithoutGst = 0.0;
-    double totalGST = 0.0;
-    double TransportamountWithoutGst = 0.0;
-    double totalTransportGST = 0.0;
-    double totalTransCGST = 0.0;
-    double totalTrasSGST = 0.0;
-
-    List<RequestProductDetails> productDetailsList = [];
-
-    for (var productWithQuantity in widget.products) {
-      if (productWithQuantity.quantity > 0) {
-        final product = productWithQuantity.product;
-        final quantity = productWithQuantity.quantity;
-
-        final productCost = product.actualPriceInclGst! * quantity;
-        totalProductCostGst += productCost;
-
-        final transportCost = product.transPortActualPriceInclGst! * quantity;
-        totalTransportCostwithgst += transportCost;
-
-        // Calculate product amount without GST
-        final productGSTPercentage = product.gstPercentage!;
-        amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
-
-        // Calculate total GST for products
-        totalGST = totalProductCostGst - amountWithoutGst;
-        totalCGST = totalGST / 2;
-        totalSGST = totalGST / 2;
-
-        // Calculate transport amount without GST
-        final transportGSTPercentage = product.transportGstPercentage!;
-        TransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
-
-        // Calculate total GST for transport
-        totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
-        totalTransCGST = totalTransportGST / 2;
-        totalTrasSGST = totalTransportGST / 2;
-
-        // Add product details to the list
-        productDetailsList.add(
-          RequestProductDetails(
-            productId: product.id!,
-            quantity: quantity,
-            bagCost: product.actualPriceInclGst!,
-            size: product.size!,
-            gstPersentage: product.gstPercentage!,
-            productCode: product.code!,
-            transGstPercentage: product.size!,
-            transportCost: product.transPortActualPriceInclGst!,
-          ),
-        );
-      }
-    }
-
-    // Calculate total amount with GST
-    totalAmountWithGST = totalProductCostGst + totalTransportCostwithgst;
-
-    getFertilizerSubsidies(totalAmountWithGST);
-
     return Scaffold(
       appBar: CustomAppBar(
         title: tr(LocaleKeys.product_req),
@@ -220,49 +191,54 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
-                  CustomBtn(
-                    label: 'Submit',
-                    borderColor: CommonStyles.primaryTextColor,
-                    borderRadius: 12,
-                    onPressed: () {
-                      final request = FertilizerRequest(
-                        id: 0,
-                        requestTypeId: 12,
-                        farmerCode: farmerCode,
-                        farmerName: farmerName,
-                        plotCode: null,
-                        requestCreatedDate: DateTime.now().toIso8601String(),
-                        isFarmerRequest: true,
-                        createdByUserId: null,
-                        createdDate: DateTime.now().toIso8601String(),
-                        updatedByUserId: null,
-                        updatedDate: DateTime.now().toIso8601String(),
-                        godownId: widget.godownid!,
-                        paymentModeType: paymentmodeId, // Use the selected payment mode type
-                        isImmediatePayment: true,
-                        fileName: null,
-                        fileLocation:null,
-                        fileExtension: null,
-                        totalCost: totalAmountWithGST,
-                        subcidyAmount: subsidyAmount,
-                        paybleAmount: payableAmount,
-                        transportPayableAmount: totalTransportCostwithgst,
-                        comments: null,
-                        cropMaintainceDate:null,
-                        issueTypeId: null,
-                        godownCode: '${widget.godownCode}',
-                        requestProductDetails: productDetailsList, // Pass the dynamic product details
-                        clusterId: Cluster_id,
-                        stateCode: Statecode,
-                        stateName: StateName
-                      );
-                      print('CHECK BOX VALUE: $_isCheckboxChecked');
-                     submitFertilizerRequest(request);
-                      // After successfully submitting the fertilizer request
 
+    CustomBtn(
+    label:tr(LocaleKeys.submit),
+    borderColor: CommonStyles.primaryTextColor,
+    borderRadius: 12,
+    onPressed: () async { // Disable button when loading
+    if (validations()) {
+    if (await isOnline()) {
+    final request = FertilizerRequest(
+    id: 0,
+    requestTypeId: 12,
+    farmerCode: farmerCode,
+    farmerName: farmerName,
+    plotCode: null,
+    requestCreatedDate: DateTime.now().toIso8601String(),
+    isFarmerRequest: true,
+    createdByUserId: null,
+    createdDate: DateTime.now().toIso8601String(),
+    updatedByUserId: null,
+    updatedDate: DateTime.now().toIso8601String(),
+    godownId: widget.godown.id!,
+    paymentModeType: paymentmodeId,
+    isImmediatePayment: true,
+    fileName: null,
+    fileLocation: null,
+    fileExtension: null,
+    totalCost: totalAmountWithGST,
+    subcidyAmount: subsidyAmount,
+    paybleAmount: payableAmount,
+    transportPayableAmount: totalTransportCostwithgst,
+    comments: null,
+    cropMaintainceDate: null,
+    issueTypeId: null,
+    godownCode: '${widget.godown.code}',
+    requestProductDetails: productDetailsList,
+    clusterId: Cluster_id,
+    stateCode: Statecode,
+    stateName: StateName,
+    );
+    print('CHECK BOX VALUE: $_isCheckboxChecked');
+    await submitFertilizerRequest(request);
+    } else {
+    CommonStyles.showCustomDialog(context, tr(LocaleKeys.Internet));
+    }
+    }
+    },
+    ),
 
-                    },
-                  ),
                 ],
               ),
             ],
@@ -560,7 +536,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     );
   }
 
-  Future<void> getFertilizerSubsidies(double totalProductCostGst) async {
+  Future<void> getFertilizerSubsidies(double totalProductCostGst, double totalTransportCostwithgst) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerSubsidies/$farmerCode';
@@ -578,16 +554,16 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
             if (subsidyAmount > 0) {
               if (totalProductCostGst < subsidyAmount) {
-                payableAmount = 0.0;
+                payableAmount = totalTransportCostwithgst;
                 subsidyAmount = totalProductCostGst;
               } else if (subsidyAmount < totalProductCostGst) {
-                payableAmount = totalProductCostGst - subsidyAmount;
+                payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
               } else {
-                payableAmount = totalProductCostGst;
+                payableAmount = totalProductCostGst + totalTransportCostwithgst;
               }
             } else {
               subsidyAmount = 0.0;
-              payableAmount = totalProductCostGst;
+              payableAmount = totalProductCostGst + totalTransportCostwithgst;
             }
 
             print("Subsidy Amount: $subsidyAmount");
@@ -602,45 +578,89 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     }
   }
   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
+    setState(() {
+      _isLoading = true;
+
+    });
+// Show the horizontal dots loading dialog after button click
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showHorizontalDotsLoadingDialog(context); // Show loading dialog
+    });
     const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
 
     // Print the request object
     print('Submitting request:');
     print('Request Object: ${jsonEncode(request.toJson())}');
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(request.toJson()),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(request.toJson()),
+      );
 
-    // Print the encoded JSON body
-    print('Request JSON: ${jsonEncode(request.toJson())}');
+      print('Request JSON: ${jsonEncode(request.toJson())}');
 
-    if (response.statusCode == 200) {
-      // Successfully submitted request
-      print('Request submitted successfully');
-      // Print the response body
-      print('Response Body: ${response.body}');
-      List<MsgModel> displayList = [
-        MsgModel(key: 'Godown', value: 'Yernagudem'),
-        MsgModel(key: 'Product & Quantity', value: 'Urea : 2'),
-        MsgModel(key: 'Amount (Rs)', value: '507.62'),
-        // Add more items as required
-      ];
+      if (response.statusCode == 200) {
+        // Successfully submitted request
+        print('Request submitted successfully');
+        print('Response Body: ${response.body}');
 
-      // Show the success dialog
-      showSuccessDialog(context, displayList, 'Fertilizer Request Submitted Successfully');
-    } else {
-      // Handle error
-      print('Failed to submit request: ${response.statusCode}');
-      // Print the error response body
-      print('Error Response: ${response.body}');
+        // Process the product list
+        for (int i = 0; i < widget.products.length; i++) {
+          String productName = widget.products[i].product.name!;
+          int quantity = widget.products[i].quantity;
+          final product = widget.products[i].product;
+
+          final productCost = product.actualPriceInclGst! * quantity;
+          displaytotalProductCostGst += productCost;
+
+          final transportCost = product.transPortActualPriceInclGst! * quantity;
+          displayTransportamountWithGst += transportCost;
+
+          final productGSTPercentage = product.gstPercentage!;
+          displayamountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+
+          displaytotalGst = displaytotalProductCostGst - displayamountWithoutGst;
+
+          final transportGSTPercentage = product.transportGstPercentage!;
+          displayTransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
+
+          displaytotaltransportGst = displayTransportamountWithGst - displayTransportamountWithoutGst;
+
+          selectedList.add('$productName : $quantity');
+        }
+
+        selectedName = selectedList.join(', ');
+        List<MsgModel> displayList = [
+          MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+          MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
+          MsgModel(key: tr(LocaleKeys.amount), value: displayamountWithoutGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.gst_amount), value: displaytotalGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.total_amt), value: displaytotalProductCostGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.transamount), value: displayTransportamountWithoutGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.transgst), value: displaytotaltransportGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.totaltransportcost), value: displayTransportamountWithGst.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.subcd_amt), value: subsidyAmount.toStringAsFixed(2)),
+          MsgModel(key: tr(LocaleKeys.amount_payble), value: payableAmount.toStringAsFixed(2)),
+        ];
+
+        // Show success dialog
+        showSuccessDialog(context, displayList, tr(LocaleKeys.success_fertilizer));
+      } else {
+        print('Failed to submit request: ${response.statusCode}');
+        print('Error Response: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loading
+      });
     }
   }
-
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
@@ -660,86 +680,180 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     );
   }
 
+  void calculateCosts() {
+    // Initialize the variables
+    // totalProductCostGst = 0.0;
+    // totalCGST = 0.0;
+    // totalSGST = 0.0;
+    // totalTransportCostwithgst = 0.0;
+    // totalAmountWithGST = 0.0;
+    // amountWithoutGst = 0.0;
+    // totalGST = 0.0;
+    // TransportamountWithoutGst = 0.0;
+    // totalTransportGST = 0.0;
+    // totalTransCGST = 0.0;
+    // totalTrasSGST = 0.0;
 
+    for (var productWithQuantity in widget.products) {
+      if (productWithQuantity.quantity > 0) {
+        final product = productWithQuantity.product;
+        final quantity = productWithQuantity.quantity;
 
+        final productCost = product.actualPriceInclGst! * quantity;
+        totalProductCostGst += productCost;
 
-}
+        final transportCost = product.transPortActualPriceInclGst! * quantity;
+        totalTransportCostwithgst += transportCost;
 
-class SuccessDialog extends StatelessWidget {
-  final List<MsgModel> msg;
-  final String summary;
+        final productGSTPercentage = product.gstPercentage!;
+        amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
 
-  SuccessDialog({required this.msg, required this.summary});
+        totalGST = totalProductCostGst - amountWithoutGst;
+        totalCGST = totalGST / 2;
+        totalSGST = totalGST / 2;
 
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Summary Text
-            Text(
-              summary,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.orange),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.0),
+        final transportGSTPercentage = product.transportGstPercentage!;
+        TransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
 
-            // List of messages
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: msg.length,
-              itemBuilder: (context, index) {
-                return Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        msg[index].key,
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          msg[index].value,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-            SizedBox(height: 20.0),
+        totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
+        totalTransCGST = totalTransportGST / 2;
+        totalTrasSGST = totalTransportGST / 2;
+        productDetailsList.add(
+          RequestProductDetails(
+            productId: product.id!,
+            quantity: quantity,
+            bagCost: product.actualPriceInclGst!,
+            size: product.size!,
+            gstPersentage: product.gstPercentage!,
+            productCode: product.code!,
+            transGstPercentage: product.size!,
+            transportCost: product.transPortActualPriceInclGst!,
+          ),
+        );
+      }
+    }
 
-            // OK Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();  // Dismiss the dialog
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()), // Replace with your Home Screen
-                      (Route<dynamic> route) => false,
-                );
-              },
-              child: Text('OK'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange, // Button color
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    // Calculate total amount with GST
+    totalAmountWithGST = totalProductCostGst + totalTransportCostwithgst;
+
+    // Call getFertilizerSubsidies only once when the calculation is done
+    getFertilizerSubsidies(totalProductCostGst, totalTransportCostwithgst);
   }
+
+  bool validations() {
+    print('----- analysis ----->> imdpayment  : ${_selectedPaymentType}');
+    if (_selectedPaymentType == -1) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.paym_validation));
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> isOnline() async {
+    final ConnectivityResult connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+
+
+
+
+
 }
+// class SuccessDialog extends StatelessWidget {
+//   final List<MsgModel> msg;
+//   final String summary;
+//
+//   SuccessDialog({required this.msg, required this.summary});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       child: SizedBox(
+//         width: double.infinity,
+//        // height: 300.0,
+//         child: Column(
+//           children: [
+//             Container(
+//               width: double.infinity,
+//               height: 80.0,
+//               color: Colors.orange, // replace with your color
+//               child: Center(
+//                 child: Image.asset(Assets.images.icLeft.path,  width: 50.0,
+//                   height: 50.0,),
+//
+//               ),
+//             ),
+//             Expanded(
+//               child: SingleChildScrollView(
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     children: [
+//                       Text(
+//                         summary,
+//                         style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.orange),
+//                         textAlign: TextAlign.center,
+//                       ),
+//                       SizedBox(height: 20.0),
+//                       // List of messages
+//                       ListView.builder(
+//                         shrinkWrap: true,
+//                         itemCount: msg.length,
+//                         itemBuilder: (context, index) {
+//                           return Row(
+//                             children: [
+//                               Expanded(
+//                                 flex: 1,
+//                                 child: Text(
+//                                   msg[index].key,
+//                                   style: TextStyle(color: Colors.red),
+//                                 ),
+//                               ),
+//                               Expanded(
+//                                 flex: 1,
+//                                 child: Padding(
+//                                   padding: const EdgeInsets.only(left: 10.0),
+//                                   child: Text(
+//                                     msg[index].value,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           );
+//                         },
+//                       ),
+//
+//                       SizedBox(height: 15.0),
+//                       ElevatedButton(
+//                         onPressed: () {
+//                           Navigator.of(context).pop(); // Dismiss the dialog
+//                         },
+//                         style: ElevatedButton.styleFrom(
+//                           backgroundColor: Colors.orange, // Replace with your button color
+//                           padding: EdgeInsets.symmetric(horizontal: 16.0),
+//                         ),
+//                         child: Text(
+//                           'OK',
+//                           style: TextStyle(
+//                             fontFamily: 'Hind',
+//                             fontWeight: FontWeight.w600, // Semibold
+//                             fontSize: 16.0,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 
 // Model to represent key-value pairs for the dialog
 class MsgModel {

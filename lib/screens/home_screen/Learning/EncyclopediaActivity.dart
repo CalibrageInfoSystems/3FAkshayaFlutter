@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../common_utils/common_styles.dart';
 import '../../../localization/locale_keys.dart';
+import '../../main_screen.dart';
 import 'Model/AgeRecommendation.dart';
 import 'Model/FertilizerRecommendation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -110,7 +111,7 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
+                          builder: (context) => const MainScreen(),
                         ),
                       );
                     },

@@ -10,7 +10,7 @@ class NurseriesContentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: ListView.builder(
         itemCount: nurseries.length,
         itemBuilder: (context, index) {

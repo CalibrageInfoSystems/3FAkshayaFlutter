@@ -22,9 +22,11 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return
+      DefaultTabController(
       length: 4,
-      child: Scaffold(
+      child:
+      Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           bottom: PreferredSize(

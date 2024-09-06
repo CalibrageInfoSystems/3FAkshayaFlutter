@@ -12,7 +12,6 @@ import '../gen/assets.gen.dart';
 import '../localization/locale_keys.dart';
 import 'models/Godowndata.dart';
 import 'package:http/http.dart' as http;
-
 class GodownSelectionScreen extends StatefulWidget {
   final String keyName;
 
@@ -25,22 +24,34 @@ class GodownSelectionScreen extends StatefulWidget {
 class GodownSelection extends State<GodownSelectionScreen> {
   List<Godowndata> godowndata = [];
   int? selectedIndex; // Track the selected index
+  bool isLoading = false; // Track loading state
+
   @override
   void initState() {
     super.initState();
+    // Don't use context or localization here, defer it to didChangeDependencies or build.
     _fetchGodowndata();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // You can safely use context and localization here if needed.
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.select_godown),
+        title: tr(LocaleKeys.select_godown), // Localization is safe here
       ),
-      // appBar:_appBar(context),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: ListView.builder(
+        child: isLoading
+            ? Center(
+          child: CircularProgressIndicator(), // Placeholder for loading
+        )
+            : ListView.builder(
           itemCount: godowndata.length,
           itemBuilder: (context, index) {
             return GestureDetector(
@@ -49,12 +60,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
                   selectedIndex = index;
                   print('===navigate from ${widget.keyName}');
                 });
-                navigateBasedOnKey(context, widget.keyName,godowndata[index].code!,godowndata[index].id!);
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => const SelectProductsScreen()),
-                // );
+                navigateBasedOnKey(context, widget.keyName, godowndata[index]);
               },
               child: GoDownsCard(
                 godown: godowndata[index],
@@ -67,40 +73,62 @@ class GodownSelection extends State<GodownSelectionScreen> {
     );
   }
 
-
   Future<void> _fetchGodowndata() async {
-    final response = await http.get(Uri.parse('http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP'));
+    setState(() {
+      isLoading = true; // Start loading
+      // Show the horizontal dots loading dialog after button click
+      // Future.delayed(Duration.zero, () {
+      //   CommonStyles.showHorizontalDotsLoadingDialog(context);
+      // });
+    });
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final List<dynamic> listResult = data['listResult'];
+    //Show loading dialog
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
 
+    try {
+      final response = await http.get(Uri.parse('http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> listResult = data['listResult'];
+
+        setState(() {
+          godowndata = listResult.map((json) => Godowndata.fromJson(json)).toList();
+         // CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          isLoading = false; // Stop loading after data is fetched
+        });
+      } else {
+        throw Exception('Failed to load locations');
+      }
+    } catch (e) {
       setState(() {
-        godowndata =
-            listResult.map((json) => Godowndata.fromJson(json)).toList();
+       // CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        isLoading = false; // Stop loading if there’s an error
       });
-    } else {
-      // Handle error
-      throw Exception('Failed to load locations');
+      // Handle error (e.g., show a message)
+      print(e);
+    } finally {
+      // Dismiss the loading dialog
+      Navigator.pop(context);
     }
   }
 
-  void navigateBasedOnKey(BuildContext context, String keyName, String godownCode, int godownid) {
+  void navigateBasedOnKey(BuildContext context, String keyName, Godowndata selectedGodown) {
     if (keyName == 'Fertilizer') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectProductsScreen(godownCode: godownCode,godownid : godownid)),
+        MaterialPageRoute(builder: (context) => SelectProductsScreen(godown: selectedGodown)),
       );
     } else if (keyName == 'otherKey') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectProductsScreen(godownCode: godownCode,godownid : godownid)),
+        MaterialPageRoute(builder: (context) => SelectProductsScreen(godown: selectedGodown)),
       );
     }
-    // Add more conditions as needed for different keys.
   }
 }
-
 
 class GoDownsCard extends StatelessWidget {
   final Godowndata godown;
@@ -127,8 +155,8 @@ class GoDownsCard extends StatelessWidget {
           ),
           border: isSelected
               ? Border.all(
-                  color: CommonStyles.primaryTextColor,
-                )
+            color: CommonStyles.primaryTextColor,
+          )
               : null,
         ),
         margin: const EdgeInsets.only(bottom: 10),

@@ -28,6 +28,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/cart.png
   AssetGenImage get cart => const AssetGenImage('assets/images/cart.png');
 
+  /// File path: assets/images/delivery.png
+  AssetGenImage get delivery =>
+      const AssetGenImage('assets/images/delivery.png');
+
   /// File path: assets/images/ediableoils.png
   AssetGenImage get ediableoils =>
       const AssetGenImage('assets/images/ediableoils.png');
@@ -136,7 +140,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/loan.png
   AssetGenImage get loan => const AssetGenImage('assets/images/loan.png');
-  AssetGenImage get delivery => const AssetGenImage('assets/images/delivery.png');
 
   /// File path: assets/images/logo_final.png
   AssetGenImage get logoFinal =>
@@ -160,6 +163,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/pest.png
   AssetGenImage get pest => const AssetGenImage('assets/images/pest.png');
 
+  /// File path: assets/images/progress-complete.svg
+  SvgGenImage get progressComplete =>
+      const SvgGenImage('assets/images/progress-complete.svg');
+
   /// File path: assets/images/quick_pay.png
   AssetGenImage get quickPay =>
       const AssetGenImage('assets/images/quick_pay.png');
@@ -173,6 +180,7 @@ class $AssetsImagesGen {
         arrowDown,
         cancel,
         cart,
+        delivery,
         ediableoils,
         equipment,
         fertilizers,
@@ -209,6 +217,7 @@ class $AssetsImagesGen {
         oilpalm,
         passbook,
         pest,
+        progressComplete,
         quickPay,
         visit
       ];

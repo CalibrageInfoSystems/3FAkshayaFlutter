@@ -19,12 +19,13 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
+import '../screens/home_screen/screens/plot_selection_screen.dart';
+import 'models/Godowndata.dart';
 
 class SelectProductsScreen extends StatefulWidget {
-  final String godownCode;
-  final int godownid;
+  final Godowndata godown;
 
-  SelectProductsScreen({required this.godownCode, required  this.godownid});
+  const SelectProductsScreen({Key? key, required this.godown}) : super(key: key);
 
   @override
   State<SelectProductsScreen> createState() => _SelectProductsScreenState();
@@ -124,21 +125,55 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-          title: tr(LocaleKeys.select_product),
-          actionIcon: Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              tr(LocaleKeys.crop),
-              textAlign: TextAlign.center,
-              style: CommonStyles.txSty_12W_fb,
+        appBar:
+        AppBar(
+          backgroundColor: CommonStyles.gradientColor1,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Image.asset(Assets.images.icLeft.path),
+          ),
+          elevation: 0,
+          title: Text(
+            tr(LocaleKeys.select_product),
+            style: CommonStyles.txSty_14black_f5.copyWith(
+              color: CommonStyles.whiteColor,
             ),
           ),
-        ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                // Handle click event here
+                print('Crop action clicked');
+                Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const PlotSelectionScreen(),
+                                ),
+                              );
+                // You can add navigation or other logic here
+              },
+              child: Container(
+                margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
+               padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Center(
+                  child: Text(
+                    tr(LocaleKeys.crop),
+                    textAlign: TextAlign.center,
+                    style: CommonStyles.txSty_12W_fb,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10,height: 10,), // Add some spacing if needed
+          ],
+        )
+        ,
         body: Column(
           children: [
             headerSection(),
@@ -375,7 +410,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductCardScreen(
-                      products: fetchCardProducts(),godownCode: widget.godownCode,godownid: widget.godownid
+                      products: fetchCardProducts(),godown:widget.godown,
                     ),
                   ),
                 );

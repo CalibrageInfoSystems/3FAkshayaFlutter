@@ -9,7 +9,7 @@ class CollectionContentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) {
