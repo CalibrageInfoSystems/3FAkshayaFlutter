@@ -10,24 +10,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   runApp(
-
     EasyLocalization(
-        supportedLocales: const [
-          AppLocal.teluguLocale,
-          AppLocal.englishLocale,
-          AppLocal.kannadaLocale
-        ],
-        path: AppLocal.localePath,
-        saveLocale: true,
-        fallbackLocale: AppLocal.englishLocale,
-        startLocale: AppLocal.englishLocale,
-        child: ChangeNotifierProvider(
-          create: (context) => DataProvider(),
-          child: MyApp(),
-        ),
+      supportedLocales: const [
+        AppLocal.teluguLocale,
+        AppLocal.englishLocale,
+        AppLocal.kannadaLocale
+      ],
+      path: AppLocal.localePath,
+      saveLocale: true,
+      fallbackLocale: AppLocal.englishLocale,
+      startLocale: AppLocal.englishLocale,
+      child: ChangeNotifierProvider(
+        create: (context) => DataProvider(),
+        child: const MyApp(),
+      ),
 
-     //   MyApp()
-
+      //   MyApp()
     ),
   );
 }
@@ -39,29 +37,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-   //   key: ValueKey(context.locale.toString()),  // Add this line
-    builder: (context, child) {
-      final originalTextScaleFactor = MediaQuery.of(context).textScaleFactor;
-      final boldText = MediaQuery.boldTextOf(context);
+      //   key: ValueKey(context.locale.toString()),  // Add this line
+      builder: (context, child) {
+        final originalTextScaleFactor = MediaQuery.of(context).textScaleFactor;
+        final boldText = MediaQuery.boldTextOf(context);
 
-      final newMediaQueryData = MediaQuery.of(context).copyWith(
-        textScaleFactor: originalTextScaleFactor.clamp(0.8, 1.0),
-        boldText: boldText,
-      );
+        final newMediaQueryData = MediaQuery.of(context).copyWith(
+          boldText: boldText,
+          textScaler:
+              TextScaler.linear(originalTextScaleFactor.clamp(0.8, 1.0)),
+        );
 
-      return MediaQuery(
-        data: newMediaQueryData,
-        child: child!,
-      );
-    },
+        return MediaQuery(
+          data: newMediaQueryData,
+          child: child!,
+        );
+      },
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
     );
-
-
   }
-
 }

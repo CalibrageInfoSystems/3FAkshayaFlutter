@@ -7,6 +7,7 @@ import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/collection_details_model.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/unpaid_collection_model.dart';
 import 'package:digital_signature_flutter/digital_signature_flutter.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class QuickPayCollectionScreen extends StatefulWidget {
   final List<UnpaidCollection> unpaidCollections;
@@ -133,33 +135,51 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     return response['listResult'][0];
   }
 
-  Future<String> submitRequest() async {
+  Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final result = prefs.getString(SharedPrefsKeys.farmerData);
+    if (result != null) {
+      Map<String, dynamic> response = json.decode(result);
+      Map<String, dynamic> farmerResult =
+          response['result']['farmerDetails'][0];
+      return FarmerModel.fromJson(farmerResult);
+    }
+    return FarmerModel();
+  }
+
+//MARK: Submit Request
+  Future<String> submitRequest(
+      List<CollectionDetails> collections, String base64Signature) async {
+    FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
+    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
     final apiUrl = '$baseUrl$addQuickpayRequest';
     final requestBody = jsonEncode({
-      "closingBalance": 0.0,
-      "clusterId": 74,
-      "collectionCodes":
-          "COL2024TAB205CCAPKLV074-2625(2.195 MT),COL2024TAB205CCAPKLV075-2650(1.13 MT)",
-      "collectionIds":
-          "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
-      "createdDate": "2024-09-09",
-      "districtId": 5,
-      "districtName": "EAST GODAVARI",
-      "farmerCode": "APWGCGKP00080096",
-      "farmerName": "Sri lakshmi Burugupalli",
-      "ffbCost": 6000.0,
+      "closingBalance": collections[0].dues,
+      "clusterId": farmerData.clusterId,
+      "collectionCodes": collectionCodes(widget.unpaidCollections),
+      // "COL2024TAB205CCAPKLV074-2625(2.195 MT),COL2024TAB205CCAPKLV075-2650(1.13 MT)",
+      "collectionIds": collectionIds(
+          widget.unpaidCollections, await Future.value(collectionDetailsData)),
+      // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
+      "createdDate": currentDate,
+      "districtId": farmerData.districtId,
+      "districtName": farmerData.districtName,
+      "farmerCode": farmerData.code,
+      "farmerName": farmerData.firstName,
+      "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}',
       "fileLocation": "",
       "isFarmerRequest": true,
       "isSpecialPay": false,
-      "netWeight": 3.3249999999999997,
-      "reqCreatedDate": "2024-09-09",
+      "netWeight": widget.unpaidCollections
+          .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)),
+      "reqCreatedDate": currentDate,
       "signatureExtension": ".png",
-      "signatureName":
-          "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\nX5MIAAAAAElFTkSuQmCC\n",
-      "stateCode": "AP",
-      "stateName": "Andhra Pradesh",
-      "updatedDate": "2024-09-09",
-      "whsCode": "CCAPKLV"
+      "signatureName": base64Signature,
+      "stateCode": farmerData.stateCode,
+      "stateName": farmerData.stateName,
+      "updatedDate": currentDate,
+      "whsCode": widget.unpaidCollections[0].whsCode
     });
 
     final jsonResponse = await http.post(
@@ -170,9 +190,18 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       body: requestBody,
     );
 
+    print('submitRequest: $apiUrl');
+    print('submitRequest: $requestBody');
+
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
       if (response['isSuccess']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Request submitted successfully'),
+          ),
+        );
+        print('result: ${response['result']}');
         return response['result'];
       } else {
         throw Exception('Something went wrong: ${response['endUserMessage']}');
@@ -438,8 +467,35 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           ),
         ),
         const SizedBox(height: 5),
-        CustomBtn(label: 'Confirm Request', onPressed: processRequest),
+        CustomBtn(
+          label: 'Confirm Request',
+          onPressed: () {
+            test();
+          },
+          // onPressed: processRequest,
+        ),
       ],
+    );
+  }
+
+  void test() {
+    CommonStyles.customDialog(
+        context,
+        Container(
+          width: 200,
+          height: 200,
+          color: Colors.blue,
+          child: const Text('Test'),
+        ));
+  }
+
+  //MARK: loadPdf
+  Future<void> loadPdf() {
+    return WebViewController().loadRequest(
+      Uri.parse(
+          'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf'),
+      method: LoadRequestMethod.get,
+      body: Uint8List.fromList('Test Body'.codeUnits),
     );
   }
 
@@ -504,6 +560,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     Uint8List? signatureBytes = await controller?.toPngBytes();
                     if (signatureBytes != null) {
                       String base64Signature = base64Encode(signatureBytes);
+                      collectionDetailsData.then(
+                        (value) => submitRequest(value, base64Signature),
+                      );
                       print('base64Signature:  $base64Signature');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -523,6 +582,44 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       ),
     );
   }
+
+  String collectionCodes(List<UnpaidCollection> unpaidCollections) {
+    // "COL2024TAB205CCAPKLV074-2625(2.195 MT),COL2024TAB205CCAPKLV075-2650(1.13 MT)",
+
+    String collectionCodes = '';
+    for (var collection in unpaidCollections) {
+      collectionCodes += '${collection.uColnid!}(${collection.quantity} MT)';
+      if (unpaidCollections.last != collection) {
+        collectionCodes += ',';
+      }
+    }
+    return collectionCodes;
+  }
+
+  String collectionIds(List<UnpaidCollection> unpaidCollections,
+      List<CollectionDetails> collectionDetailsData) {
+    // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
+    List<CollectionDetails> collectionDetails = collectionDetailsData;
+    String collectionIds = '';
+    for (int i = 0; i < unpaidCollections.length; i++) {
+      collectionIds +=
+          '${unpaidCollections[i].uColnid!}|${unpaidCollections[i].quantity}|${unpaidCollections[i].docDate}|${collectionDetails[i].quickPayRate}';
+      if (i != unpaidCollections.length - 1) {
+        collectionIds += ',';
+      }
+    }
+    return collectionIds;
+  }
+
+/*   String collectionIds(List<UnpaidCollection> unpaidCollections) {
+    // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
+
+    String collectionIds = '';
+    for (var collection in unpaidCollections) {
+      collectionIds += '${collection.uColnid!}|${collection.quantity}|${collection.docDate}|${collection.dueAmount},';
+    }
+    return collectionIds;
+  } */
 }
 
 

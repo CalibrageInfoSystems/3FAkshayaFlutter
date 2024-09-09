@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -13,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class QuickPayScreen extends StatefulWidget {
   const QuickPayScreen({super.key});
@@ -96,14 +98,15 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                   CustomBtn(
                       label: 'Raise Request',
                       onPressed: () {
-                        setState(() {
+                        test();
+                        /*    setState(() {
                           CommonStyles.showHorizontalDotsLoadingDialog(context);
                         });
                         futureUnpaidCollection.then(
                           (value) {
                             raiseRequest(value);
                           },
-                        );
+                        ); */
                       }),
                 ],
               ),
@@ -127,6 +130,44 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
               )
             ],
           )),
+    );
+  }
+
+  WebViewController webViewController = WebViewController();
+  void test() {
+    CommonStyles.customDialog(
+        context,
+        Container(
+          width: 300,
+          height: 500,
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: FutureBuilder(
+                future: webViewController.loadRequest(Uri.parse(
+                  'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
+                )),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return WebViewWidget(
+                      controller: webViewController,
+                    );
+                  }
+                }),
+          ),
+        ));
+  }
+
+  Future<void> loadPdf(WebViewController webViewController) async {
+    const String url =
+        'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf';
+    return await webViewController.loadRequest(
+      Uri.parse(url),
     );
   }
 
