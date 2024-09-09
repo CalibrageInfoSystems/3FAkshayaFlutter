@@ -14,6 +14,7 @@ import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_scre
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/quick_pay_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -185,24 +186,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget banners(Size size) {
-    return  FutureBuilder(
+    return FutureBuilder(
       future: bannersAndMarqueeTextData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final banners = snapshot.data as List<BannerModel>;
-          int _current = 0;
-          return
-            Stack(
+          int current = 0;
+          return Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              Container(
+              SizedBox(
                 // padding: const EdgeInsets.symmetric(
                 //     horizontal: 10.0, vertical: 10.0),
                 width: MediaQuery.of(context).size.width,
                 height: 200,
-                child:
-
-                    FlutterCarousel(
+                child: FlutterCarousel(
                   options: CarouselOptions(
                     floatingIndicator: true,
                     height: 200,
@@ -213,26 +211,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enableInfiniteScroll: true,
                     slideIndicator: const CircularSlideIndicator(
-                      slideIndicatorOptions:
-                      SlideIndicatorOptions(
+                      slideIndicatorOptions: SlideIndicatorOptions(
                         itemSpacing: 10,
                         padding: EdgeInsets.only(bottom: 10.0),
                         indicatorBorderColor: Colors.grey,
-                        currentIndicatorColor:Colors.white
-
-                        ,
+                        currentIndicatorColor: Colors.white,
                         indicatorRadius: 4,
                       ),
                     ),
                     autoPlayAnimationDuration:
-                    const Duration(milliseconds: 800),
+                        const Duration(milliseconds: 800),
                   ),
                   items: banners.map((item) {
                     return Builder(
                       builder: (BuildContext context) {
                         return SizedBox(
-                          width:
-                          MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(context).size.width,
                           child: Card(
                             shadowColor: Colors.transparent,
                             surfaceTintColor: Colors.transparent,
@@ -242,21 +236,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             // ),
                             elevation: 4,
                             child: ClipRRect(
-                              borderRadius:
-                              BorderRadius.circular(0),
+                              borderRadius: BorderRadius.circular(0),
                               child: Image.network(
                                 item.imageName!,
                                 height: 200,
                                 fit: BoxFit.fill,
-                                loadingBuilder: (context, child,
-                                    loadingProgress) {
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
                                     return child;
                                   }
                                   return const Center(
                                       child:
-                                      CircularProgressIndicator
-                                          .adaptive());
+                                          CircularProgressIndicator.adaptive());
                                 },
                               ),
                             ),
@@ -503,6 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ]),
     );
   }
+
   Widget gridServiceItem(int serviceTypeId) {
     return GestureDetector(
       onTap: () {
@@ -510,19 +503,26 @@ class _HomeScreenState extends State<HomeScreen> {
           case 12: // Fertilizer Request
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => GodownSelectionScreen(keyName: 'Fertilizer')),
+              MaterialPageRoute(
+                  builder: (context) =>
+                      GodownSelectionScreen(keyName: 'Fertilizer')),
             );
             break;
           case 10: // Pole Request
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
+              MaterialPageRoute(
+                  builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
             );
             break;
-        // Add more cases for other serviceTypeIds
-        // ...
+          case 13: // Quick Pay Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const QuickPayScreen()),
+            );
+            break;
+
           default:
-          // Handle default case or do nothing
             break;
         }
       },
@@ -549,7 +549,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   Widget gridLearningItem(int index, String title) {
     return GestureDetector(

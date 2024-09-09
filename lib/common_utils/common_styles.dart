@@ -1,4 +1,6 @@
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
@@ -457,6 +459,93 @@ class CommonStyles {
             CurvedAnimation(
               parent: animation1,
               curve: Curves.easeOutBack,
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
+  }
+
+  static void errorDialog(
+    BuildContext context, {
+    Widget? errorIcon,
+    String? errorLabel,
+    required String errorMessage,
+    Color? bodyBackgroundColor = CommonStyles.blackColor,
+    Color? errorMessageColor = CommonStyles.whiteColor,
+  }) {
+    final size = MediaQuery.of(context).size;
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
+              child: SizedBox(
+                width: size.width * 0.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                        height: 60,
+                        alignment: Alignment.center,
+                        color: CommonStyles.primaryTextColor,
+                        child: errorIcon ??
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.close, color: Colors.white),
+                                const SizedBox(width: 7),
+                                Text(tr(LocaleKeys.error),
+                                    style: CommonStyles.txSty_16w_fb),
+                              ],
+                            )),
+                    Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(12.0),
+                      // height: 120,
+                      color: bodyBackgroundColor,
+                      child: Column(
+                        children: [
+                          Text(
+                            errorMessage,
+                            textAlign: TextAlign.center,
+                            style: CommonStyles.txSty_14b_f5
+                                .copyWith(color: errorMessageColor),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomBtn(
+                                  label: tr(LocaleKeys.ok),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack, // Customize the animation curve here
             ),
           ),
           child: child,

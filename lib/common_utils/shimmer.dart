@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerWid extends StatelessWidget {
-  const ShimmerWid({super.key});
+  final Widget? child;
+  const ShimmerWid({super.key, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +15,10 @@ class ShimmerWid extends StatelessWidget {
           return Shimmer.fromColors(
               baseColor: Colors.grey.shade300,
               highlightColor: Colors.grey.shade100,
-              child: shimmerCard());
+              child: child ?? shimmerCard());
         },
         separatorBuilder: (context, index) {
-          return const SizedBox(height: 20);
+          return const SizedBox(height: 10);
         },
       ),
     );

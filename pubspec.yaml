@@ -9,6 +9,7 @@ environment:
   sdk: ">=3.4.3 <4.0.0"
 
 dependencies:
+  animated_read_more_text: ^0.0.6
   badges: ^3.1.2
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
@@ -16,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   device_info: ^2.0.0
   device_info_plus: ^10.1.2
+  digital_signature_flutter: ^0.0.3
   dio: ^5.6.0
   dropdown_button2: ^2.3.9
   easy_localization: ^3.0.7

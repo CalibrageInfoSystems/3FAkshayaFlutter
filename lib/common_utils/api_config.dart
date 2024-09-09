@@ -21,11 +21,15 @@ var getbankdetails = "Farmer/GetBankDetailsByFarmerCode/";
 var getvendordata = 'Payment/GetVendorLedger';
 var getfarmerreimbursement = 'Payment/GetTranspotationChargesByFarmerCode';
 var encyclopedia = 'Encyclopedia/GetEncyclopediaDetails/'; // 1/AP/true
-var getCropMaintenanceHistoryDetailsByPlotCode='GetCropMaintenanceHistoryDetailsByPlotCode';
-var GetCategoriesByParentCategory = "Categories/GetCategoriesByParentCategory/1";
-var GetPaymentsTypeByFarmerCode ="Farmer/GetPaymentsTypeByFarmerCode/";
-
-
+var getCropMaintenanceHistoryDetailsByPlotCode =
+    'GetCropMaintenanceHistoryDetailsByPlotCode';
+var GetCategoriesByParentCategory =
+    "Categories/GetCategoriesByParentCategory/1";
+var GetPaymentsTypeByFarmerCode = "Farmer/GetPaymentsTypeByFarmerCode/";
+const getUnPaidCollections = 'Farmer/GetUnPayedCollectionsByFarmerCode/';
+const raiseCollectionRequest = 'RequestHeader/CanRaiseRequest/';
+const quickPayRequest = 'QuickPayRequest/GetQuickpayDetailsByFarmerCode';
+const addQuickpayRequest = 'QuickPayRequest/AddQuickpayRequest';
 
 // APWGBDAB00010005
 

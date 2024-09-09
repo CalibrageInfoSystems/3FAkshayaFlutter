@@ -255,11 +255,11 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           prefs.setBool(Constants.isLogin, true);
           prefs.setString(SharedPrefsKeys.farmerCode,
               data['result']['farmerDetails'][0]['code']);
-          prefs.setString(
-              'statecode', data['result']['farmerDetails'][0]['stateCode']);
-          prefs.setInt(
-              'districtId', data['result']['farmerDetails'][0]['districtId']);
-          prefs.setString('districtName',
+          prefs.setString(SharedPrefsKeys.statecode,
+              data['result']['farmerDetails'][0]['stateCode']);
+          prefs.setInt(SharedPrefsKeys.districtId,
+              data['result']['farmerDetails'][0]['districtId']);
+          prefs.setString(SharedPrefsKeys.districtName,
               data['result']['farmerDetails'][0]['districtName']);
 
           print("Navigating to Home screen");
