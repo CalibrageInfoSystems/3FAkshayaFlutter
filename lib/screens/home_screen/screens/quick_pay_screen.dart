@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -12,9 +11,8 @@ import 'package:akshaya_flutter/models/unpaid_collection_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/quick_pay_collection_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class QuickPayScreen extends StatefulWidget {
   const QuickPayScreen({super.key});
@@ -37,9 +35,8 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
 
     final apiUrl = '$baseUrl$getUnPaidCollections$farmerCode';
-    final jsonResponse = await http.get(Uri.parse(apiUrl));
     print('apiUrl: $apiUrl');
-    print('apiUrl: ${jsonResponse.body}');
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
 
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
@@ -65,109 +62,71 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.quickPay)),
       body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: FutureBuilder(
-                  future: futureUnpaidCollection,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return shimmerCard();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      final data = snapshot.data as List<UnpaidCollection>;
-                      return ListView.separated(
-                        itemCount: data.length,
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(height: 10);
-                        },
-                        itemBuilder: (context, index) {
-                          return quickPayBox(index: index, data: data[index]);
-                        },
-                      );
-                    }
-                  },
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomBtn(
-                      label: 'Raise Request',
-                      onPressed: () {
-                        test();
-                        /*    setState(() {
-                          CommonStyles.showHorizontalDotsLoadingDialog(context);
-                        });
-                        futureUnpaidCollection.then(
-                          (value) {
-                            raiseRequest(value);
-                          },
-                        ); */
-                      }),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.greenAccent,
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Note', style: CommonStyles.txSty_14p_f5),
-                    SizedBox(height: 5),
-                    Text(
-                        'Collections can take upto 2 hours to show. if Any Collections are missed, Please Contact Customer Care',
-                        style: CommonStyles.txSty_12b_f5),
-                  ],
-                ),
-              )
-            ],
-          )),
-    );
-  }
-
-  WebViewController webViewController = WebViewController();
-  void test() {
-    CommonStyles.customDialog(
-        context,
-        Container(
-          width: 300,
-          height: 500,
-          color: Colors.blue,
-          alignment: Alignment.center,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: FutureBuilder(
-                future: webViewController.loadRequest(Uri.parse(
-                  'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf',
-                )),
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder(
+                future: futureUnpaidCollection,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return shimmerCard();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return WebViewWidget(
-                      controller: webViewController,
+                    final data = snapshot.data as List<UnpaidCollection>;
+                    return ListView.separated(
+                      itemCount: data.length,
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 10);
+                      },
+                      itemBuilder: (context, index) {
+                        return quickPayBox(index: index, data: data[index]);
+                      },
                     );
                   }
-                }),
-          ),
-        ));
-  }
-
-  Future<void> loadPdf(WebViewController webViewController) async {
-    const String url =
-        'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf';
-    return await webViewController.loadRequest(
-      Uri.parse(url),
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomBtn(
+                    label: 'Raise Request',
+                    onPressed: () {
+                      setState(() {
+                        CommonStyles.showHorizontalDotsLoadingDialog(context);
+                      });
+                      futureUnpaidCollection.then(
+                        (value) {
+                          raiseRequest(value);
+                        },
+                      );
+                    }),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.greenAccent,
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Note', style: CommonStyles.txSty_14p_f5),
+                  SizedBox(height: 5),
+                  Text(
+                      'Collections can take upto 2 hours to show. if Any Collections are missed, Please Contact Customer Care',
+                      style: CommonStyles.txSty_12b_f5),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -255,7 +214,6 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     final apiUrl = '$baseUrl$raiseCollectionRequest$farmerCode/null/13';
     print('apiUrl: y $apiUrl');
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-    print('apiUrl: y ${jsonResponse.body}');
     setState(() {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     });
