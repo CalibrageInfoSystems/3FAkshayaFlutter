@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/Services/plots_screen.dart';
 import 'package:akshaya_flutter/common_utils/Constants.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -519,6 +520,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const QuickPayScreen()),
+            );
+            break;
+            case 11: // Pole Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlotSelection()),
             );
             break;
 

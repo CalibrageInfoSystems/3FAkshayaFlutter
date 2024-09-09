@@ -32,5 +32,8 @@ const quickPayRequest = 'QuickPayRequest/GetQuickpayDetailsByFarmerCode';
 const addQuickpayRequest = 'QuickPayRequest/AddQuickpayRequest';
 
 // APWGBDAB00010005
-
-
+var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
+var getLabourDuration = "TypeCdDmt/7";
+var getLabourServiceCost ='LabourServiceCost/GetLabourServiceCostCalculation';
+var getlabourservicecost='LabourServiceCost/GetLabourServiceCost/null';
+var addlabourequest='LabourRequest/AddLabourRequestHeader';
