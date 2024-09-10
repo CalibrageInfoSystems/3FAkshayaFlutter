@@ -13,6 +13,7 @@ import 'package:akshaya_flutter/navigation/app_routes.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/loan_request_screen.dart';
 
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/quick_pay_screen.dart';
@@ -522,7 +523,31 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(builder: (context) => const QuickPayScreen()),
             );
             break;
-            case 11: // Pole Request
+          case 28: // Loan Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoanRequestScreen(
+                        clusterId: 28,
+                      )),
+            );
+            break;
+          /*   case 108: // Transport Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoanRequestScreen()),
+            );
+            break;
+          case 116: // Edible Oils Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoanRequestScreen()),
+            );
+            break; */
+
+          case 11: // Pole Request
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => PlotSelection()),

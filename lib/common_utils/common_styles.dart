@@ -471,9 +471,12 @@ class CommonStyles {
     BuildContext context, {
     Widget? errorIcon,
     String? errorLabel,
+    Color? errorHeaderColor = const Color(0xffc93436),
+    Widget? errorBodyWidget,
     required String errorMessage,
     Color? bodyBackgroundColor = CommonStyles.blackColor,
     Color? errorMessageColor = CommonStyles.whiteColor,
+    void Function()? onPressed,
   }) {
     final size = MediaQuery.of(context).size;
     showGeneralDialog(
@@ -495,9 +498,9 @@ class CommonStyles {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                        height: 60,
+                        height: 50,
                         alignment: Alignment.center,
-                        color: CommonStyles.primaryTextColor,
+                        color: errorHeaderColor,
                         child: errorIcon ??
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -515,21 +518,23 @@ class CommonStyles {
                       color: bodyBackgroundColor,
                       child: Column(
                         children: [
-                          Text(
-                            errorMessage,
-                            textAlign: TextAlign.center,
-                            style: CommonStyles.txSty_14b_f5
-                                .copyWith(color: errorMessageColor),
-                          ),
+                          errorBodyWidget ??
+                              Text(
+                                errorMessage,
+                                textAlign: TextAlign.center,
+                                style: CommonStyles.txSty_14b_f5
+                                    .copyWith(color: errorMessageColor),
+                              ),
                           const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomBtn(
                                   label: tr(LocaleKeys.ok),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  }),
+                                  onPressed: onPressed ??
+                                      () {
+                                        Navigator.of(context).pop();
+                                      }),
                             ],
                           ),
                         ],
