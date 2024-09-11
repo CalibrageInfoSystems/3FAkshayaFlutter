@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../Services/models/MsgModel.dart';
 import '../Services/product_card_screen.dart';
 import '../gen/assets.gen.dart';
 import '../screens/main_screen.dart';

@@ -26,7 +26,9 @@ import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../PdfWebView.dart';
 import '../../Services/GodownSelectionScreen.dart';
 import 'Learning/EncyclopediaActivity.dart';
 import 'screens/farmer_passbook.dart';
@@ -517,11 +519,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
             );
             break;
+          case 107: // Bio Lab Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      GodownSelectionScreen(keyName: 'BioLab')),
+            );
+            break;
+          case 116: // Edibleoils Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => GodownSelectionScreen(keyName: 'edibleoils')),
+            );
+            break;
           case 13: // Quick Pay Request
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const QuickPayScreen()),
             );
+      //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
+
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
+            //   ),
+            // );
+
             break;
           case 28: // Loan Request
             Navigator.push(
@@ -764,7 +790,12 @@ class _HomeScreenState extends State<HomeScreen> {
       rethrow;
     }
   }
+
+
+
 }
+
+
 
 class ShimmerWidn extends StatelessWidget {
   const ShimmerWidn({super.key});

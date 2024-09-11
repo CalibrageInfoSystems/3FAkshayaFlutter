@@ -6,10 +6,15 @@ import 'package:akshaya_flutter/Services/select_products_screen.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../common_utils/api_config.dart';
 import '../common_utils/common_styles.dart';
 import '../gen/assets.gen.dart';
 import '../localization/locale_keys.dart';
+import 'SelectEquipProductsScreen.dart';
+import 'SelectbioProductsScreen.dart';
+import 'SelectedibleProductsScreen.dart';
 import 'models/Godowndata.dart';
 import 'package:http/http.dart' as http;
 class GodownSelectionScreen extends StatefulWidget {
@@ -25,7 +30,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
   List<Godowndata> godowndata = [];
   int? selectedIndex; // Track the selected index
   bool isLoading = false; // Track loading state
-
+  String? stateCode;
   @override
   void initState() {
     super.initState();
@@ -74,6 +79,14 @@ class GodownSelection extends State<GodownSelectionScreen> {
   }
 
   Future<void> _fetchGodowndata() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+
+      stateCode = prefs.getString('statecode');
+
+      print('stateCode -==$stateCode');
+
+    });
     setState(() {
       isLoading = true; // Start loading
       // Show the horizontal dots loading dialog after button click
@@ -86,9 +99,9 @@ class GodownSelection extends State<GodownSelectionScreen> {
     Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
-
+   // http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP
     try {
-      final response = await http.get(Uri.parse('http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP'));
+      final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -121,10 +134,22 @@ class GodownSelection extends State<GodownSelectionScreen> {
         context,
         MaterialPageRoute(builder: (context) => SelectProductsScreen(godown: selectedGodown)),
       );
-    } else if (keyName == 'otherKey') {
+    } else if (keyName == 'Pole') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectProductsScreen(godown: selectedGodown)),
+        MaterialPageRoute(builder: (context) => SelectEquipProductsScreen(godown: selectedGodown)),
+      );
+    }
+    else if (keyName == 'BioLab') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SelectbioProductsScreen(godown: selectedGodown)),
+      );
+    }
+    else if (keyName == 'edibleoils') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SelectedibleProductsScreen(godown: selectedGodown)),
       );
     }
   }

@@ -20,18 +20,20 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
 import '../screens/home_screen/screens/plot_selection_screen.dart';
+import 'EdibleProductCardScreen.dart';
+import 'EquipProductCardScreen.dart';
 import 'models/Godowndata.dart';
 
-class SelectProductsScreen extends StatefulWidget {
+class SelectedibleProductsScreen extends StatefulWidget {
   final Godowndata godown;
 
-  const SelectProductsScreen({Key? key, required this.godown}) : super(key: key);
+  const SelectedibleProductsScreen({Key? key, required this.godown}) : super(key: key);
 
   @override
-  State<SelectProductsScreen> createState() => _SelectProductsScreenState();
+  State<SelectedibleProductsScreen> createState() => _SelectEdibleProductsScreenState();
 }
 
-class _SelectProductsScreenState extends State<SelectProductsScreen> {
+class _SelectEdibleProductsScreenState extends State<SelectedibleProductsScreen> {
   // tr(LocaleKeys.crop),
 
   Map<int, int> productQuantities = {};
@@ -40,8 +42,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
 
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
- late List<ProductItem> copyProductsData = [];
- // List<ProductWithQuantity>? copyProductsData;
+  late List<ProductItem> copyProductsData = [];
+  // List<ProductWithQuantity>? copyProductsData;
   @override
   void initState() {
     super.initState();
@@ -63,8 +65,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       catogaryId == -1
           ? copyProductsData
           : copyProductsData
-              .where((item) => item.categoryId == catogaryId)
-              .toList(),
+          .where((item) => item.categoryId == catogaryId)
+          .toList(),
     );
   }
 
@@ -76,109 +78,43 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     return copyProductsData
         .where((product) => productQuantities.containsKey(product.id))
         .map((product) => ProductWithQuantity(
-              product: product,
-              quantity: productQuantities[product.id] ?? 0,
-            ))
+      product: product,
+      quantity: productQuantities[product.id] ?? 0,
+    ))
         .toList();
   }
 
-  Future<List<CategoryItem>> getDropdownData() async {
- final apiUrl = '$baseUrl$GetCategoriesByParentCategory';
-   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Categories/GetCategoriesByParentCategory/1';
-
-    final jsonResponse = await http.get(Uri.parse(apiUrl));
-
-    if (jsonResponse.statusCode == 200) {
-      final response = jsonDecode(jsonResponse.body);
-      if (response['listResult'] != null) {
-        List<dynamic> listResult = response['listResult'];
-        List<CategoryItem> categoryItems =
-            listResult.map((item) => CategoryItem.fromJson(item)).toList();
-        categoryItems.insert(0, CategoryItem(categoryId: -1, name: 'Select'));
-        return categoryItems;
-      } else {
-        throw Exception('list result is null');
-      }
-    } else {
-      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
-    }
-  }
-
   Future<List<ProductItem>> getProducts() async {
-   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
     try {
-    final apiUrl = '$baseUrl$Getproductdata/1/${widget.godown.code}';
-    print('products url $apiUrl');
-    final jsonResponse = await http.get(Uri.parse(apiUrl));
+      final apiUrl = '$baseUrl$Getproductdata/12/${widget.godown.code}';
+      print('products url $apiUrl');
 
-    if (jsonResponse.statusCode == 200) {
-      final response = jsonDecode(jsonResponse.body);
-      if (response['listResult'] != null) {
-        List<dynamic> listResult = response['listResult'];
-        return listResult.map((item) => ProductItem.fromJson(item)).toList();
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        if (response['listResult'] != null) {
+          List<dynamic> listResult = response['listResult'];
+          return listResult.map((item) => ProductItem.fromJson(item)).toList();
+        } else {
+          return []; // Return an empty list if listResult is null
+        }
       } else {
-        return []; // Return empty list if listResult is null
+        throw Exception('Failed to load data: ${jsonResponse.statusCode}');
       }
-    } else {
-      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
+    } catch (e) {
+      throw Exception('Error occurred while fetching products: $e');
     }
-  } catch (e) {
-  throw Exception('Error occurred while fetching products: $e');
   }
-}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:
-        AppBar(
-          backgroundColor: CommonStyles.gradientColor1,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Image.asset(Assets.images.icLeft.path),
-          ),
-          elevation: 0,
-          title: Text(
-            tr(LocaleKeys.select_product),
-            style: CommonStyles.txSty_14black_f5.copyWith(
-              color: CommonStyles.whiteColor,
-            ),
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                // Handle click event here
-                print('Crop action clicked');
-                Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const PlotSelectionScreen(),
-                                ),
-                              );
-                // You can add navigation or other logic here
-              },
-              child: Container(
-                margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
-               padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    tr(LocaleKeys.crop),
-                    textAlign: TextAlign.center,
-                    style: CommonStyles.txSty_12W_fb,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10,height: 10,), // Add some spacing if needed
-          ],
-        )
-        ,
+        appBar: CustomAppBar(
+          title: tr(LocaleKeys.select_product), // Localization is safe here
+        ),
+
         body: Column(
           children: [
             headerSection(),
@@ -193,36 +129,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            tr(LocaleKeys.Categorytype),
-            style: CommonStyles.txSty_14b_f5,
-          ),
-          const SizedBox(height: 10),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: FutureBuilder(
-              future: getDropdownData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final categories = snapshot.data as List<CategoryItem>;
-                  return filterDropDown(categories);
-                } else if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
-                }
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  child: const Center(child: Text('loading...')),
-                );
-              },
-            ),
-          ),
+
           const SizedBox(height: 10),
           Expanded(
             child: FutureBuilder(
@@ -239,12 +146,12 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   if (products.isNotEmpty) {
                     return GridView.builder(
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10.0,
-                              mainAxisSpacing: 10.0,
-                              mainAxisExtent: 250,
-                              childAspectRatio: 8 / 2),
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10.0,
+                          mainAxisSpacing: 10.0,
+                          mainAxisExtent: 250,
+                          childAspectRatio: 8 / 2),
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
@@ -303,73 +210,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
 
-  Widget filterDropDown(List<CategoryItem> categories) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
-        iconStyleData: const IconStyleData(
-          icon: Icon(
-            Icons.arrow_drop_down_rounded,
-            color: Colors.black,
-          ),
-        ),
-        isExpanded: true,
-        hint: const Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text(
-                  'Select',
-                  style: CommonStyles.txSty_14b_f6,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-        items: categories
-            .map((CategoryItem category) => DropdownMenuItem<String>(
-                  value: category.name,
-                  child: Center(
-                    child: Text(
-                      '${category.name}',
-                      style: CommonStyles.txSty_14b_f6,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ))
-            .toList(),
-        value: selectedDropDownValue,
-        onChanged: (String? value) {
-          setState(() {
-            selectedDropDownValue = value;
-          });
-          filterProductsByCatogary(
-            categories.where((item) => item.name == value).first.categoryId ??
-                0,
-          );
-        },
-        dropdownStyleData: DropdownStyleData(
-          decoration: BoxDecoration(
-        //    borderRadius: BorderRadius.circular(14),
-            color: Colors.grey,
-          ),
-          offset: const Offset(0, 0),
-          scrollbarTheme: ScrollbarThemeData(
-            radius: const Radius.circular(40),
-            thickness: WidgetStateProperty.all<double>(6),
-            thumbVisibility: WidgetStateProperty.all<bool>(true),
-          ),
-        ),
-        menuItemStyleData: const MenuItemStyleData(
-          height: 40,
-          padding: EdgeInsets.only(left: 20, right: 20),
-        ),
-      ),
-    );
-  }
+
   Container headerSection() {
     return Container(
       color: Colors.grey.shade300,
@@ -414,7 +255,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProductCardScreen(
+                    builder: (context) => EdibleProductCardScreen(
                       products: fetchCardProducts(),godown:widget.godown,
                     ),
                   ),
@@ -448,6 +289,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
 }
+
+
 
 class ProductCard extends StatefulWidget {
   final ProductItem product;
@@ -483,96 +326,98 @@ class _ProductCardState extends State<ProductCard> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(),
-              Text(
-                '${widget.product.name}',
-                style: CommonStyles.txSty_14p_f5,
-              ),
-              GestureDetector(
-                onTap: openProductInfoDialog,
-                child: Image.asset(
-                  Assets.images.infoIcon.path,
-                  width: 20,
-                  height: 20,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(),
+                // Allow product.name to wrap into multiple lines
+                Expanded(
+                  child: Text(
+                    widget.product.name!,
+                    style: CommonStyles.txSty_14p_f5,
+                    maxLines: 3,  // Allow up to 3 lines
+                    overflow: TextOverflow.ellipsis,  // Add ellipsis if it exceeds 3 lines
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${widget.product.priceInclGst}',
-                style: CommonStyles.txSty_14b_f5,
-              ),
-              Text(
-                '${widget.product.size} ${widget.product.uomType}',
-                style: CommonStyles.txSty_14p_f5,
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Expanded(
-            child: Center(
-              child: CachedNetworkImage(
-                imageUrl: '${widget.product.imageUrl}',
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Image.asset(
-                  Assets.images.icLogo.path,
-                  fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: openProductInfoDialog,
+                  child: Image.asset(
+                    Assets.images.infoIcon.path,
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
-              ),
-
-              /* Image.network(
-                '${widget.product.imageUrl}',
-              ), */
+              ],
             ),
-          ),
-          const SizedBox(height: 3),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Qty:',
-                style: CommonStyles.txSty_14b_f5,
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    iconSize: 16,
-                    style: iconBtnStyle(
-                      foregroundColor: CommonStyles.primaryTextColor,
-                    ),
-
-                    icon: const Icon(Icons.remove),
-                    onPressed: removeProduct,
-                  ),
-                 const SizedBox(width: 2),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${widget.product.priceInclGst}',
+                  style: CommonStyles.txSty_14b_f5,
+                ),
+                // Conditionally show product size and uomType if product.size is not null
+                if (widget.product.size != null)
                   Text(
-                    '$productQuantity',
-                    style: CommonStyles.texthintstyle,
+                    '${widget.product.size} ${widget.product.uomType}',
+                    style: CommonStyles.txSty_14p_f5,
                   ),
-                  const SizedBox(width: 2),
-                  IconButton(
-                    iconSize: 16,
-                    style: iconBtnStyle(
-                      foregroundColor: CommonStyles.statusGreenText,
-                    ),
-                    icon: const Icon(Icons.add),
-                    onPressed: addProduct,
+              ],
+            ),
+            const SizedBox(height: 5),
+            Expanded(
+              child: Center(
+                child: CachedNetworkImage(
+                  imageUrl: widget.product.imageUrl!,
+                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Image.asset(
+                    Assets.images.icLogo.path,
+                    fit: BoxFit.cover,
                   ),
-                ],
+                ),
               ),
-              const SizedBox(),
-            ],
-          )
-        ],
+            ),
+            const SizedBox(height: 3),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Qty:',
+                  style: CommonStyles.txSty_14b_f5,
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      iconSize: 16,
+                      style: iconBtnStyle(
+                        foregroundColor: CommonStyles.primaryTextColor,
+                      ),
+                      icon: const Icon(Icons.remove),
+                      onPressed: removeProduct,
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      '$productQuantity',
+                      style: CommonStyles.texthintstyle,
+                    ),
+                    const SizedBox(width: 2),
+                    IconButton(
+                      iconSize: 16,
+                      style: iconBtnStyle(
+                        foregroundColor: CommonStyles.statusGreenText,
+                      ),
+                      icon: const Icon(Icons.add),
+                      onPressed: addProduct,
+                    ),
+                  ],
+                ),
+                const SizedBox(),
+              ],
+            ),
+          ]
+
       ),
     );
   }
@@ -658,7 +503,7 @@ class _ProductCardState extends State<ProductCard> {
               child: CachedNetworkImage(
                 imageUrl: '${product.imageUrl}',
                 placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
+                const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => Image.asset(
                   Assets.images.icLogo.path,
                   fit: BoxFit.cover,
@@ -708,62 +553,62 @@ class _ProductCardState extends State<ProductCard> {
           children: [
             Expanded(
                 child: Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    label1,
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-                const Expanded(
-                  flex: 1,
-                  child: Text(
-                    ':',
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    data1,
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-              ],
-            )),
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        label1,
+                        style: CommonStyles.txSty_14b_fb,
+                      ),
+                    ),
+                    const Expanded(
+                      flex: 1,
+                      child: Text(
+                        ':',
+                        style: CommonStyles.txSty_14b_fb,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        data1,
+                        style: CommonStyles.txSty_14b_fb,
+                      ),
+                    ),
+                  ],
+                )),
             const SizedBox(width: 10),
             isSingle
                 ? const Expanded(
-                    child: SizedBox(),
-                  )
+              child: SizedBox(),
+            )
                 : Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            label2,
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                        const Expanded(
-                          flex: 1,
-                          child: Text(
-                            ':',
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            data2,
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                      ],
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      label2,
+                      style: CommonStyles.txSty_14b_fb,
                     ),
                   ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txSty_14b_fb,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      data2,
+                      style: CommonStyles.txSty_14b_fb,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ],
@@ -838,10 +683,3 @@ class ProductWithQuantity {
 
   double get totalPrice => product.priceInclGst! * quantity;
 }
-
-// class ProductWithQuantity {
-//   final ProductItem product;
-//   final int quantity;
-//
-//   ProductWithQuantity({required this.product, required this.quantity});
-// }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLabourRequestScreen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLoanRequestScreen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,6 +15,7 @@ import '../../../common_utils/shimmer.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/service_model.dart';
+import 'viewQuickPayScreen.dart';
 
 class RequestsScreen extends StatefulWidget {
   const RequestsScreen({super.key});
@@ -110,6 +113,86 @@ class _RequestsScreenState extends State<RequestsScreen> {
               color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
         ),
         onTap: () {
+          switch (serviceTypeId) {
+            // case 12: // Fertilizer Request
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             GodownSelectionScreen(keyName: 'Fertilizer')),
+            //   );
+            //   break;
+            // case 10: // Pole Request
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
+            //   );
+            //   break;
+            // case 107: // Bio Lab Request
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             GodownSelectionScreen(keyName: 'BioLab')),
+            //   );
+            //   break;
+            // case 116: // Edibleoils Request
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) => GodownSelectionScreen(keyName: 'edibleoils')),
+            //   );
+            //   break;
+            case 13: // Quick Pay Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  viewQuickPayScreen()),
+              );
+              //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
+              //   ),
+              // );
+
+              break;
+            case 28: // Loan Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>  viewLoanRequestScreen(
+
+                    )),
+              );
+              break;
+          /*   case 108: // Transport Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoanRequestScreen()),
+            );
+            break;
+          case 116: // Edible Oils Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LoanRequestScreen()),
+            );
+            break; */
+
+            case 11: // Pole Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => viewLabourRequestScreen()),
+              );
+              break;
+
+            default:
+              break;
+          }
           // Add your onTap functionality here
         },
       ),

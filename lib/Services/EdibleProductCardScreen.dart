@@ -1,7 +1,13 @@
+import 'package:flutter/cupertino.dart';
+
+import '../models/farmer_model.dart';
+
+
+import 'SelectedibleProductsScreen.dart';
+import 'models/Godowndata.dart';
+
 import 'dart:convert';
 
-import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
-import 'package:akshaya_flutter/Services/select_products_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
@@ -16,20 +22,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
-import '../gen/assets.gen.dart';
-import '../models/farmer_model.dart';
-import '../screens/home_screen/home_screen.dart';
-import '../screens/main_screen.dart';
-import 'models/Godowndata.dart';
 import 'models/MsgModel.dart';
+
 import 'models/RequestProductDetails.dart';
 import 'models/SubsidyResponse.dart';
 
-class ProductCardScreen extends StatefulWidget {
+
+
+class EdibleProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
   final Godowndata godown;
 
-  const ProductCardScreen({
+  const EdibleProductCardScreen({
     Key? key,
     required this.products,
     required this.godown,
@@ -37,16 +41,16 @@ class ProductCardScreen extends StatefulWidget {
 
 
   @override
-  State<ProductCardScreen> createState() => _ProductCardScreenState();
+  State<EdibleProductCardScreen> createState() => _ProductCardScreenState();
 }
 
-class _ProductCardScreenState extends State<ProductCardScreen> {
+class _ProductCardScreenState extends State<EdibleProductCardScreen> {
   int? selectedDropDownValue = -1;
- late double subsidyAmount = 0.0;
+  late double subsidyAmount = 0.0;
   late double payableAmount = 0.0;
   late Future<FarmerModel> farmerData;
   late String farmerCode,farmerName,Statecode,StateName;
-    late int  Cluster_id;
+  late int  Cluster_id;
   bool _isCheckboxChecked = false;
   int _selectedPaymentType = -1;
   late int  paymentmodeId = 0;
@@ -100,7 +104,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl = '$baseUrl$GetPaymentsTypeByFarmerCode$farmerCode';
     print('GetPaymentsTypeByFarmerCode==$apiUrl');
-   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetPaymentsTypeByFarmerCode/APWGBDAB00010005';
+    // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetPaymentsTypeByFarmerCode/APWGBDAB00010005';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -115,7 +119,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       throw Exception('Failed to load data');
     }
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,52 +197,52 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     const Color(0xFFFF4500),
                   ]),
 
-    CustomBtn(
-    label:tr(LocaleKeys.submit),
-    borderColor: CommonStyles.primaryTextColor,
-    borderRadius: 12,
-    onPressed: () async { // Disable button when loading
-    if (validations()) {
-    if (await isOnline()) {
-    final request = FertilizerRequest(
-    id: 0,
-    requestTypeId: 12,
-    farmerCode: farmerCode,
-    farmerName: farmerName,
-    plotCode: null,
-    requestCreatedDate: DateTime.now().toIso8601String(),
-    isFarmerRequest: true,
-    createdByUserId: null,
-    createdDate: DateTime.now().toIso8601String(),
-    updatedByUserId: null,
-    updatedDate: DateTime.now().toIso8601String(),
-    godownId: widget.godown.id!,
-    paymentModeType: paymentmodeId,
-    isImmediatePayment: true,
-    fileName: null,
-    fileLocation: null,
-    fileExtension: null,
-    totalCost: totalAmountWithGST,
-    subcidyAmount: subsidyAmount,
-    paybleAmount: payableAmount,
-    transportPayableAmount: totalTransportCostwithgst,
-    comments: null,
-    cropMaintainceDate: null,
-    issueTypeId: null,
-    godownCode: '${widget.godown.code}',
-    requestProductDetails: productDetailsList,
-    clusterId: Cluster_id,
-    stateCode: Statecode,
-    stateName: StateName,
-    );
-    print('CHECK BOX VALUE: $_isCheckboxChecked');
-    await submitFertilizerRequest(request);
-    } else {
-    CommonStyles.showCustomDialog(context, tr(LocaleKeys.Internet));
-    }
-    }
-    },
-    ),
+                  CustomBtn(
+                    label:tr(LocaleKeys.submit),
+                    borderColor: CommonStyles.primaryTextColor,
+                    borderRadius: 12,
+                    onPressed: () async { // Disable button when loading
+                      if (validations()) {
+                        if (await isOnline()) {
+                          final request = FertilizerRequest(
+                            id: 0,
+                            requestTypeId: 116,
+                            farmerCode: farmerCode,
+                            farmerName: farmerName,
+                            plotCode: null,
+                            requestCreatedDate: DateTime.now().toIso8601String(),
+                            isFarmerRequest: true,
+                            createdByUserId: null,
+                            createdDate: DateTime.now().toIso8601String(),
+                            updatedByUserId: null,
+                            updatedDate: DateTime.now().toIso8601String(),
+                            godownId: widget.godown.id!,
+                            paymentModeType: paymentmodeId,
+                            isImmediatePayment: true,
+                            fileName: null,
+                            fileLocation: null,
+                            fileExtension: null,
+                            totalCost: totalAmountWithGST,
+                            subcidyAmount: subsidyAmount,
+                            paybleAmount: payableAmount,
+                            transportPayableAmount: totalTransportCostwithgst,
+                            comments: null,
+                            cropMaintainceDate: null,
+                            issueTypeId: null,
+                            godownCode: '${widget.godown.code}',
+                            requestProductDetails: productDetailsList,
+                            clusterId: Cluster_id,
+                            stateCode: Statecode,
+                            stateName: StateName,
+                          );
+                          print('CHECK BOX VALUE: $_isCheckboxChecked');
+                          await submitFertilizerRequest(request);
+                        } else {
+                          CommonStyles.showCustomDialog(context, tr(LocaleKeys.Internet));
+                        }
+                      }
+                    },
+                  ),
 
                 ],
               ),
@@ -376,7 +380,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             setState(() {
               _selectedPaymentType = value!;
               if (_selectedPaymentType != -1) {
-                 paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
+                paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
                 final paymentmodeName = paymentModes[_selectedPaymentType]['desc'];
 
                 print('setState paymentmodeId: $paymentmodeId');
@@ -461,7 +465,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           ),
           productInfo(
             label1: tr(LocaleKeys.each_product),
-          //  label1: 'Item Cost(Rs)',
+            //  label1: 'Item Cost(Rs)',
             data1: '${product.actualPriceInclGst?.toStringAsFixed(2)}',
             label2:  tr(LocaleKeys.gst),
             data2: '${product.gstPercentage?.toStringAsFixed(2)}',
@@ -588,9 +592,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(context); // Show loading dialog
     });
-   // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
+    // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
     final url = '$baseUrl$productsubRequest';
-  //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
+    //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
     // Print the request object
     print('Submitting request:');
     print('Request Object: ${jsonEncode(request.toJson())}');
@@ -651,7 +655,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         ];
 
         // Show success dialog
-        showSuccessDialog(context, displayList, tr(LocaleKeys.success_fertilizer));
+        showSuccessDialog(context, displayList, tr(LocaleKeys.success_edible));
       } else {
         print('Failed to submit request: ${response.statusCode}');
         print('Error Response: ${response.body}');
@@ -684,18 +688,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   }
 
   void calculateCosts() {
-    // Initialize the variables
-    // totalProductCostGst = 0.0;
-    // totalCGST = 0.0;
-    // totalSGST = 0.0;
-    // totalTransportCostwithgst = 0.0;
-    // totalAmountWithGST = 0.0;
-    // amountWithoutGst = 0.0;
-    // totalGST = 0.0;
-    // TransportamountWithoutGst = 0.0;
-    // totalTransportGST = 0.0;
-    // totalTransCGST = 0.0;
-    // totalTrasSGST = 0.0;
 
     for (var productWithQuantity in widget.products) {
       if (productWithQuantity.quantity > 0) {
@@ -763,5 +755,3 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
 
 }
-
-

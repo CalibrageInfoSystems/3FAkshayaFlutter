@@ -1,22 +1,20 @@
-class RequestProductDetails {
+class RequestPoleDetails {
   final int productId;
   final int quantity;
   final double bagCost;
   final double? size;
   final double ?gstPersentage;
   final String productCode;
-  final double? transGstPercentage;
-  final double? transportCost;
 
-  RequestProductDetails({
+
+  RequestPoleDetails({
     required this.productId,
     required this.quantity,
     required this.bagCost,
     required this.size,
     required this.gstPersentage,
     required this.productCode,
-    required this.transGstPercentage,
-    required this.transportCost,
+
   });
 
   Map<String, dynamic> toJson() => {
@@ -26,8 +24,7 @@ class RequestProductDetails {
     'size': size,
     'gstPersentage': gstPersentage,
     'productCode': productCode,
-    'transGstPercentage': transGstPercentage,
-    'transportCost': transportCost,
+
   };
 }
 
@@ -52,12 +49,12 @@ class FertilizerRequest {
   final double totalCost;
   final double? subcidyAmount;
   final double? paybleAmount;
-  final double transportPayableAmount;
+  final double? transportPayableAmount;
   final String? comments; // Nullable
   final DateTime? cropMaintainceDate; // Nullable
   final int? issueTypeId; // Nullable
   final String godownCode;
-  final List<RequestProductDetails> requestProductDetails;
+  final List<RequestPoleDetails> requestProductDetails;
   final int clusterId;
   final String stateCode;
   final String stateName;

@@ -163,6 +163,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           widget.unpaidCollections, await Future.value(collectionDetailsData)),
       // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
       "createdDate": currentDate,
+      "createdByUserId": null,
       "districtId": farmerData.districtId,
       "districtName": farmerData.districtName,
       "farmerCode": farmerData.code,
@@ -179,6 +180,8 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       "stateCode": farmerData.stateCode,
       "stateName": farmerData.stateName,
       "updatedDate": currentDate,
+      "updatedByUserId": null,
+
       "whsCode": widget.unpaidCollections[0].whsCode
     });
 
@@ -196,11 +199,13 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
       if (response['isSuccess']) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Request submitted successfully'),
-          ),
-        );
+        showPdfDialog(context, response['result']);
+       // showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
+       //  ScaffoldMessenger.of(context).showSnackBar(
+       //    const SnackBar(
+       //      content: Text('Request submitted successfully'),
+       //    ),
+       //  );
         print('result: ${response['result']}');
         return response['result'];
       } else {
@@ -611,6 +616,15 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     return collectionIds;
   }
 
+  void showPdfDialog(BuildContext context, String pdfUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PdfViewerPopup(pdfUrl: pdfUrl);
+      },
+    );
+  }
+
 /*   String collectionIds(List<UnpaidCollection> unpaidCollections) {
     // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
 
@@ -620,6 +634,86 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     }
     return collectionIds;
   } */
+}
+
+class PdfViewerPopup extends StatefulWidget {
+  final String pdfUrl;
+
+  PdfViewerPopup({required this.pdfUrl});
+
+  @override
+  _PdfViewerPopupState createState() => _PdfViewerPopupState();
+}
+
+class _PdfViewerPopupState extends State<PdfViewerPopup> {
+  bool isLoading = true;
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(
+          "https://docs.google.com/gview?embedded=true&url=" + widget.pdfUrl));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Column(
+        children: <Widget>[
+          // Header
+          Container(
+            padding: EdgeInsets.all(8),
+            color: Colors.red,
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                'QuickPay Request PDF',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+          ),
+          // WebView displaying PDF
+          Expanded(
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _controller),
+                if (isLoading)
+                  Center(child: CircularProgressIndicator()),
+              ],
+            ),
+          ),
+          // "OK" Button
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 50), // Full width button
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 

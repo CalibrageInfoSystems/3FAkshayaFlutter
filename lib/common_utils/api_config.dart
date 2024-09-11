@@ -31,6 +31,10 @@ const raiseCollectionRequest = 'RequestHeader/CanRaiseRequest/';
 const quickPayRequest = 'QuickPayRequest/GetQuickpayDetailsByFarmerCode';
 const addQuickpayRequest = 'QuickPayRequest/AddQuickpayRequest';
 const loanRequest = 'RequestHeader/AddRequestHeader';
+const Getproductdata ='Products/GetProductsByGodown';
+const GetActivegodowns ='Godown/GetActiveGodowns/';
+const productsubRequest = 'FertilizerRequest';
+
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
