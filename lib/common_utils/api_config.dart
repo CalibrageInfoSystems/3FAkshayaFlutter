@@ -2,7 +2,7 @@ library APIConstants;
 
 const String SUCCESS_MESSAGE = " You will be contacted by us very soon.";
 
-var baseUrl = "http://182.18.157.215/3FAkshaya/API/api/"; // Test
+const baseUrl = "http://182.18.157.215/3FAkshaya/API/api/"; // Test
 //var baseUrl ="http://182.18.157.215/SaloonApp_Live/API/";//live
 
 var getBanners = "GetBanner?Id=null";
@@ -30,10 +30,11 @@ const getUnPaidCollections = 'Farmer/GetUnPayedCollectionsByFarmerCode/';
 const raiseCollectionRequest = 'RequestHeader/CanRaiseRequest/';
 const quickPayRequest = 'QuickPayRequest/GetQuickpayDetailsByFarmerCode';
 const addQuickpayRequest = 'QuickPayRequest/AddQuickpayRequest';
+const loanRequest = 'RequestHeader/AddRequestHeader';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
 var getLabourDuration = "TypeCdDmt/7";
-var getLabourServiceCost ='LabourServiceCost/GetLabourServiceCostCalculation';
-var getlabourservicecost='LabourServiceCost/GetLabourServiceCost/null';
-var addlabourequest='LabourRequest/AddLabourRequestHeader';
+var getLabourServiceCost = 'LabourServiceCost/GetLabourServiceCostCalculation';
+var getlabourservicecost = 'LabourServiceCost/GetLabourServiceCost/null';
+var addlabourequest = 'LabourRequest/AddLabourRequestHeader';
