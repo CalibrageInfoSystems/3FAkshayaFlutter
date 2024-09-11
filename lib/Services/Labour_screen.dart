@@ -5,12 +5,15 @@ import 'package:akshaya_flutter/Services/models/LabourRequest.dart';
 import 'package:akshaya_flutter/Services/models/Popupmodel.dart';
 import 'package:akshaya_flutter/Services/models/ResponseModel.dart';
 import 'package:akshaya_flutter/Services/models/ServiceType.dart';
+import 'package:akshaya_flutter/Services/product_card_screen.dart';
+import 'package:akshaya_flutter/common_utils/SuccessDialog.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +41,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   List<ServiceType> _selectedServiceTypes = [];
   late List<dynamic> appointmentsData;
   bool _isChecked = false;
+  bool _isagreed = false;
   TextEditingController _dateController = TextEditingController();
+  TextEditingController _commentController = TextEditingController();
   List<LabourRequest> _labourRequests = [];
   String? _selectedDesc;
   bool isharvestingamount = false;
@@ -48,9 +53,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   double? pruningWithIntercropCost;
   double? harvestingWithIntercropCost;
   late Future<FarmerModel> farmerData;
-  late String farmerCode, farmerName, Statecode, StateName;
+  late String farmerCode, farmerName, Statecode, StateName, servicename, service_id;
   late int Cluster_id;
   late int selectduration_id;
+
+  // List<String>? service_id;
 
   @override
   void initState() {
@@ -81,11 +88,26 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: DateTime.now(), // Default date
-      firstDate: DateTime(2000), // Minimum selectable date
-      lastDate: DateTime(2101), // Maximum selectable date
+      initialDate: DateTime.now(),
+      // Default date
+      firstDate: DateTime.now(),
+      // Disable past dates
+      lastDate: DateTime(2101),
+      // Maximum selectable date
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: InputBorder.none, // Hide manual entry underline
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (picked != null) {
       setState(() {
         _dateController.text = "${picked.day}/${picked.month}/${picked.year}"; // Format the date
@@ -170,7 +192,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    //    height: 50,
+                    // height: 50,
                     child: MultiSelectDialogField(
                       listType: MultiSelectListType.LIST,
                       dialogHeight: MediaQuery.of(context).size.width / 4.10,
@@ -195,12 +217,27 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ),
                       items: ServiceType_list.map((service) => MultiSelectItem<ServiceType>(service, service.desc!)).toList(),
                       chipDisplay: MultiSelectChipDisplay.none(),
+                      buttonIcon: Icon(
+                        Icons.keyboard_arrow_down_sharp, // Replace with your desired icon
+                        color: Colors.white,
+                      ),
                       // This hides the chips below the field
                       onConfirm: (List<dynamic> selected) {
                         setState(() {
+                          _selectedDesc = null;
                           _selectedServiceTypes = selected.cast<ServiceType>();
                         });
-
+                        service_id = _selectedServiceTypes
+                            .map((e) => e.typeCdId)
+                            .where((id) => id != null) // Remove null values
+                            .map((id) => id.toString()) // Convert each id to a string
+                            .join(',');
+                        servicename = _selectedServiceTypes.map((e) => e.desc).join(', ');
+                        if (service_id == "19") {
+                          selectduration_id = _labourRequests[0].typeCdId;
+                          _selectedDesc = _labourRequests[0].desc;
+                          print('selectduration_id$selectduration_id');
+                        }
                         fetchlabourservicecost();
                       },
                     ),
@@ -225,7 +262,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       data: '${prunningCost ?? 0.0}',
                     ),
                   ),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -282,16 +318,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       )
                     ],
                   ),
-                  Padding(
+                  Container(
+                    height: 55,
                     padding: EdgeInsets.only(left: 0, top: 10.0, right: 0),
                     child: GestureDetector(
                       onTap: () async {
-                        // setState(() {
-                        //   fromDateSelected = true;
-                        // });
                         _selectDate(context);
                       },
                       child: Container(
+                        height: 55,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1.5),
@@ -300,13 +335,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                         child: AbsorbPointer(
                           child: SizedBox(
+                            height: 55,
                             child: TextFormField(
                               controller: _dateController,
-                              style: TextStyle(
-                                fontFamily: 'Calibri',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                              ),
+                              style: TextStyle(fontFamily: 'Calibri', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                               decoration: InputDecoration(
                                 hintText: 'Preferred Date',
                                 hintStyle: TextStyle(
@@ -315,7 +347,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Calibri',
                                 ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                                 // Adjust padding as needed
                                 suffixIcon: Padding(
                                   padding: EdgeInsets.all(8.0),
@@ -326,7 +358,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                   ),
                                 ),
                                 border: InputBorder.none,
+                                isDense: true,
                               ),
+                              textAlignVertical: TextAlignVertical.center,
                             ),
                           ),
                         ),
@@ -360,92 +394,205 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   SizedBox(
                     height: 4,
                   ),
-                  _labourRequests.isEmpty
-                      ? CircularProgressIndicator() // Show loading indicator while data is being fetched
-                      : DropdownButtonFormField<String>(
-                          value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                              ? null // Show hint if 20 is selected
-                              : _selectedDesc,
-                          icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          dropdownColor: Colors.grey[800],
-                          items: _labourRequests
-                              .asMap()
-                              .entries
-                              .map((entry) {
-                                int index = entry.key;
-                                LabourRequest request = entry.value;
-
-                                // If service ID 19 is selected, only show the first item (index == 0)
-                                if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                                  if (index == 0) {
-                                    if (_selectedDesc == null) {
-                                      // Set the default selection to the first item's description
-                                      _selectedDesc = request.desc;
-                                    }
-                                    return DropdownMenuItem<String>(
-                                      value: request.desc,
-                                      child: Text(
-                                        request.desc,
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    );
-                                  }
-                                }
-                                // If service ID 20 is selected, show all items
-                                else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
-                                  return DropdownMenuItem<String>(
-                                    value: request.desc,
-                                    child: Text(
-                                      request.desc,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                }
-                                // If both 19 and 20 are selected, show all items
-                                else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                                  return DropdownMenuItem<String>(
-                                    value: request.desc,
-                                    child: Text(
-                                      request.desc,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  );
-                                }
-                                return null; // Return null for items that shouldn't be shown
-                              })
-                              .where((item) => item != null) // Filter out null items
-                              .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
-                              .toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _selectedDesc = newValue;
-                              print('_selectedDesc$_selectedDesc');
-                              LabourRequest? selectedRequest = _labourRequests.firstWhere(
-                                (request) => request.desc == newValue,
-                                orElse: () => null!,
-                              );
-
-                              if (selectedRequest != null) {
-                                print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
-                                selectduration_id = selectedRequest.typeCdId;
-                              }
-                            });
-                          },
-                          hint: Text(
-                            'Select',
-                            style: TextStyle(color: Colors.white),
+                  // _labourRequests.isEmpty
+                  //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
+                  //     :
+                  Container(
+                    height: 45,
+                    padding: const EdgeInsets.only(right: 10),
+                    // padding: const EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: CommonStyles.whiteColor, width: 1.5),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                        //     ? null // Show hint if 20 is selected
+                        //     : _selectedDesc,
+                        value: _getSelectedValue(),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_rounded,
+                            color: Colors.white,
                           ),
                         ),
+                        isExpanded: true,
+                        hint: Text(
+                          'Select',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        // items: _labourRequests
+                        //     .asMap()
+                        //     .entries
+                        //     .map((entry) {
+                        //       int index = entry.key;
+                        //       LabourRequest request = entry.value;
+                        //
+                        //       // If service ID 19 is selected, only show the first item (index == 0)
+                        //       if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                        //         if (index == 0) {
+                        //           if (_selectedDesc == null) {
+                        //             // Set the default selection to the first item's description
+                        //             _selectedDesc = request.desc;
+                        //           }
+                        //           return DropdownMenuItem<String>(
+                        //             value: request.desc,
+                        //             child: Text(
+                        //               request.desc,
+                        //               style: TextStyle(color: Colors.white),
+                        //             ),
+                        //           );
+                        //         }
+                        //       }
+                        //       // If service ID 20 is selected, show all items
+                        //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
+                        //         return DropdownMenuItem<String>(
+                        //           value: request.desc,
+                        //           child: Text(
+                        //             request.desc,
+                        //             style: TextStyle(color: Colors.white),
+                        //           ),
+                        //         );
+                        //       }
+                        //       // If both 19 and 20 are selected, show all items
+                        //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                        //         return DropdownMenuItem<String>(
+                        //           value: request.desc,
+                        //           child: Text(
+                        //             request.desc,
+                        //             style: TextStyle(color: Colors.white),
+                        //           ),
+                        //         );
+                        //       }
+                        //       return null; // Return null for items that shouldn't be shown
+                        //     })
+                        //     .where((item) => item != null) // Filter out null items
+                        //     .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
+                        //     .toList(),
+                        items: _getDropdownItems(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedDesc = newValue;
+                            print('_selectedDesc$_selectedDesc');
+                            LabourRequest? selectedRequest = _labourRequests.firstWhere(
+                              (request) => request.desc == newValue,
+                              orElse: () => null!,
+                            );
+
+                            if (selectedRequest != null) {
+                              print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                              selectduration_id = selectedRequest.typeCdId;
+                            }
+                          });
+                        },
+
+                        dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.black87,
+                          ),
+                          offset: const Offset(0, 0),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: WidgetStateProperty.all<double>(6),
+                            thumbVisibility: WidgetStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // DropdownButtonFormField<String>(
+                  //
+                  //         value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                  //             ? null // Show hint if 20 is selected
+                  //             : _selectedDesc,
+                  //         icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                  //         decoration: InputDecoration(
+                  //           enabledBorder: OutlineInputBorder(
+                  //             borderSide: BorderSide(color: Colors.white,width: 1.5),
+                  //             borderRadius: BorderRadius.circular(8),
+                  //           ),
+                  //           focusedBorder: OutlineInputBorder(
+                  //             borderSide: BorderSide(color: Colors.white,width: 1.5),
+                  //
+                  //             borderRadius: BorderRadius.circular(8),
+                  //           ),
+                  //         ),
+                  //         dropdownColor: Colors.grey[800],
+                  //   isExpanded: true,
+                  //         items: _labourRequests
+                  //             .asMap()
+                  //             .entries
+                  //             .map((entry) {
+                  //               int index = entry.key;
+                  //               LabourRequest request = entry.value;
+                  //
+                  //               // If service ID 19 is selected, only show the first item (index == 0)
+                  //               if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                  //                 if (index == 0) {
+                  //                   if (_selectedDesc == null) {
+                  //                     // Set the default selection to the first item's description
+                  //                     _selectedDesc = request.desc;
+                  //                   }
+                  //                   return DropdownMenuItem<String>(
+                  //                     value: request.desc,
+                  //                     child: Text(
+                  //                       request.desc,
+                  //                       style: TextStyle(color: Colors.white),
+                  //                     ),
+                  //                   );
+                  //                 }
+                  //               }
+                  //               // If service ID 20 is selected, show all items
+                  //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
+                  //                 return DropdownMenuItem<String>(
+                  //                   value: request.desc,
+                  //                   child: Text(
+                  //                     request.desc,
+                  //                     style: TextStyle(color: Colors.white),
+                  //                   ),
+                  //                 );
+                  //               }
+                  //               // If both 19 and 20 are selected, show all items
+                  //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                  //                 return DropdownMenuItem<String>(
+                  //                   value: request.desc,
+                  //                   child: Text(
+                  //                     request.desc,
+                  //                     style: TextStyle(color: Colors.white),
+                  //                   ),
+                  //                 );
+                  //               }
+                  //               return null; // Return null for items that shouldn't be shown
+                  //             })
+                  //             .where((item) => item != null) // Filter out null items
+                  //             .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
+                  //             .toList(),
+                  //         onChanged: (String? newValue) {
+                  //           setState(() {
+                  //             _selectedDesc = newValue;
+                  //             print('_selectedDesc$_selectedDesc');
+                  //             LabourRequest? selectedRequest = _labourRequests.firstWhere(
+                  //               (request) => request.desc == newValue,
+                  //               orElse: () => null!,
+                  //             );
+                  //
+                  //             if (selectedRequest != null) {
+                  //               print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                  //               selectduration_id = selectedRequest.typeCdId;
+                  //             }
+                  //           });
+                  //         },
+                  //         hint: Text(
+                  //           'Select',
+                  //           style: TextStyle(color: Colors.white),
+                  //         ),
+                  //       )),
                   SizedBox(
                     height: 2,
                   ),
@@ -461,39 +608,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
                     ),
-                  // DropdownButtonFormField<String>(
-                  //         value: _selectedDesc,
-                  //         icon: Icon(Icons.arrow_downward, color: Colors.white),
-                  //         decoration: InputDecoration(
-                  //           enabledBorder: OutlineInputBorder(
-                  //             borderSide: BorderSide(color: Colors.white),
-                  //             borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //           focusedBorder: OutlineInputBorder(
-                  //             borderSide: BorderSide(color: Colors.white),
-                  //             borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //         ),
-                  //         dropdownColor: Colors.grey[800],
-                  //         items: _labourRequests.map((LabourRequest request) {
-                  //           return DropdownMenuItem<String>(
-                  //             value: request.desc,
-                  //             child: Text(
-                  //               request.desc,
-                  //               style: TextStyle(color: Colors.white),
-                  //             ),
-                  //           );
-                  //         }).toList(),
-                  //         onChanged: (String? newValue) {
-                  //           setState(() {
-                  //             _selectedDesc = newValue;
-                  //           });
-                  //         },
-                  //         hint: Text(
-                  //           'Select Duration',
-                  //           style: TextStyle(color: Colors.white),
-                  //         ),
-                  //       ),
                   SizedBox(
                     height: 8,
                   ),
@@ -515,16 +629,18 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   SizedBox(
                     height: 4,
                   ),
-                  Padding(
+                  Container(
+                    height: 50,
                     padding: const EdgeInsets.all(0.0),
                     child: TextFormField(
+                      controller: _commentController,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // White border
+                          borderSide: BorderSide(color: Colors.white, width: 1.5), // White border
                           borderRadius: BorderRadius.circular(8),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // White border on focus
+                          borderSide: BorderSide(color: Colors.white, width: 1.5), // White border on focus
                           borderRadius: BorderRadius.circular(8),
                         ),
                         hintText: 'comments',
@@ -540,15 +656,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Checkbox(
-                        value: _isChecked,
+                        value: _isagreed,
                         onChanged: (value) {
                           setState(() {
-                            _isChecked = value!;
+                            _isagreed = value!;
 //Showalertdialog(context);
-                            showDialog(
-                              context: context,
-                              builder: (context) => const TermsConditionsPopup(),
-                            );
+//                             showDialog(
+//                               context: context,
+//                               builder: (context) => TermsConditionsPopup(),
+//                             );
                           });
                         },
                         checkColor: Colors.grey,
@@ -602,6 +718,40 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     );
   }
 
+  String? _getSelectedValue() {
+    if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+      return _labourRequests.isNotEmpty ? _labourRequests[0].desc : null;
+    } else if (_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+      return _selectedDesc;
+    } else {
+      return null;
+    }
+  }
+
+  List<DropdownMenuItem<String>> _getDropdownItems() {
+    if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+      return [_labourRequests[0]]
+          .map((request) => DropdownMenuItem<String>(
+                value: request.desc,
+                child: Text(
+                  request.desc,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList();
+    } else {
+      return _labourRequests
+          .map((request) => DropdownMenuItem<String>(
+                value: request.desc,
+                child: Text(
+                  request.desc,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList();
+    }
+  }
+
   Widget submitBtn(
     BuildContext context,
     String language,
@@ -628,7 +778,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         ),
         child: ElevatedButton(
           onPressed: () async {
-            labourrequestsendbtn();
+            bool validationSuccess = await isvalidations();
+            if (validationSuccess) {
+              labourrequestsendbtn();
+            }
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0),
@@ -644,6 +797,66 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<bool> isvalidations() async {
+    bool isValid = true;
+
+    if (_selectedServiceTypes.isEmpty) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.multistring));
+
+      return false;
+    }
+    if (_dateController.text.toString().isEmpty) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.date_selectiomn));
+
+      return false;
+    }
+    if (_selectedDesc!.isEmpty) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.valid_pack));
+
+      return false;
+    }
+    if (_isagreed == false) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.terms_agree));
+      return false;
+    }
+    if (service_id.contains('20')) {
+      if (harvestCost == 0.0) {
+        CommonStyles.showCustomDialog(context, "'You can't Raise the Request since Harvesting Amount is 0'");
+        return false;
+      }
+    }
+
+    if (service_id.contains('19')) {
+      if (harvestCost == 0.0) {
+        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
+        return false;
+      }
+    }
+    if (service_id.contains('33')) {
+      if (pruningWithIntercropCost == 0.0) {
+        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
+        return false;
+      }
+    }
+    if (service_id.contains('34')) {
+      if (harvestingWithIntercropCost == 0.0) {
+        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
+        return false;
+      }
+    }
+    return isValid; // Return true if validation is successful, false otherwise
+  }
+
+// Function to show the dialog
+  void showSuccessDialog(BuildContext context, List<MsgModel> msg, String summary) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialog(msg: msg, summary: summary);
+      },
     );
   }
 
@@ -748,8 +961,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-  void Showalertdialog(BuildContext context) {}
-
   Future<void> labourrequestsendbtn() async {
     final url = Uri.parse(baseUrl + addlabourequest);
     print('url==>555: $url');
@@ -758,10 +969,18 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     });
     DateTime cuurentdate = DateTime.now();
 
+    DateFormat inputFormat = DateFormat('dd/MM/yyyy');
+    DateFormat outputFormat = DateFormat('yyyy-MM-dd');
+    String prefdate = _dateController.text.toString();
+    DateTime parsedDate = inputFormat.parse(prefdate); // Parsing the date
+    String formattedDate = outputFormat.format(parsedDate);
+
+    String comments = _commentController.text.toString();
+
     final request = {
-      "package": "$_selectedDesc",
+      "package": "${_selectedDesc.toString()}",
       "clusterId": Cluster_id,
-      "comments": "",
+      "comments": "$comments",
       "createdDate": "$cuurentdate",
       "durationId": selectduration_id,
       "farmerCode": "$farmerCode",
@@ -770,20 +989,20 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "harvestingWithIntercropAmount": harvestingWithIntercropCost,
       "isFarmerRequest": true,
       "ownPole": _isChecked,
-      "palmArea": 1.2,
+      "palmArea": widget.plotdata.palmArea,
       "plotCode": "${widget.plotdata.plotcode}",
       "plotVillage": "${widget.plotdata.villageName}",
-      "preferredDate": "2024/09/12",
+      "preferredDate": "$formattedDate",
       "pruningAmount": prunningCost,
       "pruningWithIntercropAmount": harvestingWithIntercropCost,
-      "serviceTypes": "19",
-      "services": "Pruning (ప్రూనింగ్)",
+      "serviceTypes": "$service_id",
+      "services": "$servicename",
       "stateCode": "$Statecode",
       "stateName": "$StateName",
       "updatedDate": "$cuurentdate",
       "yearofPlanting": "${widget.plotdata.dateOfPlanting}"
     };
-    print('addreqestheader: $request');
+    print('addreqestheader: ${json.encode(request)}');
 
     try {
       final response = await http.post(
@@ -795,7 +1014,18 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       );
 
       if (response.statusCode == 200) {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
         final Map<String, dynamic> responseData = jsonDecode(response.body);
+        String prningcost = prunningCost.toString();
+        List<MsgModel> displayList = [
+          MsgModel(key: tr(LocaleKeys.select_labour_type), value: servicename),
+          MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+          MsgModel(key: tr(LocaleKeys.Package), value: _selectedDesc!),
+          MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
+        ];
+
+        showSuccessDialog(context, displayList, tr(LocaleKeys.success_labour));
+        print('responseData$responseData');
       } else {
         print('Request was not successful. Status code: ${response.statusCode}');
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
