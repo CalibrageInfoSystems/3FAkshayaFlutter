@@ -59,6 +59,9 @@ class $AssetsImagesGen {
   AssetGenImage get harvesting =>
       const AssetGenImage('assets/images/harvesting.png');
 
+  /// File path: assets/images/ic_add.png
+  AssetGenImage get icAdd => const AssetGenImage('assets/images/ic_add.png');
+
   /// File path: assets/images/ic_bank_white.png
   AssetGenImage get icBankWhite =>
       const AssetGenImage('assets/images/ic_bank_white.png');
@@ -124,6 +127,13 @@ class $AssetsImagesGen {
   SvgGenImage get icMyprofile =>
       const SvgGenImage('assets/images/ic_myprofile.svg');
 
+  /// File path: assets/images/ic_pause.png
+  AssetGenImage get icPause =>
+      const AssetGenImage('assets/images/ic_pause.png');
+
+  /// File path: assets/images/ic_play.png
+  AssetGenImage get icPlay => const AssetGenImage('assets/images/ic_play.png');
+
   /// File path: assets/images/ic_request.svg
   SvgGenImage get icRequest =>
       const SvgGenImage('assets/images/ic_request.svg');
@@ -188,6 +198,7 @@ class $AssetsImagesGen {
         ffbCollection,
         general,
         harvesting,
+        icAdd,
         icBankWhite,
         icCalender,
         icCare,
@@ -206,6 +217,8 @@ class $AssetsImagesGen {
         icMyPng,
         icMySvg,
         icMyprofile,
+        icPause,
+        icPlay,
         icRequest,
         icUser,
         infoIcon,

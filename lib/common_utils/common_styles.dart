@@ -32,6 +32,7 @@ class CommonStyles {
   static const whiteColor = Colors.white;
   static const hintTextColor = Color(0xCBBEBEBE);
   static const headercolor = Color(0xDAF05F4E);
+  // <color name="colorOrange">#e86100</color>
   // styles
   static const RedColor = Color(0xFFC93437);
   static const TextStyle txSty_12b_f5 = TextStyle(
@@ -272,6 +273,12 @@ class CommonStyles {
 
   static const TextStyle text18orange = TextStyle(
     fontSize: 18,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w600,
+    color: primaryTextColor,
+  );
+  static const TextStyle text14orange = TextStyle(
+    fontSize: 14,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w600,
     color: primaryTextColor,

@@ -26,6 +26,7 @@ import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 
+import '../common_utils/custom_btn.dart';
 import 'models/MsgModel.dart';
 
 class Labourscreen extends StatefulWidget {
@@ -160,560 +161,562 @@ class _LabourscreenScreenState extends State<Labourscreen> {
             ),
             SingleChildScrollView(
                 child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.0),
-                color: Colors.black54,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: Colors.black54,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        tr(LocaleKeys.select_labour_type),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.select_labour_type),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.star,
+                            size: 8,
+                            color: Colors.red,
+                          )
+                        ],
                       ),
                       SizedBox(
-                        width: 5,
+                        height: 10,
                       ),
-                      Icon(
-                        Icons.star,
-                        size: 8,
-                        color: Colors.red,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    // height: 50,
-                    child: MultiSelectDialogField(
-                      listType: MultiSelectListType.LIST,
-                      dialogHeight: MediaQuery.of(context).size.width / 4.10,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                      title: Text("Services Types"),
-                      buttonText: Text(
-                        _selectedServiceTypes.isEmpty ? "Tap to select" : _selectedServiceTypes.map((e) => e.desc).join(', '),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                        overflow: TextOverflow.ellipsis, // To handle long text
-                      ),
-                      items: ServiceType_list.map((service) => MultiSelectItem<ServiceType>(service, service.desc!)).toList(),
-                      chipDisplay: MultiSelectChipDisplay.none(),
-                      buttonIcon: Icon(
-                        Icons.keyboard_arrow_down_sharp, // Replace with your desired icon
-                        color: Colors.white,
-                      ),
-                      // This hides the chips below the field
-                      onConfirm: (List<dynamic> selected) {
-                        setState(() {
-                          _selectedDesc = null;
-                          _selectedServiceTypes = selected.cast<ServiceType>();
-                        });
-                        service_id = _selectedServiceTypes
-                            .map((e) => e.typeCdId)
-                            .where((id) => id != null) // Remove null values
-                            .map((id) => id.toString()) // Convert each id to a string
-                            .join(',');
-                        servicename = _selectedServiceTypes.map((e) => e.desc).join(', ');
-                        if (service_id == "19") {
-                          selectduration_id = _labourRequests[0].typeCdId;
-                          _selectedDesc = _labourRequests[0].desc;
-                          print('selectduration_id$selectduration_id');
-                        }
-                        fetchlabourservicecost();
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Visibility(
-                    visible: _selectedServiceTypes.any((service) => service.typeCdId == 20),
-                    child: plotDetailsBox(
-                      label: tr(LocaleKeys.harv_amount),
-                      data: "${harvestCost ?? 0.0}",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Visibility(
-                    visible: _selectedServiceTypes.any((service) => service.typeCdId == 19),
-                    child: plotDetailsBox(
-                      label: tr(LocaleKeys.pru_amount),
-                      data: '${prunningCost ?? 0.0}',
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            _isChecked = value!;
-                          });
-                        },
-                        checkColor: Colors.grey,
-                        // Grey tick mark color
-                        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.white; // White background when checked
-                          }
-                          return Colors.transparent; // Transparent background when unchecked
-                        }),
-                        side: BorderSide(
-                          color: Colors.black, // Black border when unchecked
-                          width: 2, // Border width
-                        ),
-                      ),
-                      //SizedBox(width: 8),
-                      Text(
-                        tr(LocaleKeys.have_pole),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.startDate),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Icon(
-                        Icons.star,
-                        size: 8,
-                        color: Colors.red,
-                      )
-                    ],
-                  ),
-                  Container(
-                    height: 55,
-                    padding: EdgeInsets.only(left: 0, top: 10.0, right: 0),
-                    child: GestureDetector(
-                      onTap: () async {
-                        _selectDate(context);
-                      },
-                      child: Container(
-                        height: 55,
+                      Container(
                         width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: BorderRadius.circular(5.0),
-                          color: Colors.transparent, // Add white background color
+                        // height: 50,
+                        child: MultiSelectDialogField(
+                          listType: MultiSelectListType.LIST,
+                          dialogHeight: MediaQuery.of(context).size.width / 4.10,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                          ),
+                          title: Text("Services Types"),
+                          buttonText: Text(
+                            _selectedServiceTypes.isEmpty ? "Tap to select" : _selectedServiceTypes.map((e) => e.desc).join(', '),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                            overflow: TextOverflow.ellipsis, // To handle long text
+                          ),
+                          items: ServiceType_list.map((service) => MultiSelectItem<ServiceType>(service, service.desc!)).toList(),
+                          chipDisplay: MultiSelectChipDisplay.none(),
+                          buttonIcon: Icon(
+                            Icons.keyboard_arrow_down_sharp, // Replace with your desired icon
+                            color: Colors.white,
+                          ),
+                          // This hides the chips below the field
+                          onConfirm: (List<dynamic> selected) {
+                            setState(() {
+                              _selectedDesc = null;
+                              _selectedServiceTypes = selected.cast<ServiceType>();
+                            });
+                            service_id = _selectedServiceTypes
+                                .map((e) => e.typeCdId)
+                                .where((id) => id != null) // Remove null values
+                                .map((id) => id.toString()) // Convert each id to a string
+                                .join(',');
+                            servicename = _selectedServiceTypes.map((e) => e.desc).join(', ');
+                            if (service_id == "19") {
+                              selectduration_id = _labourRequests[0].typeCdId;
+                              _selectedDesc = _labourRequests[0].desc;
+                              print('selectduration_id$selectduration_id');
+                            }
+                            fetchlabourservicecost();
+                          },
                         ),
-                        child: AbsorbPointer(
-                          child: SizedBox(
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Visibility(
+                        visible: _selectedServiceTypes.any((service) => service.typeCdId == 20),
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.harv_amount),
+                          data: "${harvestCost ?? 0.0}",
+                        ),
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Visibility(
+                        visible: _selectedServiceTypes.any((service) => service.typeCdId == 19),
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.pru_amount),
+                          data: '${prunningCost ?? 0.0}',
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                _isChecked = value!;
+                              });
+                            },
+                            checkColor: Colors.grey,
+                            // Grey tick mark color
+                            fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Colors.white; // White background when checked
+                              }
+                              return Colors.transparent; // Transparent background when unchecked
+                            }),
+                            side: BorderSide(
+                              color: Colors.black, // Black border when unchecked
+                              width: 2, // Border width
+                            ),
+                          ),
+                          //SizedBox(width: 8),
+                          Text(
+                            tr(LocaleKeys.have_pole),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.startDate),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.star,
+                            size: 8,
+                            color: Colors.red,
+                          )
+                        ],
+                      ),
+                      Container(
+                        height: 55,
+                        padding: EdgeInsets.only(left: 0, top: 10.0, right: 0),
+                        child: GestureDetector(
+                          onTap: () async {
+                            _selectDate(context);
+                          },
+                          child: Container(
                             height: 55,
-                            child: TextFormField(
-                              controller: _dateController,
-                              style: TextStyle(fontFamily: 'Calibri', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
-                              decoration: InputDecoration(
-                                hintText: 'Preferred Date',
-                                hintStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Calibri',
-                                ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                                // Adjust padding as needed
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.calendar_today,
-                                    // Replace with your desired icon
-                                    color: Colors.white,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 1.5),
+                              borderRadius: BorderRadius.circular(5.0),
+                              color: Colors.transparent, // Add white background color
+                            ),
+                            child: AbsorbPointer(
+                              child: SizedBox(
+                                height: 55,
+                                child: TextFormField(
+                                  controller: _dateController,
+                                  style: TextStyle(fontFamily: 'Calibri', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: 'Preferred Date',
+                                    hintStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Calibri',
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                                    // Adjust padding as needed
+                                    suffixIcon: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.calendar_today,
+                                        // Replace with your desired icon
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    border: InputBorder.none,
+                                    isDense: true,
                                   ),
+                                  textAlignVertical: TextAlignVertical.center,
                                 ),
-                                border: InputBorder.none,
-                                isDense: true,
                               ),
-                              textAlignVertical: TextAlignVertical.center,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.labour_duration),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.labour_duration),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.star,
+                            size: 8,
+                            color: Colors.red,
+                          )
+                        ],
                       ),
                       SizedBox(
-                        width: 5,
+                        height: 4,
                       ),
-                      Icon(
-                        Icons.star,
-                        size: 8,
-                        color: Colors.red,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  // _labourRequests.isEmpty
-                  //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
-                  //     :
-                  Container(
-                    height: 45,
-                    padding: const EdgeInsets.only(right: 10),
-                    // padding: const EdgeInsets.symmetric(vertical: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: CommonStyles.whiteColor, width: 1.5),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                        //     ? null // Show hint if 20 is selected
-                        //     : _selectedDesc,
-                        value: _getSelectedValue(),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: Colors.white,
-                          ),
-                        ),
-                        isExpanded: true,
-                        hint: Text(
-                          'Select',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        // items: _labourRequests
-                        //     .asMap()
-                        //     .entries
-                        //     .map((entry) {
-                        //       int index = entry.key;
-                        //       LabourRequest request = entry.value;
-                        //
-                        //       // If service ID 19 is selected, only show the first item (index == 0)
-                        //       if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                        //         if (index == 0) {
-                        //           if (_selectedDesc == null) {
-                        //             // Set the default selection to the first item's description
-                        //             _selectedDesc = request.desc;
-                        //           }
-                        //           return DropdownMenuItem<String>(
-                        //             value: request.desc,
-                        //             child: Text(
-                        //               request.desc,
-                        //               style: TextStyle(color: Colors.white),
-                        //             ),
-                        //           );
-                        //         }
-                        //       }
-                        //       // If service ID 20 is selected, show all items
-                        //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
-                        //         return DropdownMenuItem<String>(
-                        //           value: request.desc,
-                        //           child: Text(
-                        //             request.desc,
-                        //             style: TextStyle(color: Colors.white),
-                        //           ),
-                        //         );
-                        //       }
-                        //       // If both 19 and 20 are selected, show all items
-                        //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                        //         return DropdownMenuItem<String>(
-                        //           value: request.desc,
-                        //           child: Text(
-                        //             request.desc,
-                        //             style: TextStyle(color: Colors.white),
-                        //           ),
-                        //         );
-                        //       }
-                        //       return null; // Return null for items that shouldn't be shown
-                        //     })
-                        //     .where((item) => item != null) // Filter out null items
-                        //     .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
-                        //     .toList(),
-                        items: _getDropdownItems(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedDesc = newValue;
-                            print('_selectedDesc$_selectedDesc');
-                            LabourRequest? selectedRequest = _labourRequests.firstWhere(
-                              (request) => request.desc == newValue,
-                              orElse: () => null!,
-                            );
-
-                            if (selectedRequest != null) {
-                              print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
-                              selectduration_id = selectedRequest.typeCdId;
-                            }
-                          });
-                        },
-
-                        dropdownStyleData: DropdownStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: Colors.black87,
-                          ),
-                          offset: const Offset(0, 0),
-                          scrollbarTheme: ScrollbarThemeData(
-                            radius: const Radius.circular(40),
-                            thickness: WidgetStateProperty.all<double>(6),
-                            thumbVisibility: WidgetStateProperty.all<bool>(true),
-                          ),
-                        ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // DropdownButtonFormField<String>(
-                  //
-                  //         value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                  //             ? null // Show hint if 20 is selected
-                  //             : _selectedDesc,
-                  //         icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-                  //         decoration: InputDecoration(
-                  //           enabledBorder: OutlineInputBorder(
-                  //             borderSide: BorderSide(color: Colors.white,width: 1.5),
-                  //             borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //           focusedBorder: OutlineInputBorder(
-                  //             borderSide: BorderSide(color: Colors.white,width: 1.5),
-                  //
-                  //             borderRadius: BorderRadius.circular(8),
-                  //           ),
-                  //         ),
-                  //         dropdownColor: Colors.grey[800],
-                  //   isExpanded: true,
-                  //         items: _labourRequests
-                  //             .asMap()
-                  //             .entries
-                  //             .map((entry) {
-                  //               int index = entry.key;
-                  //               LabourRequest request = entry.value;
-                  //
-                  //               // If service ID 19 is selected, only show the first item (index == 0)
-                  //               if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                  //                 if (index == 0) {
-                  //                   if (_selectedDesc == null) {
-                  //                     // Set the default selection to the first item's description
-                  //                     _selectedDesc = request.desc;
-                  //                   }
-                  //                   return DropdownMenuItem<String>(
-                  //                     value: request.desc,
-                  //                     child: Text(
-                  //                       request.desc,
-                  //                       style: TextStyle(color: Colors.white),
-                  //                     ),
-                  //                   );
-                  //                 }
-                  //               }
-                  //               // If service ID 20 is selected, show all items
-                  //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
-                  //                 return DropdownMenuItem<String>(
-                  //                   value: request.desc,
-                  //                   child: Text(
-                  //                     request.desc,
-                  //                     style: TextStyle(color: Colors.white),
-                  //                   ),
-                  //                 );
-                  //               }
-                  //               // If both 19 and 20 are selected, show all items
-                  //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-                  //                 return DropdownMenuItem<String>(
-                  //                   value: request.desc,
-                  //                   child: Text(
-                  //                     request.desc,
-                  //                     style: TextStyle(color: Colors.white),
-                  //                   ),
-                  //                 );
-                  //               }
-                  //               return null; // Return null for items that shouldn't be shown
-                  //             })
-                  //             .where((item) => item != null) // Filter out null items
-                  //             .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
-                  //             .toList(),
-                  //         onChanged: (String? newValue) {
-                  //           setState(() {
-                  //             _selectedDesc = newValue;
-                  //             print('_selectedDesc$_selectedDesc');
-                  //             LabourRequest? selectedRequest = _labourRequests.firstWhere(
-                  //               (request) => request.desc == newValue,
-                  //               orElse: () => null!,
-                  //             );
-                  //
-                  //             if (selectedRequest != null) {
-                  //               print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
-                  //               selectduration_id = selectedRequest.typeCdId;
-                  //             }
-                  //           });
-                  //         },
-                  //         hint: Text(
-                  //           'Select',
-                  //           style: TextStyle(color: Colors.white),
-                  //         ),
-                  //       )),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  if (_selectedDesc != null && (_selectedDesc == _labourRequests[1].desc || _selectedDesc == _labourRequests[2].desc || _selectedDesc == _labourRequests[3].desc))
-                    Padding(
-                      padding: EdgeInsets.all(0),
-                      child: Text(
-                        tr(LocaleKeys.text),
-                        style: TextStyle(
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF34A350),
-                        ),
-                      ),
-                    ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.comments),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                      // SizedBox(width: 5,),
-                      // Icon(Icons.star,size: 8,color: Colors.red,)
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Container(
-                    height: 50,
-                    padding: const EdgeInsets.all(0.0),
-                    child: TextFormField(
-                      controller: _commentController,
-                      decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 1.5), // White border
+                      // _labourRequests.isEmpty
+                      //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
+                      //     :
+                      Container(
+                        height: 45,
+                        padding: const EdgeInsets.only(right: 10),
+                        // padding: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: CommonStyles.whiteColor, width: 1.5),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 1.5), // White border on focus
-                          borderRadius: BorderRadius.circular(8),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                            //     ? null // Show hint if 20 is selected
+                            //     : _selectedDesc,
+                            value: _getSelectedValue(),
+                            iconStyleData: const IconStyleData(
+                              icon: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            isExpanded: true,
+                            hint: Text(
+                              'Select',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            // items: _labourRequests
+                            //     .asMap()
+                            //     .entries
+                            //     .map((entry) {
+                            //       int index = entry.key;
+                            //       LabourRequest request = entry.value;
+                            //
+                            //       // If service ID 19 is selected, only show the first item (index == 0)
+                            //       if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                            //         if (index == 0) {
+                            //           if (_selectedDesc == null) {
+                            //             // Set the default selection to the first item's description
+                            //             _selectedDesc = request.desc;
+                            //           }
+                            //           return DropdownMenuItem<String>(
+                            //             value: request.desc,
+                            //             child: Text(
+                            //               request.desc,
+                            //               style: TextStyle(color: Colors.white),
+                            //             ),
+                            //           );
+                            //         }
+                            //       }
+                            //       // If service ID 20 is selected, show all items
+                            //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
+                            //         return DropdownMenuItem<String>(
+                            //           value: request.desc,
+                            //           child: Text(
+                            //             request.desc,
+                            //             style: TextStyle(color: Colors.white),
+                            //           ),
+                            //         );
+                            //       }
+                            //       // If both 19 and 20 are selected, show all items
+                            //       else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                            //         return DropdownMenuItem<String>(
+                            //           value: request.desc,
+                            //           child: Text(
+                            //             request.desc,
+                            //             style: TextStyle(color: Colors.white),
+                            //           ),
+                            //         );
+                            //       }
+                            //       return null; // Return null for items that shouldn't be shown
+                            //     })
+                            //     .where((item) => item != null) // Filter out null items
+                            //     .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
+                            //     .toList(),
+                            items: _getDropdownItems(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedDesc = newValue;
+                                print('_selectedDesc$_selectedDesc');
+                                LabourRequest? selectedRequest = _labourRequests.firstWhere(
+                                      (request) => request.desc == newValue,
+                                  orElse: () => null!,
+                                );
+
+                                if (selectedRequest != null) {
+                                  print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                                  selectduration_id = selectedRequest.typeCdId;
+                                }
+                              });
+                            },
+
+                            dropdownStyleData: DropdownStyleData(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: Colors.black87,
+                              ),
+                              offset: const Offset(0, 0),
+                              scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: WidgetStateProperty.all<double>(6),
+                                thumbVisibility: WidgetStateProperty.all<bool>(true),
+                              ),
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                            ),
+                          ),
                         ),
-                        hintText: 'comments',
-                        hintStyle: TextStyle(color: Colors.white), // White hint text color
                       ),
-                      style: TextStyle(color: Colors.white), // White input text color
-                      // inputFormatters: [
-                      //   FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")), // Allow only letters and spaces
-                      // ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        value: _isagreed,
-                        onChanged: (value) {
-                          setState(() {
-                            _isagreed = value!;
+                      // DropdownButtonFormField<String>(
+                      //
+                      //         value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                      //             ? null // Show hint if 20 is selected
+                      //             : _selectedDesc,
+                      //         icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                      //         decoration: InputDecoration(
+                      //           enabledBorder: OutlineInputBorder(
+                      //             borderSide: BorderSide(color: Colors.white,width: 1.5),
+                      //             borderRadius: BorderRadius.circular(8),
+                      //           ),
+                      //           focusedBorder: OutlineInputBorder(
+                      //             borderSide: BorderSide(color: Colors.white,width: 1.5),
+                      //
+                      //             borderRadius: BorderRadius.circular(8),
+                      //           ),
+                      //         ),
+                      //         dropdownColor: Colors.grey[800],
+                      //   isExpanded: true,
+                      //         items: _labourRequests
+                      //             .asMap()
+                      //             .entries
+                      //             .map((entry) {
+                      //               int index = entry.key;
+                      //               LabourRequest request = entry.value;
+                      //
+                      //               // If service ID 19 is selected, only show the first item (index == 0)
+                      //               if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                      //                 if (index == 0) {
+                      //                   if (_selectedDesc == null) {
+                      //                     // Set the default selection to the first item's description
+                      //                     _selectedDesc = request.desc;
+                      //                   }
+                      //                   return DropdownMenuItem<String>(
+                      //                     value: request.desc,
+                      //                     child: Text(
+                      //                       request.desc,
+                      //                       style: TextStyle(color: Colors.white),
+                      //                     ),
+                      //                   );
+                      //                 }
+                      //               }
+                      //               // If service ID 20 is selected, show all items
+                      //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19)) {
+                      //                 return DropdownMenuItem<String>(
+                      //                   value: request.desc,
+                      //                   child: Text(
+                      //                     request.desc,
+                      //                     style: TextStyle(color: Colors.white),
+                      //                   ),
+                      //                 );
+                      //               }
+                      //               // If both 19 and 20 are selected, show all items
+                      //               else if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && _selectedServiceTypes.any((service) => service.typeCdId == 20)) {
+                      //                 return DropdownMenuItem<String>(
+                      //                   value: request.desc,
+                      //                   child: Text(
+                      //                     request.desc,
+                      //                     style: TextStyle(color: Colors.white),
+                      //                   ),
+                      //                 );
+                      //               }
+                      //               return null; // Return null for items that shouldn't be shown
+                      //             })
+                      //             .where((item) => item != null) // Filter out null items
+                      //             .cast<DropdownMenuItem<String>>() // Cast to non-nullable type
+                      //             .toList(),
+                      //         onChanged: (String? newValue) {
+                      //           setState(() {
+                      //             _selectedDesc = newValue;
+                      //             print('_selectedDesc$_selectedDesc');
+                      //             LabourRequest? selectedRequest = _labourRequests.firstWhere(
+                      //               (request) => request.desc == newValue,
+                      //               orElse: () => null!,
+                      //             );
+                      //
+                      //             if (selectedRequest != null) {
+                      //               print('Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                      //               selectduration_id = selectedRequest.typeCdId;
+                      //             }
+                      //           });
+                      //         },
+                      //         hint: Text(
+                      //           'Select',
+                      //           style: TextStyle(color: Colors.white),
+                      //         ),
+                      //       )),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      if (_selectedDesc != null && (_selectedDesc == _labourRequests[1].desc || _selectedDesc == _labourRequests[2].desc || _selectedDesc == _labourRequests[3].desc))
+                        Padding(
+                          padding: EdgeInsets.all(0),
+                          child: Text(
+                            tr(LocaleKeys.text),
+                            style: TextStyle(
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF34A350),
+                            ),
+                          ),
+                        ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.comments),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          // SizedBox(width: 5,),
+                          // Icon(Icons.star,size: 8,color: Colors.red,)
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.all(0.0),
+                        child: TextFormField(
+                          controller: _commentController,
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 1.5), // White border
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white, width: 1.5), // White border on focus
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: 'comments',
+                            hintStyle: TextStyle(color: Colors.white), // White hint text color
+                          ),
+                          style: TextStyle(color: Colors.white), // White input text color
+                          // inputFormatters: [
+                          //   FilteringTextInputFormatter.allow(RegExp("[a-zA-Z ]")), // Allow only letters and spaces
+                          // ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _isagreed,
+                            onChanged: (value) {
+                              setState(() {
+                                _isagreed = value!;
+                                showRateChartDialog(context);
+                             //   TermsConditionsPopup();
 //Showalertdialog(context);
 //                             showDialog(
 //                               context: context,
 //                               builder: (context) => TermsConditionsPopup(),
 //                             );
-                          });
-                        },
-                        checkColor: Colors.grey,
-                        // Grey tick mark color
-                        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(MaterialState.selected)) {
-                            return Colors.white; // White background when checked
-                          }
-                          return Colors.transparent; // Transparent background when unchecked
-                        }),
-                        side: BorderSide(
-                          color: Colors.black, // Black border when unchecked
-                          width: 2, // Border width
-                        ),
-                      ),
-                      //SizedBox(width: 8),
-                      Text(
-                        tr(LocaleKeys.i_have_agree),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
+                              });
+                            },
+                            checkColor: Colors.grey,
+                            // Grey tick mark color
+                            fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return Colors.white; // White background when checked
+                              }
+                              return Colors.transparent; // Transparent background when unchecked
+                            }),
+                            side: BorderSide(
+                              color: Colors.black, // Black border when unchecked
+                              width: 2, // Border width
+                            ),
+                          ),
+                          //SizedBox(width: 8),
+                          Text(
+                            tr(LocaleKeys.i_have_agree),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+
+                          Text(
+                            tr(LocaleKeys.terms_conditions),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: CommonStyles.primaryTextColor,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
-                        width: 4,
+                        height: 8,
                       ),
-
-                      Text(
-                        tr(LocaleKeys.terms_conditions),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: CommonStyles.primaryTextColor,
-                        ),
-                      ),
+                      submitBtn(context, tr(LocaleKeys.submit_req)),
                     ],
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  submitBtn(context, tr(LocaleKeys.submit_req)),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),
@@ -734,33 +737,34 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     if (_selectedServiceTypes.any((service) => service.typeCdId == 19) && !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
       return [_labourRequests[0]]
           .map((request) => DropdownMenuItem<String>(
-                value: request.desc,
-                child: Text(
-                  request.desc,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ))
+        value: request.desc,
+        child: Text(
+          request.desc,
+          style: TextStyle(color: Colors.white),
+        ),
+      ))
           .toList();
     } else {
       return _labourRequests
           .map((request) => DropdownMenuItem<String>(
-                value: request.desc,
-                child: Text(
-                  request.desc,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ))
+        value: request.desc,
+        child: Text(
+          request.desc,
+          style: TextStyle(color: Colors.white),
+        ),
+      ))
           .toList();
     }
   }
 
   Widget submitBtn(
-    BuildContext context,
-    String language,
-  ) {
+      BuildContext context,
+      String language,
+      ) {
     return SizedBox(
       //  width: double.infinity,
-      child: Container(
+      child:
+      Container(
         padding: EdgeInsets.only(left: 10, right: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
@@ -778,7 +782,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
             width: 2.0,
           ),
         ),
-        child: ElevatedButton(
+        child:
+        ElevatedButton(
           onPressed: () async {
             bool validationSuccess = await isvalidations();
             if (validationSuccess) {
@@ -1037,6 +1042,238 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     }
   }
+
+
+  void showRateChartDialog(BuildContext context) async {
+    // Step 1: Fetch the data from the API
+    final url = 'http://182.18.157.215/3FAkshaya/API/api/LabourServiceCost/GetLabourServiceCost/null';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      List<dynamic> listResult = data['listResult'];
+
+      // Step 2: Show the dialog with dynamically generated table rows
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(1.0),
+            ),
+            child: Container(
+          //  padding: EdgeInsets.all(2),
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      color: CommonStyles.primaryTextColor,
+                      alignment: Alignment.center, // Center the title
+                      padding: EdgeInsets.all(8), // Optional padding for better spacing
+                      child: Text(
+                        'Rate Chart - Terms & Conditions',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // Text color
+                        ),
+                      ),
+                    ),
+
+                  //  SizedBox(height: 5),
+
+                    // Table
+                    Column(
+                      children: [
+                        // Static Table Header
+                        Table(
+                          border: TableBorder.all(color: Colors.orange),
+                          columnWidths: const {
+                            0: FlexColumnWidth(2),
+                            1: FlexColumnWidth(2),
+                            2: FlexColumnWidth(2),
+                            3: FlexColumnWidth(2),
+                            4: FlexColumnWidth(2),
+                          },
+                          children: [
+                            TableRow(
+                           //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
+                              children: [
+                                tableHeader('Age'),
+                                tableHeader('Pruning Amount/Tree (Rs)'),
+                                tableHeader('Harvesting Amount/Ton (Rs)'),
+                                tableHeader('Pruning with Cocoa Intercrop/Tree (Rs)'),
+                                tableHeader('Harvesting with Cocoa Intercrop/Ton (Rs)'),
+                              ],
+                            ),
+                          ],
+                        ),
+                        // Scrollable Table Body
+                        SizedBox(
+                          height: 300, // Set the fixed height for the scrollable part
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Table(
+                            border: TableBorder.all(color: Colors.orange),
+                              columnWidths: const {
+                                0: FlexColumnWidth(2),
+                                1: FlexColumnWidth(2),
+                                2: FlexColumnWidth(2),
+                                3: FlexColumnWidth(2),
+                                4: FlexColumnWidth(2),
+                              },
+                              children: [
+                                // Dynamically generated rows for each year based on API data
+                                ...generateTableRows(listResult),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+
+
+                    //SizedBox(height: 10),
+
+                    // Terms and conditions text
+                    Padding(
+                      padding:  EdgeInsets.fromLTRB(5, 5, 5, 5), // Add some padding for better spacing
+                      child: Text(
+                    tr(LocaleKeys.inter_coco),
+                        style: CommonStyles.txSty_14p_f5, // Your defined text style
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    // Button to dismiss the popup
+                    Align(
+                      alignment: Alignment.center,
+                      child:    Container(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFFCCCCCC),
+                              Color(0xFFFFFFFF),
+                              Color(0xFFCCCCCC),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: const Color(0xFFe86100),
+                            width: 2.0,
+                          ),
+                        ),
+                        child:ElevatedButton(
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 0),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.got_it),
+                          style: CommonStyles.txSty_16p_f5,
+                        ),
+                      ),
+
+                      // CustomBtn(
+                      //   label:tr(LocaleKeys.got_it),
+                      //   borderColor: CommonStyles.primaryTextColor,
+                      //   borderRadius: 12,
+                      //   onPressed: () {
+                      //     Navigator.of(context).pop(); // Close the dialog
+                      //   },
+                      //
+                      //
+                      // ),
+                    ),
+                    ),
+                    SizedBox(height: 10),],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      // Handle error in fetching data
+      print("Failed to load data");
+    }
+  }
+
+// Step 3: Helper function to generate table rows
+  List<TableRow> generateTableRows(List<dynamic> listResult) {
+    List<TableRow> rows = [];
+
+    // Loop for each year (c1 to c30 represent the values for years 1 to 30)
+    for (int i = 1; i <= 30; i++) {
+      rows.add(
+        tableRow(
+          '$i Years', // Display the current year
+          listResult[0]['c$i'].toString(), // Pruning Amount/Tree (Rs)
+          listResult[1]['c$i'].toString(), // Harvesting Amount/Ton (Rs)
+          listResult[2]['c$i'].toString(), // Pruning with Cocoa Intercrop/Tree (Rs)
+          listResult[3]['c$i'].toString(), // Harvesting with Cocoa Intercrop/Ton (Rs)
+        ),
+      );
+    }
+
+    return rows;
+  }
+
+//
+
+
+// Helper widget for table headers
+  Widget tableHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        title,
+        style:CommonStyles.text14orange,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+// Helper function for table rows
+  TableRow tableRow(String age, String pruning, String harvesting, String cocoaPruning, String cocoaHarvesting) {
+    return TableRow(
+      children: [
+        tableCell(age),
+        tableCell(pruning),
+        tableCell(harvesting),
+        tableCell(cocoaPruning),
+        tableCell(cocoaHarvesting),
+      ],
+    );
+  }
+
+// Helper widget for table cells
+  Widget tableCell(String content) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        content,
+        style: CommonStyles.txSty_12b_f5,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
 }
 
 class CropPlotDetails extends StatelessWidget {
@@ -1065,8 +1302,8 @@ class CropPlotDetails extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-          // border:
-          //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
+        // border:
+        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
           borderRadius: BorderRadius.circular(10),
           color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
       child: Stack(
@@ -1135,255 +1372,255 @@ class CropPlotDetails extends StatelessWidget {
   }
 }
 
-class TermsConditionsPopup extends StatefulWidget {
-  const TermsConditionsPopup({Key? key}) : super(key: key);
-
-  @override
-  State<TermsConditionsPopup> createState() => _TermsConditionsPopupState();
-}
-
-class _TermsConditionsPopupState extends State<TermsConditionsPopup> {
-  List<Popup> popuplist = [];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    fetchpopup();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Container(
-        width: 350,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.all(0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              color: Colors.orange,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: const Text(
-                      'Terms & Conditions',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  // Visibility Toggle for Close Button (if needed)
-                  // IconButton(
-                  //   icon: const Icon(Icons.close, color: Colors.white),
-                  //   onPressed: () => Navigator.of(context).pop(),
-                  // ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 2.0, bottom: 5),
-              child: Table(
-                border: TableBorder(
-                  bottom: BorderSide(color: Colors.grey),
-                  verticalInside: BorderSide(color: Colors.grey),
-                ),
-                columnWidths: {
-                  0: FlexColumnWidth(1),
-                  1: FixedColumnWidth(1),
-                  2: FlexColumnWidth(1),
-                  3: FixedColumnWidth(1),
-                  4: FlexColumnWidth(1),
-                  5: FixedColumnWidth(1),
-                  6: FlexColumnWidth(1),
-                  7: FixedColumnWidth(1),
-                  8: FlexColumnWidth(1),
-                },
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [
-                  TableRow(
-                    children: [
-                      TableCell(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Center(
-                            child: Text(
-                              'Age',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(),
-                      TableCell(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Center(
-                            child: Text(
-                              'Pruning Amount/ Tree (Rs)',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(),
-                      TableCell(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Center(
-                            child: Text(
-                              'Harvesting Amount/ Ton (Rs)',
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(),
-                      TableCell(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Center(
-                            child: Text(
-                              'Pruning with Cocoa Intercrop Amount/ Tree (Rs)',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(),
-                      TableCell(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Center(
-                            child: Text(
-                              'Harvesting With Cocoa Intercrop Amount/ Ton (Rs)',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  TableRow(children: [
-                    TableCell(child: Text("1.")),
-                    TableCell(child: Text("Krishna Karki")),
-                    TableCell(child: Text("Nepal, Kathmandu")),
-                    TableCell(child: Text("Nepal"))
-                  ]),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                ),
-                child: const Text('Got It'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Widget _buildServiceCostTable() {
-  //   List<TableRow> rows = [];
-  //
-  //   // Iterate over each service in the popuplist and add a row for each
-  //   for (var service in popuplist) {
-  //     List<Widget> cells = [];
-  //
-  //     // Add the Age column which will display the description of the service
-  //     // cells.add(_buildTableCell(service.desc));
-  //
-  //     // Add the space between columns
-  //     cells.add(Container());
-  //
-  //     // Add values for c1 to c30 dynamically
-  //     for (int i = 1; i <= 30; i++) {
-  //       String costKey = 'c$i';
-  //       double costValue = service.toJson()[costKey] ?? 0.0;
-  //
-  //       cells.add(_buildTableCell(costValue.toString()));
-  //       cells.add(Container()); // space column
-  //     }
-  //
-  //     // Add the row to the table
-  //     rows.add(TableRow(children: cells));
-  //   }
-  //
-  //   return Table(
-  //     border: TableBorder(
-  //       bottom: BorderSide(color: Colors.grey),
-  //       verticalInside: BorderSide(color: Colors.grey),
-  //     ),
-  //     columnWidths: {
-  //       0: FlexColumnWidth(1),
-  //       1: FixedColumnWidth(1),
-  //       2: FlexColumnWidth(1),
-  //       3: FixedColumnWidth(1),
-  //       4: FlexColumnWidth(1),
-  //       5: FixedColumnWidth(1),
-  //       6: FlexColumnWidth(1),
-  //       7: FixedColumnWidth(1),
-  //       8: FlexColumnWidth(1),
-  //     },
-  //     defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-  //     children: rows,
-  //   );
-  // }
-
-  Widget _buildTableCell(String text) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 12),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Future<void> fetchpopup() async {
-    final url = Uri.parse(baseUrl + getlabourservicecost);
-    print('$url');
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print('response==$responseData');
-        if (responseData['listResult'] != null) {
-          setState(() {
-            popuplist = (responseData['listResult'] as List).map((appointment) => Popup.fromJson(appointment)).toList();
-          });
-        } else {
-          print('Failed to show Farmer plot details list');
-        }
-      } else {
-        throw Exception('Failed to show Farmer plot details list');
-      }
-    } catch (error) {
-      throw Exception('Failed to connect to the API $error');
-    }
-  }
-}
+// class TermsConditionsPopup extends StatefulWidget {
+//   const TermsConditionsPopup({Key? key}) : super(key: key);
+//
+//   @override
+//   State<TermsConditionsPopup> createState() => _TermsConditionsPopupState();
+// }
+//
+// class _TermsConditionsPopupState extends State<TermsConditionsPopup> {
+//   List<Popup> popuplist = [];
+//
+//   @override
+//   void initState() {
+//     // TODO: implement initState
+//     super.initState();
+//     fetchpopup();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Dialog(
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(10),
+//       ),
+//       child: Container(
+//         width: 350,
+//         height: MediaQuery.of(context).size.height,
+//         padding: EdgeInsets.all(0),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Container(
+//               color: Colors.orange,
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Padding(
+//                     padding: const EdgeInsets.all(10.0),
+//                     child: const Text(
+//                       'Terms & Conditions',
+//                       style: TextStyle(
+//                         fontSize: 18,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.white,
+//                       ),
+//                     ),
+//                   ),
+//                   // Visibility Toggle for Close Button (if needed)
+//                   // IconButton(
+//                   //   icon: const Icon(Icons.close, color: Colors.white),
+//                   //   onPressed: () => Navigator.of(context).pop(),
+//                   // ),
+//                 ],
+//               ),
+//             ),
+//             Container(
+//               padding: EdgeInsets.only(top: 2.0, bottom: 5),
+//               child: Table(
+//                 border: TableBorder(
+//                   bottom: BorderSide(color: Colors.grey),
+//                   verticalInside: BorderSide(color: Colors.grey),
+//                 ),
+//                 columnWidths: {
+//                   0: FlexColumnWidth(1),
+//                   1: FixedColumnWidth(1),
+//                   2: FlexColumnWidth(1),
+//                   3: FixedColumnWidth(1),
+//                   4: FlexColumnWidth(1),
+//                   5: FixedColumnWidth(1),
+//                   6: FlexColumnWidth(1),
+//                   7: FixedColumnWidth(1),
+//                   8: FlexColumnWidth(1),
+//                 },
+//                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+//                 children: [
+//                   TableRow(
+//                     children: [
+//                       TableCell(
+//                         child: Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           padding: EdgeInsets.only(left: 5, right: 5),
+//                           child: Center(
+//                             child: Text(
+//                               'Age',
+//                               style: TextStyle(fontSize: 14),
+//                               textAlign: TextAlign.center,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       Container(),
+//                       TableCell(
+//                         child: Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           padding: EdgeInsets.only(left: 5, right: 5),
+//                           child: Center(
+//                             child: Text(
+//                               'Pruning Amount/ Tree (Rs)',
+//                               style: TextStyle(fontSize: 14),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       Container(),
+//                       TableCell(
+//                         child: Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           padding: EdgeInsets.only(left: 5, right: 5),
+//                           child: Center(
+//                             child: Text(
+//                               'Harvesting Amount/ Ton (Rs)',
+//                               style: TextStyle(fontSize: 14),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       Container(),
+//                       TableCell(
+//                         child: Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           padding: EdgeInsets.only(left: 5, right: 5),
+//                           child: Center(
+//                             child: Text(
+//                               'Pruning with Cocoa Intercrop Amount/ Tree (Rs)',
+//                               style: TextStyle(fontSize: 14),
+//                               textAlign: TextAlign.center,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                       Container(),
+//                       TableCell(
+//                         child: Container(
+//                           width: MediaQuery.of(context).size.width,
+//                           padding: EdgeInsets.only(left: 5, right: 5),
+//                           child: Center(
+//                             child: Text(
+//                               'Harvesting With Cocoa Intercrop Amount/ Ton (Rs)',
+//                               style: TextStyle(fontSize: 14),
+//                               textAlign: TextAlign.center,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   TableRow(children: [
+//                     TableCell(child: Text("1.")),
+//                     TableCell(child: Text("Krishna Karki")),
+//                     TableCell(child: Text("Nepal, Kathmandu")),
+//                     TableCell(child: Text("Nepal"))
+//                   ]),
+//                 ],
+//               ),
+//             ),
+//             Padding(
+//               padding: const EdgeInsets.all(10.0),
+//               child: ElevatedButton(
+//                 onPressed: () => Navigator.of(context).pop(),
+//                 style: ElevatedButton.styleFrom(
+//                   backgroundColor: Colors.blue,
+//                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+//                 ),
+//                 child: const Text('Got It'),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+//
+//   // Widget _buildServiceCostTable() {
+//   //   List<TableRow> rows = [];
+//   //
+//   //   // Iterate over each service in the popuplist and add a row for each
+//   //   for (var service in popuplist) {
+//   //     List<Widget> cells = [];
+//   //
+//   //     // Add the Age column which will display the description of the service
+//   //     // cells.add(_buildTableCell(service.desc));
+//   //
+//   //     // Add the space between columns
+//   //     cells.add(Container());
+//   //
+//   //     // Add values for c1 to c30 dynamically
+//   //     for (int i = 1; i <= 30; i++) {
+//   //       String costKey = 'c$i';
+//   //       double costValue = service.toJson()[costKey] ?? 0.0;
+//   //
+//   //       cells.add(_buildTableCell(costValue.toString()));
+//   //       cells.add(Container()); // space column
+//   //     }
+//   //
+//   //     // Add the row to the table
+//   //     rows.add(TableRow(children: cells));
+//   //   }
+//   //
+//   //   return Table(
+//   //     border: TableBorder(
+//   //       bottom: BorderSide(color: Colors.grey),
+//   //       verticalInside: BorderSide(color: Colors.grey),
+//   //     ),
+//   //     columnWidths: {
+//   //       0: FlexColumnWidth(1),
+//   //       1: FixedColumnWidth(1),
+//   //       2: FlexColumnWidth(1),
+//   //       3: FixedColumnWidth(1),
+//   //       4: FlexColumnWidth(1),
+//   //       5: FixedColumnWidth(1),
+//   //       6: FlexColumnWidth(1),
+//   //       7: FixedColumnWidth(1),
+//   //       8: FlexColumnWidth(1),
+//   //     },
+//   //     defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+//   //     children: rows,
+//   //   );
+//   // }
+//
+//   Widget _buildTableCell(String text) {
+//     return Container(
+//       padding: EdgeInsets.all(8),
+//       child: Text(
+//         text,
+//         style: TextStyle(fontSize: 12),
+//         textAlign: TextAlign.center,
+//       ),
+//     );
+//   }
+//
+//   Future<void> fetchpopup() async {
+//     final url = Uri.parse(baseUrl + getlabourservicecost);
+//     print('$url');
+//     try {
+//       final response = await http.get(url);
+//       if (response.statusCode == 200) {
+//         final Map<String, dynamic> responseData = jsonDecode(response.body);
+//         print('response==$responseData');
+//         if (responseData['listResult'] != null) {
+//           setState(() {
+//             popuplist = (responseData['listResult'] as List).map((appointment) => Popup.fromJson(appointment)).toList();
+//           });
+//         } else {
+//           print('Failed to show Farmer plot details list');
+//         }
+//       } else {
+//         throw Exception('Failed to show Farmer plot details list');
+//       }
+//     } catch (error) {
+//       throw Exception('Failed to connect to the API $error');
+//     }
+//   }
+// }
