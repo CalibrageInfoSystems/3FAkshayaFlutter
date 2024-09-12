@@ -1,3 +1,4 @@
+import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -33,11 +34,22 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //   key: ValueKey(context.locale.toString()),  // Add this line
+      theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: CommonStyles.primaryTextColor,
+          selectionColor: Colors.blue.withOpacity(0.3),
+          selectionHandleColor: CommonStyles.primaryTextColor,
+        ),
+        checkboxTheme: CheckboxThemeData(
+          fillColor: WidgetStateProperty.all(CommonStyles.primaryTextColor),
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: CommonStyles.primaryTextColor,
+        ),
+      ),
       builder: (context, child) {
         final originalTextScaleFactor = MediaQuery.of(context).textScaleFactor;
         final boldText = MediaQuery.boldTextOf(context);

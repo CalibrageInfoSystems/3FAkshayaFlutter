@@ -34,25 +34,22 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     // http://182.18.157.215/3FAkshaya/API/api/Farmer/GetUnPayedCollectionsByFarmerCode/APWGNJAP00150015
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
-    try {
-      final apiUrl = '$baseUrl$getUnPaidCollections$farmerCode';
-      final jsonResponse = await http.get(Uri.parse(apiUrl));
 
-      if (jsonResponse.statusCode == 200) {
-        final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
-        if (response['listResult'] != null &&
-            response['listResult'].isNotEmpty) {
-          List<dynamic> result = response['listResult'];
-          return result.map((item) => UnpaidCollection.fromJson(item)).toList();
-        } else {
-          throw Exception('No data found');
-        }
+    final apiUrl = '$baseUrl$getUnPaidCollections$farmerCode';
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
+
+    if (jsonResponse.statusCode == 200) {
+      final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['listResult'] != null && response['listResult'].isNotEmpty) {
+        List<dynamic> result = response['listResult'];
+        return result.map((item) => UnpaidCollection.fromJson(item)).toList();
       } else {
-        throw Exception('Failed to load data: ${jsonResponse.statusCode}');
+        throw Exception(
+          tr(LocaleKeys.no_unpaid_collections),
+        );
       }
-    } catch (e) {
-      print('catch: $e');
-      rethrow;
+    } else {
+      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
     }
   }
 
@@ -67,90 +64,72 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.quickPay)),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder(
-                future: futureUnpaidCollection,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return shimmerCard();
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        extractException(snapshot.error.toString()),
-                        style: CommonStyles.txSty_16p_f5,
-                      ),
-                    );
-                  } else {
-                    final data = snapshot.data as List<UnpaidCollection>;
-                    if (data.isNotEmpty) {
-                      return ListView.separated(
+          padding: const EdgeInsets.all(12.0),
+          child: FutureBuilder(
+            future: futureUnpaidCollection,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return shimmerCard();
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    snapshot.error.toString().replaceFirst('Exception: ', ''),
+                    style: CommonStyles.txSty_14p_f5,
+                  ),
+                );
+              } else {
+                final data = snapshot.data as List<UnpaidCollection>;
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.separated(
                         itemCount: data.length,
                         separatorBuilder: (context, index) {
                           return const SizedBox(height: 10);
                         },
                         itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              Expanded(
-                                  child: quickPayBox(
-                                      index: index, data: data[index])),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  CustomBtn(
-                                      label: 'Raise Request',
-                                      onPressed: () {
-                                        setState(() {
-                                          CommonStyles
-                                              .showHorizontalDotsLoadingDialog(
-                                                  context);
-                                        });
-                                        raiseRequest(data);
-                                      }),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.greenAccent,
-                                ),
-                                child: const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Note',
-                                        style: CommonStyles.txSty_14p_f5),
-                                    SizedBox(height: 5),
-                                    Text(
-                                        'Collections can take upto 2 hours to show. if Any Collections are missed, Please Contact Customer Care',
-                                        style: CommonStyles.txSty_12b_f5),
-                                  ],
-                                ),
-                              )
-                            ],
-                          );
+                          return quickPayBox(index: index, data: data[index]);
                         },
-                      );
-                    } else {
-                      return const Center(
-                        child: Text(
-                          'List is empty',
-                          style: CommonStyles.txSty_16p_f5,
-                        ),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomBtn(
+                            label: tr(LocaleKeys.request_rise),
+                            onPressed: () {
+                              setState(() {
+                                CommonStyles.showHorizontalDotsLoadingDialog(
+                                    context);
+                              });
+                              raiseRequest(data);
+                            }),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.greenAccent,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(tr(LocaleKeys.notee),
+                              style: CommonStyles.txSty_14p_f5),
+                          const SizedBox(height: 5),
+                          Text(tr(LocaleKeys.unpaid_note),
+                              style: CommonStyles.txSty_12b_f5),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }
+            },
+          )),
     );
   }
 
@@ -181,19 +160,19 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
       child: Column(
         children: [
           buildQuickPayRow(
-              label: 'Collection ID',
+              label: tr(LocaleKeys.collection_id),
               data: data.uColnid,
               datatextColor: CommonStyles.primaryTextColor),
           buildQuickPayRow(
-            label: 'Net Weight',
+            label: tr(LocaleKeys.net_weight),
             data: data.quantity.toString(),
           ),
           buildQuickPayRow(
-            label: 'Date',
+            label: tr(LocaleKeys.only_date),
             data: formateDate(data.docDate),
           ),
           buildQuickPayRow(
-            label: 'CC',
+            label: tr(LocaleKeys.cc),
             data: data.whsName,
           ),
         ],

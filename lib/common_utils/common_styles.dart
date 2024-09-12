@@ -20,7 +20,7 @@ class CommonStyles {
   static const startColor = Color(0xFF59ca6b);
 
   static const blackColor = Colors.black;
-  static const blackColorShade = Color(0xFF5f5f5f);
+  static const blackColorShade = Color(0xFF636363);
   static const dropdownbg = Color(0x8D000000);
   static const primaryColor = Color(0xFAF5F5F5);
   static const primaryTextColor = Color(0xFFe86100);
@@ -176,6 +176,12 @@ class CommonStyles {
   );
   static const TextStyle txSty_16w_fb = TextStyle(
     fontSize: 16,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.bold,
+    color: whiteColor,
+  );
+  static const TextStyle txSty_14w_fb = TextStyle(
+    fontSize: 14,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.bold,
     color: whiteColor,

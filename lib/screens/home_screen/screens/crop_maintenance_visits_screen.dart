@@ -30,34 +30,28 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   List<PestData> PestDatalist = [];
   List<DiseaseData> DiseaseDatalist = [];
   List<PlotIrrigation> plotIrrigationlist = [];
-  String updated='';
+  String updated = '';
   String treesAppearance = '';
   int plamscount = 0;
   double frequencyofharvest = 0.0;
   String? formattedDate;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchcropmaintencelist();
   }
 
   Future<void> fetchcropmaintencelist() async {
-
-
-
-
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
 
     String plotcode = widget.plotdata.plotcode!;
 
-
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/GetCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
     //  final apiUrl = '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/$plotcode/$userId';
-    final apiUrl = '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
-    print('apiUrl${apiUrl}');
+    final apiUrl =
+        '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
+    print('apiUrl$apiUrl');
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
@@ -79,28 +73,34 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
 
           // Print the structure for debugging
           print('healthPlantationData: $healthPlantationData');
-          String _updated = healthPlantationData['updatedDate'];
+          String updated = healthPlantationData['updatedDate'];
           var treessapprearance = healthPlantationData['treesAppearance'];
-          var _plamscount = uproomtementdata['plamsCount'];
+          var plamscount = uproomtementdata['plamsCount'];
 
           List<dynamic> pestdatalist = response['pestData'];
           List<dynamic> diseasedatalist = response['diseaseData'];
-          List<dynamic> _nutrientdatalist = response['nutrientData'];
-          List<dynamic> _plotIrrigationdatalist = response['plotIrrigation'];
-
+          List<dynamic> nutrientdatalist = response['nutrientData'];
+          List<dynamic> plotIrrigationdatalist = response['plotIrrigation'];
 
           if (healthPlantationData['updatedDate'] != null) {
             setState(() {
-              updated = _updated;
-              print('_updated${_updated}');
-              print('updated${updated}');
+              updated = updated;
+              print('_updated$updated');
+              print('updated$updated');
               treesAppearance = treessapprearance;
-              plamscount = _plamscount;
+              plamscount = plamscount;
               frequencyofharvest = frequency;
-              PestDatalist = pestdatalist.map((item) => PestData.fromJson(item)).toList();
-              DiseaseDatalist = diseasedatalist.map((item) => DiseaseData.fromJson(item)).toList();
-              NutrientDatalist = _nutrientdatalist.map((item) => NutrientData.fromJson(item)).toList();
-              plotIrrigationlist = _plotIrrigationdatalist.map((item) => PlotIrrigation.fromJson(item)).toList();
+              PestDatalist =
+                  pestdatalist.map((item) => PestData.fromJson(item)).toList();
+              DiseaseDatalist = diseasedatalist
+                  .map((item) => DiseaseData.fromJson(item))
+                  .toList();
+              NutrientDatalist = nutrientdatalist
+                  .map((item) => NutrientData.fromJson(item))
+                  .toList();
+              plotIrrigationlist = plotIrrigationdatalist
+                  .map((item) => PlotIrrigation.fromJson(item))
+                  .toList();
 
               print('healthplantationlist length: ${PestDatalist.length}');
             });
@@ -117,8 +117,8 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
         throw Exception('list is empty');
       } else {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        throw Exception('Request failed with status: ${jsonResponse.statusCode}');
-
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}');
       }
     } catch (e) {
       rethrow;
@@ -132,7 +132,8 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   //   return formattedDate;
   // }
 
-  String formatDate(String dateStr, DateFormat inputFormat1, DateFormat inputFormat2, DateFormat outputFormat) {
+  String formatDate(String dateStr, DateFormat inputFormat1,
+      DateFormat inputFormat2, DateFormat outputFormat) {
     DateTime? date;
 
     try {
@@ -151,9 +152,9 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
       return '';
     }
   }
+
   @override
   Widget build(BuildContext context) {
-
     // if (updated != null && updated!.isNotEmpty) {
     //   print('updateddate: $updated');
     //   try {
@@ -168,17 +169,18 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
     // }
     DateFormat inputFormat1 = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
     DateFormat inputFormat2 = DateFormat("yyyy-MM-dd HH:mm:ss");
-    DateFormat outputFormat = DateFormat("dd-MM-yyyy",'en');
+    DateFormat outputFormat = DateFormat("dd-MM-yyyy", 'en');
 
     //String? cmlastvisitdate =updated!; // Example date
-    String formattedDate = formatDate(updated, inputFormat1, inputFormat2, outputFormat);
-   // print(cmlastvisitdate);
+    String formattedDate =
+        formatDate(updated, inputFormat1, inputFormat2, outputFormat);
+    // print(cmlastvisitdate);
     print(formattedDate);
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -190,7 +192,7 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
               ),
               const SizedBox(height: 10),
               Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   color: Colors.black54,
@@ -198,11 +200,26 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    custombox(label: tr(LocaleKeys.treesAppearance), data: '$treesAppearance', dataTextColor: CommonStyles.whiteColor, labelTextColor: CommonStyles.whiteColor),
-                    custombox(label: tr(LocaleKeys.plamsCount), data: '$plamscount', dataTextColor: CommonStyles.whiteColor, labelTextColor: CommonStyles.whiteColor),
-                    custombox(label: tr(LocaleKeys.Frequency_harvest), data: '$frequencyofharvest', dataTextColor: CommonStyles.whiteColor, labelTextColor: CommonStyles.whiteColor),
                     custombox(
-                        label: tr(LocaleKeys.last_date), data: '${formattedDate?? ''}', dataTextColor: CommonStyles.whiteColor, labelTextColor: CommonStyles.whiteColor),
+                        label: tr(LocaleKeys.treesAppearance),
+                        data: treesAppearance,
+                        dataTextColor: CommonStyles.whiteColor,
+                        labelTextColor: CommonStyles.whiteColor),
+                    custombox(
+                        label: tr(LocaleKeys.plamsCount),
+                        data: '$plamscount',
+                        dataTextColor: CommonStyles.whiteColor,
+                        labelTextColor: CommonStyles.whiteColor),
+                    custombox(
+                        label: tr(LocaleKeys.Frequency_harvest),
+                        data: '$frequencyofharvest',
+                        dataTextColor: CommonStyles.whiteColor,
+                        labelTextColor: CommonStyles.whiteColor),
+                    custombox(
+                        label: tr(LocaleKeys.last_date),
+                        data: formattedDate ?? '',
+                        dataTextColor: CommonStyles.whiteColor,
+                        labelTextColor: CommonStyles.whiteColor),
                     Text(
                       tr(LocaleKeys.Frequency),
                       style: CommonStyles.txSty_16w_fb,
@@ -212,13 +229,14 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                       tr(
                         LocaleKeys.static_data,
                       ),
-                      style: CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                      style:
+                          CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 5),
-              Container(
+              const SizedBox(height: 5),
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,38 +251,56 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                       ),
                       child: Text(
                         tr(LocaleKeys.pest),
-                        style: CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                        style: CommonStyles.txF14Fw5Cb
+                            .copyWith(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    if (PestDatalist != null && PestDatalist.isNotEmpty)
+                    if (PestDatalist.isNotEmpty)
                       ListView.builder(
-                        shrinkWrap: true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics: NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                        shrinkWrap:
+                            true, // This is crucial to ensure the ListView doesn't require a fixed height
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
                         itemCount: PestDatalist.length,
                         itemBuilder: (context, index) {
                           final pestData = PestDatalist[index];
                           return Container(
-                             color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
-                            padding: EdgeInsets.all(4),
+                            color: index.isEven
+                                ? Colors.white
+                                : const Color(0xFFDFDFDF),
+                            padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
-                                plotDetailsBox(label: tr(LocaleKeys.Pest), data: '${pestData.pest}', dataTextColor: Color(0xFFF1614E)),
-                                plotDetailsBox(label: tr(LocaleKeys.pestChemicals), data: '${pestData.pestChemicals}'),
-                                if (pestData.recommendedChemical != null && pestData.recommendedChemical!.isNotEmpty)
-                                  plotDetailsBox(label: tr(LocaleKeys.RecommendedChemical), data: '${pestData.recommendedChemical}'),
-                                if (pestData.dosage != null && pestData.dosage != 0.0)
-                                  plotDetailsBox(label: tr(LocaleKeys.dosage_only), data: '${pestData.dosage}kg'),
-                                if (pestData.comments != null && pestData.comments!.isNotEmpty)
-                                  plotDetailsBox(label: tr(LocaleKeys.comments), data: '${pestData.comments}'),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.Pest),
+                                    data: pestData.pest,
+                                    dataTextColor: const Color(0xFFF1614E)),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.pestChemicals),
+                                    data: '${pestData.pestChemicals}'),
+                                if (pestData.recommendedChemical != null &&
+                                    pestData.recommendedChemical!.isNotEmpty)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.RecommendedChemical),
+                                      data: '${pestData.recommendedChemical}'),
+                                if (pestData.dosage != 0.0)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.dosage_only),
+                                      data: '${pestData.dosage}kg'),
+                                if (pestData.comments != null &&
+                                    pestData.comments!.isNotEmpty)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.comments),
+                                      data: '${pestData.comments}'),
                               ],
                             ),
                           );
                         },
                       )
                     else
-                      SizedBox.shrink(), // Or another placeholder widget
-                    SizedBox(height: 5),
+                      const SizedBox.shrink(), // Or another placeholder widget
+                    const SizedBox(height: 5),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(10),
@@ -273,40 +309,58 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                         color: Colors.black54,
                       ),
                       child: Text(
-                       tr(LocaleKeys.deases),
-                        style: CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                        tr(LocaleKeys.deases),
+                        style: CommonStyles.txF14Fw5Cb
+                            .copyWith(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    if (DiseaseDatalist != null && DiseaseDatalist.isNotEmpty)
+                    if (DiseaseDatalist.isNotEmpty)
                       ListView.builder(
-                        shrinkWrap: true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics: NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                        shrinkWrap:
+                            true, // This is crucial to ensure the ListView doesn't require a fixed height
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
                         itemCount: DiseaseDatalist.length,
                         itemBuilder: (context, index) {
                           final pestData = DiseaseDatalist[index];
                           return Container(
-                            color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
-                            padding: EdgeInsets.all(4),
+                            color: index.isEven
+                                ? Colors.white
+                                : const Color(0xFFDFDFDF),
+                            padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
-                                plotDetailsBox(label: tr(LocaleKeys.disease), data: '${pestData.disease}',),
-                                plotDetailsBox(label: tr(LocaleKeys.pestChemicals), data: '${pestData.chemical}'),
-                                 if (pestData.dosage != null && pestData.dosage != 0.0)
-                                  plotDetailsBox(label: tr(LocaleKeys.dosage_only), data: '${pestData.dosage}kg'),
-                                if (pestData.recommendedChemical != null && pestData.recommendedChemical != 'null')
-                                  plotDetailsBox(label: tr(LocaleKeys.UOMName), data: '${pestData.recommendedChemical}'),
-                               if (pestData.comments != null && pestData.comments!.isNotEmpty)
-                                  plotDetailsBox(label: tr(LocaleKeys.comments), data: '${pestData.comments}'),
+                                plotDetailsBox(
+                                  label: tr(LocaleKeys.disease),
+                                  data: pestData.disease,
+                                ),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.pestChemicals),
+                                    data: '${pestData.chemical}'),
+                                if (pestData.dosage != 0.0)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.dosage_only),
+                                      data: '${pestData.dosage}kg'),
+                                if (pestData.recommendedChemical != null &&
+                                    pestData.recommendedChemical != 'null')
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.UOMName),
+                                      data: '${pestData.recommendedChemical}'),
+                                if (pestData.comments != null &&
+                                    pestData.comments!.isNotEmpty)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.comments),
+                                      data: '${pestData.comments}'),
                               ],
                             ),
                           );
                         },
                       )
                     else
-                      SizedBox.shrink(),
+                      const SizedBox.shrink(),
 
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(10),
@@ -316,46 +370,64 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                       ),
                       child: Text(
                         tr(LocaleKeys.nut_repo),
-                        style: CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                        style: CommonStyles.txF14Fw5Cb
+                            .copyWith(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    if (NutrientDatalist != null && NutrientDatalist.isNotEmpty)
+                    if (NutrientDatalist.isNotEmpty)
                       ListView.builder(
-                        shrinkWrap: true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics: NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                        shrinkWrap:
+                            true, // This is crucial to ensure the ListView doesn't require a fixed height
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
                         itemCount: NutrientDatalist.length,
                         itemBuilder: (context, index) {
                           final pestData = NutrientDatalist[index];
 
-                          String formattedDate = DateFormat('dd-MM-yyyy').format(pestData.registeredDate);
-
+                          String formattedDate = DateFormat('dd-MM-yyyy')
+                              .format(pestData.registeredDate);
 
                           return Container(
-                            color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
-                            padding: EdgeInsets.all(4),
+                            color: index.isEven
+                                ? Colors.white
+                                : const Color(0xFFDFDFDF),
+                            padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
-                                plotDetailsBox(label: tr(LocaleKeys.NutrientDeficiencyName), data: '${pestData.nutrient}'),
-                              //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
-                               if (pestData.recommendedFertilizer != null && pestData.recommendedFertilizer != 'null')
-                                  plotDetailsBox(label: tr(LocaleKeys.recommended_ertilizer), data: '${pestData.recommendedFertilizer}'),
-                               if (pestData.dosage != null && pestData.dosage != 0.0)
-                                  plotDetailsBox(label: tr(LocaleKeys.dosage_only), data: '${pestData.dosage}kg'),
-                                if (pestData.registeredDate != null )
-                                  plotDetailsBox(label: tr(LocaleKeys.registeredDate), data: '${formattedDate}'),
-                                if (pestData.comments != null && pestData.comments != 'null')
-                                  plotDetailsBox(label: tr(LocaleKeys.comments), data: '${pestData.comments}'),
+                                plotDetailsBox(
+                                    label:
+                                        tr(LocaleKeys.NutrientDeficiencyName),
+                                    data: pestData.nutrient),
+                                //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
+                                if (pestData.recommendedFertilizer != null &&
+                                    pestData.recommendedFertilizer != 'null')
+                                  plotDetailsBox(
+                                      label:
+                                          tr(LocaleKeys.recommended_ertilizer),
+                                      data:
+                                          '${pestData.recommendedFertilizer}'),
+                                if (pestData.dosage != 0.0)
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.dosage_only),
+                                      data: '${pestData.dosage}kg'),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.registeredDate),
+                                    data: formattedDate),
+                                if (pestData.comments != null &&
+                                    pestData.comments != 'null')
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.comments),
+                                      data: '${pestData.comments}'),
                               ],
                             ),
                           );
                         },
                       )
                     else
-                      SizedBox.shrink(),
+                      const SizedBox.shrink(),
 
-
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(10),
@@ -365,19 +437,23 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                       ),
                       child: Text(
                         tr(LocaleKeys.irrigation),
-                        style: CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                        style: CommonStyles.txF14Fw5Cb
+                            .copyWith(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    if (plotIrrigationlist != null && plotIrrigationlist.isNotEmpty)
+                    if (plotIrrigationlist.isNotEmpty)
                       ListView.builder(
-                        shrinkWrap: true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics: NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                        shrinkWrap:
+                            true, // This is crucial to ensure the ListView doesn't require a fixed height
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
                         itemCount: plotIrrigationlist.length,
                         itemBuilder: (context, index) {
                           final pestData = plotIrrigationlist[index];
 
-                           String formattedDate = DateFormat('dd-MM-yyyy').format(pestData.updatedbyDate);
+                          String formattedDate = DateFormat('dd-MM-yyyy')
+                              .format(pestData.updatedbyDate);
                           // // String formattedDate = formatDate(formattedDate1, inputFormat1, inputFormat2, outputFormat);
                           // DateTime parsedDate = DateTime.parse(formattedDate1);
                           //
@@ -390,25 +466,28 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                           // //String? cmlastvisitdate =updated!; // Example date
                           // String formattedDate = formatDate(formattedDate1, inputFormat1, inputFormat2, outputFormat);
 
-
                           return Container(
-                            color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
-                            padding: EdgeInsets.all(4),
+                            color: index.isEven
+                                ? Colors.white
+                                : const Color(0xFFDFDFDF),
+                            padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
-                                plotDetailsBox(label: tr(LocaleKeys.irrigation_name), data: '${pestData.irrigaationType}',dataTextColor: Color(0xFFF1614E)),
-                                plotDetailsBox(label: tr(LocaleKeys.updated_by), data: '${formattedDate}'),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.irrigation_name),
+                                    data: pestData.irrigaationType,
+                                    dataTextColor: const Color(0xFFF1614E)),
+                                plotDetailsBox(
+                                    label: tr(LocaleKeys.updated_by),
+                                    data: formattedDate),
                                 //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
-
                               ],
                             ),
                           );
                         },
                       )
                     else
-                      SizedBox.shrink(),
-
-
+                      const SizedBox.shrink(),
                   ],
                 ),
               ),
@@ -520,9 +599,9 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   //   );
   // }
 
-  Widget plotDetailsBox({required String label, required String data, Color? dataTextColor}) {
-    return
-      Column(
+  Widget plotDetailsBox(
+      {required String label, required String data, Color? dataTextColor}) {
+    return Column(
       children: [
         Row(
           children: [
@@ -532,13 +611,10 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                   label,
                   style: CommonStyles.txSty_14b_f5,
                 )),
-            Expanded(
-                flex: 1,
-                child: Text(
-                  ':',
-                  style: CommonStyles.txSty_14b_f5
-                  ),
-                ),
+            const Expanded(
+              flex: 1,
+              child: Text(':', style: CommonStyles.txSty_14b_f5),
+            ),
             Expanded(
                 flex: 4,
                 child: Text(

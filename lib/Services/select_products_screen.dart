@@ -25,7 +25,7 @@ import 'models/Godowndata.dart';
 class SelectProductsScreen extends StatefulWidget {
   final Godowndata godown;
 
-  const SelectProductsScreen({Key? key, required this.godown}) : super(key: key);
+  const SelectProductsScreen({super.key, required this.godown});
 
   @override
   State<SelectProductsScreen> createState() => _SelectProductsScreenState();
@@ -37,11 +37,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   Map<int, int> productQuantities = {};
   int badgeCount = 0;
 
-
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
- late List<ProductItem> copyProductsData = [];
- // List<ProductWithQuantity>? copyProductsData;
+  late List<ProductItem> copyProductsData = [];
+  // List<ProductWithQuantity>? copyProductsData;
   @override
   void initState() {
     super.initState();
@@ -83,8 +82,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
   Future<List<CategoryItem>> getDropdownData() async {
- final apiUrl = '$baseUrl$GetCategoriesByParentCategory';
-   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Categories/GetCategoriesByParentCategory/1';
+    final apiUrl = '$baseUrl$GetCategoriesByParentCategory';
+    // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Categories/GetCategoriesByParentCategory/1';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -105,33 +104,32 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
   Future<List<ProductItem>> getProducts() async {
-   // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
+    // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
     try {
-    final apiUrl = '$baseUrl$Getproductdata/1/${widget.godown.code}';
-    print('products url $apiUrl');
-    final jsonResponse = await http.get(Uri.parse(apiUrl));
+      final apiUrl = '$baseUrl$Getproductdata/1/${widget.godown.code}';
+      print('products url $apiUrl');
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
 
-    if (jsonResponse.statusCode == 200) {
-      final response = jsonDecode(jsonResponse.body);
-      if (response['listResult'] != null) {
-        List<dynamic> listResult = response['listResult'];
-        return listResult.map((item) => ProductItem.fromJson(item)).toList();
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        if (response['listResult'] != null) {
+          List<dynamic> listResult = response['listResult'];
+          return listResult.map((item) => ProductItem.fromJson(item)).toList();
+        } else {
+          return []; // Return empty list if listResult is null
+        }
       } else {
-        return []; // Return empty list if listResult is null
+        throw Exception('Failed to load data: ${jsonResponse.statusCode}');
       }
-    } else {
-      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
+    } catch (e) {
+      throw Exception('Error occurred while fetching products: $e');
     }
-  } catch (e) {
-  throw Exception('Error occurred while fetching products: $e');
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar:
-        AppBar(
+        appBar: AppBar(
           backgroundColor: CommonStyles.gradientColor1,
           leading: GestureDetector(
             onTap: () {
@@ -152,16 +150,18 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 // Handle click event here
                 print('Crop action clicked');
                 Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const PlotSelectionScreen(),
-                                ),
-                              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PlotSelectionScreen(
+                      serviceTypeId: 100,
+                    ),
+                  ),
+                );
                 // You can add navigation or other logic here
               },
               child: Container(
-                margin: EdgeInsets.fromLTRB(5, 5, 0, 5),
-               padding: const EdgeInsets.all(5),
+                margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
                   borderRadius: BorderRadius.circular(6),
@@ -175,10 +175,12 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 10,height: 10,), // Add some spacing if needed
+            const SizedBox(
+              width: 10,
+              height: 10,
+            ), // Add some spacing if needed
           ],
-        )
-        ,
+        ),
         body: Column(
           children: [
             headerSection(),
@@ -263,7 +265,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                     );
                   } else {
                     return const Center(
-                      child: Text('No products found',   style: CommonStyles.txSty_14b_f6,),
+                      child: Text(
+                        'No products found',
+                        style: CommonStyles.txSty_14b_f6,
+                      ),
                     );
                   }
                 }
@@ -301,7 +306,6 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       },
     );
   }
-
 
   Widget filterDropDown(List<CategoryItem> categories) {
     return DropdownButtonHideUnderline(
@@ -352,8 +356,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           );
         },
         dropdownStyleData: DropdownStyleData(
-          decoration: BoxDecoration(
-        //    borderRadius: BorderRadius.circular(14),
+          decoration: const BoxDecoration(
+            //    borderRadius: BorderRadius.circular(14),
             color: Colors.grey,
           ),
           offset: const Offset(0, 0),
@@ -370,12 +374,12 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       ),
     );
   }
+
   Container headerSection() {
     return Container(
       color: Colors.grey.shade300,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child:
-      Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
@@ -406,7 +410,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             ],
           ),
           CustomBtn(
-            label:tr(LocaleKeys.next),
+            label: tr(LocaleKeys.next),
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
@@ -415,7 +419,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ProductCardScreen(
-                      products: fetchCardProducts(),godown:widget.godown,
+                      products: fetchCardProducts(),
+                      godown: widget.godown,
                     ),
                   ),
                 );
@@ -430,14 +435,12 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           ),
         ],
       ),
-
     );
   }
 
-
-
   void updateBadgeCount() {
-    badgeCount = productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
+    badgeCount =
+        productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
     print('productQuantities: $productQuantities');
   }
 
@@ -446,7 +449,6 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         .map((productWithQuantity) => productWithQuantity.totalPrice)
         .fold(0.0, (previousValue, element) => previousValue + element);
   }
-
 }
 
 class ProductCard extends StatefulWidget {
@@ -549,11 +551,10 @@ class _ProductCardState extends State<ProductCard> {
                     style: iconBtnStyle(
                       foregroundColor: CommonStyles.primaryTextColor,
                     ),
-
                     icon: const Icon(Icons.remove),
                     onPressed: removeProduct,
                   ),
-                 const SizedBox(width: 2),
+                  const SizedBox(width: 2),
                   Text(
                     '$productQuantity',
                     style: CommonStyles.texthintstyle,
@@ -827,6 +828,7 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 }
+
 class ProductWithQuantity {
   final ProductItem product;
   final int quantity;

@@ -7,13 +7,15 @@ import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/visit_request_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class PlotSelectionScreen extends StatefulWidget {
-  const PlotSelectionScreen({super.key});
+  final int serviceTypeId;
+  const PlotSelectionScreen({super.key, required this.serviceTypeId});
 
   @override
   State<PlotSelectionScreen> createState() => _PlotSelectionScreenState();
@@ -74,15 +76,8 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                     itemCount: plots.length,
                     itemBuilder: (context, index) {
                       return CropPlotDetails(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CropMaintenanceVisitsScreen(
-                                        plotdata: plots[index]),
-                              ),
-                            );
-                          },
+                          onTap: () =>
+                              navigateAccordingToServiceTypeId(plots[index]),
                           plotdata: plots[index],
                           index: index);
                     },
@@ -95,6 +90,57 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
         ),
       ),
     );
+  }
+
+  void navigateAccordingToServiceTypeId(PlotDetailsModel plot) {
+    switch (widget.serviceTypeId) {
+      case 14:
+        setState(() {
+          CommonStyles.showHorizontalDotsLoadingDialog(context);
+        });
+        checkVisitRequest(widget.serviceTypeId, plot);
+        /*  Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => VisitRequest(plot: plot)),); */
+        break;
+      default:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
+          ),
+        );
+        break;
+    }
+  }
+
+  Future<void> checkVisitRequest(
+      int serviceTypeId, PlotDetailsModel plot) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
+    final apiUrl =
+        '$baseUrl$raiseCollectionRequest$farmerCode/null/$serviceTypeId';
+    setState(() {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
+    });
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
+    print('jsonResponse: ${jsonResponse.body}');
+    if (jsonResponse.statusCode == 200) {
+      final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['isSuccess']) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VisitRequest(plot: plot)),
+        );
+      } else {
+        CommonStyles.errorDialog(
+          context,
+          errorMessage: '', // tr(LocaleKeys.quick_reqc),
+        );
+      }
+    } else {
+      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
+    }
   }
 }
 
@@ -126,13 +172,15 @@ class CropPlotDetails extends StatelessWidget {
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
     String year = parsedDate.year.toString();
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-          // border:
-          //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
-          borderRadius: BorderRadius.circular(10),
-          color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
+        // border:
+        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
+        borderRadius: BorderRadius.circular(10),
+        color: index.isEven ? Colors.grey.shade200 : Colors.transparent,
+        // color: index.isEven ? Colors.grey.shade200 : Colors.transparent,
+      ),
       child: Stack(
         children: [
           plotCard(df, year),

@@ -454,7 +454,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   tr(LocaleKeys.recommendationss), onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const PlotSelectionScreen(),
+                    builder: (context) => const PlotSelectionScreen(
+                      serviceTypeId: 101,
+                    ),
                   ),
                 );
               }),
@@ -531,7 +533,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => GodownSelectionScreen(keyName: 'edibleoils')),
+                  builder: (context) =>
+                      GodownSelectionScreen(keyName: 'edibleoils')),
             );
             break;
           case 13: // Quick Pay Request
@@ -539,16 +542,24 @@ class _HomeScreenState extends State<HomeScreen> {
               context,
               MaterialPageRoute(builder: (context) => const QuickPayScreen()),
             );
-      //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
 
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
-            //   ),
-            // );
-
+          case 14: // Visit Request
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const PlotSelectionScreen(
+                        serviceTypeId: 14,
+                      )),
+            );
             break;
+          //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
+          //   ),
+          // );
           case 28: // Loan Request
             Navigator.push(
               context,
@@ -790,12 +801,7 @@ class _HomeScreenState extends State<HomeScreen> {
       rethrow;
     }
   }
-
-
-
 }
-
-
 
 class ShimmerWidn extends StatelessWidget {
   const ShimmerWidn({super.key});
