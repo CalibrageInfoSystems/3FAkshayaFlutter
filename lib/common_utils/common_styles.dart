@@ -505,7 +505,7 @@ class CommonStyles {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6)),
               child: SizedBox(
-                width: size.width * 0.7,
+                width: size.width * 0.8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,

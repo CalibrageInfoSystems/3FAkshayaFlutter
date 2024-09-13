@@ -38,8 +38,8 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      // print('apiUrl: $apiUrl');
-      // print('jsonResponse: ${jsonResponse.body}');
+      print('yyy: $apiUrl');
+      print('yyy: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         if (response['listResult'] != null) {
@@ -119,12 +119,13 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl =
-        '$baseUrl$raiseCollectionRequest$farmerCode/null/$serviceTypeId';
+        '$baseUrl$raiseCollectionRequest$farmerCode/${plot.plotcode}/$serviceTypeId';
     setState(() {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     });
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-    print('jsonResponse: ${jsonResponse.body}');
+    print('www: $apiUrl');
+    print('www: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['isSuccess']) {
@@ -135,7 +136,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       } else {
         CommonStyles.errorDialog(
           context,
-          errorMessage: '', // tr(LocaleKeys.quick_reqc),
+          errorMessage: tr(LocaleKeys.visit_reqst),
         );
       }
     } else {

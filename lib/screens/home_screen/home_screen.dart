@@ -502,120 +502,95 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void navigateToSelectedServiceScreen(int serviceTypeId) {
+    switch (serviceTypeId) {
+      case 12: // Fertilizer Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GodownSelectionScreen(keyName: 'Fertilizer')),
+        );
+        break;
+      case 10: // Pole Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
+        );
+        break;
+      case 107: // Bio Lab Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => GodownSelectionScreen(keyName: 'BioLab')),
+        );
+        break;
+      case 116: // Edibleoils Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GodownSelectionScreen(keyName: 'edibleoils')),
+        );
+        break;
+      case 13: // Quick Pay Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const QuickPayScreen()),
+        );
+
+      case 14: // Visit Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const PlotSelectionScreen(
+                    serviceTypeId: 14,
+                  )),
+        );
+        break;
+      case 28:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const LoanRequestScreen(
+                    clusterId: 28,
+                  )),
+        );
+        break;
+      case 11: // Pole Request
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PlotSelection()),
+        );
+        break;
+
+      default:
+        break;
+    }
+  }
+
   Widget gridServiceItem(int serviceTypeId) {
-    return GestureDetector(
-      onTap: () {
-        switch (serviceTypeId) {
-          case 12: // Fertilizer Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      GodownSelectionScreen(keyName: 'Fertilizer')),
-            );
-            break;
-          case 10: // Pole Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
-            );
-            break;
-          case 107: // Bio Lab Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      GodownSelectionScreen(keyName: 'BioLab')),
-            );
-            break;
-          case 116: // Edibleoils Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      GodownSelectionScreen(keyName: 'edibleoils')),
-            );
-            break;
-          case 13: // Quick Pay Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const QuickPayScreen()),
-            );
-
-          case 14: // Visit Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const PlotSelectionScreen(
-                        serviceTypeId: 14,
-                      )),
-            );
-            break;
-          //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
-
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
-          //   ),
-          // );
-          case 28: // Loan Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoanRequestScreen(
-                        clusterId: 28,
-                      )),
-            );
-            break;
-          /*   case 108: // Transport Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoanRequestScreen()),
-            );
-            break;
-          case 116: // Edible Oils Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoanRequestScreen()),
-            );
-            break; */
-
-          case 11: // Pole Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlotSelection()),
-            );
-            break;
-
-          default:
-            break;
-        }
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            getServiceImagePath(serviceTypeId),
-            width: 35,
-            height: 35,
-            fit: BoxFit.cover,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(
+          getServiceImagePath(serviceTypeId),
+          width: 35,
+          height: 35,
+          fit: BoxFit.cover,
+        ),
+        const SizedBox(height: 5),
+        Text(
+          getServiceName(serviceTypeId),
+          textAlign: TextAlign.center,
+          style: CommonStyles.txSty_12W_fb.copyWith(
+            color: CommonStyles.blackColor,
+            fontWeight: FontWeight.w600,
           ),
-          const SizedBox(height: 5),
-          Text(
-            getServiceName(serviceTypeId),
-            textAlign: TextAlign.center,
-            style: CommonStyles.txSty_12W_fb.copyWith(
-              color: CommonStyles.blackColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -665,18 +640,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     BorderSide borderSide = const BorderSide(color: Colors.grey, width: 0.5);
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: (index < totalColumns) ? BorderSide.none : borderSide,
-          left: (index % totalColumns == 0) ? BorderSide.none : borderSide,
-          right: (index % totalColumns == totalColumns - 1)
-              ? BorderSide.none
-              : borderSide,
-          bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
+    return GestureDetector(
+      onTap: () => navigateToSelectedServiceScreen(serviceTypeId),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: (index < totalColumns) ? BorderSide.none : borderSide,
+            left: (index % totalColumns == 0) ? BorderSide.none : borderSide,
+            right: (index % totalColumns == totalColumns - 1)
+                ? BorderSide.none
+                : borderSide,
+            bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
+          ),
         ),
+        child: gridServiceItem(serviceTypeId),
       ),
-      child: gridServiceItem(serviceTypeId),
     );
   }
 

@@ -10,7 +10,9 @@ import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/models/type_issue.dart';
+import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
+import 'package:akshaya_flutter/screens/main_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,6 +43,7 @@ class _VisitRequestState extends State<VisitRequest> {
   String? audioFilePath;
   double _currentPosition = 0;
   double _totalDuration = 0;
+  final double _totalDuration2 = 0;
   int _recordedSeconds = 0;
   Timer? _timer;
   int? selectedTypeOfIssueId;
@@ -101,7 +104,8 @@ class _VisitRequestState extends State<VisitRequest> {
       submitVisitRequest(
         plot: widget.plot,
         reason: selectedTypeOfIssue,
-        comments: commentsController.text,
+        comments:
+            commentsController.text.isEmpty ? null : commentsController.text,
       );
     }
   }
@@ -212,9 +216,9 @@ class _VisitRequestState extends State<VisitRequest> {
       body: requestBody,
     );
 
-    print('xxx: $apiUrl');
-    print('xxx: $requestBody');
-    print('xxx: ${jsonResponse.body}');
+    print('api response: $apiUrl');
+    print('api response: $requestBody');
+    print('api response: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
@@ -356,7 +360,6 @@ class _VisitRequestState extends State<VisitRequest> {
               index: 0,
               isIconVisible: false,
             ),
-            // PlotItem(index: 0, plot: widget.plot),
             const SizedBox(height: 10),
             mainSection(),
           ],
@@ -364,6 +367,210 @@ class _VisitRequestState extends State<VisitRequest> {
       ),
     );
   }
+/* 
+  void showSuccessDialog() {
+    double currentPositionDialog = 0;
+    Duration totalDurationDialog = Duration(seconds: _totalDuration2.toInt());
+    bool isPlayingDialog = false;
+    AudioPlayer audioPlayerDialog = AudioPlayer();
+
+    Future<void> playRecordingDialog() async {
+      await audioPlayerDialog.setFilePath(audioFilePath!);
+      _totalDuration2 = audioPlayerDialog.duration?.inSeconds.toDouble() ?? 0;
+      audioPlayerDialog.play();
+
+      audioPlayerDialog.positionStream.listen((position) {
+        setState(() {
+          currentPositionDialog = position.inSeconds.toDouble();
+        });
+      });
+      setState(() {
+        isPlayingDialog = true;
+      });
+    }
+
+    CommonStyles.errorDialog(
+      context,
+      errorMessage: 'errorMessage',
+      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
+      bodyBackgroundColor: Colors.white,
+      errorLabel: 'errorLabel',
+      errorMessageColor: Colors.orange,
+      errorBodyWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(tr(LocaleKeys.visit_success), style: CommonStyles.txSty_14p_f5),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Text(tr(LocaleKeys.issue_type),
+                    style: CommonStyles.txSty_14b_f5),
+              ),
+              const Expanded(
+                  flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
+              Expanded(
+                flex: 8,
+                child: Text('$selectedTypeOfIssue',
+                    style: CommonStyles.texthintstyle),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Text(tr(LocaleKeys.comments),
+                    style: CommonStyles.txSty_14b_f5),
+              ),
+              const Expanded(
+                  flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
+              Expanded(
+                flex: 8,
+                child: Text(commentsController.text,
+                    style: CommonStyles.texthintstyle),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const SizedBox(height: 20),
+          if (_images.isNotEmpty)
+            GridView.builder(
+              shrinkWrap: true,
+              itemCount: _images.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
+              itemBuilder: (context, index) {
+                return Image.memory(_images[index], fit: BoxFit.cover);
+              },
+            ),
+          const SizedBox(height: 10),
+          if (audioFilePath != null)
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(isPlayingDialog
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded),
+                  onPressed: !isPlayingDialog ? playRecordingDialog : null,
+                ),
+                Expanded(
+                  child: SeekBar(
+                    value: currentPositionDialog,
+                    progressColor: Colors.red,
+                              backgroundColor: Colors.white,
+                    min: 0,
+                    max: totalDurationDialog.inSeconds.toDouble(),
+                    onValueChanged: (value) {
+                      setState(() {
+                        currentPositionDialog = value.value;
+                      });
+                      audioPlayerDialog
+                          .seek(Duration(seconds: value.value.toInt()));
+                    },
+                  ),
+                ),
+                Text(_formatTime(currentPositionDialog.toInt())),
+              ],
+            ),
+        ],
+      ),
+    );
+
+/* 
+    CommonStyles.errorDialog(
+      context,
+      errorMessage: 'errorMessage',
+      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
+      bodyBackgroundColor: Colors.white,
+      errorLabel: 'errorLabel',
+      errorMessageColor: Colors.orange,
+      errorBodyWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(tr(LocaleKeys.visit_success),
+              style: CommonStyles.txSty_14p_f5),
+          const SizedBox(height: 20),
+          if (_images.isNotEmpty)
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.5,
+              ),
+              itemCount: _images.length,
+              itemBuilder: (context, index) {
+                Uint8List image = _images[index];
+                return Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: MemoryImage(image),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
+            ),
+          const SizedBox(height: 10),
+          if (audioFilePath != null)
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(isPlayingDialog
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded),
+                  onPressed: !isPlayingDialog ? playRecordingDialog : null,
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SeekBar(
+                          progressColor: Colors.red,
+                          backgroundColor: Colors.white,
+                          value: currentPositionDialog,
+                          min: 0,
+                          max: totalDurationDialog.inSeconds.toDouble(),
+                          onValueChanged: (value) {
+                            setState(() {
+                              currentPositionDialog = value.value;
+                            });
+                            audioPlayerDialog.seek(
+                              Duration(seconds: value.value.toInt()),
+                            );
+                          },
+                        ),
+                      ),
+                      Text(
+                        _formatTime(currentPositionDialog.toInt()),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+        ],
+      ),
+    );
+  */
+  }
+ */
 
   void showSuccessDialog() {
     CommonStyles.errorDialog(
@@ -374,96 +581,17 @@ class _VisitRequestState extends State<VisitRequest> {
       errorLabel: 'errorLabel',
       errorMessageColor: Colors.orange,
       onPressed: () {
-        /* Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        ); */
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (Route<dynamic> route) => false,
+        );
       },
-      errorBodyWidget: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(tr(LocaleKeys.visit_success),
-                style: CommonStyles.txSty_14p_f5),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Text(tr(LocaleKeys.issue_type),
-                      style: CommonStyles.txSty_14b_f5),
-                ),
-                const Expanded(
-                    flex: 1,
-                    child: Text(':', style: CommonStyles.txSty_14b_f5)),
-                Expanded(
-                  flex: 5,
-                  child: Text('$selectedTypeOfIssue',
-                      style: CommonStyles.texthintstyle),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: Text(tr(LocaleKeys.issue_type),
-                      style: CommonStyles.txSty_14b_f5),
-                ),
-                const Expanded(
-                    flex: 1,
-                    child: Text(':', style: CommonStyles.txSty_14b_f5)),
-                Expanded(
-                  flex: 5,
-                  child: Text(commentsController.text,
-                      style: CommonStyles.texthintstyle),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            //MARK: GridView
-            if (_images.isNotEmpty)
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.5,
-                ),
-                itemCount: _images.length,
-                itemBuilder: (context, index) {
-                  Uint8List image = _images[index];
-                  return Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      image: DecorationImage(
-                        image: MemoryImage(image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            const SizedBox(
-              height: 10,
-            ),
-            if (_images.isNotEmpty) const SizedBox(),
-          ],
-        ),
+      errorBodyWidget: SuccessDialog(
+        images: _images,
+        audioFilePath: audioFilePath,
+        comments: commentsController.text,
+        selectedTypeOfIssue: selectedTypeOfIssue,
       ),
     );
   }
@@ -595,12 +723,17 @@ class _VisitRequestState extends State<VisitRequest> {
                   ],
                 ),
               ),
-              const SizedBox(height: 5),
+              // const SizedBox(height: 5),
               GestureDetector(
                 onTap: () {
                   mobileImagePicker(context);
                 },
-                child: Container(
+                child: Image.asset(
+                  Assets.images.icAdd.path,
+                  width: 100,
+                ),
+
+                /*  Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -612,7 +745,7 @@ class _VisitRequestState extends State<VisitRequest> {
                     size: 40,
                     color: Colors.black54,
                   ),
-                ),
+                ), */
               ),
               const SizedBox(height: 5),
               _images.isEmpty
@@ -668,6 +801,24 @@ class _VisitRequestState extends State<VisitRequest> {
                       }).toList(),
                     ),
               const SizedBox(height: 10),
+              //MARK: Audio
+              RichText(
+                text: TextSpan(
+                  text: tr(LocaleKeys.record),
+                  style: CommonStyles.txSty_16w_fb,
+                  children: const <TextSpan>[
+                    TextSpan(
+                      text: ' *',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              ),
+              if (_isRecording)
+                Text(
+                  'Recording... ${_formatTime(_recordedSeconds)}',
+                  style: CommonStyles.txSty_14p_f5,
+                ),
               if (isAudioRecorded)
                 Row(
                   children: [
@@ -675,56 +826,52 @@ class _VisitRequestState extends State<VisitRequest> {
                       icon: const Icon(Icons.play_arrow_rounded),
                       onPressed: !_isRecording ? _playRecording : null,
                     ),
-                    if (_totalDuration > 0)
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: SeekBar(
-                                progressColor: Colors.red,
-                                backgroundColor: Colors.white,
-                                value: _currentPosition,
-                                min: 0,
-                                max: _totalDuration,
-                                onValueChanged: (value) {
-                                  setState(() {
-                                    _currentPosition = value.value;
-                                  });
-                                  _audioPlayer.seek(
-                                    Duration(seconds: value.value.toInt()),
-                                  );
-                                },
-                              ),
+                    // if (_totalDuration > 0)
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: SeekBar(
+                              progressColor: Colors.red,
+                              backgroundColor: Colors.white,
+                              value: _currentPosition,
+                              min: 0,
+                              max: _totalDuration,
+                              onValueChanged: (value) {
+                                setState(() {
+                                  _currentPosition = value.value;
+                                });
+                                _audioPlayer.seek(
+                                  Duration(seconds: value.value.toInt()),
+                                );
+                              },
                             ),
-                            Text(
-                              _formatTime(_currentPosition.toInt()),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            _formatTime(_currentPosition.toInt()),
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ],
                       ),
-                    const SizedBox(width: 10),
+                    ),
                   ],
                 ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(
-                    icon: Icon(
-                      _isRecording ? Icons.pause : Icons.mic,
-                      size: 100,
-                      color: _isRecording ? Colors.red : Colors.blue,
+                    icon: Image.asset(
+                      _isRecording
+                          ? Assets.images.icPause.path
+                          : Assets.images.icMicrophone.path,
+                      width: 100,
                     ),
                     onPressed: _isRecording ? _stopRecording : _startRecording,
                   ),
                 ],
               ),
-              if (_isRecording)
-                Text(
-                  'Recording... ${_formatTime(_recordedSeconds)}',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              const SizedBox(height: 30),
+
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -734,30 +881,6 @@ class _VisitRequestState extends State<VisitRequest> {
                   ),
                 ],
               ),
-
-              /* ElevatedButton(
-                onPressed: () {
-                  if (_images.isEmpty) {
-                    isImageList = true;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          tr(LocaleKeys.select_product_toast),
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    isImageList = false;
-                  }
-                  setState(() {});
-                },
-                child: Text(
-                  tr(LocaleKeys.submit_req),
-                ),
-              ), */
               const SizedBox(height: 20),
             ],
           ),
@@ -772,6 +895,247 @@ class _VisitRequestState extends State<VisitRequest> {
       borderSide: BorderSide(
         color: Colors.white,
       ),
+    );
+  }
+}
+
+class SuccessDialog extends StatefulWidget {
+  final List<Uint8List> images;
+  final String? audioFilePath;
+  final String? comments;
+  final String? selectedTypeOfIssue;
+
+  const SuccessDialog({
+    super.key,
+    required this.images,
+    required this.audioFilePath,
+    required this.comments,
+    required this.selectedTypeOfIssue,
+  });
+
+  @override
+  State<SuccessDialog> createState() => _SuccessDialogState();
+}
+
+class _SuccessDialogState extends State<SuccessDialog> {
+  double currentPositionDialog = 0;
+  double totalDurationDialog = 0;
+  bool isPlayingDialog = false;
+  AudioPlayer audioPlayerDialog = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.audioFilePath != null) {
+      _initAudio();
+    }
+  }
+
+  Future<void> _initAudio() async {
+    await audioPlayerDialog.setFilePath(widget.audioFilePath!);
+    audioPlayerDialog.durationStream.listen((duration) {
+      setState(() {
+        totalDurationDialog = duration!.inSeconds.toDouble();
+      });
+    });
+
+    audioPlayerDialog.positionStream.listen((position) {
+      setState(() {
+        currentPositionDialog = position.inSeconds.toDouble();
+      });
+    });
+  }
+
+  Future<void> playRecordingDialog() async {
+    if (!isPlayingDialog) {
+      await audioPlayerDialog.play();
+      setState(() {
+        isPlayingDialog = true;
+      });
+    } else {
+      await audioPlayerDialog.pause();
+      setState(() {
+        isPlayingDialog = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    audioPlayerDialog.dispose();
+    super.dispose();
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = (seconds / 60).floor();
+    final remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+// dialogTemplate()
+  @override
+  Widget build(BuildContext context) {
+    return dialogTemplate();
+/* 
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      title:
+          Text(tr(LocaleKeys.visit_success), style: CommonStyles.txSty_14p_f5),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 20),
+          if (widget.images.isNotEmpty)
+            GridView.builder(
+              shrinkWrap: true,
+              itemCount: widget.images.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3),
+              itemBuilder: (context, index) {
+                return Image.memory(widget.images[index], fit: BoxFit.cover);
+              },
+            ),
+          const SizedBox(height: 10),
+          if (widget.audioFilePath != null)
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isPlayingDialog
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
+                  ),
+                  onPressed: playRecordingDialog,
+                ),
+                Expanded(
+                  child: SeekBar(
+                    value: currentPositionDialog,
+                    progressColor: Colors.green,
+                    backgroundColor: Colors.grey.shade300,
+                    min: 0,
+                    max: totalDurationDialog,
+                    onValueChanged: (value) {
+                      setState(() {
+                        currentPositionDialog = value.value;
+                      });
+                      audioPlayerDialog
+                          .seek(Duration(seconds: value.value.toInt()));
+                    },
+                  ),
+                ),
+                Text(_formatTime(currentPositionDialog.toInt())),
+              ],
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(tr(LocaleKeys.ok)),
+        ),
+      ],
+    );
+  */
+  }
+
+  Column dialogTemplate() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(tr(LocaleKeys.visit_success), style: CommonStyles.txSty_14p_f5),
+        const SizedBox(height: 20),
+        if (widget.selectedTypeOfIssue != null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Text(tr(LocaleKeys.issue_type),
+                    style: CommonStyles.txSty_14b_f5),
+              ),
+              const Expanded(
+                  flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
+              Expanded(
+                flex: 7,
+                child: Text('${widget.selectedTypeOfIssue}',
+                    style: CommonStyles.texthintstyle),
+              ),
+            ],
+          ),
+        if (widget.comments != null)
+          Column(
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(tr(LocaleKeys.comments),
+                        style: CommonStyles.txSty_14b_f5),
+                  ),
+                  const Expanded(
+                      flex: 1,
+                      child: Text(':', style: CommonStyles.txSty_14b_f5)),
+                  Expanded(
+                    flex: 7,
+                    child: Text('${widget.comments}',
+                        style: CommonStyles.texthintstyle),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        const SizedBox(
+          height: 10,
+        ),
+        if (widget.images.isNotEmpty)
+          GridView.builder(
+            shrinkWrap: true,
+            itemCount: widget.images.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3),
+            itemBuilder: (context, index) {
+              return Image.memory(widget.images[index], fit: BoxFit.cover);
+            },
+          ),
+        const SizedBox(height: 10),
+        if (widget.audioFilePath != null)
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  isPlayingDialog
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
+                ),
+                onPressed: playRecordingDialog,
+              ),
+              Expanded(
+                child: SeekBar(
+                  value: currentPositionDialog,
+                  progressColor: Colors.red,
+                  backgroundColor: Colors.grey.shade300,
+                  min: 0,
+                  max: totalDurationDialog,
+                  onValueChanged: (value) {
+                    setState(() {
+                      currentPositionDialog = value.value;
+                    });
+                    audioPlayerDialog
+                        .seek(Duration(seconds: value.value.toInt()));
+                  },
+                ),
+              ),
+              Text(_formatTime(currentPositionDialog.toInt())),
+            ],
+          ),
+      ],
     );
   }
 }
