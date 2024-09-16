@@ -1,0 +1,430 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:akshaya_flutter/common_utils/api_config.dart';
+import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/common_utils/shimmer.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/models/view_visit_model.dart';
+import 'package:akshaya_flutter/models/view_visit_more_details_model.dart';
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:shimmer/shimmer.dart';
+
+class ViewVisitRequests extends StatefulWidget {
+  const ViewVisitRequests({super.key});
+
+  @override
+  State<ViewVisitRequests> createState() => _ViewVisitRequestsState();
+}
+
+class _ViewVisitRequestsState extends State<ViewVisitRequests> {
+  late Future<List<ViewVisitModel>> futureVisitRequest;
+
+  double currentPositionDialog = 0;
+  double totalDurationDialog = 0;
+  bool isPlayingDialog = false;
+  AudioPlayer audioPlayerDialog = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    futureVisitRequest = getVisitRequest();
+  }
+
+  Future<List<ViewVisitModel>> getVisitRequest() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
+    const apiUrl = '$baseUrl$getVisitRequestDetails';
+    final requestBody = jsonEncode({
+      "farmerCode": farmerCode,
+      "fromDate": null,
+      "toDate": null,
+      "userId": null,
+      "stateCode": null
+    });
+    final jsonResponse = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    if (jsonResponse.statusCode == 200) {
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['listResult'] != null) {
+        List<dynamic> list = response['listResult'];
+        return list.map((item) => ViewVisitModel.fromJson(item)).toList();
+      } else {
+        throw Exception('No visit request found');
+      }
+    } else {
+      throw Exception('Request failed with status: ${jsonResponse.statusCode}');
+    }
+  }
+
+  Future<List<ViewVisitMoreDetailsModel>> getVisitRequestMoreDetails(
+      String? requestId) async {
+    final apiUrl = '$baseUrl$getVisitRequestCompleteDetails$requestId';
+
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
+    print('bbb: $apiUrl');
+    print('bbb: ${jsonResponse.body}');
+
+    if (jsonResponse.statusCode == 200) {
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['listResult'] != null) {
+        List<dynamic> list = response['listResult'];
+        return list
+            .map((item) => ViewVisitMoreDetailsModel.fromJson(item))
+            .toList();
+      } else {
+        throw Exception('No visit request found');
+      }
+    } else {
+      throw Exception('Request failed with status: ${jsonResponse.statusCode}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+          title: tr(LocaleKeys.req_visit), actionIcon: const SizedBox()),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 10),
+        child: FutureBuilder(
+          future: futureVisitRequest,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return shimmerLoading();
+            } else if (snapshot.hasError) {
+              return Text(
+                  snapshot.error.toString().replaceFirst('Exception: ', ''));
+            } else {
+              final visitRequests = snapshot.data as List<ViewVisitModel>;
+              return ListView.builder(
+                itemCount: visitRequests.length,
+                itemBuilder: (context, index) {
+                  final request = visitRequests[index];
+
+                  return visitRequest(
+                    index,
+                    request,
+                    onPressed: () {
+                      getVisitRequestMoreDetails(request.requestCode)
+                          .then((value) {
+                        List<ViewVisitMoreDetailsModel> imageList = value
+                            .where((element) => element.fileTypeId == 36)
+                            .toList();
+                        List<ViewVisitMoreDetailsModel> audioList = value
+                            .where((element) => element.fileTypeId == 37)
+                            .toList();
+
+                        if (value.isNotEmpty) {
+                          CommonStyles.errorDialog(
+                            context,
+                            errorMessage: 'errorMessage',
+                            isHeader: false,
+                            bodyBackgroundColor: Colors.white,
+                            errorMessageColor: Colors.orange,
+                            errorBodyWidget: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (audioList.isNotEmpty)
+                                  MoreDetails(
+                                    imagesList: imageList,
+                                    audioFilePath: audioList[0].fileLocation,
+                                  )
+                              ],
+                            ),
+                          );
+                          /* showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: MoreDetails(
+                                  imagesList: imageList, // Your images list
+                                  audioFilePath:
+                                      'https://webaudioapi.com/samples/audio-tag/chrono.mp3', // Your audio URL
+                                ),
+                              );
+                            },
+                          ); */
+                        }
+                      });
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget shimmerLoading() {
+    return ShimmerWid(
+      child: Container(
+        width: double.infinity,
+        height: 120.0,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  Container visitRequest(int index, ViewVisitModel visitRequest,
+      {void Function()? onPressed}) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: index.isEven ? Colors.transparent : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        children: [
+          plotDetailBox(
+              label: tr(LocaleKeys.requestCodeLabel),
+              data: '${visitRequest.requestCode}',
+              dataTextColor: CommonStyles.primaryTextColor),
+          plotDetailBox(
+              label: tr(LocaleKeys.plot_code),
+              data: '${visitRequest.plotCode}'),
+          plotDetailBox(
+              label: tr(LocaleKeys.plot_size),
+              data: '${visitRequest.palmArea}'),
+          plotDetailBox(
+              label: tr(LocaleKeys.village),
+              data: '${visitRequest.plotVillage}'),
+          plotDetailBox(
+              label: tr(LocaleKeys.req_date),
+              data: '${visitRequest.reqCreatedDate}'),
+          plotDetailBox(
+              label: tr(LocaleKeys.status), data: '${visitRequest.statusType}'),
+          const SizedBox(height: 5),
+          CustomBtn(
+            label: tr(LocaleKeys.complete_details),
+            borderColor: Colors.transparent,
+            borderRadius: 4,
+            onPressed: onPressed,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget plotDetailBox(
+      {required String label, required String data, Color? dataTextColor}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              flex: 5,
+              child: Text(
+                label,
+                style: CommonStyles.txSty_14b_f5,
+              ),
+            ),
+            Expanded(
+                flex: 6,
+                child: Text(
+                  data,
+                  style: CommonStyles.txF14Fw5Cb.copyWith(
+                    color: dataTextColor,
+                  ),
+                )),
+          ],
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+}
+
+class MoreDetails extends StatefulWidget {
+  final List<ViewVisitMoreDetailsModel> imagesList;
+  final String? audioFilePath;
+
+  const MoreDetails({
+    super.key,
+    required this.imagesList,
+    this.audioFilePath,
+  });
+
+  @override
+  State<MoreDetails> createState() => _MoreDetailsState();
+}
+
+class _MoreDetailsState extends State<MoreDetails> {
+  AudioPlayer audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  double currentPosition = 0;
+  double totalDuration = 0;
+  StreamSubscription<Duration>? _durationSubscription;
+  StreamSubscription<Duration>? _positionSubscription;
+  StreamSubscription<void>? _completeSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.audioFilePath != null) {
+      _initAudio();
+    }
+  }
+
+  Future<void> _initAudio() async {
+    await audioPlayer.setSourceUrl(widget.audioFilePath!);
+
+/*     audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          isPlaying = state == PlayerState.playing;
+        });
+      }
+    }); */
+
+    _durationSubscription = audioPlayer.onDurationChanged.listen((duration) {
+      if (mounted) {
+        setState(() {
+          totalDuration = duration.inSeconds.toDouble();
+        });
+      }
+    });
+
+    _positionSubscription = audioPlayer.onPositionChanged.listen((position) {
+      if (mounted) {
+        setState(() {
+          currentPosition = position.inSeconds.toDouble();
+        });
+      }
+    });
+
+    _completeSubscription = audioPlayer.onPlayerComplete.listen((event) {
+      if (mounted) {
+        setState(() {
+          isPlaying = false;
+          currentPosition = 0;
+        });
+      }
+    });
+  }
+
+  Future<void> playOrPause() async {
+    if (isPlaying) {
+      await audioPlayer.pause();
+    } else {
+      await audioPlayer.play(UrlSource(widget.audioFilePath!));
+    }
+    if (mounted) {
+      setState(() {
+        isPlaying = !isPlaying;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _durationSubscription?.cancel();
+    _positionSubscription?.cancel();
+    _completeSubscription?.cancel();
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  String formatTime(int seconds) {
+    final minutes = (seconds / 60).floor();
+    final remainingSeconds = seconds % 60;
+    return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (widget.imagesList.isNotEmpty)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: widget.imagesList.map((image) {
+                return Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: image.fileLocation!,
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      Assets.images.icLogo.path,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          const SizedBox(height: 10),
+          if (widget.audioFilePath != null)
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_filled,
+                  ),
+                  onPressed: playOrPause,
+                ),
+                if (totalDuration > 0)
+                  Expanded(
+                    child: Slider(
+                      value: currentPosition,
+                      min: 0,
+                      max: totalDuration,
+                      activeColor: CommonStyles.primaryTextColor,
+                      onChanged: (value) {
+                        setState(() {
+                          currentPosition = value;
+                        });
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
+                      },
+                    ),
+                  ),
+                Text(formatTime(currentPosition.toInt())),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLabourRequestScreen.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLoanRequestScreen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_loan_requests.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_visit_requests.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -49,7 +51,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
             .where((serviceTypeId) => serviceTypeId != 108)
             .map((id) => id!)
             .toList();
-        print('serviceTypeIds: $serviceTypeIds');
         return serviceTypeIds;
       } else {
         throw Exception('Failed to get learning data');
@@ -69,12 +70,20 @@ class _RequestsScreenState extends State<RequestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CommonStyles.primaryColor,
-      body:
-      FutureBuilder(
+      body: FutureBuilder(
         future: servicesData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const ShimmerWid();
+            return ShimmerWid(
+              child: Container(
+                width: double.infinity,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -92,9 +101,10 @@ class _RequestsScreenState extends State<RequestsScreen> {
       ),
     );
   }
+
   Widget serviceListItem(int serviceTypeId) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0,2,0,2),
+      padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
       //  margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey, width: 0.8),
@@ -147,28 +157,24 @@ class _RequestsScreenState extends State<RequestsScreen> {
             case 13: // Quick Pay Request
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  viewQuickPayScreen()),
+                MaterialPageRoute(builder: (context) => viewQuickPayScreen()),
               );
-              //   showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
-
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => PdfWebView(pdfUrl: 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf'),
-              //   ),
-              // );
-
+            case 14: // Visit Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ViewVisitRequests(),
+                ),
+              );
               break;
             case 28: // Loan Request
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>  viewLoanRequestScreen(
-
-                    )),
+                    builder: (context) => const ViewLoanRequests()),
               );
               break;
-          /*   case 108: // Transport Request
+            /*   case 108: // Transport Request
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -186,7 +192,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
             case 11: // Pole Request
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => viewLabourRequestScreen()),
+                MaterialPageRoute(
+                    builder: (context) => viewLabourRequestScreen()),
               );
               break;
 
@@ -251,4 +258,3 @@ class _RequestsScreenState extends State<RequestsScreen> {
     }
   }
 }
-

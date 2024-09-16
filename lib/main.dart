@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
           selectionColor: Colors.blue.withOpacity(0.3),
           selectionHandleColor: CommonStyles.primaryTextColor,
         ),
-        checkboxTheme: CheckboxThemeData(
+        /*  checkboxTheme: CheckboxThemeData(
           fillColor: WidgetStateProperty.all(CommonStyles.primaryTextColor),
-        ),
+        ), */
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: CommonStyles.primaryTextColor,
         ),

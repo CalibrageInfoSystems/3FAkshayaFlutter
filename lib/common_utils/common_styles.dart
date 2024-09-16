@@ -482,6 +482,7 @@ class CommonStyles {
 
   static void errorDialog(
     BuildContext context, {
+    bool isHeader = true,
     Widget? errorIcon,
     String? errorLabel,
     Color? errorHeaderColor = const Color(0xffc93436),
@@ -510,20 +511,21 @@ class CommonStyles {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                        height: 50,
-                        alignment: Alignment.center,
-                        color: errorHeaderColor,
-                        child: errorIcon ??
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.close, color: Colors.white),
-                                const SizedBox(width: 7),
-                                Text(tr(LocaleKeys.error),
-                                    style: CommonStyles.txSty_16w_fb),
-                              ],
-                            )),
+                    if (isHeader)
+                      Container(
+                          height: 50,
+                          alignment: Alignment.center,
+                          color: errorHeaderColor,
+                          child: errorIcon ??
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.close, color: Colors.white),
+                                  const SizedBox(width: 7),
+                                  Text(tr(LocaleKeys.error),
+                                      style: CommonStyles.txSty_16w_fb),
+                                ],
+                              )),
                     Container(
                       alignment: Alignment.center,
                       padding: const EdgeInsets.all(12.0),

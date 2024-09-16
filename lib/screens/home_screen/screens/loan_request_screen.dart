@@ -251,7 +251,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
               ),
             ),
             Container(
-              height: size.height * 0.5,
+              // height: size.height * 0.5,
               padding: const EdgeInsets.all(12),
               color: CommonStyles.whiteColor,
               alignment: Alignment.center,
@@ -310,7 +310,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
               Expanded(
                 flex: 6,
                 child: Text(tr(LocaleKeys.loan_amount),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txSty_14p_f5),
               ),
               const Expanded(
                   flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
@@ -335,7 +335,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     ),
                     const Expanded(
                         flex: 1,
-                        child: Text(':', style: CommonStyles.txSty_14p_f5)),
+                        child: Text(':', style: CommonStyles.txSty_14b_f5)),
                     Expanded(
                       flex: 5,
                       child: Text(_reasonController.text,

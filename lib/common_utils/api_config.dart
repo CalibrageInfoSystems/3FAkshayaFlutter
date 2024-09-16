@@ -37,6 +37,9 @@ const productsubRequest = 'FertilizerRequest';
 
 const typeOfIssues = 'TypeCdDmt/';
 const visitRequest = 'RequestHeader/AddVisitRequest';
+const getVisitRequestDetails = 'RequestHeader/GetVisitRequestDetails';
+const getVisitRequestCompleteDetails =
+    'RequestHeader/GetVisitRequestRepository/';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
