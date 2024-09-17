@@ -4,7 +4,7 @@ class ViewLoanRequest {
   final String? farmerCode;
   final String? stateName;
   final String? reqCreatedDate;
-  final int? totalCost;
+  final double? totalCost;
   final String? comments;
   final String? createdBy;
 

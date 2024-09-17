@@ -19,10 +19,10 @@ class CollectionCenterCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: CommonStyles.whiteColor,
           borderRadius: BorderRadius.circular(5.0),
         ),
-        margin: const EdgeInsets.only(bottom: 10),
+        margin: const EdgeInsets.only(bottom: 5),
         child: Row(
           children: [
             Expanded(
@@ -30,6 +30,8 @@ class CollectionCenterCard extends StatelessWidget {
               child: Image.asset(
                 imagePath,
                 fit: BoxFit.contain,
+                width: 50,
+                height: 70,
               ),
             ),
             const SizedBox(width: 10),
@@ -39,10 +41,13 @@ class CollectionCenterCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${data.collectionCenter}',
-                      style: CommonStyles.txSty_14b_f5),
-                  const Divider(),
+                      style: CommonStyles.txStyF14CbFF6),
+                  const Divider(
+                    color: CommonStyles.primaryTextColor,
+                    thickness: 0.3,
+                  ),
                   contentBox(
-                    label:  tr(LocaleKeys.village),
+                    label: tr(LocaleKeys.village),
                     data: '${data.villageName}',
                   ),
                   contentBox(
@@ -50,7 +55,7 @@ class CollectionCenterCard extends StatelessWidget {
                     data: '${data.mandalName}',
                   ),
                   contentBox(
-                    label:  tr(LocaleKeys.dist),
+                    label: tr(LocaleKeys.dist),
                     data: '${data.districtName}',
                   ),
                   GestureDetector(
@@ -61,8 +66,9 @@ class CollectionCenterCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                         Text( tr(LocaleKeys.view_in_map),
+                        Text(tr(LocaleKeys.view_in_map),
                             style: CommonStyles.txSty_12b_f5),
+                        const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
                           height: 30,
@@ -86,14 +92,21 @@ class CollectionCenterCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 4, child: Text(label, style: CommonStyles.txSty_12b_f5)),
+                flex: 3, child: Text(label, style: CommonStyles.txStyF12CbFF6)),
             const Text(':  '),
             Expanded(
-                flex: 6,
-                child: Text('$data', style: CommonStyles.txSty_12b_f5)),
+              flex: 7,
+              child: Text('$data',
+                  style: CommonStyles.txStyF12CbFF6,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis),
+            ),
           ],
         ),
-        const Divider(),
+        const Divider(
+          color: CommonStyles.primaryTextColor,
+          thickness: 0.3,
+        ),
       ],
     );
   }

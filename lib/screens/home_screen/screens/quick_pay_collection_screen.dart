@@ -36,13 +36,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   String? statecode;
   bool isChecked = false;
 
-  SignatureController? controller;
+  SignatureController? signatureController;
   Uint8List? signature;
 
   @override
   void initState() {
     super.initState();
-    controller = SignatureController(penStrokeWidth: 2, penColor: Colors.black);
+    signatureController =
+        SignatureController(penStrokeWidth: 2, penColor: Colors.black);
 
     collectionDetailsData = getCollectionDetails();
   }
@@ -115,7 +116,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     required double? quantity,
     required String? stateCode,
   }) async {
-    final apiUrl = '$baseUrl$quickPayRequest';
+    const apiUrl = '$baseUrl$quickPayRequest';
     final requestBody = jsonEncode({
       "districtId": districtId,
       "docDate": docDate,
@@ -153,7 +154,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
     String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    final apiUrl = '$baseUrl$addQuickpayRequest';
+    const apiUrl = '$baseUrl$addQuickpayRequest';
     final requestBody = jsonEncode({
       "closingBalance": collections[0].dues,
       "clusterId": farmerData.clusterId,
@@ -200,12 +201,12 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
       if (response['isSuccess']) {
         showPdfDialog(context, response['result']);
-       // showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
-       //  ScaffoldMessenger.of(context).showSnackBar(
-       //    const SnackBar(
-       //      content: Text('Request submitted successfully'),
-       //    ),
-       //  );
+        // showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
+        //  ScaffoldMessenger.of(context).showSnackBar(
+        //    const SnackBar(
+        //      content: Text('Request submitted successfully'),
+        //    ),
+        //  );
         print('result: ${response['result']}');
         return response['result'];
       } else {
@@ -474,24 +475,11 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         const SizedBox(height: 5),
         CustomBtn(
           label: 'Confirm Request',
-          onPressed: () {
-            test();
-          },
+          onPressed: () => processRequest(),
           // onPressed: processRequest,
         ),
       ],
     );
-  }
-
-  void test() {
-    CommonStyles.customDialog(
-        context,
-        Container(
-          width: 200,
-          height: 200,
-          color: Colors.blue,
-          child: const Text('Test'),
-        ));
   }
 
   //MARK: loadPdf
@@ -542,7 +530,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     style: CommonStyles.txSty_16b_fb),
                 GestureDetector(
                     onTap: () {
-                      controller?.clear();
+                      signatureController?.clear();
                     },
                     child:
                         const Text('Clear', style: CommonStyles.txSty_16p_fb)),
@@ -553,7 +541,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 // width: 300,
                 height: 200,
                 backgroundColor: Colors.white,
-                controller: controller!,
+                controller: signatureController!,
               ),
             ),
             Row(
@@ -562,7 +550,8 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 CustomBtn(
                   label: 'Ok',
                   onPressed: () async {
-                    Uint8List? signatureBytes = await controller?.toPngBytes();
+                    Uint8List? signatureBytes =
+                        await signatureController?.toPngBytes();
                     if (signatureBytes != null) {
                       String base64Signature = base64Encode(signatureBytes);
                       collectionDetailsData.then(
@@ -639,7 +628,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 class PdfViewerPopup extends StatefulWidget {
   final String pdfUrl;
 
-  PdfViewerPopup({required this.pdfUrl});
+  const PdfViewerPopup({super.key, required this.pdfUrl});
 
   @override
   _PdfViewerPopupState createState() => _PdfViewerPopupState();
@@ -664,7 +653,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
         ),
       )
       ..loadRequest(Uri.parse(
-          "https://docs.google.com/gview?embedded=true&url=" + widget.pdfUrl));
+          "https://docs.google.com/gview?embedded=true&url=${widget.pdfUrl}"));
   }
 
   @override
@@ -677,10 +666,10 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
         children: <Widget>[
           // Header
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             color: Colors.red,
             width: double.infinity,
-            child: Center(
+            child: const Center(
               child: Text(
                 'QuickPay Request PDF',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -692,8 +681,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
             child: Stack(
               children: [
                 WebViewWidget(controller: _controller),
-                if (isLoading)
-                  Center(child: CircularProgressIndicator()),
+                if (isLoading) const Center(child: CircularProgressIndicator()),
               ],
             ),
           ),
@@ -702,12 +690,13 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 50), // Full width button
+                minimumSize:
+                    const Size(double.infinity, 50), // Full width button
               ),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ),
         ],

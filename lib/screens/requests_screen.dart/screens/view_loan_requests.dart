@@ -32,7 +32,7 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
   Future<List<ViewLoanRequest>> getLoanRequest() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
-    const apiUrl = '$baseUrl$getVisitRequestDetails';
+    const apiUrl = '$baseUrl$getLoanRequestDetails';
     final requestBody = jsonEncode({
       "farmerCode": farmerCode,
       "fromDate": null,
@@ -66,10 +66,6 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
     return Scaffold(
       appBar: CustomAppBar(
           title: tr(LocaleKeys.Loan_req), actionIcon: const SizedBox()),
-      body: const Center(
-        child: Text('View Loan Requests'),
-      ),
-      /* 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 10),
         child: FutureBuilder(
@@ -90,48 +86,28 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                   return visitRequest(
                     index,
                     request,
-                    onPressed: () {
-                      getVisitRequestMoreDetails(request.requestCode)
-                          .then((value) {
-                        List<ViewVisitMoreDetailsModel> imageList = value
-                            .where((element) => element.fileTypeId == 36)
-                            .toList();
-                        List<ViewVisitMoreDetailsModel> audioList = value
-                            .where((element) => element.fileTypeId == 37)
-                            .toList();
-
-                        if (value.isNotEmpty) {
-                          CommonStyles.errorDialog(
-                            context,
-                            errorMessage: 'errorMessage',
-                            isHeader: false,
-                            bodyBackgroundColor: Colors.white,
-                            errorMessageColor: Colors.orange,
-                            errorBodyWidget: Column(
-                              mainAxisSize: MainAxisSize.min,
+                    viewMoreDetails: () {
+                      CommonStyles.errorDialog(
+                        context,
+                        errorHeaderColor: Colors.transparent,
+                        bodyBackgroundColor: Colors.transparent,
+                        isHeader: false,
+                        errorMessage: '',
+                        errorBodyWidget: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(tr(LocaleKeys.comments),
+                                style: CommonStyles.txSty_16p_fb),
+                            const SizedBox(height: 10),
+                            Row(
                               children: [
-                                if (audioList.isNotEmpty)
-                                  MoreDetails(
-                                    imagesList: imageList,
-                                    audioFilePath: audioList[0].fileLocation,
-                                  )
+                                Text('${request.comments}',
+                                    style: CommonStyles.txSty_14b_f5),
                               ],
                             ),
-                          );
-                          /* showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: MoreDetails(
-                                  imagesList: imageList, // Your images list
-                                  audioFilePath:
-                                      'https://webaudioapi.com/samples/audio-tag/chrono.mp3', // Your audio URL
-                                ),
-                              );
-                            },
-                          ); */
-                        }
-                      });
+                          ],
+                        ),
+                      );
                     },
                   );
                 },
@@ -140,7 +116,6 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
           },
         ),
       ),
-    */
     );
   }
 
@@ -157,8 +132,8 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
     );
   }
 
-  Container visitRequest(int index, ViewLoanRequest visitLoan,
-      {void Function()? onPressed}) {
+  Container visitRequest(int index, ViewLoanRequest loanRequest,
+      {void Function()? viewMoreDetails}) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -167,34 +142,35 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
       margin: const EdgeInsets.only(bottom: 10),
       child: Column(
         children: [
-          /*  plotDetailBox(
+          plotDetailBox(
               label: tr(LocaleKeys.requestCodeLabel),
-              data: '${visitLoan.requestCode}',
+              data: '${loanRequest.requestCode}',
               dataTextColor: CommonStyles.primaryTextColor),
           plotDetailBox(
-              label: tr(LocaleKeys.plot_code),
-              data: '${visitLoan.plotCode}'),
-          plotDetailBox(
-              label: tr(LocaleKeys.plot_size),
-              data: '${visitLoan.palmArea}'),
-          plotDetailBox(
-              label: tr(LocaleKeys.village),
-              data: '${visitLoan.plotVillage}'),
-          plotDetailBox(
               label: tr(LocaleKeys.req_date),
-              data: '${visitLoan.reqCreatedDate}'),
+              data: '${formatDate(loanRequest.reqCreatedDate)}'),
           plotDetailBox(
-              label: tr(LocaleKeys.status), data: '${visitLoan.statusType}'), */
+              label: tr(LocaleKeys.total_amt),
+              data: '${loanRequest.totalCost}'),
           const SizedBox(height: 5),
           CustomBtn(
             label: tr(LocaleKeys.complete_details),
             borderColor: Colors.transparent,
             borderRadius: 4,
-            onPressed: onPressed,
+            onPressed: viewMoreDetails,
           ),
         ],
       ),
     );
+  }
+
+  String? formatDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+
+    DateTime parsedDate = DateTime.parse(dateString);
+    return DateFormat('dd-MM-yyyy').format(parsedDate);
   }
 
   Widget plotDetailBox(

@@ -112,7 +112,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Colors.greenAccent,
+                        color: CommonStyles.noteColor,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

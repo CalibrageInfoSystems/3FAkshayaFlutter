@@ -20,31 +20,35 @@ class ImportantContactsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
             Image.asset(Assets.images.icImpContacts.path),
             const SizedBox(height: 10),
-             Text(tr(LocaleKeys.important_contacts), style: CommonStyles.txSty_16p_fb),
+            Text(tr(LocaleKeys.important_contacts),
+                style: CommonStyles.txStyF14CbFF6
+                    .copyWith(color: CommonStyles.primaryTextColor)),
             const SizedBox(height: 20),
-            contactForm(label:tr(LocaleKeys.officer_name), data: data.clusterOfficerName ?? 'N/A'),
+            contactForm(
+                label: tr(LocaleKeys.officer_name),
+                data: data.clusterOfficerName ?? 'N/A'),
             contactFormclick(
                 label: tr(LocaleKeys.officer_mobile),
                 data: data.clusterOfficerContactNumber ?? 'N/A',
                 datatextColor: Colors.green),
             contactForm(
                 label: tr(LocaleKeys.manager_name),
-
                 data: data.clusterOfficerManagerName ?? 'N/A'),
             contactFormclick(
                 label: tr(LocaleKeys.manager_num),
                 data: data.clusterOfficerManagerContactNumber ?? 'N/A',
                 datatextColor: Colors.green),
-            contactForm(label: tr(LocaleKeys.head_name), data: data.stateHeadName ?? 'N/A'),
+            contactForm(
+                label: tr(LocaleKeys.head_name),
+                data: data.stateHeadName ?? 'N/A'),
             contactFormclick(
                 label: tr(LocaleKeys.customer_care),
                 data: '040 23324733',
                 datatextColor: Colors.green),
             contactFormWhatsAppclick(
-                label:tr(LocaleKeys.whats_number),
+                label: tr(LocaleKeys.whats_number),
                 data: '9515103107',
                 datatextColor: Colors.green),
           ],
@@ -60,13 +64,13 @@ class ImportantContactsScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-                flex: 7, child: Text(label, style: CommonStyles.txSty_14b_fb)),
-            const Text(':  '),
+                flex: 7, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
+            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
             Expanded(
               flex: 4,
               child: Text(
                 '$data',
-                style: CommonStyles.txSty_14b_fb.copyWith(
+                style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: datatextColor,
                 ),
               ),
@@ -85,8 +89,11 @@ class ImportantContactsScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-                flex: 7, child: Text(label, style: CommonStyles.txSty_14b_fb)),
-            const Text(':  '),
+                flex: 7, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
+            const Text(
+              ':  ',
+              style: CommonStyles.txStyF14CbFF6,
+            ),
             Expanded(
               flex: 4,
               child: InkWell(
@@ -100,9 +107,8 @@ class ImportantContactsScreen extends StatelessWidget {
                 },
                 child: Text(
                   '$data',
-                  style: CommonStyles.txSty_14b_f5.copyWith(
-                    color:Color(0xFF34A350), // Use blue or custom color
-                    // Optional: underline to indicate clickable
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                    color: const Color(0xFF34A350),
                   ),
                 ),
               ),
@@ -122,7 +128,6 @@ class ImportantContactsScreen extends StatelessWidget {
       ],
     );
   }
-
 
   Widget contactFormWhatsAppclick(
       {required String label, required String? data, Color? datatextColor}) {
@@ -131,25 +136,25 @@ class ImportantContactsScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-                flex: 7, child: Text(label, style: CommonStyles.txSty_14b_fb)),
-            const Text(':  '),
+                flex: 7, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
+            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
             Expanded(
               flex: 4,
               child: InkWell(
                 onTap: () async {
-    const phoneNumber = '+91 9515103107';
-    final url = 'https://api.whatsapp.com/send?phone=$phoneNumber';
-    if (await canLaunch(url)) {
-    await launch(url);
-    } else {
-    throw 'Could not launch $url';
-    }
-
+                  const phoneNumber = '+91 9515103107';
+                  const url =
+                      'https://api.whatsapp.com/send?phone=$phoneNumber';
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
                 },
                 child: Text(
                   '$data',
-                  style: CommonStyles.txSty_14b_f5.copyWith(
-                    color:Color(0xFF34A350), // Use blue or custom color
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                    color: const Color(0xFF34A350), // Use blue or custom color
                     // Optional: underline to indicate clickable
                   ),
                 ),
@@ -170,5 +175,4 @@ class ImportantContactsScreen extends StatelessWidget {
       ],
     );
   }
-
 }

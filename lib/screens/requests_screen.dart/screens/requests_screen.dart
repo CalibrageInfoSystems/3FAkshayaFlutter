@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLabourRequestScreen.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLoanRequestScreen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_fertilizer_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_loan_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_visit_requests.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -124,14 +125,13 @@ class _RequestsScreenState extends State<RequestsScreen> {
         ),
         onTap: () {
           switch (serviceTypeId) {
-            // case 12: // Fertilizer Request
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             GodownSelectionScreen(keyName: 'Fertilizer')),
-            //   );
-            //   break;
+            case 12: // Fertilizer Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewFertilizerRequests()),
+              );
+              break;
             // case 10: // Pole Request
             //   Navigator.push(
             //     context,

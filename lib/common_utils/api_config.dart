@@ -38,8 +38,10 @@ const productsubRequest = 'FertilizerRequest';
 const typeOfIssues = 'TypeCdDmt/';
 const visitRequest = 'RequestHeader/AddVisitRequest';
 const getVisitRequestDetails = 'RequestHeader/GetVisitRequestDetails';
+const getLoanRequestDetails = 'RequestHeader/GetLoanRequestDetails';
 const getVisitRequestCompleteDetails =
     'RequestHeader/GetVisitRequestRepository/';
+const getFertilizerDetails = 'GetFertilizerDetails';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

@@ -22,11 +22,9 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      DefaultTabController(
+    return DefaultTabController(
       length: 4,
-      child:
-      Scaffold(
+      child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           bottom: PreferredSize(
@@ -43,52 +41,61 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
               ),
               child: Stack(
                 children: [
-                  TabBar(
-                    dividerColor: Colors.transparent,
-                    labelColor: Colors.white,
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 1),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    unselectedLabelColor: CommonStyles.primaryTextColor,
-                    indicator: BoxDecoration(
-                      color: CommonStyles.primaryTextColor,
-                      borderRadius: borderForSelectedTab(selectedTab),
+                  SizedBox(
+                    // height: 40,
+                    child: TabBar(
+                      dividerColor: Colors.transparent,
+                      labelColor: Colors.white,
+                      labelPadding: const EdgeInsets.symmetric(
+                        horizontal: 2,
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      unselectedLabelColor: CommonStyles.primaryTextColor,
+                      indicator: const BoxDecoration(
+                        color: CommonStyles.primaryTextColor,
+                        // borderRadius: borderForSelectedTab(selectedTab),
+                      ),
+                      onTap: (tab) {
+                        setState(() {
+                          selectedTab = tab;
+                        });
+                      },
+                      labelStyle: CommonStyles.txStyF12CbFF6,
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            tr(LocaleKeys.fertgodown),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: tabLabelStyle(),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            tr(LocaleKeys.collection_centres),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: tabLabelStyle(),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            tr(LocaleKeys.Mills),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: tabLabelStyle(),
+                          ),
+                        ),
+                        Tab(
+                          child: Text(
+                            tr(LocaleKeys.Nurseries),
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.visible,
+                            style: tabLabelStyle(),
+                          ),
+                        ),
+                      ],
                     ),
-                    onTap: (tab) {
-                      setState(() {
-                        selectedTab = tab;
-                      });
-                    },
-                    labelStyle:  CommonStyles.txSty_12p_f5,
-                    tabs:  [
-                      Tab(
-                        child: Text(
-                          tr(LocaleKeys.fertgodown),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                         // style: CommonStyles.txSty_12p_f5,
-                        ),
-                      ),
-                      Tab(
-                        child: Text(
-                          tr(LocaleKeys.collection_centres),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.visible,
-                         // style: CommonStyles.txSty_12p_f5,
-                        ),
-                      ),
-                      Tab( child: Text(
-                        tr(LocaleKeys.Mills),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.visible,
-                      //  style: CommonStyles.txSty_12p_f5,
-                      ),),
-                      Tab(child: Text(
-                        tr(LocaleKeys.Nurseries),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.visible,
-                      //  style: CommonStyles.txSty_12p_f5,
-                      ),),
-                    ],
                   ),
                   Positioned.fill(
                     child: Row(
@@ -117,18 +124,14 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+        body: Container(
+          color: CommonStyles.screenBgColor,
           child: TabBarView(
             children: [
               GoDownsScreen(godowns: widget.data.godowns!),
               CollectionContentScreen(data: widget.data.collectionCenters!),
               MillsContentScreen(mills: widget.data.mills!),
               NurseriesContentScreen(nurseries: widget.data.nurseries!),
-              /*  PlaceTemplate1(),
-              PlaceTemplate2(),
-              PlaceTemplate2(),
-              PlaceTemplate2(), */
             ],
           ),
         ),
@@ -136,8 +139,15 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
     );
   }
 
+  TextStyle tabLabelStyle() {
+    return const TextStyle(
+      height: 1.2,
+      fontSize: 10,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
   BorderRadius borderForSelectedTab(int selectedTab) {
-    print('selectedTab: $selectedTab');
     switch (selectedTab) {
       case 0:
         return const BorderRadius.only(

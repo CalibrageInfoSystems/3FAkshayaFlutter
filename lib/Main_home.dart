@@ -20,6 +20,7 @@ import '../navigation/app_routes.dart';
 //
 //   const MainScreen({super.key, required this.navigationShell});
 class Main_home extends StatefulWidget {
+  const Main_home({super.key});
 
   @override
   _MainScreenPageState createState() => _MainScreenPageState();
@@ -33,34 +34,27 @@ class _MainScreenPageState extends State<Main_home> {
     super.initState();
 
     //  _selectedIndex = widget.navigationShell.currentIndex;
-    print('_selectedIndex==$_selectedIndex');// Sync with initial index
+    print('_selectedIndex==$_selectedIndex'); // Sync with initial index
   }
-
-
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
       onWillPop: () async {
-        // Show a confirmation dialog
         if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;
           });
           return Future.value(false);
         } else {
-
-            SystemNavigator.pop();
+          SystemNavigator.pop();
 
           return Future.value(false);
         }
       },
-
-
       child: Scaffold(
-        appBar: appBar(),
-       drawer: drawer(context),
+        // appBar: appBar(),
+        drawer: drawer(context),
         backgroundColor: Colors.transparent,
         body: _buildScreens(_selectedIndex, context),
         bottomNavigationBar: bottomNavigationBar(),
@@ -68,115 +62,16 @@ class _MainScreenPageState extends State<Main_home> {
     );
   }
 
-  // BottomNavigationBar bottomNavigationBar() {
-  //   return BottomNavigationBar(
-  //     currentIndex: _selectedIndex,
-  //     onTap: (index) {
-  //       setState(() {
-  //
-  //         _selectedIndex = index;
-  //         print('_selectedIndex==143$_selectedIndex');
-  //       });
-  //       widget.navigationShell.goBranch(
-  //         index,
-  //         initialLocation: index == _selectedIndex,
-  //       );
-  //     },
-  //     selectedItemColor: CommonStyles.primaryTextColor,
-  //     items: <BottomNavigationBarItem>[
-  //       BottomNavigationBarItem(
-  //         icon: SvgPicture.asset(
-  //           'assets/images/ic_home.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //         ),
-  //         activeIcon: SvgPicture.asset(
-  //           'assets/images/ic_home.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //           color: CommonStyles.primaryTextColor,
-  //         ),
-  //         label: 'Home',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: SvgPicture.asset(
-  //           'assets/images/ic_myprofile.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //         ),
-  //         activeIcon: SvgPicture.asset(
-  //           'assets/images/ic_myprofile.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //           color: CommonStyles.primaryTextColor,
-  //         ),
-  //         label: 'Profile',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: SvgPicture.asset(
-  //           'assets/images/ic_my.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //         ),
-  //         activeIcon: SvgPicture.asset(
-  //           'assets/images/ic_my.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //           color: CommonStyles.primaryTextColor,
-  //         ),
-  //         label: 'My 3F',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: SvgPicture.asset(
-  //           'assets/images/ic_request.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //         ),
-  //         activeIcon: SvgPicture.asset(
-  //           'assets/images/ic_request.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //           color: CommonStyles.primaryTextColor,
-  //         ),
-  //         label: 'Requests',
-  //       ),
-  //       BottomNavigationBarItem(
-  //         icon: SvgPicture.asset(
-  //           'assets/images/ic_care.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //         ),
-  //         activeIcon: SvgPicture.asset(
-  //           'assets/images/ic_care.svg',
-  //           width: 20,
-  //           height: 20,
-  //           fit: BoxFit.contain,
-  //           color: CommonStyles.primaryTextColor,
-  //         ),
-  //         label: 'Customer Care',
-  //       ),
-  //     ],
-  //   );
-  // }
-
   AppBar appBar() {
     return AppBar(
       backgroundColor: const Color(0xffe46f5d),
+      elevation: 0,
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(
             Icons.menu,
             color: CommonStyles.whiteColor,
-          ), // Replace with your custom icon or widget
+          ),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -186,27 +81,25 @@ class _MainScreenPageState extends State<Main_home> {
     );
   }
 
-
   Widget _buildScreens(int index, BuildContext context) {
     switch (index) {
       case 0:
         return const HomeScreen();
 
-
       case 1:
-      // Return the messages screen widget
+        // Return the messages screen widget
         return const ProfileScreen();
 
       case 2:
 
-      // Return the settings screen widget
+        // Return the settings screen widget
         return const My3fScreen();
       case 3:
-      // Return the settings screen widget
+        // Return the settings screen widget
         return const RequestsScreen();
 
       default:
-       return HomeScreen();
+        return const HomeScreen();
     }
   }
 
@@ -217,19 +110,19 @@ class _MainScreenPageState extends State<Main_home> {
         children: [
           DrawerHeader(
               child: Container(
-                width: 120.0,
-                height: 120.0,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  child: Image.asset(
-                    'assets/images/ic_user.png',
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              )),
+            width: 120.0,
+            height: 120.0,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/images/ic_user.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+          )),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -429,7 +322,6 @@ class _MainScreenPageState extends State<Main_home> {
       currentIndex: _selectedIndex,
       onTap: (index) {
         setState(() {
-
           _selectedIndex = index;
           print('_selectedIndex==143$_selectedIndex');
         });
@@ -523,12 +415,8 @@ class _MainScreenPageState extends State<Main_home> {
       ],
     );
   }
-
-
-
-
-
 }
+
 void logOutDialog(BuildContext context) {
   showGeneralDialog(
     context: context,
@@ -554,19 +442,22 @@ void logOutDialog(BuildContext context) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(tr(LocaleKeys.confirmation), style: CommonStyles.text18orange),
+                Text(tr(LocaleKeys.confirmation),
+                    style: CommonStyles.text18orange),
                 const SizedBox(height: 10),
                 Container(
                   height: 0.5,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors:  [
-                      CommonStyles.primaryTextColor,
-                      const Color.fromARGB(255, 110, 6, 228)
-                    ],),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        CommonStyles.primaryTextColor,
+                        Color.fromARGB(255, 110, 6, 228)
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
+                const Text(
                   'Are you sure you want to Logout?',
                   style: CommonStyles.text16white,
                   textAlign: TextAlign.center,
@@ -577,12 +468,11 @@ void logOutDialog(BuildContext context) {
                   children: [
                     // Cancel Button
                     Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 10.0),
-                      child:Container(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Container(
                         decoration: BoxDecoration(
                           borderRadius:
-                          BorderRadius.circular(20.0), // Rounded corners
+                              BorderRadius.circular(20.0), // Rounded corners
                           gradient: const LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -593,8 +483,8 @@ void logOutDialog(BuildContext context) {
                             ],
                           ),
                           border: Border.all(
-                            color: const Color(
-                                0xFFe86100), // Orange border color
+                            color:
+                                const Color(0xFFe86100), // Orange border color
                             width: 2.0,
                           ),
                         ),
@@ -605,7 +495,8 @@ void logOutDialog(BuildContext context) {
                               Navigator.of(context).pop();
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 35.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 35.0),
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
                               shape: RoundedRectangleBorder(
@@ -614,22 +505,18 @@ void logOutDialog(BuildContext context) {
                             ),
                             child: const Text(
                               'Cancel',
-                              style:  CommonStyles.txSty_16p_f5,
+                              style: CommonStyles.txSty_16p_f5,
                             ),
                           ),
                         ),
-
-
                       ),
-
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 10.0),
-                      child:Container(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Container(
                         decoration: BoxDecoration(
                           borderRadius:
-                          BorderRadius.circular(20.0), // Rounded corners
+                              BorderRadius.circular(20.0), // Rounded corners
                           gradient: const LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -640,8 +527,8 @@ void logOutDialog(BuildContext context) {
                             ],
                           ),
                           border: Border.all(
-                            color: const Color(
-                                0xFFe86100), // Orange border color
+                            color:
+                                const Color(0xFFe86100), // Orange border color
                             width: 2.0,
                           ),
                         ),
@@ -653,7 +540,8 @@ void logOutDialog(BuildContext context) {
                               onConfirmLogout(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(horizontal: 35.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 35.0),
                               backgroundColor: Colors.transparent,
                               shadowColor: Colors.transparent,
                               shape: RoundedRectangleBorder(
@@ -666,12 +554,8 @@ void logOutDialog(BuildContext context) {
                             ),
                           ),
                         ),
-
-
                       ),
-
                     )
-
                   ],
                 ),
               ],
@@ -693,8 +577,6 @@ void logOutDialog(BuildContext context) {
     },
   );
 }
-
-
 
 Future<void> onConfirmLogout(BuildContext context) async {
   //  SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -768,7 +650,7 @@ void openLanguageDialog(BuildContext context) {
 
 Container languageBox(String language,
     {List<Color> colors = const [Colors.grey, Colors.grey],
-      required void Function()? onPressed}) {
+    required void Function()? onPressed}) {
   return Container(
     margin: const EdgeInsets.only(top: 10),
     child: Column(

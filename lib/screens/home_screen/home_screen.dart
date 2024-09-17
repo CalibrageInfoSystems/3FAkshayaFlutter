@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 
 import 'package:akshaya_flutter/Services/plots_screen.dart';
@@ -58,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      print('getServicesData jsonResponse: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> servicesList = response['listResult'];
@@ -123,44 +124,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final appBarHeight = AppBar().preferredSize.height;
+    final remainingHeight = screenHeight - appBarHeight;
+
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        SystemNavigator.pop(); // Close the app
-
-        return false; // Prevent the default back button behavior
+        SystemNavigator.pop();
+        return false;
       },
       child: Scaffold(
         backgroundColor: const Color(0xfff4f3f1),
         body: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    menuSection(size),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    servicesSection(
-                      size,
-                      tr(LocaleKeys.req_services),
-                    ),
-                    // Container(
-                    //   color: Colors.transparent,
-                    //   height: 30,
-                    // ),
-                    const SizedBox(
-                      height: 5.0,
-                    ),
-                    learningSection(size, tr(LocaleKeys.learning),
-                        backgroundColor: Colors.grey.shade300),
-                  ],
-                ),
-              ),
+            menuSection(size, remainingHeight),
+            servicesSection(
+              size,
+              tr(LocaleKeys.req_services),
+              remainingHeight: remainingHeight,
             ),
-            marqueeText(),
-            banners(size),
+            learningSection(
+              size,
+              tr(LocaleKeys.learning),
+              backgroundColor: Colors.grey.shade300,
+              remainingHeight: remainingHeight,
+            ),
+            SizedBox(
+              height: remainingHeight * 0.03,
+              // color: Colors.orange,
+              child: marqueeText(),
+            ),
+            Expanded(
+              child: banners(size),
+            ),
           ],
         ),
       ),
@@ -173,13 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final marquee = snapshot.data as List<BannerModel>;
-          return SizedBox(
-            // color: Colors.green,
-            height: 25,
-            child: Marquee(
-                text:
-                    "${marquee[0].description!}                                        ${marquee[0].description!}                                        ",
-                style: CommonStyles.txSty_14black),
+          return Marquee(
+            text:
+                "${marquee[0].description!}                                        ${marquee[0].description!}                                        ",
+            style: CommonStyles.txStyF12CbFF6,
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -195,119 +189,57 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final banners = snapshot.data as List<BannerModel>;
-          int current = 0;
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              SizedBox(
-                // padding: const EdgeInsets.symmetric(
-                //     horizontal: 10.0, vertical: 10.0),
-                width: MediaQuery.of(context).size.width,
+          return SizedBox(
+            // padding: const EdgeInsets.symmetric(
+            //     horizontal: 10.0, vertical: 10.0),
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            child: FlutterCarousel(
+              options: CarouselOptions(
+                floatingIndicator: true,
                 height: 200,
-                child: FlutterCarousel(
-                  options: CarouselOptions(
-                    floatingIndicator: true,
-                    height: 200,
-                    viewportFraction: 1.0,
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    aspectRatio: 16 / 9,
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enableInfiniteScroll: true,
-                    slideIndicator: const CircularSlideIndicator(
-                      slideIndicatorOptions: SlideIndicatorOptions(
-                        itemSpacing: 10,
-                        padding: EdgeInsets.only(bottom: 10.0),
-                        indicatorBorderColor: Colors.grey,
-                        currentIndicatorColor: Colors.white,
-                        indicatorRadius: 4,
-                      ),
-                    ),
-                    autoPlayAnimationDuration:
-                        const Duration(milliseconds: 800),
+                viewportFraction: 1.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                aspectRatio: 16 / 9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                slideIndicator: const CircularSlideIndicator(
+                  slideIndicatorOptions: SlideIndicatorOptions(
+                    itemSpacing: 10,
+                    padding: EdgeInsets.only(bottom: 10.0),
+                    indicatorBorderColor: Colors.grey,
+                    currentIndicatorColor: Colors.white,
+                    indicatorRadius: 3,
                   ),
-                  items: banners.map((item) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Card(
-                            shadowColor: Colors.transparent,
-                            surfaceTintColor: Colors.transparent,
-                            // shape: RoundedRectangleBorder(
-                            //   borderRadius:
-                            //   BorderRadius.circular(10),
-                            // ),
-                            elevation: 4,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(0),
-                              child: Image.network(
-                                item.imageName!,
-                                height: 200,
-                                fit: BoxFit.fill,
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return const Center(
-                                      child:
-                                          CircularProgressIndicator.adaptive());
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
                 ),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
               ),
-              // CarouselSlider(
-              //   options: CarouselOptions(
-              //     height: size.height * 0.2,
-              //     viewportFraction: 1.0, // Occupy full width
-              //     autoPlay: true,
-              //     onPageChanged: (index, reason) {
-              //       setState(() {
-              //         _current = index; // Update the state to reflect the current slide
-              //       });
-              //     }, // Enable auto-play
-              //   ),
-              //   items: banners.map((url) {
-              //     return Builder(
-              //       builder: (BuildContext context) {
-              //         return Container(
-              //           width: MediaQuery.of(context).size.width, // Occupy full width
-              //           decoration: BoxDecoration(
-              //             image: DecorationImage(
-              //               image: NetworkImage(url.imageName!),
-              //               fit: BoxFit.fill, // Ensure the image covers the entire area
-              //             ),
-              //           ),
-              //         );
-              //       },
-              //     );
-              //   }).toList(),
-              // ),
-              // Positioned(
-              //   bottom: 10.0, // Position the indicators at the bottom of the image
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: banners.asMap().entries.map((entry) {
-              //       return Container(
-              //         width: 8.0,
-              //         height: 8.0,
-              //         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              //         decoration: BoxDecoration(
-              //           shape: BoxShape.circle,
-              //           color: _current == entry.key ? Colors.white : Colors.grey, // Highlight the active indicator
-              //         ),
-              //       );
-              //     }).toList(),
-              //   ),
-              // ),
-            ],
+              items: banners.map((item) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(0),
+                        child: Image.network(
+                          item.imageName!,
+                          height: 200,
+                          fit: BoxFit.fill,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return const Center(
+                                child: CircularProgressIndicator.adaptive());
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -317,99 +249,121 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container servicesSection(Size size, String title, {Color? backgroundColor}) {
+  Container servicesSection(Size size, String title,
+      {Color? backgroundColor, required double remainingHeight}) {
     return Container(
       color: backgroundColor,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 5),
           Text(
-            title,
-            style: CommonStyles.txSty_16b6_fb,
+            tr(LocaleKeys.req_services),
+            style: CommonStyles.txStyF14CbFF6,
           ),
           const SizedBox(height: 10),
-          FutureBuilder(
-            future: servicesData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const ShimmerWidn();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final serviceTypeIdList = snapshot.data as List<int>;
-                return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 0,
-                      crossAxisSpacing: 0,
-                      childAspectRatio: 1.5,
-                    ),
-                    itemCount: serviceTypeIdList.length,
-                    itemBuilder: (context, index) {
-                      return serviceGridItem(index, serviceTypeIdList.length,
-                          serviceTypeIdList[index]);
-                    });
-              }
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container learningSection(Size size, String title, {Color? backgroundColor}) {
-    return Container(
-      color: backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 5.0,
-          ),
-          Text(
-            title,
-            style: CommonStyles.txSty_16b6_fb,
-          ),
-          const SizedBox(height: 10),
-          FutureBuilder(
-            future: getLearningsData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const ShimmerWidn();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final learningsList = snapshot.data as List<String?>;
-
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 0,
-                    crossAxisSpacing: 0,
-                    childAspectRatio: 1.5,
+          SizedBox(
+            height: remainingHeight * 0.26,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FutureBuilder(
+                    future: servicesData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const ShimmerWidn();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final serviceTypeIdList = snapshot.data as List<int>;
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 0,
+                            childAspectRatio: 1.5,
+                          ),
+                          itemCount: serviceTypeIdList.length,
+                          itemBuilder: (context, index) {
+                            return serviceGridItem(
+                                index,
+                                serviceTypeIdList.length,
+                                serviceTypeIdList[index]);
+                          },
+                        );
+                      }
+                    },
                   ),
-                  itemCount: learningsList.length,
-                  itemBuilder: (context, index) {
-                    return learningGridItem(
-                      index: index,
-                      learningsList: learningsList.length,
-                      title: learningsList[index] ?? '',
-                    );
-                  },
-                );
-              }
-            },
-          )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
+  Widget learningSection(Size size, String title,
+      {Color? backgroundColor, required double remainingHeight}) {
+    return Container(
+      color: backgroundColor,
+      child: Column(
+        children: [
+          Text(
+            tr(LocaleKeys.learning),
+            style: CommonStyles.txStyF14CbFF6,
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: remainingHeight * 0.16,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FutureBuilder(
+                    future: getLearningsData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const ShimmerWidn();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final learningsList = snapshot.data as List<String?>;
+
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 0,
+                            crossAxisSpacing: 0,
+                            childAspectRatio: 1.5,
+                          ),
+                          itemCount: learningsList.length,
+                          itemBuilder: (context, index) {
+                            return learningGridItem(
+                              index: index,
+                              learningsList: learningsList.length,
+                              title: learningsList[index] ?? '',
+                            );
+                          },
+                        );
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+/* 
   Container menuSection(Size size) {
     return Container(
       decoration: const BoxDecoration(
@@ -467,6 +421,65 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+ */
+
+  Container menuSection(Size size, double remainingHeight) {
+    return Container(
+      height: remainingHeight * 0.155,
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            Color(0xffe46f5d),
+            Color(0xffe49962),
+          ])),
+      child: Column(
+        children: [
+          const SizedBox(height: 5),
+          Text(
+            tr(LocaleKeys.view),
+            style: CommonStyles.txStyF14CwFF6,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              viewOption(size, Assets.images.ffbCollection.path,
+                  tr(LocaleKeys.collection), onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FfbCollectionScreen(),
+                  ),
+                );
+                // context.push(
+                //     context.namedLocation(Routes.ffbCollectionScreen.name));
+              }),
+              viewOption(
+                  size, Assets.images.passbook.path, tr(LocaleKeys.payments),
+                  onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FarmerPassbookScreen_1(),
+                  ),
+                );
+              }),
+              viewOption(size, Assets.images.mainVisit.path,
+                  tr(LocaleKeys.recommendationss), onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PlotSelectionScreen(
+                      serviceTypeId: 101,
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget viewOption(Size size, String imagePath, String title,
       {void Function()? onTap}) {
@@ -492,7 +505,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: CommonStyles.txSty_12W_fb,
+                  style: CommonStyles.txStyF12CwFF6,
                 ),
               ),
             ],
@@ -585,10 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(
           getServiceName(serviceTypeId),
           textAlign: TextAlign.center,
-          style: CommonStyles.txSty_12W_fb.copyWith(
-            color: CommonStyles.blackColor,
-            fontWeight: FontWeight.w600,
-          ),
+          style: CommonStyles.txStyF12CbFF6,
         ),
       ],
     );
@@ -597,11 +607,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget gridLearningItem(int index, String title) {
     return GestureDetector(
       onTap: () {
-        print('gridItemIndex: $index');
-        List<String> tabnames = (index + 1) == 1
-            ? ['Standard', 'PDF', 'Videos']
-            : ['PDF', 'Videos'];
-
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -625,8 +630,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 5),
           Text(
             title,
-            style: CommonStyles.txSty_12W_fb.copyWith(
-                color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+            style: CommonStyles.txStyF12CbFF6,
           ),
         ],
       ),

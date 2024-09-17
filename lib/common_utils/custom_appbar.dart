@@ -18,7 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: CommonStyles.gradientColor1,
+      backgroundColor: CommonStyles.appBarColor,
       leading: GestureDetector(
         onTap: () {
           Navigator.pop(context);

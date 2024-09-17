@@ -109,6 +109,59 @@ class _My3fScreenState extends State<My3fScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: const Color(0xffe46f5d),
+      elevation: 0,
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: TabBar(
+          labelStyle: CommonStyles.txStyF14CbFF6.copyWith(
+            fontWeight: FontWeight.w400,
+          ),
+          indicatorPadding: const EdgeInsets.only(bottom: 3),
+          indicatorColor: CommonStyles.primaryTextColor,
+          indicatorWeight: 2.0,
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelColor: CommonStyles.primaryTextColor,
+          unselectedLabelColor: CommonStyles.whiteColor,
+          indicator: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            color: CommonStyles.primaryColor,
+          ),
+          tabs: [
+            Tab(
+              text: tr(LocaleKeys.basic_info),
+            ),
+            Tab(
+              child: Text(
+                tr(LocaleKeys.important_contacts),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.visible,
+                style: const TextStyle(
+                  height: 1.2,
+                ),
+              ),
+            ),
+            Tab(
+              child: Text(
+                tr(LocaleKeys.places),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.visible,
+                style: const TextStyle(
+                  height: 1.2,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+/*   AppBar tabBar() {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: const Color(0xffe46f5d),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: TabBar(
@@ -138,7 +191,7 @@ class _My3fScreenState extends State<My3fScreen> {
         ),
       ),
     );
-  }
+  } */
 
   Widget tabView() {
     return Padding(

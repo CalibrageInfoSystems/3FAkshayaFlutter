@@ -1,11 +1,19 @@
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/gen/fonts.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 
 class CommonStyles {
+  static const appBarColor = Color(0xfff07566);
+  static const viewMoreBtnColor = Color(0xffc4c4c4);
+  static const viewMoreBtnTextColor = Color(0xffd0691f);
+  static const dataTextColor = Color(0xff818181);
+  static const requestOddColor = Color(0xffdfdfdf);
+  static const screenBgColor = Color(0xfff4f3f1);
+
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -18,6 +26,7 @@ class CommonStyles {
   static const statusRedBg = Color(0xFFffdedf);
   static const statusRedText = Color.fromARGB(255, 236, 62, 68);
   static const startColor = Color(0xFF59ca6b);
+  static const noteColor = Color(0xFFfff7c9);
 
   static const blackColor = Colors.black;
   static const blackColorShade = Color(0xFF636363);
@@ -35,6 +44,50 @@ class CommonStyles {
   // <color name="colorOrange">#e86100</color>
   // styles
   static const RedColor = Color(0xFFC93437);
+
+  static const txStyF12CbFF6 = TextStyle(
+    fontSize: 12,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: blackColor,
+  );
+
+  static const txStyF12CwFF6 = TextStyle(
+    fontSize: 12,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: whiteColor,
+  );
+
+  static const txStyF14CbFF6 = TextStyle(
+    fontSize: 14,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: blackColor,
+  );
+
+  static const txStyF14CwFF6 = TextStyle(
+    fontSize: 14,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: whiteColor,
+  );
+
+  static const txStyF16CbFF6 = TextStyle(
+    fontSize: 16,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: blackColor,
+  );
+
+  static const txStyF16CwFF6 = TextStyle(
+    fontSize: 16,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: whiteColor,
+  );
+
+  /* ...................................... */
   static const TextStyle txSty_12b_f5 = TextStyle(
     fontSize: 12,
     fontFamily: "hind_semibold",
@@ -504,7 +557,10 @@ class CommonStyles {
           child: Material(
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+                  borderRadius: BorderRadius.circular(6),
+                  side: const BorderSide(
+                    color: Color(0xffc93436),
+                  )),
               child: SizedBox(
                 width: size.width * 0.8,
                 child: Column(

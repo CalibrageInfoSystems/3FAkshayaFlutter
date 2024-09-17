@@ -83,6 +83,7 @@ class _MainScreenPageState extends State<MainScreen> {
         }
       },
       selectedItemColor: CommonStyles.primaryTextColor,
+      selectedLabelStyle: CommonStyles.txStyF14CwFF6,
       items: <BottomNavigationBarItem>[
         bottomNavItem(
           imagePath: Assets.images.icHome.path,
@@ -154,53 +155,17 @@ class _MainScreenPageState extends State<MainScreen> {
             width: 40.0,
             height: 40.0,
           ),
-          const SizedBox(width: 8.0), // Space adjustment if needed
+          const SizedBox(width: 5.0), // Space adjustment if needed
           Expanded(
             child: Text(
               tr(LocaleKeys.app_name),
-              style: CommonStyles.txSty_20w_fb,
+              style: CommonStyles.txStyF16CwFF6,
             ),
           ),
         ],
       ),
     );
   }
-
-  // AppBar appBar() {
-  //   return AppBar(
-  //     backgroundColor: const Color(0xffe46f5d),
-  //     leading: SizedBox(
-  //      width: 0.0, // Adjust width as needed to match the icon size
-  //       child: IconButton(
-  //         icon: const Icon(
-  //           Icons.menu,
-  //           color: CommonStyles.whiteColor,
-  //         ),
-  //         onPressed: () {
-  //           Scaffold.of(context).openDrawer();
-  //         },
-  //       ),
-  //     ),
-  //     title: Row(
-  //       children: [
-  //         // App icon with no additional space before it
-  //         Image.asset(
-  //           'assets/images/logo_final.png', // Path to your app icon
-  //           width: 40.0, // Adjust size as needed
-  //           height: 40.0, // Adjust size as needed
-  //         ),
-  //         const SizedBox(width: 8.0), // Space between icon and text
-  //         Expanded(
-  //           child: Text(
-  //             tr(LocaleKeys.app_name),
-  //             style: CommonStyles.txSty_20w_fb,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //    // toolbarHeight: 60.0, // Adjust if you need to control the height of the AppBar
-  //   );
-  // }
 
   Widget drawer(BuildContext context) {
     return FutureBuilder(

@@ -90,4 +90,13 @@ flutter:
   fonts:
     - family: hind
       fonts:
-        - asset: fonts/hind_semibold.ttf
+        - asset: assets/fonts/Hind-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Hind-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Hind-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Hind-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Hind-Bold.ttf
+          weight: 700

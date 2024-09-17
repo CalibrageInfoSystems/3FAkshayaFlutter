@@ -14,6 +14,8 @@ class GoDownsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      // color: Colors.grey,
       child: ListView.builder(
         itemCount: godowns.length,
         itemBuilder: (context, index) {
@@ -34,12 +36,11 @@ class GoDownsCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
+          color: CommonStyles.whiteColor,
           borderRadius: BorderRadius.circular(5.0),
         ),
-        margin: const EdgeInsets.only(bottom: 10),
-        child:
-        Row(
+        margin: const EdgeInsets.only(bottom: 5),
+        child: Row(
           children: [
             Expanded(
               flex: 3,
@@ -54,10 +55,16 @@ class GoDownsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${godown.godown}', style: CommonStyles.txSty_14b_f5),
-                  const Divider(),
-                  contentBox(label: tr(LocaleKeys.location), data: '${godown.location}'),
-                  contentBox(label: tr(LocaleKeys.address), data: '${godown.address}'),
+                  Text('${godown.godown}', style: CommonStyles.txStyF14CbFF6),
+                  const Divider(
+                    color: CommonStyles.primaryTextColor,
+                    thickness: 0.3,
+                  ),
+                  contentBox(
+                      label: tr(LocaleKeys.location),
+                      data: '${godown.location}'),
+                  contentBox(
+                      label: tr(LocaleKeys.address), data: '${godown.address}'),
                   GestureDetector(
                     onTap: () {
                       Constants.launchMap(
@@ -67,8 +74,9 @@ class GoDownsCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Text('View in Map',
+                        Text(tr(LocaleKeys.view_in_map),
                             style: CommonStyles.txSty_12b_f5),
+                        const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
                           height: 30,
@@ -92,18 +100,21 @@ class GoDownsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 4, child: Text(label, style: CommonStyles.txSty_12b_f5)),
+                flex: 3, child: Text(label, style: CommonStyles.txStyF12CbFF6)),
             const Text(':  '),
             Expanded(
-              flex: 6,
+              flex: 7,
               child: Text('$data',
-                  style: CommonStyles.txSty_12b_f5,
+                  style: CommonStyles.txStyF12CbFF6,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis),
             ),
           ],
         ),
-        const Divider(),
+        const Divider(
+          color: CommonStyles.primaryTextColor,
+          thickness: 0.3,
+        ),
       ],
     );
   }

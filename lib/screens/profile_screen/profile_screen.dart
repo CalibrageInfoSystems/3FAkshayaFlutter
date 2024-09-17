@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/common_utils/SharedPrefsData.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
-import 'package:akshaya_flutter/common_utils/constants.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
@@ -49,8 +48,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      print('apiUrl: $apiUrl');
-      print('jsonResponse: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> plotList = response['listResult'];
@@ -84,51 +81,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        // backgroundColor: const Color(0xffe46f5d),
+        backgroundColor: CommonStyles.screenBgColor,
         appBar: tabBar(),
         body: tabView(),
       ),
     );
   }
-  // AppBar tabBar() {
-  //   return AppBar(
-  //     automaticallyImplyLeading: false,
-  //     backgroundColor: const Color(0xffe46f5d),
-  //     bottom: PreferredSize(
-  //       preferredSize: const Size.fromHeight(1),
-  //       child: TabBar(
-  //         indicatorColor: Colors.transparent, // Set to transparent to use BoxDecoration
-  //         indicator: BoxDecoration(
-  //           color: CommonStyles.primaryColor, // Background color for the selected tab
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         labelColor: CommonStyles.primaryTextColor, // Text color for the selected tab
-  //         unselectedLabelColor: CommonStyles.whiteColor, // Text color for unselected tabs
-  //         tabs: [
-  //           Tab(text: tr(LocaleKeys.farmer_profile)),
-  //           Tab(text: tr(LocaleKeys.plot_details)),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   AppBar tabBar() {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: const Color(0xffe46f5d),
+      elevation: 0,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child:
-        TabBar(
+        child: TabBar(
+          labelStyle: CommonStyles.txStyF14CbFF6.copyWith(
+            fontWeight: FontWeight.w400,
+          ),
+          indicatorPadding: const EdgeInsets.only(bottom: 3),
           indicatorColor: CommonStyles.primaryTextColor,
           indicatorWeight: 2.0,
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: CommonStyles.primaryTextColor,
           unselectedLabelColor: CommonStyles.whiteColor,
-
           indicator: const BoxDecoration(
-
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
@@ -145,49 +122,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget tabView() {
-    return Container(
-        color: Color(0xFAF5F5F5),
-        child:Padding(
-
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-
-
-
-          child: TabBarView(
-            children: [
-              FutureBuilder(
-                  future: farmerData,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      final farmer = snapshot.data as FarmerModel;
-                      return FarmerProfile(farmerData: farmer);
-                    }
-                    return const CircularProgressIndicator.adaptive();
-                  }),
-              // const Center(child: Text('Plot Details')),
-              FutureBuilder(
-                  future: plotsData,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      final plots = snapshot.data as List<PlotDetailsModel>;
-                      return ListView.builder(
-                        itemCount: plots.length,
-                        itemBuilder: (context, index) {
-                          return PlotDetails(plotdata: plots[index], index: index);
-                        },
-                      );
-                    } else {
-                      return const Center(
-                          child: CircularProgressIndicator.adaptive());
-                    }
-                  }),
-            ],
-          ),
-        ));
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+      child: TabBarView(
+        children: [
+          FutureBuilder(
+              future: farmerData,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final farmer = snapshot.data as FarmerModel;
+                  return FarmerProfile(farmerData: farmer);
+                }
+                return const CircularProgressIndicator.adaptive();
+              }),
+          // const Center(child: Text('Plot Details')),
+          FutureBuilder(
+              future: plotsData,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final plots = snapshot.data as List<PlotDetailsModel>;
+                  return ListView.builder(
+                    itemCount: plots.length,
+                    itemBuilder: (context, index) {
+                      return PlotDetails(plotdata: plots[index], index: index);
+                    },
+                  );
+                } else {
+                  return const Center(
+                      child: CircularProgressIndicator.adaptive());
+                }
+              }),
+        ],
+      ),
+    );
   }
 
   Future<void> _loadUserData() async {
@@ -197,10 +168,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       stateCode = prefs.getString('statecode');
       districtId = prefs.getInt('districtId');
       districtName = prefs.getString('districtName');
-      print('FarmerCode -==$userId');
-      print('stateCode -==$stateCode');
-      print('districtId -==$districtId');
-      print('districtName -==$districtName');
     });
   }
 }
@@ -212,13 +179,11 @@ class FarmerProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-
       child: Column(
-
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 120,
+            height: 100,
             child: Row(
               children: [
                 Expanded(
@@ -226,108 +191,86 @@ class FarmerProfile extends StatelessWidget {
                     child: Image.asset(
                       Assets.images.icUser.path,
                       fit: BoxFit.contain,
+                      height: 90,
                     ),
                   ),
                 ),
                 Expanded(
                     child: Center(
-                      child: QrImageView(
-                        data: '${farmerData.code}',
-                        version: QrVersions.auto,
-                        // size: 200.0,
-                      ),
-                    )),
+                  child: QrImageView(
+                    data: '${farmerData.code}',
+                    version: QrVersions.auto,
+                    size: 90,
+                    // size: 200.0,
+                  ),
+                )),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
               label: tr(LocaleKeys.farmar_code),
               data: '${farmerData.code}',
-              textColor: CommonStyles.primaryTextColor),
-          farmerInfoBox(
+              dataTextColor: CommonStyles.primaryTextColor),
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.farmer_name),
             data:
-            '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
+                '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
           ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.fa_hu_name),
             data: '${farmerData.guardianName}',
           ),
-          farmerdialInfoBox(
+          CommonWidgets.commonRowWithColon(
               label: tr(LocaleKeys.mobile),
               data: '${farmerData.contactNumber}',
-              textColor: Colors.green),
+              dataTextColor: Colors.green),
           const SizedBox(height: 20),
           Text(tr(LocaleKeys.res_address),
-              style: CommonStyles.txSty_14b_f5
+              style: CommonStyles.txStyF14CbFF6
                   .copyWith(color: CommonStyles.primaryTextColor)),
-          const Divider(color: CommonStyles.primaryTextColor, thickness: 0.3),
-          const SizedBox(height: 5),
-          farmerInfoBox(
+          const Divider(
+            color: CommonStyles.primaryTextColor,
+            thickness: 0.3,
+          ),
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.address),
             data: '${farmerData.address}',
           ),
-          farmerInfoBox(
-            label: tr(LocaleKeys.res_address),
-            data: '${farmerData.landmark}',
-          ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.village),
             data: '${farmerData.villageName}',
           ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.mandal),
             data: '${farmerData.mandalName}',
           ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.dist),
             data: '${farmerData.districtName}',
           ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.state),
             data: '${farmerData.stateName}',
           ),
-          farmerInfoBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.pin),
             data: '${farmerData.pinCode}',
+            isSpace: false,
+          ),
+          const Divider(
+            color: CommonStyles.primaryTextColor,
+            thickness: 0.3,
           ),
         ],
       ),
     );
   }
 
-  Widget farmerInfoBox(
-      {required String label, required String data, Color? textColor}) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-                flex: 5,
-                child: Text(
-                  label,
-                  style: CommonStyles.txSty_14b_f5,
-                )),
-            Expanded(
-                flex: 6,
-                child: Text(
-                  ':   $data',
-                  style: CommonStyles.txSty_14b_f5.copyWith(
-                    color: textColor,
-                  ),
-                )),
-          ],
-        ),
-        const SizedBox(height: 5),
-      ],
-    );
-  }
-
   farmerdialInfoBox(
       {required String label,
-        required String data,
-        required MaterialColor textColor}) {
+      required String data,
+      required MaterialColor textColor}) {
     return Column(
       children: [
         Row(
@@ -374,70 +317,70 @@ class PlotDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10),
-        plot(),
-        const SizedBox(height: 10),
-      ],
-    );
+    return plot();
   }
 
   Container plot() {
     final df = NumberFormat("#,##0.00");
     String? dateOfPlanting = plotdata.dateOfPlanting;
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
-    String year = parsedDate.year.toString(); // Example number format
-    print('year=======$year');
+    String year = parsedDate.year.toString();
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        // border:
-        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
           borderRadius: BorderRadius.circular(10),
           color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          plotDetailsBox(
-              label: tr(LocaleKeys.code),
-              data: '${plotdata.plotcode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          plotDetailsBox(
-            label: tr(LocaleKeys.plaod_hect),
-            data:
-            '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
+          CommonWidgets.commonRowWithColon(
+            label: tr(LocaleKeys.code),
+            data: '${plotdata.plotcode}',
+            dataTextColor: CommonStyles.primaryTextColor,
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.plaod_hect),
+              dataTextColor: CommonStyles.dataTextColor,
+              data:
+                  '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)'),
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.sur_num),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.surveyNumber}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.address),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.clusterName}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.land_mark),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.landMark}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.village),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.villageName}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.mandal),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.mandalName}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.dist),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.districtName}',
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.yop),
+            dataTextColor: CommonStyles.dataTextColor,
             data: year,
           ),
-          plotDetailsBox(
+          CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.address),
+            dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.clusterName}',
           ),
         ],
@@ -455,13 +398,13 @@ class PlotDetails extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txSty_14b_f5,
+                  style: CommonStyles.txStyF14CbFF6,
                 )),
             Expanded(
                 flex: 6,
                 child: Text(
                   ':   $data',
-                  style: CommonStyles.txSty_14b_f5.copyWith(
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
                     color: dataTextColor,
                   ),
                 )),

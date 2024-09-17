@@ -10,6 +10,7 @@ class MillsContentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
       child: ListView.builder(
         itemCount: mills.length,
         itemBuilder: (context, index) {
