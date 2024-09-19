@@ -15,6 +15,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../Services/models/MsgModel.dart';
+import '../../../common_utils/SuccessDialog.dart';
+
 class LoanRequestScreen extends StatefulWidget {
   final int clusterId;
   const LoanRequestScreen({super.key, required this.clusterId});
@@ -108,7 +111,16 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     );
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
-      showSuccessDialog();
+      List<MsgModel> displayList = [
+        MsgModel(key: tr(LocaleKeys.loan_amount), value: _loanAmountController.text!),
+        if(_reasonController.text != null)
+        MsgModel(key: tr(LocaleKeys.reason_loan), value: _reasonController.text!),
+
+      ];
+
+      // Show success dialog
+      showSuccessDialog(context, displayList, tr(LocaleKeys.success_Loan));
+      // showSuccessDialog();
       print('loanRequestSubmit: ${response["isSuccess"]}');
       return response['isSuccess'] as bool;
     } else {
@@ -282,73 +294,83 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       borderSide: BorderSide(color: Colors.white),
     );
   }
-
-  void showSuccessDialog() {
-    CommonStyles.errorDialog(
-      context,
-      errorMessage: 'errorMessage',
-      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
-      bodyBackgroundColor: Colors.white,
-      errorLabel: 'errorLabel',
-      errorMessageColor: Colors.orange,
-      onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-        );
+// Function to show the dialog
+  void showSuccessDialog(BuildContext context, List<MsgModel> msg, String summary) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialog(msg: msg, summary: summary);
       },
-      errorBodyWidget: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(tr(LocaleKeys.success_Loan), style: CommonStyles.txSty_14p_f5),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                flex: 6,
-                child: Text(tr(LocaleKeys.loan_amount),
-                    style: CommonStyles.txSty_14p_f5),
-              ),
-              const Expanded(
-                  flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
-              Expanded(
-                flex: 5,
-                child: Text(_loanAmountController.text,
-                    style: CommonStyles.txSty_14b_f5),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          _reasonController.text.isNotEmpty
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      flex: 6,
-                      child: Text(tr(LocaleKeys.reason_loan),
-                          style: CommonStyles.txSty_14p_f5),
-                    ),
-                    const Expanded(
-                        flex: 1,
-                        child: Text(':', style: CommonStyles.txSty_14b_f5)),
-                    Expanded(
-                      flex: 5,
-                      child: Text(_reasonController.text,
-                          style: CommonStyles.txF14Fw5Cb),
-                    ),
-                  ],
-                )
-              : const SizedBox(),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
     );
   }
+  // void showSuccessDialog(BuildContext context, List<MsgModel> displayList, String tr) {}
+
+  // void showSuccessDialog() {
+  //   CommonStyles.errorDialog(
+  //     context,
+  //     errorMessage: 'errorMessage',
+  //     errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
+  //     bodyBackgroundColor: Colors.white,
+  //     errorLabel: 'errorLabel',
+  //     errorMessageColor: Colors.orange,
+  //     onPressed: () {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const HomeScreen(),
+  //         ),
+  //       );
+  //     },
+  //     errorBodyWidget: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.center,
+  //       children: [
+  //         Text(tr(LocaleKeys.success_Loan), style: CommonStyles.txSty_14p_f5),
+  //         const SizedBox(height: 20),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //           children: [
+  //             Expanded(
+  //               flex: 6,
+  //               child: Text(tr(LocaleKeys.loan_amount),
+  //                   style: CommonStyles.txSty_14p_f5),
+  //             ),
+  //             const Expanded(
+  //                 flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
+  //             Expanded(
+  //               flex: 5,
+  //               child: Text(_loanAmountController.text,
+  //                   style: CommonStyles.txSty_14b_f5),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(
+  //           height: 10,
+  //         ),
+  //         _reasonController.text.isNotEmpty
+  //             ? Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                 children: [
+  //                   Expanded(
+  //                     flex: 6,
+  //                     child: Text(tr(LocaleKeys.reason_loan),
+  //                         style: CommonStyles.txSty_14p_f5),
+  //                   ),
+  //                   const Expanded(
+  //                       flex: 1,
+  //                       child: Text(':', style: CommonStyles.txSty_14b_f5)),
+  //                   Expanded(
+  //                     flex: 5,
+  //                     child: Text(_reasonController.text,
+  //                         style: CommonStyles.txF14Fw5Cb),
+  //                   ),
+  //                 ],
+  //               )
+  //             : const SizedBox(),
+  //         const SizedBox(
+  //           height: 10,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

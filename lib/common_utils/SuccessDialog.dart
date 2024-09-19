@@ -70,7 +70,7 @@ class SuccessDialog extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   msg[index].key,
-                                  style: TextStyle(color: Colors.red),
+                                  style: CommonStyles.txSty_12red_f5,
                                 ),
                               ),
                               Expanded(

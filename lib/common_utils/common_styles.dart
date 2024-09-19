@@ -112,6 +112,12 @@ class CommonStyles {
     fontWeight: FontWeight.w500,
     color: blackColor,
   );
+  static const TextStyle txSty_12red_f5 = TextStyle(
+    fontSize: 14,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.w600,
+    color: Colors.red,
+  );
   static const TextStyle texthintstyle = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",

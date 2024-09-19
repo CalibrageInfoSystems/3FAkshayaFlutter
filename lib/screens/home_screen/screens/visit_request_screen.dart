@@ -372,9 +372,11 @@ class _VisitRequestState extends State<VisitRequest> {
     CommonStyles.errorDialog(
       context,
       errorMessage: 'errorMessage',
-      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
+      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path,color: Colors.white,),
       bodyBackgroundColor: Colors.white,
       errorLabel: 'errorLabel',
+      errorHeaderColor :CommonStyles.primaryTextColor,
+
       errorMessageColor: Colors.orange,
       onPressed: () {
         Navigator.pushAndRemoveUntil(
@@ -773,7 +775,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 5,
                 child: Text(tr(LocaleKeys.issue_type),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txSty_12red_f5),
               ),
               const Expanded(
                   flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
@@ -796,7 +798,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 5,
                     child: Text(tr(LocaleKeys.comments),
-                        style: CommonStyles.txSty_14b_f5),
+         style: CommonStyles.txSty_12red_f5),
                   ),
                   const Expanded(
                       flex: 1,
