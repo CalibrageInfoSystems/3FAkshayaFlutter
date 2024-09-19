@@ -12,13 +12,15 @@ class CommonStyles {
   static const viewMoreBtnColor = Color(0xffc4c4c4);
   static const viewMoreBtnTextColor = Color(0xffd0691f);
   static const dataTextColor = Color(0xff818181);
-  static const requestOddColor = Color(0xffdfdfdf);
   static const screenBgColor = Color(0xfff4f3f1);
   static const screenBgColor2 = Color(0xffe9e7e8);
   static const tabBarColor = Color(0xffe46f5d);
   static const appBarColor2 = Color(0xffdd6950);
   static const dropdownListBgColor = Color(0xff6f6f6f);
   static const blackColorShade = Color(0xFF636363);
+  static const listOddColor = Color(0xFFdfdfdf);
+  static const listEvenColor = Color(0xFFf5f5f5);
+  static const primaryTextColor = Color(0xFFf07566);
 
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
@@ -37,7 +39,7 @@ class CommonStyles {
   static const blackColor = Colors.black;
   static const dropdownbg = Color(0x8D000000);
   static const primaryColor = Color(0xFAF5F5F5);
-  static const primaryTextColor = Color(0xFFe86100);
+  // static const primaryTextColor = Color(0xFFe86100);
   static const formFieldErrorBorderColor = Color(0xFFff0000);
   static const blueColor = Color(0xFF0f75bc);
   static const branchBg = Color(0xFFcfeaff);
@@ -105,18 +107,19 @@ class CommonStyles {
     color: whiteColor,
   );
 
+  static const TextStyle txStyF16CrFF6 = TextStyle(
+    fontSize: 16,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: RedColor,
+  );
+
   /* ...................................... */
   static const TextStyle txSty_12b_f5 = TextStyle(
     fontSize: 12,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w500,
     color: blackColor,
-  );
-  static const TextStyle txSty_12red_f5 = TextStyle(
-    fontSize: 14,
-    fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w600,
-    color: Colors.red,
   );
   static const TextStyle texthintstyle = TextStyle(
     fontSize: 14,

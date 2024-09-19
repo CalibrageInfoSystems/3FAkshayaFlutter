@@ -359,6 +359,7 @@ class _VisitRequestState extends State<VisitRequest> {
               plotdata: widget.plot,
               index: 0,
               isIconVisible: false,
+              dataTextColor: CommonStyles.blackColor,
             ),
             const SizedBox(height: 10),
             mainSection(),
@@ -372,11 +373,13 @@ class _VisitRequestState extends State<VisitRequest> {
     CommonStyles.errorDialog(
       context,
       errorMessage: 'errorMessage',
-      errorIcon: SvgPicture.asset(Assets.images.progressComplete.path,color: Colors.white,),
+      errorIcon: SvgPicture.asset(
+        Assets.images.progressComplete.path,
+        color: Colors.white,
+      ),
       bodyBackgroundColor: Colors.white,
       errorLabel: 'errorLabel',
-      errorHeaderColor :CommonStyles.primaryTextColor,
-
+      errorHeaderColor: CommonStyles.primaryTextColor,
       errorMessageColor: Colors.orange,
       onPressed: () {
         Navigator.pushAndRemoveUntil(
@@ -775,7 +778,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 5,
                 child: Text(tr(LocaleKeys.issue_type),
-                    style: CommonStyles.txSty_12red_f5),
+                    style: CommonStyles.txStyF16CrFF6),
               ),
               const Expanded(
                   flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
@@ -798,7 +801,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 5,
                     child: Text(tr(LocaleKeys.comments),
-         style: CommonStyles.txSty_12red_f5),
+                        style: CommonStyles.txStyF16CrFF6),
                   ),
                   const Expanded(
                       flex: 1,

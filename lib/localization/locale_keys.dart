@@ -249,6 +249,7 @@ class LocaleKeys {
   static const String nocomments = "nocomments";
   static const String note = "note";
   static const String notee = "notee";
+  static const String noteWithOutColon = "noteWithOutColon";
   static const String num_intercrop = "num_intercrop";
   static const String num_trees = "num_trees";
   static const String nut_repo = "nut_repo";
