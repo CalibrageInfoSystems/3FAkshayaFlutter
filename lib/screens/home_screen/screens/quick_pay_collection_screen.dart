@@ -247,7 +247,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       future: collectionDetailsData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return shimmerEffect();
+          return CommonStyles.rectangularShapeShimmerEffect();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData) {
@@ -302,21 +302,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
             collections[0].transactionFee! -
             calculateDynamicSum(collections, 'quickPay')) -
         calculateDynamicSum(collections, 'dues');
-  }
-
-  Widget shimmerEffect() {
-    return Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
-        child: Container(
-          height: 140,
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade300,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ));
   }
 
 /*   String calculateDynamicSum(
@@ -383,7 +368,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         future: collectionDetailsData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return shimmerEffect();
+            return CommonStyles.rectangularShapeShimmerEffect();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else if (!snapshot.hasData) {

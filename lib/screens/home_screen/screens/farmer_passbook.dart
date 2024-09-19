@@ -1,28 +1,26 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/common_utils/SharedPreferencesHelper.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/FarmerInfo.dart';
-import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_2.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:http/http.dart' as http;
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main_screen.dart';
 
-
 class FarmerPassbookScreen_1 extends StatefulWidget {
+  const FarmerPassbookScreen_1({super.key});
+
   @override
   _farmerpassbook createState() => _farmerpassbook();
 }
@@ -56,88 +54,30 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
       print('fcinfarmerpassbook$farmercode');
       farmerbankdetails(farmercode!);
     });
-    //
-    // final loadedData = await SharedPreferencesHelper.getCategories();
-    // if (loadedData != null) {
-    //   final farmerDetails = loadedData['result']['farmerDetails'];
-    //   final loadedfarmercode = farmerDetails[0]['code'];
-    //
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: Color(0xFFDB5D4B),
-        //   title: Text("Farmer Passbook"),
-        //   leading: IconButton(
-        //     icon: Image.asset('assets/ic_left.png'),
-        //     onPressed: () {
-        //       Navigator.of(context).pop();
-        //     },
-        //   ),
-        // ),
-        appBar:   AppBar(
-      backgroundColor: Color(0xFFDAF05F4E),
-      leading: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Image.asset(Assets.images.icLeft.path),
-      ),
-      elevation: 0,
-      title: Text(
-        tr(LocaleKeys.payments),
-        style: CommonStyles.txSty_14black_f5.copyWith(
-          color: CommonStyles.whiteColor,
+        appBar: CustomAppBar(
+          title: tr(LocaleKeys.payments),
         ),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.home,
-            color: Colors.white,
-          ),
-          onPressed:
-                  () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ),
-                );
-              },
-        ),
-      ],
-    ),
-
         body: Center(
           child: Card(
-            //  color: Color(0x8D000000),
-            //width: MediaQuery.of(context).size.width,
-            //height: 450,
-            child: IntrinsicHeight(child:
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.only(left: 10,right:10),
-              decoration: BoxDecoration(
+            child: IntrinsicHeight(
+                child: Container(
+              width: size.width * 0.9,
+              decoration: const BoxDecoration(
                   color: Color(0x8D000000),
                   borderRadius: BorderRadius.all(Radius.circular(8))),
-              //height: MediaQuery.of(context).size.height/1.8,
-
               child: Column(
                 children: [
-                  // Align(
-                  //   alignment: Alignment.topCenter,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(top: 16.0),
-                  //     child: Image.asset('assets/ic_bank_white.png'),
-                  //   ),
-                  // ),
-                  SizedBox(height: 12,),
-                  Image.asset( Assets.images.icBankWhite.path,
-                    //  color: CommonStyles.primaryTextColor,
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Image.asset(
+                    Assets.images.icBankWhite.path,
                     height: 75,
                     width: 75,
                   ),
@@ -147,7 +87,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                       padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         tr(LocaleKeys.bank_details),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -156,10 +96,11 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   Container(
-                    height: 2.0,
+                    height: 1.0,
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
                           Color(0xFFFF4500),
@@ -170,7 +111,9 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8,),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -178,23 +121,17 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 12, 5),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
                               child: Text(
                                 tr(LocaleKeys.bank_holder),
-                                // style: TextStyle(
-                                //   color: Colors.white,
-                                //   fontWeight: FontWeight.bold,
-                                //   fontSize: 14,
-                                //   fontFamily: 'hind_semibold',
-                                // ),
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +140,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                               padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
                                 ":",
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -216,10 +153,10 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
                               child: Text(
-                                '${accountholdername ?? ''}',
-                                style: CommonStyles.txSty_12W_fb,
+                                accountholdername ?? '',
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -234,17 +171,17 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 12, 5),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
                               child: Text(
                                 tr(LocaleKeys.account_no),
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -253,7 +190,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                               padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
                                 ":",
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -266,10 +203,10 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
-                                '${accountnum??''}',
-                                style: CommonStyles.txSty_12W_fb,
+                                accountnum ?? '',
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -284,17 +221,17 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 12, 5),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
                               child: Text(
                                 tr(LocaleKeys.bank_name),
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -303,7 +240,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                               padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
                                 ":",
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -316,10 +253,10 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
-                                '${bankname??''}',
-                                style: CommonStyles.txSty_12W_fb,
+                                bankname ?? '',
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -334,17 +271,17 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 12, 5),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
                               child: Text(
                                 tr(LocaleKeys.branch_name),
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -353,7 +290,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                               padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
                                 ":",
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -366,10 +303,10 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
-                                '${branchname??''}',
-                                style: CommonStyles.txSty_12W_fb,
+                                branchname ?? '',
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -384,17 +321,17 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Padding(
-                              padding: EdgeInsets.fromLTRB(20, 15, 12, 5),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
                               child: Text(
                                 tr(LocaleKeys.ifsc),
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         flex: 1,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -403,7 +340,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                               padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
                                 ":",
-                                style: CommonStyles.txSty_12W_fb,
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -416,10 +353,10 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                               child: Text(
-                                '${ifscode??''}',
-                                style: CommonStyles.txSty_12W_fb,
+                                ifscode ?? '',
+                                style: CommonStyles.txStyF14CwFF6,
                               ),
                             ),
                           ],
@@ -427,61 +364,39 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                       ),
                     ],
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: IntrinsicWidth(
-                      child: Padding(
-                        padding:  EdgeInsets.only(right: 15.0, top: 10.0,bottom: 8),
-                        child: Container(
-
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color(0xFFCCCCCC),
-                                Color(0xFFFFFFFF),
-                                Color(0xFFCCCCCC),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                            borderRadius: BorderRadius.circular(20.0),
-                            border: Border.all(
-                              width: 2.0,
-                              color: Color(0xFFe86100),
-                            ),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print('Next');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => farmer_passbook_2(accountHolderName: farmerinfolist[0].accountHolderName, accountNumber: farmerinfolist[0].accountNumber, bankName: farmerinfolist[0].bankName,
-                                          branchName: farmerinfolist[0].branchName, district: farmerinfolist[0].district, farmerCode: farmerinfolist[0].farmerCode,
-                                          guardianName: farmerinfolist[0].guardianName, ifscCode: farmerinfolist[0].ifscCode, mandal: farmerinfolist[0].mandal,
-                                          state: farmerinfolist[0].state, village: farmerinfolist[0].village)));
-                            },
-                            child: Text(
-                              tr(LocaleKeys.next),
-                              style: TextStyle(
-                                color: Color(0xFFe86100),
-                                fontSize: 14,
-                                fontFamily: 'hind_semibold',
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            ),
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomBtn(
+                          label: tr(LocaleKeys.next),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => farmer_passbook_2(
+                                        accountHolderName:
+                                            farmerinfolist[0].accountHolderName,
+                                        accountNumber:
+                                            farmerinfolist[0].accountNumber,
+                                        bankName: farmerinfolist[0].bankName,
+                                        branchName:
+                                            farmerinfolist[0].branchName,
+                                        district: farmerinfolist[0].district,
+                                        farmerCode:
+                                            farmerinfolist[0].farmerCode,
+                                        guardianName:
+                                            farmerinfolist[0].guardianName,
+                                        ifscCode: farmerinfolist[0].ifscCode,
+                                        mandal: farmerinfolist[0].mandal,
+                                        state: farmerinfolist[0].state,
+                                        village: farmerinfolist[0].village)));
+                          },
                         ),
-                      ),
-                    )
-
-                  )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             )),
@@ -490,7 +405,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
   }
 
   Future<FarmerInfo?> farmerbankdetails(String fc) async {
-    final url = Uri.parse(baseUrl + getbankdetails + "$fc");
+    final url = Uri.parse("$baseUrl$getbankdetails$fc");
     print('farmerpassbook >> $url');
 
     setState(() {
@@ -505,21 +420,21 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
 
         if (responseData['listResult'] != null) {
           final List<dynamic> appointmentsData = responseData['listResult'];
-          List<FarmerInfo> paymentresponse = (responseData['listResult'] as List)
-              .map((item) => FarmerInfo.fromJson(item))
-              .toList();
+          List<FarmerInfo> paymentresponse =
+              (responseData['listResult'] as List)
+                  .map((item) => FarmerInfo.fromJson(item))
+                  .toList();
           setState(() {
-            FarmerInfo farmer_info =
+            FarmerInfo farmerInfo =
                 FarmerInfo.fromJson(responseData['listResult'][0]);
-            accountholdername = farmer_info.accountHolderName;
-            accountnum = farmer_info.accountNumber;
-            bankname = farmer_info.bankName;
-            branchname = farmer_info.branchName;
-            ifscode = farmer_info.ifscCode;
-            farmerinfolist =paymentresponse;
+            accountholdername = farmerInfo.accountHolderName;
+            accountnum = farmerInfo.accountNumber;
+            bankname = farmerInfo.bankName;
+            branchname = farmerInfo.branchName;
+            ifscode = farmerInfo.ifscCode;
+            farmerinfolist = paymentresponse;
             print('>$accountholdername');
             CommonStyles.hideHorizontalDotsLoadingDialog(context);
-
           });
           print('farmerdetails ${appointmentsData.length}');
         } else {
@@ -540,5 +455,6 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
 
       throw Exception('Failed to connect to the API $error');
     }
+    return null;
   }
 }

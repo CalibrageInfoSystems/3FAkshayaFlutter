@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   AppBar tabBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xffe46f5d),
+      backgroundColor: CommonStyles.tabBarColor,
       elevation: 0,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),

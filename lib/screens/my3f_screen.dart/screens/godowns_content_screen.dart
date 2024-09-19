@@ -55,7 +55,7 @@ class GoDownsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${godown.godown}', style: CommonStyles.txStyF14CbFF6),
+                  Text('${godown.godown}', style: CommonStyles.txStyF16CbFF6),
                   const Divider(
                     color: CommonStyles.primaryTextColor,
                     thickness: 0.3,
@@ -75,7 +75,7 @@ class GoDownsCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(tr(LocaleKeys.view_in_map),
-                            style: CommonStyles.txSty_12b_f5),
+                            style: CommonStyles.txStyF14CbFF6),
                         const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
@@ -100,12 +100,12 @@ class GoDownsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 3, child: Text(label, style: CommonStyles.txStyF12CbFF6)),
-            const Text(':  '),
+                flex: 3, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
+            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
             Expanded(
               flex: 7,
               child: Text('$data',
-                  style: CommonStyles.txStyF12CbFF6,
+                  style: CommonStyles.txStyF14CbFF6,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis),
             ),

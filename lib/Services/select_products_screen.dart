@@ -129,6 +129,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: CommonStyles.screenBgColor2,
+        appBar: appBar(context),
+
+        /* 
         appBar: AppBar(
           backgroundColor: CommonStyles.gradientColor1,
           leading: GestureDetector(
@@ -161,10 +165,11 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               },
               child: Container(
                 margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-                padding: const EdgeInsets.all(5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white),
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
                   child: Text(
@@ -181,12 +186,52 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             ), // Add some spacing if needed
           ],
         ),
+      */
+
         body: Column(
           children: [
             headerSection(),
             Expanded(child: filterAndProductSection()),
           ],
         ));
+  }
+
+  CustomAppBar appBar(BuildContext context) {
+    return CustomAppBar(
+      title: tr(LocaleKeys.select_product),
+      actionIcon: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PlotSelectionScreen(
+                    serviceTypeId: 100,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  tr(LocaleKeys.crop),
+                  textAlign: TextAlign.center,
+                  style: CommonStyles.txStyF12CwFF6,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10)
+        ],
+      ),
+    );
   }
 
   Widget filterAndProductSection() {
@@ -197,7 +242,9 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         children: [
           Text(
             tr(LocaleKeys.Categorytype),
-            style: CommonStyles.txSty_14b_f5,
+            style: CommonStyles.txStyF16CbFF6.copyWith(
+              color: CommonStyles.blackColorShade,
+            ),
           ),
           const SizedBox(height: 10),
           Container(
@@ -237,14 +284,13 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
                 } else {
                   final products = snapshot.data as List<ProductItem>;
-                  // print('xxx: ${products.length}');
                   if (products.isNotEmpty) {
                     return GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 10.0,
-                              mainAxisSpacing: 10.0,
+                              crossAxisSpacing: 5.0,
+                              mainAxisSpacing: 5.0,
                               mainAxisExtent: 250,
                               childAspectRatio: 8 / 2),
                       itemCount: products.length,
@@ -312,8 +358,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
       child: DropdownButton2<String>(
         iconStyleData: const IconStyleData(
           icon: Icon(
-            Icons.arrow_drop_down_rounded,
-            color: Colors.black,
+            Icons.arrow_drop_down_sharp,
+            color: CommonStyles.blackColorShade,
           ),
         ),
         isExpanded: true,
@@ -338,7 +384,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   child: Center(
                     child: Text(
                       '${category.name}',
-                      style: CommonStyles.txSty_14b_f6,
+                      style: CommonStyles.txStyF14CbFF6,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -358,7 +404,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         dropdownStyleData: DropdownStyleData(
           decoration: const BoxDecoration(
             //    borderRadius: BorderRadius.circular(14),
-            color: Colors.grey,
+            color: CommonStyles.dropdownListBgColor,
           ),
           offset: const Offset(0, 0),
           scrollbarTheme: ScrollbarThemeData(
@@ -377,7 +423,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
 
   Container headerSection() {
     return Container(
-      color: Colors.grey.shade300,
+      color: const Color(0xffc6c6c6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -387,7 +433,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               badges.Badge(
                 badgeContent: Text(
                   '$badgeCount',
-                  style: CommonStyles.txSty_12W_fb,
+                  style: CommonStyles.txStyF12CwFF6,
                 ),
                 badgeAnimation: const badges.BadgeAnimation.fade(
                   animationDuration: Duration(seconds: 1),
@@ -402,7 +448,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   height: 30,
                 ),
               ),
-              const SizedBox(width: 10), // Spacing between cart icon and text
+              const SizedBox(width: 10),
               Text(
                 ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
                 style: CommonStyles.text16white,
@@ -413,6 +459,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             label: tr(LocaleKeys.next),
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
+            btnTextStyle: CommonStyles.txStyF12CpFF6.copyWith(fontSize: 14),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 25,
+            ),
             onPressed: () {
               if (fetchCardProducts().isNotEmpty) {
                 Navigator.push(
@@ -481,7 +531,7 @@ class _ProductCardState extends State<ProductCard> {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: CommonStyles.whiteColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -492,29 +542,29 @@ class _ProductCardState extends State<ProductCard> {
               const SizedBox(),
               Text(
                 '${widget.product.name}',
-                style: CommonStyles.txSty_14p_f5,
+                style: CommonStyles.txStyF14CpFF6,
               ),
               GestureDetector(
                 onTap: openProductInfoDialog,
                 child: Image.asset(
                   Assets.images.infoIcon.path,
-                  width: 20,
-                  height: 20,
+                  width: 25,
+                  height: 25,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${widget.product.priceInclGst}',
-                style: CommonStyles.txSty_14b_f5,
+                '₹${widget.product.priceInclGst}',
+                style: CommonStyles.txStyF14CbFF6,
               ),
               Text(
                 '${widget.product.size} ${widget.product.uomType}',
-                style: CommonStyles.txSty_14p_f5,
+                style: CommonStyles.txStyF14CpFF6,
               ),
             ],
           ),
@@ -530,20 +580,17 @@ class _ProductCardState extends State<ProductCard> {
                   fit: BoxFit.cover,
                 ),
               ),
-
-              /* Image.network(
-                '${widget.product.imageUrl}',
-              ), */
             ),
           ),
           const SizedBox(height: 3),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text(
                 'Qty:',
                 style: CommonStyles.txSty_14b_f5,
               ),
+              const SizedBox(width: 5),
               Row(
                 children: [
                   IconButton(
@@ -554,12 +601,13 @@ class _ProductCardState extends State<ProductCard> {
                     icon: const Icon(Icons.remove),
                     onPressed: removeProduct,
                   ),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: 12),
                   Text(
                     '$productQuantity',
-                    style: CommonStyles.texthintstyle,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.blackColorShade),
                   ),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: 12),
                   IconButton(
                     iconSize: 16,
                     style: iconBtnStyle(
@@ -570,7 +618,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ],
               ),
-              const SizedBox(),
+              // const SizedBox(),
             ],
           )
         ],

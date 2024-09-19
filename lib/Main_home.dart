@@ -53,7 +53,7 @@ class _MainScreenPageState extends State<Main_home> {
         }
       },
       child: Scaffold(
-        // appBar: appBar(),
+        appBar: appBar(),
         drawer: drawer(context),
         backgroundColor: Colors.transparent,
         body: _buildScreens(_selectedIndex, context),

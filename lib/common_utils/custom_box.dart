@@ -14,29 +14,18 @@ Widget custombox({
         child: Row(
           children: [
             Expanded(
-                flex: 5,
-                child: Text(
-                  label,
-                  style: CommonStyles.txSty_14b_f5.copyWith(
-                    color: labelTextColor,
-                  ),
-                )),
+                flex: 5, child: Text(label, style: CommonStyles.txStyF14CwFF6)),
+            const Expanded(
+                flex: 1, child: Text(':', style: CommonStyles.txStyF14CwFF6)),
             Expanded(
-                flex: 1,
-                child: Text(
-                  ':',
-                  style: CommonStyles.txF14Fw5Cb.copyWith(
-                    color: dataTextColor,
-                  ),
-                )),
-            Expanded(
-                flex: 5,
-                child: Text(
-                  data,
-                  style: CommonStyles.txF14Fw5Cb.copyWith(
-                    color: dataTextColor,
-                  ),
-                )),
+              flex: 5,
+              child: Text(
+                data,
+                style: CommonStyles.txStyF14CwFF6.copyWith(
+                  color: dataTextColor,
+                ),
+              ),
+            ),
           ],
         ),
       ),

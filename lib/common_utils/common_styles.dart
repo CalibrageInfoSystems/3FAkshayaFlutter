@@ -5,6 +5,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CommonStyles {
   static const appBarColor = Color(0xfff07566);
@@ -13,6 +14,11 @@ class CommonStyles {
   static const dataTextColor = Color(0xff818181);
   static const requestOddColor = Color(0xffdfdfdf);
   static const screenBgColor = Color(0xfff4f3f1);
+  static const screenBgColor2 = Color(0xffe9e7e8);
+  static const tabBarColor = Color(0xffe46f5d);
+  static const appBarColor2 = Color(0xffdd6950);
+  static const dropdownListBgColor = Color(0xff6f6f6f);
+  static const blackColorShade = Color(0xFF636363);
 
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
@@ -29,7 +35,6 @@ class CommonStyles {
   static const noteColor = Color(0xFFfff7c9);
 
   static const blackColor = Colors.black;
-  static const blackColorShade = Color(0xFF636363);
   static const dropdownbg = Color(0x8D000000);
   static const primaryColor = Color(0xFAF5F5F5);
   static const primaryTextColor = Color(0xFFe86100);
@@ -50,6 +55,19 @@ class CommonStyles {
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: blackColor,
+  );
+
+  static const txStyF12CpFF6 = TextStyle(
+    fontSize: 12,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: primaryTextColor,
+  );
+  static const txStyF14CpFF6 = TextStyle(
+    fontSize: 14,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: primaryTextColor,
   );
 
   static const txStyF12CwFF6 = TextStyle(
@@ -343,6 +361,26 @@ class CommonStyles {
     color: headercolor,
   );
 
+  static Widget rectangularShapeShimmerEffect() {
+    return ListView.separated(
+      itemCount: 10,
+      itemBuilder: (context, index) => Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: 140,
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
+    );
+  }
+
   static void customDialognew(BuildContext context, Widget child) {
     showGeneralDialog(
       context: context,
@@ -495,7 +533,7 @@ class CommonStyles {
 
   static String? formateDate(String? formateDate) {
     if (formateDate != null) {
-      DateFormat formatter = DateFormat('dd-MM-yyyy');
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
       DateTime date = DateTime.parse(formateDate);
       return formatter.format(date);
     } else {

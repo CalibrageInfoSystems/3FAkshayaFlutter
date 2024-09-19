@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:akshaya_flutter/models/CropData.dart';
-import 'package:akshaya_flutter/models/CropData.dart';
 import 'package:http/http.dart' as http;
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -111,7 +110,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
           // }
         } else {
           throw Exception('healthPlantationData is null');
-          CommonStyles.hideHorizontalDotsLoadingDialog(context);
         }
         //CommonStyles.hideHorizontalDotsLoadingDialog(context);
         throw Exception('list is empty');
@@ -155,32 +153,18 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // if (updated != null && updated!.isNotEmpty) {
-    //   print('updateddate: $updated');
-    //   try {
-    //     DateTime formattedDate1 = DateFormat('dd-MM-yyyy').parse(updated!);
-    //      formattedDate = DateFormat('dd-MM-yyyy').format(formattedDate1);
-    //     print(formattedDate);  // Output: 2024-09-05 00:00:00.000
-    //   } catch (e) {
-    //     print('Error parsing date: $e');
-    //   }
-    // } else {
-    //   print('Date string is null or empty');
-    // }
     DateFormat inputFormat1 = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
     DateFormat inputFormat2 = DateFormat("yyyy-MM-dd HH:mm:ss");
     DateFormat outputFormat = DateFormat("dd-MM-yyyy", 'en');
 
-    //String? cmlastvisitdate =updated!; // Example date
     String formattedDate =
         formatDate(updated, inputFormat1, inputFormat2, outputFormat);
-    // print(cmlastvisitdate);
-    print(formattedDate);
     return Scaffold(
-      appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
+      backgroundColor: CommonStyles.screenBgColor,
+      appBar: CustomAppBar(title: tr(LocaleKeys.crop)),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -195,47 +179,40 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.black54,
+                  color: CommonStyles.dropdownListBgColor,
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     custombox(
-                        label: tr(LocaleKeys.treesAppearance),
-                        data: treesAppearance,
-                        dataTextColor: CommonStyles.whiteColor,
-                        labelTextColor: CommonStyles.whiteColor),
+                      label: tr(LocaleKeys.treesAppearance),
+                      data: treesAppearance,
+                    ),
                     custombox(
-                        label: tr(LocaleKeys.plamsCount),
-                        data: '$plamscount',
-                        dataTextColor: CommonStyles.whiteColor,
-                        labelTextColor: CommonStyles.whiteColor),
+                      label: tr(LocaleKeys.plamsCount),
+                      data: '$plamscount',
+                    ),
                     custombox(
-                        label: tr(LocaleKeys.Frequency_harvest),
-                        data: '$frequencyofharvest',
-                        dataTextColor: CommonStyles.whiteColor,
-                        labelTextColor: CommonStyles.whiteColor),
+                      label: tr(LocaleKeys.Frequency_harvest),
+                      data: '$frequencyofharvest',
+                    ),
                     custombox(
-                        label: tr(LocaleKeys.last_date),
-                        data: formattedDate ?? '',
-                        dataTextColor: CommonStyles.whiteColor,
-                        labelTextColor: CommonStyles.whiteColor),
+                      label: tr(LocaleKeys.last_date),
+                      data: formattedDate ?? '',
+                    ),
                     Text(
                       tr(LocaleKeys.Frequency),
-                      style: CommonStyles.txSty_16w_fb,
+                      style: CommonStyles.txStyF16CwFF6,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      tr(
-                        LocaleKeys.static_data,
-                      ),
-                      style:
-                          CommonStyles.txF14Fw5Cb.copyWith(color: Colors.white),
+                      tr(LocaleKeys.static_data),
+                      style: CommonStyles.txStyF14CwFF6,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
@@ -251,8 +228,7 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                       ),
                       child: Text(
                         tr(LocaleKeys.pest),
-                        style: CommonStyles.txF14Fw5Cb
-                            .copyWith(color: Colors.white),
+                        style: CommonStyles.txStyF14CwFF6,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -266,9 +242,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                         itemBuilder: (context, index) {
                           final pestData = PestDatalist[index];
                           return Container(
-                            color: index.isEven
-                                ? Colors.white
-                                : const Color(0xFFDFDFDF),
                             padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
@@ -325,9 +298,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                         itemBuilder: (context, index) {
                           final pestData = DiseaseDatalist[index];
                           return Container(
-                            color: index.isEven
-                                ? Colors.white
-                                : const Color(0xFFDFDFDF),
                             padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
@@ -389,9 +359,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                               .format(pestData.registeredDate);
 
                           return Container(
-                            color: index.isEven
-                                ? Colors.white
-                                : const Color(0xFFDFDFDF),
                             padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
@@ -454,22 +421,8 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
 
                           String formattedDate = DateFormat('dd-MM-yyyy')
                               .format(pestData.updatedbyDate);
-                          // // String formattedDate = formatDate(formattedDate1, inputFormat1, inputFormat2, outputFormat);
-                          // DateTime parsedDate = DateTime.parse(formattedDate1);
-                          //
-                          // // Format the date
-                          // String formattedDate = DateFormat('dd-MM-yyyy').format(parsedDate);
-                          // DateFormat inputFormat1 = DateFormat("yyyy-MM-dd'T'HH:mm:ss");
-                          // DateFormat inputFormat2 = DateFormat("yyyy-MM-dd HH:mm:ss");
-                          // DateFormat outputFormat = DateFormat("dd-MM-yyyy",'en');
-                          //
-                          // //String? cmlastvisitdate =updated!; // Example date
-                          // String formattedDate = formatDate(formattedDate1, inputFormat1, inputFormat2, outputFormat);
 
                           return Container(
-                            color: index.isEven
-                                ? Colors.white
-                                : const Color(0xFFDFDFDF),
                             padding: const EdgeInsets.all(4),
                             child: Column(
                               children: [
@@ -480,7 +433,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                                 plotDetailsBox(
                                     label: tr(LocaleKeys.updated_by),
                                     data: formattedDate),
-                                //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
                               ],
                             ),
                           );
@@ -609,17 +561,20 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                 flex: 4,
                 child: Text(
                   label,
-                  style: CommonStyles.txSty_14b_f5,
+                  style: CommonStyles.txStyF14CbFF6,
                 )),
             const Expanded(
               flex: 1,
-              child: Text(':', style: CommonStyles.txSty_14b_f5),
+              child: Text(
+                ':',
+                style: CommonStyles.txStyF14CbFF6,
+              ),
             ),
             Expanded(
                 flex: 4,
                 child: Text(
                   data,
-                  style: CommonStyles.txSty_14b_f5.copyWith(
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
                     color: dataTextColor,
                   ),
                 )),

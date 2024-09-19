@@ -45,6 +45,8 @@ class NurseriesContentCard extends StatelessWidget {
               child: Image.asset(
                 Assets.images.nurseriesIcon.path,
                 fit: BoxFit.contain,
+                // width: 70,
+                height: 90,
               ),
             ),
             const SizedBox(width: 10),
@@ -54,7 +56,7 @@ class NurseriesContentCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${nursery.nurseryName}',
-                      style: CommonStyles.txStyF14CbFF6),
+                      style: CommonStyles.txStyF16CbFF6),
                   const Divider(
                     color: CommonStyles.primaryTextColor,
                     thickness: 0.3,
@@ -81,7 +83,7 @@ class NurseriesContentCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(tr(LocaleKeys.view_in_map),
-                            style: CommonStyles.txSty_12b_f5),
+                            style: CommonStyles.txStyF14CbFF6),
                         const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
@@ -106,12 +108,12 @@ class NurseriesContentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 4, child: Text(label, style: CommonStyles.txStyF12CbFF6)),
-            const Text(':  '),
+                flex: 4, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
+            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
             Expanded(
               flex: 6,
               child: Text('$nursery',
-                  style: CommonStyles.txStyF12CbFF6,
+                  style: CommonStyles.txStyF14CbFF6,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis),
             ),

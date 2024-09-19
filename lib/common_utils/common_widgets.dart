@@ -50,20 +50,20 @@ class CommonWidgets {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txStyF12CbFF6,
+                  style: CommonStyles.txStyF14CbFF6,
                 )),
             const Expanded(
               flex: 1,
               child: Text(
                 ':',
-                style: CommonStyles.txStyF12CbFF6,
+                style: CommonStyles.txStyF14CbFF6,
               ),
             ),
             Expanded(
               flex: 6,
               child: Text(
                 data,
-                style: CommonStyles.txStyF12CbFF6.copyWith(
+                style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: dataTextColor,
                 ),
               ),

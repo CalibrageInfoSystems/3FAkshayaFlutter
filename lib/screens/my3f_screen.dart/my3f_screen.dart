@@ -108,7 +108,7 @@ class _My3fScreenState extends State<My3fScreen> {
   AppBar tabBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xffe46f5d),
+      backgroundColor: CommonStyles.tabBarColor,
       elevation: 0,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),

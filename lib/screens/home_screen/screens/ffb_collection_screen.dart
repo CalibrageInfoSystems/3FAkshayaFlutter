@@ -73,23 +73,23 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     toDate ??= formatter.format(DateTime.now());
 
-    print('getCollectionData: $fromDate, $toDate');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl = baseUrl + getcollection;
-    print('getCollectionData: $apiUrl');
     final requestBody = {
       "farmerCode": farmerCode,
       "fromDate": fromDate, // "2022-07-29",
       "toDate": toDate
     };
-    print('getCollectionData: ${jsonEncode(requestBody)}');
     final jsonResponse = await http
         .post(Uri.parse(apiUrl), body: json.encode(requestBody), headers: {
       'Content-Type': 'application/json',
     });
 
-    print('getCollectionData: ${jsonResponse.body}');
+/*     print('getCollectionData: $apiUrl');
+    print('getCollectionData: ${json.encode(requestBody)}');
+    print('getCollectionData: ${jsonResponse.body}'); */
+
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
       if (response['result'] != null) {
@@ -123,8 +123,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: CommonStyles.whiteColor,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.collection),
       ),
@@ -132,9 +133,13 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         children: [
           Container(
             // color: CommonStyles.primaryTextColor,
+            height: dropdownItems.indexOf(selectedDropDownValue!) == 0
+                ? (size.height / 2) - AppBar().preferredSize.height
+                : null,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
+                  CommonStyles.appBarColor,
                   CommonStyles.gradientColor1,
                   CommonStyles.gradientColor2,
                 ],
@@ -169,7 +174,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: index % 2 == 0 ? Colors.white : Colors.grey.shade200,
+          color:
+              index % 2 == 0 ? CommonStyles.whiteColor : Colors.grey.shade300,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -179,8 +185,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               children: [
                 Text(
                   '${data.uColnid}',
-                  style: CommonStyles.txSty_14p_f5
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: CommonStyles.txStyF14CpFF6,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -195,8 +200,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                 ),
               ],
             ),
-
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -205,16 +209,18 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       Expanded(
                           child: Text(
                         tr(LocaleKeys.only_date),
-                        style: CommonStyles.txSty_14b_f5,
+                        style: CommonStyles.txStyF14CbFF6,
                       )),
-                      const Text(
+                      Text(
                         ' :  ',
-                        style: CommonStyles.txF14Fw5Cb,
+                        style: CommonStyles.txStyF14CbFF6
+                            .copyWith(color: CommonStyles.dataTextColor),
                       ),
                       Expanded(
                           child: Text(
                         '${CommonStyles.formateDate(data.docDate)}',
-                        style: CommonStyles.txF14Fw5Cb,
+                        style: CommonStyles.txStyF14CbFF6
+                            .copyWith(color: CommonStyles.dataTextColor),
                       )),
                     ],
                   ),
@@ -226,24 +232,50 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       Expanded(
                           child: Text(
                         tr(LocaleKeys.weight),
-                        style: CommonStyles.txSty_14b_f5,
+                        style: CommonStyles.txStyF14CbFF6,
                       )),
-                      const Text(
+                      Text(
                         ':  ',
-                        style: CommonStyles.txF14Fw5Cb,
+                        style: CommonStyles.txStyF14CbFF6
+                            .copyWith(color: CommonStyles.dataTextColor),
                       ),
                       Expanded(
                           child: Text(
-                        '${data.quantity}',
-                        style: CommonStyles.txF14Fw5Cb,
+                        formatText('${data.quantity}'),
+                        style: CommonStyles.txStyF14CbFF6
+                            .copyWith(color: CommonStyles.dataTextColor),
                       )),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             Row(
+              children: [
+                Expanded(
+                    flex: 7,
+                    child: Text(
+                      tr(LocaleKeys.cc),
+                      style: CommonStyles.txStyF14CbFF6,
+                    )),
+                Text(
+                  ':  ',
+                  style: CommonStyles.txStyF14CbFF6
+                      .copyWith(color: CommonStyles.dataTextColor),
+                ),
+                Expanded(
+                    flex: 22,
+                    child: Text(
+                      '${data.whsName}',
+                      style: CommonStyles.txStyF14CbFF6
+                          .copyWith(color: CommonStyles.dataTextColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+              ],
+            ),
+/*             Row(
               children: [
                 Expanded(
                   child: Row(
@@ -251,16 +283,16 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       Expanded(
                           child: Text(
                         tr(LocaleKeys.cc),
-                        style: CommonStyles.txSty_14b_f5,
+                        style: CommonStyles.txStyF14CbFF6,
                       )),
-                      const Text(
+                       Text(
                         ':  ',
-                        style: CommonStyles.txF14Fw5Cb,
+                          style: CommonStyles.txStyF14CbFF6.copyWith(color: CommonStyles.dataTextColor),
                       ),
                       Expanded(
                           child: Text(
                         '${data.whsName}',
-                        style: CommonStyles.txF14Fw5Cb,
+                          style: CommonStyles.txStyF14CbFF6.copyWith(color: CommonStyles.dataTextColor),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       )),
@@ -271,38 +303,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   child: SizedBox(),
                 ),
               ],
-            ),
-            // Row(
-            //
-            //   children: [
-            //     Expanded(
-            //       child: Row(
-            //         children: [
-            //           Text(
-            //             tr(LocaleKeys.cc),
-            //             style: CommonStyles.txSty_14b_f5,
-            //           ),
-            //           const SizedBox(width: 60),
-            //           const Text(
-            //             ' :  ',
-            //             style: CommonStyles.txF14Fw5Cb,
-            //           ),
-            //           Expanded(
-            //             child: Text(
-            //               '${data.whsName}',
-            //               style: CommonStyles.txF14Fw5Cb,
-            //               maxLines: 1,
-            //               overflow: TextOverflow.ellipsis,
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //  //   const Spacer(),
-            //   ],
-            // ),
-
-            const SizedBox(height: 5),
+            ), */
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -319,11 +321,13 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       ),
                       Expanded(
                           child: Text(
-                        '${data.uApaystat}',
+                        data.uApaystat != 'Paid'
+                            ? 'Pending'
+                            : '${data.uApaystat}',
                         style: CommonStyles.txF14Fw5Cb.copyWith(
                           color: data.uApaystat == 'Paid'
-                              ? Colors.green
-                              : Colors.red,
+                              ? CommonStyles.statusGreenText
+                              : CommonStyles.RedColor,
                         ),
                       )),
                     ],
@@ -415,15 +419,15 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     listRow(
                         title: tr(LocaleKeys.collectionsWeight),
                         // title: 'Total Net Weight',
-                        value: data.collectionsWeight.toString()),
+                        value: formatText('${data.collectionsWeight}')),
                     listRow(
                         title: tr(LocaleKeys.unPaidCollectionsWeight),
                         // title: 'Unpaid Collections Weight',
-                        value: data.unPaidCollectionsWeight.toString()),
+                        value: formatText('${data.unPaidCollectionsWeight}')),
                     listRow(
                         title: tr(LocaleKeys.paidCollectionsWeight),
                         // title: 'Paid Collections Weight',
-                        value: data.paidCollectionsWeight.toString()),
+                        value: formatText('${data.paidCollectionsWeight}')),
                   ],
                 ),
               );
@@ -439,28 +443,40 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         });
   }
 
-  Row listRow({
+  String formatText(String? value) {
+    if (value == null) {
+      return '0.00';
+    }
+    return '${double.parse(value).toStringAsFixed(2)} Kg';
+  }
+
+  Widget listRow({
     required String title,
     required String value,
   }) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-            flex: 7,
-            child: Text(
-              title,
-              style: CommonStyles.text14white,
-            )),
-        const Text(
-          ':    ',
-          style: CommonStyles.text14white,
+        Row(
+          children: [
+            Expanded(
+                flex: 7,
+                child: Text(
+                  title,
+                  style: CommonStyles.txStyF14CwFF6,
+                )),
+            const Text(
+              ':    ',
+              style: CommonStyles.txStyF14CwFF6,
+            ),
+            Expanded(
+                flex: 5,
+                child: Text(
+                  value,
+                  style: CommonStyles.txStyF14CwFF6,
+                )),
+          ],
         ),
-        Expanded(
-            flex: 5,
-            child: Text(
-              value,
-              style: CommonStyles.text14white,
-            )),
+        const SizedBox(height: 5),
       ],
     );
   }
@@ -543,7 +559,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           dropdownStyleData: DropdownStyleData(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: Colors.black87,
+              color: CommonStyles.dropdownListBgColor,
+              // color: Colors.black87,
             ),
             offset: const Offset(0, 0),
             scrollbarTheme: ScrollbarThemeData(
@@ -618,11 +635,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Expanded(
             child: datePickerBox(
               dateLabel: tr(LocaleKeys.from_date),
-              // dateLabel: 'From Date',
               displaydate: displayFromDate,
               onTap: () {
                 final DateTime currentDate = DateTime.now();
-                final DateTime firstDate = DateTime(currentDate.year - 1);
+                final DateTime firstDate = DateTime(currentDate.year - 100);
                 launchFromDatePicker(
                   context,
                   firstDate: firstDate,
@@ -639,7 +655,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             displaydate: displayToDate,
             onTap: () {
               final DateTime currentDate = DateTime.now();
-              final DateTime firstDate = DateTime(currentDate.year - 1);
+              final DateTime firstDate = DateTime(currentDate.year - 100);
               launchToDatePicker(context,
                   firstDate: selectedFromDate ?? firstDate,
                   lastDate: currentDate,
@@ -647,26 +663,14 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             },
           )),
           const SizedBox(width: 10),
-          CustomBtn(
-              label: tr(LocaleKeys.submit),
-              // label: 'Submit',
-              onPressed: () {
-                validateAndSubmit(selectedFromDate, selectedToDate);
-              }),
-          /*  ElevatedButton(
-              onPressed: () {
-                validateAndSubmit(selectedFromDate, selectedToDate);
-              },
-              style: ElevatedButton.styleFrom(
-                // padding: const EdgeInsets.symmetric(horizontal: 10),
-                backgroundColor: Colors.white,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: Colors.grey),
-                ),
-              ),
-              child: const Text('Submit', style: CommonStyles.txSty_14p_f5)) */
+          Expanded(
+            flex: 1,
+            child: CustomBtn(
+                label: tr(LocaleKeys.submit),
+                onPressed: () {
+                  validateAndSubmit(selectedFromDate, selectedToDate);
+                }),
+          ),
         ],
       ),
     );
@@ -795,7 +799,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // Check if pickedDay is not in the future
       setState(() {
         selectedFromDate = pickedDay;
-        displayFromDate = DateFormat('dd-MM-yyyy').format(selectedFromDate!);
+        displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
       });
     }
     // return DateFormat('dd-MM-yyyy').format(selectedFromDate!);
@@ -809,6 +813,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     // final DateTime firstDate = DateTime(lastDate.year - 100);
     final DateTime? pickedDay = await showDatePicker(
       context: context,
+      // initialDate: DateTime.now(),
       initialDate: initialDate ?? DateTime.now(),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       firstDate: firstDate,
@@ -820,7 +825,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // Check if pickedDay is not in the future
       setState(() {
         selectedToDate = pickedDay;
-        displayToDate = DateFormat('dd-MM-yyyy').format(selectedToDate!);
+        displayToDate = DateFormat('dd/MM/yyyy').format(selectedToDate!);
       });
     }
     // return DateFormat('dd-MM-yyyy').format(selectedToDate!);
@@ -970,12 +975,6 @@ class InfoDialog extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  // Image.network(
-                  //   info.receiptImg!,
-                  //   width: 300,
-                  //   height: 300,
-                  //   fit: BoxFit.contain,
-                  // ),
                 );
               },
               child: Text(tr(LocaleKeys.recept),
@@ -984,25 +983,12 @@ class InfoDialog extends StatelessWidget {
           ),
           Center(
             child: CustomBtn(
-                label: tr(LocaleKeys.close),
-                // label: 'Submit',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                }),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.of(context).pop();
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     foregroundColor: Colors.black,
-            //     backgroundColor: Colors.white,
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(20),
-            //       side: const BorderSide(color: Colors.orange, width: 2),
-            //     ),
-            //   ),
-            //   child: Text(tr(LocaleKeys.close)),
-            // ),
+              label: tr(LocaleKeys.close),
+              // label: 'Submit',
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ),
         ],
       ),

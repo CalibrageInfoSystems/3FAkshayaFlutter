@@ -17,10 +17,11 @@ import 'SelectbioProductsScreen.dart';
 import 'SelectedibleProductsScreen.dart';
 import 'models/Godowndata.dart';
 import 'package:http/http.dart' as http;
+
 class GodownSelectionScreen extends StatefulWidget {
   final String keyName;
 
-  GodownSelectionScreen({required this.keyName});
+  const GodownSelectionScreen({super.key, required this.keyName});
 
   @override
   GodownSelection createState() => GodownSelection();
@@ -48,32 +49,30 @@ class GodownSelection extends State<GodownSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.select_godown), // Localization is safe here
+        title: tr(LocaleKeys.select_godown),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: isLoading
-            ? Center(
-          child: CircularProgressIndicator(), // Placeholder for loading
-        )
+            ? CommonStyles.rectangularShapeShimmerEffect()
             : ListView.builder(
-          itemCount: godowndata.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedIndex = index;
-                  print('===navigate from ${widget.keyName}');
-                });
-                navigateBasedOnKey(context, widget.keyName, godowndata[index]);
-              },
-              child: GoDownsCard(
-                godown: godowndata[index],
-                isSelected: selectedIndex == index,
+                itemCount: godowndata.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                      navigateBasedOnKey(
+                          context, widget.keyName, godowndata[index]);
+                    },
+                    child: GoDownsCard(
+                      godown: godowndata[index],
+                      isSelected: selectedIndex == index,
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }
@@ -81,11 +80,9 @@ class GodownSelection extends State<GodownSelectionScreen> {
   Future<void> _fetchGodowndata() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-
       stateCode = prefs.getString('statecode');
 
       print('stateCode -==$stateCode');
-
     });
     setState(() {
       isLoading = true; // Start loading
@@ -99,17 +96,19 @@ class GodownSelection extends State<GodownSelectionScreen> {
     Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
-   // http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP
+    // http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP
     try {
-      final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
+      final response =
+          await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final List<dynamic> listResult = data['listResult'];
 
         setState(() {
-          godowndata = listResult.map((json) => Godowndata.fromJson(json)).toList();
-         // CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          godowndata =
+              listResult.map((json) => Godowndata.fromJson(json)).toList();
+          // CommonStyles.hideHorizontalDotsLoadingDialog(context);
           isLoading = false; // Stop loading after data is fetched
         });
       } else {
@@ -117,7 +116,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
       }
     } catch (e) {
       setState(() {
-       // CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        // CommonStyles.hideHorizontalDotsLoadingDialog(context);
         isLoading = false; // Stop loading if there’s an error
       });
       // Handle error (e.g., show a message)
@@ -128,28 +127,34 @@ class GodownSelection extends State<GodownSelectionScreen> {
     }
   }
 
-  void navigateBasedOnKey(BuildContext context, String keyName, Godowndata selectedGodown) {
+  void navigateBasedOnKey(
+      BuildContext context, String keyName, Godowndata selectedGodown) {
     if (keyName == 'Fertilizer') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectProductsScreen(godown: selectedGodown)),
+        MaterialPageRoute(
+            builder: (context) => SelectProductsScreen(godown: selectedGodown)),
       );
     } else if (keyName == 'Pole') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectEquipProductsScreen(godown: selectedGodown)),
+        MaterialPageRoute(
+            builder: (context) =>
+                SelectEquipProductsScreen(godown: selectedGodown)),
       );
-    }
-    else if (keyName == 'BioLab') {
+    } else if (keyName == 'BioLab') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectbioProductsScreen(godown: selectedGodown)),
+        MaterialPageRoute(
+            builder: (context) =>
+                SelectbioProductsScreen(godown: selectedGodown)),
       );
-    }
-    else if (keyName == 'edibleoils') {
+    } else if (keyName == 'edibleoils') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectedibleProductsScreen(godown: selectedGodown)),
+        MaterialPageRoute(
+            builder: (context) =>
+                SelectedibleProductsScreen(godown: selectedGodown)),
       );
     }
   }
@@ -167,7 +172,7 @@ class GoDownsCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(3.0),
           gradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -180,15 +185,15 @@ class GoDownsCard extends StatelessWidget {
           ),
           border: isSelected
               ? Border.all(
-            color: CommonStyles.primaryTextColor,
-          )
+                  color: CommonStyles.primaryTextColor,
+                )
               : null,
         ),
         margin: const EdgeInsets.only(bottom: 10),
         child: Row(
           children: [
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Image.asset(
                 Assets.images.icGodown.path,
                 fit: BoxFit.contain,
@@ -200,7 +205,9 @@ class GoDownsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(godown.name!, style: CommonStyles.txSty_14b_f5),
+                  Text(godown.name!,
+                      style: CommonStyles.txStyF16CbFF6
+                          .copyWith(color: CommonStyles.blackColorShade)),
                   Container(
                     height: 0.5,
                     margin: const EdgeInsets.symmetric(vertical: 5),
@@ -248,13 +255,19 @@ class GoDownsCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                  flex: 4,
-                  child: Text(label, style: CommonStyles.txSty_12b_f5)),
-              const Text(':  '),
+                flex: 4,
+                child: Text(label,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.blackColorShade)),
+              ),
+              Text(':  ',
+                  style: CommonStyles.txStyF14CbFF6
+                      .copyWith(color: CommonStyles.blackColorShade)),
               Expanded(
                 flex: 6,
                 child: Text('$data',
-                    style: CommonStyles.txSty_12b_f5,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.blackColorShade),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis),
               ),

@@ -61,6 +61,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommonStyles.whiteColor,
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
@@ -83,8 +84,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                     },
                   );
                 } else {
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive());
+                  return CommonStyles.rectangularShapeShimmerEffect();
                 }
               }),
         ),
@@ -99,10 +99,6 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
           CommonStyles.showHorizontalDotsLoadingDialog(context);
         });
         checkVisitRequest(widget.serviceTypeId, plot);
-        /*  Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => VisitRequest(plot: plot)),); */
         break;
       default:
         Navigator.of(context).push(
@@ -124,8 +120,6 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     });
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-    print('www: $apiUrl');
-    print('www: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['isSuccess']) {
@@ -173,14 +167,11 @@ class CropPlotDetails extends StatelessWidget {
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
     String year = parsedDate.year.toString();
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        // border:
-        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
         borderRadius: BorderRadius.circular(10),
-        color: index.isEven ? Colors.grey.shade200 : Colors.transparent,
-        // color: index.isEven ? Colors.grey.shade200 : Colors.transparent,
+        color: index.isEven ? Colors.grey.shade300 : Colors.transparent,
       ),
       child: Stack(
         children: [
@@ -230,7 +221,9 @@ class CropPlotDetails extends StatelessWidget {
   }
 
   Widget plotDetailsBox(
-      {required String label, required String data, Color? dataTextColor}) {
+      {required String label,
+      required String data,
+      Color? dataTextColor = CommonStyles.dataTextColor}) {
     return Column(
       children: [
         Row(
@@ -239,19 +232,18 @@ class CropPlotDetails extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txSty_14b_f5,
+                  style: CommonStyles.txStyF14CbFF6,
                 )),
             Expanded(
-                flex: 6,
-                child: Text(
-                  data,
-                  style: CommonStyles.txF14Fw5Cb.copyWith(
-                    color: dataTextColor,
-                  ),
-                )),
+              flex: 6,
+              child: Text(
+                data,
+                style: CommonStyles.txStyF14CbFF6,
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 8),
       ],
     );
   }

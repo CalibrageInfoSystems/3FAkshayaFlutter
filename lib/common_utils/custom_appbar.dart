@@ -1,24 +1,27 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
+import 'package:akshaya_flutter/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Widget? actionIcon;
+  final Color? appBarColor;
   final void Function()? onPressed;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.actionIcon,
+    this.appBarColor = CommonStyles.appBarColor,
     this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: CommonStyles.appBarColor,
+      backgroundColor: appBarColor,
       leading: GestureDetector(
         onTap: () {
           Navigator.pop(context);
@@ -28,9 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: Text(
         title,
-        style: CommonStyles.txSty_14black_f5.copyWith(
-          color: CommonStyles.whiteColor,
-        ),
+        style: CommonStyles.txStyF14CwFF6,
       ),
       actions: [
         actionIcon ??
@@ -44,7 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
+                        builder: (context) => const MainScreen(),
                       ),
                     );
                   },

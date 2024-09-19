@@ -1,12 +1,10 @@
 import 'dart:convert';
 
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLabourRequestScreen.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLoanRequestScreen.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_fertilizer_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_loan_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_visit_requests.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
@@ -41,7 +39,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      print('getServicesData jsonResponse: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> servicesList = response['listResult'];
@@ -70,7 +67,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonStyles.primaryColor,
+      backgroundColor: CommonStyles.screenBgColor,
       body: FutureBuilder(
         future: servicesData,
         builder: (context, snapshot) {
@@ -78,7 +75,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
             return ShimmerWid(
               child: Container(
                 width: double.infinity,
-                height: 40.0,
+                height: 65.0,
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10),
@@ -105,13 +102,16 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
   Widget serviceListItem(int serviceTypeId) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       //  margin: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 0.8),
-        //borderRadius: BorderRadius.circular(8),
-      ),
+          border: Border.all(color: Colors.grey, width: 0.8),
+          color: CommonStyles.whiteColor
+          //borderRadius: BorderRadius.circular(8),
+          ),
       child: ListTile(
+        // trailing: const IconButton(
+        //     onPressed: null, icon: Icon(Icons.arrow_right_rounded)),
         leading: Image.asset(
           getServiceImagePath(serviceTypeId),
           width: 35,
@@ -132,28 +132,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     builder: (context) => const ViewFertilizerRequests()),
               );
               break;
-            // case 10: // Pole Request
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => GodownSelectionScreen(keyName: 'Pole')),
-            //   );
-            //   break;
-            // case 107: // Bio Lab Request
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             GodownSelectionScreen(keyName: 'BioLab')),
-            //   );
-            //   break;
-            // case 116: // Edibleoils Request
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => GodownSelectionScreen(keyName: 'edibleoils')),
-            //   );
-            //   break;
             case 13: // Quick Pay Request
               Navigator.push(
                 context,
@@ -174,21 +152,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     builder: (context) => const ViewLoanRequests()),
               );
               break;
-            /*   case 108: // Transport Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoanRequestScreen()),
-            );
-            break;
-          case 116: // Edible Oils Request
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const LoanRequestScreen()),
-            );
-            break; */
-
             case 11: // Pole Request
               Navigator.push(
                 context,

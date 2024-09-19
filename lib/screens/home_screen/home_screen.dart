@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 5),
           Text(
             tr(LocaleKeys.req_services),
-            style: CommonStyles.txStyF14CbFF6,
+            style: CommonStyles.txStyF16CbFF6,
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -286,17 +286,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisSpacing: 0,
                             childAspectRatio: 1.5,
                           ),
-                          itemCount: serviceTypeIdList.length,
+                          itemCount: serviceTypeIdList.length + 1,
                           itemBuilder: (context, index) {
                             return serviceGridItem(
                                 index,
-                                serviceTypeIdList.length,
-                                serviceTypeIdList[index]);
+                                serviceTypeIdList.length + 1,
+                                serviceTypeIdList.length == index
+                                    ? -1
+                                    : serviceTypeIdList[index]);
                           },
                         );
                       }
                     },
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -312,9 +315,10 @@ class _HomeScreenState extends State<HomeScreen> {
       color: backgroundColor,
       child: Column(
         children: [
+          const SizedBox(height: 5),
           Text(
             tr(LocaleKeys.learning),
-            style: CommonStyles.txStyF14CbFF6,
+            style: CommonStyles.txStyF16CbFF6,
           ),
           const SizedBox(height: 10),
           SizedBox(
@@ -343,18 +347,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisSpacing: 0,
                             childAspectRatio: 1.5,
                           ),
-                          itemCount: learningsList.length,
+                          itemCount: learningsList.length + 1,
                           itemBuilder: (context, index) {
                             return learningGridItem(
                               index: index,
-                              learningsList: learningsList.length,
-                              title: learningsList[index] ?? '',
+                              learningsList: learningsList.length + 1,
+                              title: learningsList.length == index
+                                  ? null
+                                  : learningsList[index],
                             );
                           },
                         );
                       }
                     },
-                  )
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -439,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 5),
           Text(
             tr(LocaleKeys.view),
-            style: CommonStyles.txStyF14CwFF6,
+            style: CommonStyles.txStyF16CwFF6,
           ),
           const SizedBox(height: 10),
           Row(
@@ -505,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: CommonStyles.txStyF12CwFF6,
+                  style: CommonStyles.txStyF14CwFF6,
                 ),
               ),
             ],
@@ -584,60 +591,64 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget gridServiceItem(int serviceTypeId) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset(
-          getServiceImagePath(serviceTypeId),
-          width: 35,
-          height: 35,
-          fit: BoxFit.cover,
-        ),
-        const SizedBox(height: 5),
-        Text(
-          getServiceName(serviceTypeId),
-          textAlign: TextAlign.center,
-          style: CommonStyles.txStyF12CbFF6,
-        ),
-      ],
-    );
+    return serviceTypeId < 0
+        ? const SizedBox()
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                getServiceImagePath(serviceTypeId),
+                width: 35,
+                height: 35,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                getServiceName(serviceTypeId),
+                textAlign: TextAlign.center,
+                style: CommonStyles.txStyF14CbFF6,
+              ),
+            ],
+          );
   }
 
-  Widget gridLearningItem(int index, String title) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EncyclopediaActivity(
-              appBarTitle: title,
-              index: (index + 1),
+  Widget gridLearningItem(int index, String? title) {
+    return title == null
+        ? const SizedBox()
+        : GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EncyclopediaActivity(
+                    appBarTitle: title,
+                    index: (index + 1),
+                  ),
+                ),
+              );
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  getLearningImagePath(index),
+                  width: 35,
+                  height: 35,
+                  fit: BoxFit.cover,
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  title,
+                  style: CommonStyles.txStyF14CbFF6,
+                ),
+              ],
             ),
-          ),
-        );
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            getLearningImagePath(index),
-            width: 35,
-            height: 35,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(height: 5),
-          Text(
-            title,
-            style: CommonStyles.txStyF12CbFF6,
-          ),
-        ],
-      ),
-    );
+          );
   }
 
-  Widget serviceGridItem(int index, int gridSize, int serviceTypeId) {
+  Widget serviceGridItem(int index, int gridSize, int? serviceTypeId) {
     int totalColumns = 3;
     int totalRows = (gridSize / totalColumns).ceil();
     int currentRow = (index / totalColumns).floor() + 1;
@@ -657,13 +668,15 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: (currentRow == totalRows) ? BorderSide.none : borderSide,
           ),
         ),
-        child: gridServiceItem(serviceTypeId),
+        child: gridServiceItem(serviceTypeId!),
       ),
     );
   }
 
   Widget learningGridItem(
-      {required int index, required int learningsList, required String title}) {
+      {required int index,
+      required int learningsList,
+      required String? title}) {
     int totalColumns = 3;
     int totalRows = (learningsList / totalColumns).ceil();
     int currentRow = (index / totalColumns).floor() + 1;
@@ -708,7 +721,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Assets.images.ediableoils.path;
 
       default:
-        return Assets.images.mainVisit.path;
+        return Assets.images.ediableoils.path;
     }
   }
 
@@ -735,7 +748,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return tr(LocaleKeys.edibleoils);
 
       default:
-        return Assets.images.mainVisit.path;
+        return tr(LocaleKeys.my3F);
     }
   }
 

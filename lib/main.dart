@@ -1,6 +1,7 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +71,7 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
-      // home: const RequestServicesScreen(),
+      // home: const FfbCollectionScreen(),
     );
   }
 }
