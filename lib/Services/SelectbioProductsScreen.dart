@@ -27,10 +27,11 @@ import 'models/Godowndata.dart';
 class SelectbioProductsScreen extends StatefulWidget {
   final Godowndata godown;
 
-  const SelectbioProductsScreen({Key? key, required this.godown}) : super(key: key);
+  const SelectbioProductsScreen({super.key, required this.godown});
 
   @override
-  State<SelectbioProductsScreen> createState() => _SelectbioProductsScreenState();
+  State<SelectbioProductsScreen> createState() =>
+      _SelectbioProductsScreenState();
 }
 
 class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
@@ -38,7 +39,6 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
 
   Map<int, int> productQuantities = {};
   int badgeCount = 0;
-
 
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
@@ -65,8 +65,8 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
       catogaryId == -1
           ? copyProductsData
           : copyProductsData
-          .where((item) => item.categoryId == catogaryId)
-          .toList(),
+              .where((item) => item.categoryId == catogaryId)
+              .toList(),
     );
   }
 
@@ -78,9 +78,9 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
     return copyProductsData
         .where((product) => productQuantities.containsKey(product.id))
         .map((product) => ProductWithQuantity(
-      product: product,
-      quantity: productQuantities[product.id] ?? 0,
-    ))
+              product: product,
+              quantity: productQuantities[product.id] ?? 0,
+            ))
         .toList();
   }
 
@@ -97,7 +97,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
           List<dynamic> listResult = response['listResult'];
           return listResult.map((item) => ProductItem.fromJson(item)).toList();
         } else {
-          return []; // Return an empty list if listResult is null
+          return [];
         }
       } else {
         throw Exception('Failed to load data: ${jsonResponse.statusCode}');
@@ -107,74 +107,71 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(
-          title: tr(LocaleKeys.select_product), // Localization is safe here
-        ),
-
-        body: Column(
-          children: [
-            headerSection(),
-            Expanded(child: filterAndProductSection()),
-          ],
-        ));
-  }
-
-  Widget filterAndProductSection() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: CustomAppBar(
+        title: tr(LocaleKeys.select_product),
+      ),
+      body: Column(
         children: [
-
-          const SizedBox(height: 10),
           Expanded(
-            child: FutureBuilder(
-              future: productsData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return shimmerLoading();
-                }
-                if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
-                } else {
-                  final products = snapshot.data as List<ProductItem>;
-                  // print('xxx: ${products.length}');
-                  if (products.isNotEmpty) {
-                    return GridView.builder(
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          mainAxisExtent: 250,
-                          childAspectRatio: 8 / 2),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-                        final quantity = productQuantities[product.id] ?? 0;
-                        return ProductCard(
-                          product: product,
-                          quantity: quantity,
-                          onQuantityChanged: (newQuantity) {
-                            setState(() {
-                              productQuantities[product.id!] = newQuantity;
-                              updateBadgeCount();
-                            });
-                          },
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text('No products found',   style: CommonStyles.txSty_14b_f6,),
-                    );
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              child: FutureBuilder(
+                future: productsData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return shimmerLoading();
                   }
-                }
-              },
+                  if (snapshot.hasError) {
+                    return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                  } else {
+                    final products = snapshot.data as List<ProductItem>;
+                    if (products.isNotEmpty) {
+                      return Column(
+                        children: [
+                          headerSection(),
+                          const SizedBox(height: 10),
+                          GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10.0,
+                                    mainAxisSpacing: 10.0,
+                                    mainAxisExtent: 250,
+                                    childAspectRatio: 8 / 2),
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              final product = products[index];
+                              final quantity =
+                                  productQuantities[product.id] ?? 0;
+                              return ProductCard(
+                                product: product,
+                                quantity: quantity,
+                                onQuantityChanged: (newQuantity) {
+                                  setState(() {
+                                    productQuantities[product.id!] =
+                                        newQuantity;
+                                    updateBadgeCount();
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Center(
+                        child: Text(
+                          'No products found',
+                          style: CommonStyles.txStyF14CpFF6,
+                        ),
+                      );
+                    }
+                  }
+                },
+              ),
             ),
           ),
         ],
@@ -209,14 +206,11 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
     );
   }
 
-
-
   Container headerSection() {
     return Container(
       color: Colors.grey.shade300,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child:
-      Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
@@ -247,7 +241,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
             ],
           ),
           CustomBtn(
-            label:tr(LocaleKeys.next),
+            label: tr(LocaleKeys.next),
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
@@ -256,7 +250,8 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => bioProductCardScreen(
-                      products: fetchCardProducts(),godown:widget.godown,
+                      products: fetchCardProducts(),
+                      godown: widget.godown,
                     ),
                   ),
                 );
@@ -271,14 +266,12 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
           ),
         ],
       ),
-
     );
   }
 
-
-
   void updateBadgeCount() {
-    badgeCount = productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
+    badgeCount =
+        productQuantities.values.fold(0, (sum, quantity) => sum + quantity);
     print('productQuantities: $productQuantities');
   }
 
@@ -287,10 +280,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
         .map((productWithQuantity) => productWithQuantity.totalPrice)
         .fold(0.0, (previousValue, element) => previousValue + element);
   }
-
 }
-
-
 
 class ProductCard extends StatefulWidget {
   final ProductItem product;
@@ -325,100 +315,98 @@ class _ProductCardState extends State<ProductCard> {
         color: Colors.grey.shade300,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(),
-                // Allow product.name to wrap into multiple lines
-                Expanded(
-                  child: Text(
-                    widget.product.name!,
-                    style: CommonStyles.txSty_14p_f5,
-                    maxLines: 3,  // Allow up to 3 lines
-                    overflow: TextOverflow.ellipsis,  // Add ellipsis if it exceeds 3 lines
-                  ),
-                ),
-                GestureDetector(
-                  onTap: openProductInfoDialog,
-                  child: Image.asset(
-                    Assets.images.infoIcon.path,
-                    width: 20,
-                    height: 20,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${widget.product.priceInclGst}',
-                  style: CommonStyles.txSty_14b_f5,
-                ),
-                // Conditionally show product size and uomType if product.size is not null
-                if (widget.product.size != null)
-                  Text(
-                    '${widget.product.size} ${widget.product.uomType}',
-                    style: CommonStyles.txSty_14p_f5,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 5),
+            const SizedBox(),
+            // Allow product.name to wrap into multiple lines
             Expanded(
-              child: Center(
-                child: CachedNetworkImage(
-                  imageUrl: widget.product.imageUrl!,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Image.asset(
-                    Assets.images.icLogo.path,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+              child: Text(
+                widget.product.name!,
+                style: CommonStyles.txStyF14CpFF6,
+                maxLines: 3, // Allow up to 3 lines
+                overflow:
+                    TextOverflow.ellipsis, // Add ellipsis if it exceeds 3 lines
               ),
             ),
-            const SizedBox(height: 3),
+            GestureDetector(
+              onTap: openProductInfoDialog,
+              child: Image.asset(
+                Assets.images.infoIcon.path,
+                width: 20,
+                height: 20,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${widget.product.priceInclGst}',
+              style: CommonStyles.txStyF14CbFF6,
+            ),
+            // Conditionally show product size and uomType if product.size is not null
+            if (widget.product.size != null)
+              Text(
+                '${widget.product.size} ${widget.product.uomType}',
+                style: CommonStyles.txStyF14CpFF6,
+              ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Expanded(
+          child: Center(
+            child: CachedNetworkImage(
+              imageUrl: widget.product.imageUrl!,
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Image.asset(
+                Assets.images.icLogo.path,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Qty:',
+              style: CommonStyles.txStyF14CbFF6,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Qty:',
-                  style: CommonStyles.txSty_14b_f5,
+                IconButton(
+                  iconSize: 16,
+                  style: iconBtnStyle(
+                    foregroundColor: CommonStyles.primaryTextColor,
+                  ),
+                  icon: const Icon(Icons.remove),
+                  onPressed: removeProduct,
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      iconSize: 16,
-                      style: iconBtnStyle(
-                        foregroundColor: CommonStyles.primaryTextColor,
-                      ),
-                      icon: const Icon(Icons.remove),
-                      onPressed: removeProduct,
-                    ),
-                    const SizedBox(width: 2),
-                    Text(
-                      '$productQuantity',
-                      style: CommonStyles.texthintstyle,
-                    ),
-                    const SizedBox(width: 2),
-                    IconButton(
-                      iconSize: 16,
-                      style: iconBtnStyle(
-                        foregroundColor: CommonStyles.statusGreenText,
-                      ),
-                      icon: const Icon(Icons.add),
-                      onPressed: addProduct,
-                    ),
-                  ],
+                const SizedBox(width: 2),
+                Text(
+                  '$productQuantity',
+                  style: CommonStyles.texthintstyle,
                 ),
-                const SizedBox(),
+                const SizedBox(width: 2),
+                IconButton(
+                  iconSize: 16,
+                  style: iconBtnStyle(
+                    foregroundColor: CommonStyles.statusGreenText,
+                  ),
+                  icon: const Icon(Icons.add),
+                  onPressed: addProduct,
+                ),
               ],
             ),
-          ]
-
-      ),
+            const SizedBox(),
+          ],
+        ),
+      ]),
     );
   }
 
@@ -503,7 +491,7 @@ class _ProductCardState extends State<ProductCard> {
               child: CachedNetworkImage(
                 imageUrl: '${product.imageUrl}',
                 placeholder: (context, url) =>
-                const CircularProgressIndicator(),
+                    const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => Image.asset(
                   Assets.images.icLogo.path,
                   fit: BoxFit.cover,
@@ -553,62 +541,62 @@ class _ProductCardState extends State<ProductCard> {
           children: [
             Expanded(
                 child: Row(
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Text(
-                        label1,
-                        style: CommonStyles.txSty_14b_fb,
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: Text(
-                        ':',
-                        style: CommonStyles.txSty_14b_fb,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 5,
-                      child: Text(
-                        data1,
-                        style: CommonStyles.txSty_14b_fb,
-                      ),
-                    ),
-                  ],
-                )),
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Text(
+                    label1,
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+                const Expanded(
+                  flex: 1,
+                  child: Text(
+                    ':',
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Text(
+                    data1,
+                    style: CommonStyles.txSty_14b_fb,
+                  ),
+                ),
+              ],
+            )),
             const SizedBox(width: 10),
             isSingle
                 ? const Expanded(
-              child: SizedBox(),
-            )
+                    child: SizedBox(),
+                  )
                 : Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      label2,
-                      style: CommonStyles.txSty_14b_fb,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            label2,
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 1,
+                          child: Text(
+                            ':',
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            data2,
+                            style: CommonStyles.txSty_14b_fb,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const Expanded(
-                    flex: 1,
-                    child: Text(
-                      ':',
-                      style: CommonStyles.txSty_14b_fb,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      data2,
-                      style: CommonStyles.txSty_14b_fb,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ],
@@ -672,6 +660,7 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 }
+
 class ProductWithQuantity {
   final ProductItem product;
   final int quantity;

@@ -485,14 +485,30 @@ class _ProductCardState extends State<ProductCard> {
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.close,
-                    color: CommonStyles.primaryTextColor,
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: CommonStyles.primaryTextColor,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 20,
+                      color: CommonStyles.primaryTextColor,
+                    ),
+                    // IconButton(
+                    //   icon: const Icon(
+                    //     Icons.close,
+                    //     color: CommonStyles.primaryTextColor,
+                    //   ),
+                    //   onPressed: () {
+                    //     Navigator.of(context).pop();
+                    //   },
+                    // ),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
                 ),
                 /*  Align(
                   alignment: Alignment.topRight,

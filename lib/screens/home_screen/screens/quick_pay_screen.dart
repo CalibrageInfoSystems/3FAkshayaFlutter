@@ -30,7 +30,6 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   late Future<List<UnpaidCollection>> futureUnpaidCollection;
 
   Future<List<UnpaidCollection>> getUnpaidCollection() async {
-    // throw Exception('No data found');
     // http://182.18.157.215/3FAkshaya/API/api/Farmer/GetUnPayedCollectionsByFarmerCode/APWGNJAP00150015
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
@@ -62,6 +61,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommonStyles.whiteColor,
       appBar: CustomAppBar(title: tr(LocaleKeys.quickPay)),
       body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -98,6 +98,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                       children: [
                         CustomBtn(
                             label: tr(LocaleKeys.request_rise),
+                            btnTextStyle: CommonStyles.txStyF14CpFF6,
                             onPressed: () {
                               setState(() {
                                 CommonStyles.showHorizontalDotsLoadingDialog(
@@ -113,15 +114,17 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: CommonStyles.noteColor,
+                        border: Border.all(
+                            color: CommonStyles.primaryTextColor, width: 0.5),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(tr(LocaleKeys.notee),
-                              style: CommonStyles.txSty_14p_f5),
+                          Text(tr(LocaleKeys.noteWithOutColon),
+                              style: CommonStyles.txStyF14CpFF6),
                           const SizedBox(height: 5),
                           Text(tr(LocaleKeys.unpaid_note),
-                              style: CommonStyles.txSty_12b_f5),
+                              style: CommonStyles.txStyF14CbFF6),
                         ],
                       ),
                     )
@@ -153,7 +156,9 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   Container quickPayBox({required int index, required UnpaidCollection data}) {
     return Container(
       decoration: BoxDecoration(
-        color: index % 2 == 0 ? Colors.white : Colors.grey.shade400,
+        color: index.isEven
+            ? CommonStyles.listEvenColor
+            : CommonStyles.listOddColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -188,7 +193,9 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   }
 
   Widget buildQuickPayRow(
-      {required String label, required String? data, Color? datatextColor}) {
+      {required String label,
+      required String? data,
+      Color? datatextColor = CommonStyles.dataTextColor}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
@@ -197,7 +204,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
             flex: 3,
             child: Text(
               label,
-              style: CommonStyles.txSty_12b_f5,
+              style: CommonStyles.txStyF14CbFF6,
             ),
           ),
           const SizedBox(width: 20),
@@ -205,8 +212,8 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
             flex: 7,
             child: Text(
               '$data',
-              style: CommonStyles.txSty_12b_f5.copyWith(
-                color: datatextColor ?? Colors.grey,
+              style: CommonStyles.txStyF14CbFF6.copyWith(
+                color: datatextColor,
               ),
             ),
           ),

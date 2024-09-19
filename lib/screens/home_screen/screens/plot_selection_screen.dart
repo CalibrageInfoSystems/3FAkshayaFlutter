@@ -38,8 +38,6 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      print('yyy: $apiUrl');
-      print('yyy: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         if (response['listResult'] != null) {
@@ -61,7 +59,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonStyles.whiteColor,
+      backgroundColor: CommonStyles.listOddColor,
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
@@ -144,13 +142,15 @@ class CropPlotDetails extends StatelessWidget {
   final int index;
   final void Function()? onTap;
   final bool isIconVisible;
+  final Color? dataTextColor;
 
   const CropPlotDetails(
       {super.key,
       required this.plotdata,
       required this.index,
       this.onTap,
-      this.isIconVisible = true});
+      this.isIconVisible = true,
+      this.dataTextColor = CommonStyles.primaryTextColor});
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +171,7 @@ class CropPlotDetails extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: index.isEven ? Colors.grey.shade300 : Colors.transparent,
+        color: index.isEven ? CommonStyles.listEvenColor : Colors.transparent,
       ),
       child: Stack(
         children: [
@@ -194,7 +194,7 @@ class CropPlotDetails extends StatelessWidget {
         plotDetailsBox(
             label: tr(LocaleKeys.plot_code),
             data: '${plotdata.plotcode}',
-            dataTextColor: CommonStyles.primaryTextColor),
+            dataTextColor: dataTextColor),
         plotDetailsBox(
           label: tr(LocaleKeys.plot_size),
           data:
@@ -238,7 +238,9 @@ class CropPlotDetails extends StatelessWidget {
               flex: 6,
               child: Text(
                 data,
-                style: CommonStyles.txStyF14CbFF6,
+                style: CommonStyles.txStyF14CbFF6.copyWith(
+                  color: dataTextColor,
+                ),
               ),
             ),
           ],
