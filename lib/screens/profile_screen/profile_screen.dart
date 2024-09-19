@@ -183,27 +183,68 @@ class FarmerProfile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 100,
+            height: 120,
             child: Row(
               children: [
                 Expanded(
                   child: Center(
-                    child: Image.asset(
-                      Assets.images.icUser.path,
+                    child: farmerData.farmerPictureLocation != null
+                        ? Image.network(
+                      farmerData.farmerPictureLocation!,
+                      fit: BoxFit.contain,
+                      height: 90,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Show icUser image if there's an error loading the farmer image
+                        return Image.asset(
+                          Assets.images.icUser.path,
+                          fit: BoxFit.contain,
+                          height: 90,
+                        );
+                      },
+                    )
+                        : Image.asset(
+                      Assets.images.icUser.path, // Placeholder image if farmerImage is null
                       fit: BoxFit.contain,
                       height: 90,
                     ),
                   ),
                 ),
                 Expanded(
-                    child: Center(
-                  child: QrImageView(
-                    data: '${farmerData.code}',
-                    version: QrVersions.auto,
-                    size: 90,
-                    // size: 200.0,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          color: CommonStyles.whiteColor, // Set the background color for the QR code
+                          padding: const EdgeInsets.all(4.0), // Optional padding for the QR code
+                          child: QrImageView(
+                            data: '${farmerData.code}',
+                            version: QrVersions.auto,
+                            size: 90, // QR code size
+                          ),
+                        ),
+                   //     const SizedBox(height: 10), // Space between QR code and the text
+                        const Text(
+                          'QR Code', // Text below the QR code
+                          style: TextStyle(
+                            fontFamily: 'hind_semibold',
+                            color: Colors.black, // Text color
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )),
+                ),
+
+                // Expanded(
+                //     child: Center(
+                //   child: QrImageView(
+                //     data: '${farmerData.code}',
+                //     version: QrVersions.auto,
+                //     size: 90,
+                //     // size: 200.0,
+                //   ),
+                // )),
               ],
             ),
           ),

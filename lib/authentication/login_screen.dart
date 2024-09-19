@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:akshaya_flutter/authentication/login_otp_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -32,7 +34,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          if (Platform.isAndroid) {
+            // Close the app on Android
+            SystemNavigator.pop();
+            return Future.value(false); // Do not navigate back
+          } else if (Platform.isIOS) {
+            // Close the app on iOS
+            exit(0);
+            return Future.value(false); // Do not navigate back
+          }
+          return Future.value(true); // Default behavior (navigate back) if not Android or iOS
+        },
+    child:  Scaffold(
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -219,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Future<void> onLoginPressed() async {

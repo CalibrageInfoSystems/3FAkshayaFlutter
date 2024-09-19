@@ -62,7 +62,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   Future<CollectionResponse> getInitialData() async {
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     String fromDate =
-        formatter.format(DateTime.now().subtract(const Duration(days: 30)));
+    formatter.format(DateTime.now().subtract(const Duration(days: 30)));
     // String toDate = formatter.format(DateTime.now());
     return getCollectionData(fromDate: fromDate);
   }
@@ -95,10 +95,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       if (response['result'] != null) {
         List<dynamic> collectionDataList = response['result']['collectioData'];
         Map<String, dynamic> collectionCountMap =
-            response['result']['collectionCount'][0];
+        response['result']['collectionCount'][0];
 
         CollectionCount collectionCount =
-            CollectionCount.fromJson(collectionCountMap);
+        CollectionCount.fromJson(collectionCountMap);
         List<CollectionData> collectionData = collectionDataList
             .map((item) => CollectionData.fromJson(item))
             .toList();
@@ -175,7 +175,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color:
-              index % 2 == 0 ? CommonStyles.whiteColor : Colors.grey.shade300,
+          index % 2 == 0 ? CommonStyles.whiteColor : Colors.grey.shade300,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -208,9 +208,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     children: [
                       Expanded(
                           child: Text(
-                        tr(LocaleKeys.only_date),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
+                            tr(LocaleKeys.only_date),
+                            style: CommonStyles.txStyF14CbFF6,
+                          )),
                       Text(
                         ' :  ',
                         style: CommonStyles.txStyF14CbFF6
@@ -218,10 +218,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       ),
                       Expanded(
                           child: Text(
-                        '${CommonStyles.formateDate(data.docDate)}',
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      )),
+                            '${CommonStyles.formateDate(data.docDate)}',
+                            style: CommonStyles.txStyF14CbFF6
+                                .copyWith(color: CommonStyles.dataTextColor),
+                          )),
                     ],
                   ),
                 ),
@@ -231,9 +231,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     children: [
                       Expanded(
                           child: Text(
-                        tr(LocaleKeys.weight),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
+                            tr(LocaleKeys.weight),
+                            style: CommonStyles.txStyF14CbFF6,
+                          )),
                       Text(
                         ':  ',
                         style: CommonStyles.txStyF14CbFF6
@@ -241,10 +241,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       ),
                       Expanded(
                           child: Text(
-                        formatText('${data.quantity}'),
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      )),
+                            formatText('${data.quantity}'),
+                            style: CommonStyles.txStyF14CbFF6
+                                .copyWith(color: CommonStyles.dataTextColor),
+                          )),
                     ],
                   ),
                 ),
@@ -312,24 +312,24 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     children: [
                       Expanded(
                           child: Text(
-                        tr(LocaleKeys.status),
-                        style: CommonStyles.txSty_14b_f5,
-                      )),
+                            tr(LocaleKeys.status),
+                            style: CommonStyles.txSty_14b_f5,
+                          )),
                       const Text(
                         ':  ',
                         style: CommonStyles.txF14Fw5Cb,
                       ),
                       Expanded(
                           child: Text(
-                        data.uApaystat != 'Paid'
-                            ? 'Pending'
-                            : '${data.uApaystat}',
-                        style: CommonStyles.txF14Fw5Cb.copyWith(
-                          color: data.uApaystat == 'Paid'
-                              ? CommonStyles.statusGreenText
-                              : CommonStyles.RedColor,
-                        ),
-                      )),
+                            data.uApaystat != 'Paid'
+                                ? 'Pending'
+                                : '${data.uApaystat}',
+                            style: CommonStyles.txF14Fw5Cb.copyWith(
+                              color: data.uApaystat == 'Paid'
+                                  ? CommonStyles.statusGreenText
+                                  : CommonStyles.RedColor,
+                            ),
+                          )),
                     ],
                   ),
                 ),
@@ -520,20 +520,20 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           ),
           items: dropdownItems
               .map((String item) => DropdownMenuItem<String>(
-                    value: item,
-                    child: Center(
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ))
+            value: item,
+            child: Center(
+              child: Text(
+                item,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ))
               .toList(),
           value: selectedDropDownValue,
           onChanged: (String? value) {
@@ -650,18 +650,18 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           const SizedBox(width: 10),
           Expanded(
               child: datePickerBox(
-            dateLabel: tr(LocaleKeys.to_date),
-            // dateLabel: 'To Date',
-            displaydate: displayToDate,
-            onTap: () {
-              final DateTime currentDate = DateTime.now();
-              final DateTime firstDate = DateTime(currentDate.year - 100);
-              launchToDatePicker(context,
-                  firstDate: selectedFromDate ?? firstDate,
-                  lastDate: currentDate,
-                  initialDate: selectedFromDate);
-            },
-          )),
+                dateLabel: tr(LocaleKeys.to_date),
+                // dateLabel: 'To Date',
+                displaydate: displayToDate,
+                onTap: () {
+                  final DateTime currentDate = DateTime.now();
+                  final DateTime firstDate = DateTime(currentDate.year - 100);
+                  launchToDatePicker(context,
+                      firstDate: selectedFromDate ?? firstDate,
+                      lastDate: currentDate,
+                      initialDate: selectedFromDate);
+                },
+              )),
           const SizedBox(width: 10),
           Expanded(
             flex: 1,
@@ -755,8 +755,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   Widget datePickerBox(
       {void Function()? onTap,
-      required String dateLabel,
-      required String? displaydate}) {
+        required String dateLabel,
+        required String? displaydate}) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -764,17 +764,17 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         children: [
           displaydate == null
               ? Row(
-                  children: [
-                    Text(dateLabel,
-                        style: CommonStyles.txSty_14black
-                            .copyWith(color: CommonStyles.whiteColor)),
-                    // const SizedBox(width: 5),
-                    // const Text('*', style: TextStyle(color: Colors.red)),
-                  ],
-                )
-              : Text(displaydate,
+            children: [
+              Text(dateLabel,
                   style: CommonStyles.txSty_14black
                       .copyWith(color: CommonStyles.whiteColor)),
+              // const SizedBox(width: 5),
+              // const Text('*', style: TextStyle(color: Colors.red)),
+            ],
+          )
+              : Text(displaydate,
+              style: CommonStyles.txSty_14black
+                  .copyWith(color: CommonStyles.whiteColor)),
           const Divider(color: CommonStyles.whiteColor),
         ],
       ),
@@ -783,8 +783,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   Future<void> launchFromDatePicker(BuildContext context,
       {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
+        required DateTime lastDate,
+        DateTime? initialDate}) async {
     // final DateTime lastDate = DateTime.now();
     // final DateTime firstDate = DateTime(lastDate.year - 100);
     final DateTime? pickedDay = await showDatePicker(
@@ -807,8 +807,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
   Future<void> launchToDatePicker(BuildContext context,
       {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
+        required DateTime lastDate,
+        DateTime? initialDate}) async {
     // final DateTime lastDate = DateTime.now();
     // final DateTime firstDate = DateTime(lastDate.year - 100);
     final DateTime? pickedDay = await showDatePicker(
@@ -881,7 +881,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   // tr(LocaleKeys.enter_Date),
                   // tr(LocaleKeys.datevalidation),
                   style:
-                      CommonStyles.txSty_14b_f5.copyWith(color: Colors.white),
+                  CommonStyles.txSty_14b_f5.copyWith(color: Colors.white),
                 ),
                 const SizedBox(height: 20),
                 CustomBtn(
@@ -969,7 +969,7 @@ class InfoDialog extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: info.receiptImg!,
                     placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                    const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Image.asset(
                       Assets.images.icLogo.path,
                       fit: BoxFit.cover,

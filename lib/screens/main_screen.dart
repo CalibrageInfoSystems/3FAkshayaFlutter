@@ -184,19 +184,32 @@ class _MainScreenPageState extends State<MainScreen> {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: CircleAvatar(
+                    child:CircleAvatar(
                       backgroundColor: Colors.transparent,
-                      child: Image.asset(
-                        Assets.images.icUser.path,
+                      child: farmer.farmerPictureLocation != null
+                          ? Image.network(
+                        farmer.farmerPictureLocation!,
+                        fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Show icUser image if there's an error loading the farmer image
+                          return Image.asset(
+                            Assets.images.icUser.path,
+                            fit: BoxFit.fill,
+                          );
+                        },
+                      )
+                          : Image.asset(
+                        Assets.images.icUser.path, // Placeholder image if farmerImage is null
                         fit: BoxFit.fill,
                       ),
                     ),
+
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        farmer.firstName!,
+                        farmer.firstName! + ' '+ (farmer.middleName ?? '') + ' '+ farmer.lastName!,
                         style: const TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
@@ -204,46 +217,64 @@ class _MainScreenPageState extends State<MainScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      Text(
-                        farmer.lastName!,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontFamily: 'hind_semibold',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+
+                      // const SizedBox(
+                      //   width: 10.0,
+                      // ),
+                      // Text(
+                      //   farmer.lastName!,
+                      //   style: const TextStyle(
+                      //     fontSize: 16.0,
+                      //     color: Colors.white,
+                      //     fontFamily: 'hind_semibold',
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                     ],
                   ),
-                  Row(
+
+                  // Row(
+                  //   // mainAxisAlignment: MainAxisAlignment.center,
+                  //   // crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0), // Add padding around the text
+                  //    child:  Flexible(
+                  //
+                  //       child: Text(
+                  //         farmer.addressLine1! + "-" + farmer.addressLine2!,
+                  //         maxLines: 3,
+                  //         overflow: TextOverflow.ellipsis,
+                  //         style: const TextStyle(
+                  //           fontSize: 16.0,
+                  //           color: Colors.white,
+                  //           fontFamily: 'hind_semibold',
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     )],
+                  // ),
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        farmer.addressLine1!,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontFamily: 'hind_semibold',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      Text(
-                        farmer.addressLine2!,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontFamily: 'hind_semibold',
-                          fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          farmer.addressLine1! + " - " + farmer.addressLine2!,
+                          textAlign: TextAlign.center,  // Center-align the text
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.white,
+                            fontFamily: 'hind_semibold',
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(
                     height: 5.0,
                   ),

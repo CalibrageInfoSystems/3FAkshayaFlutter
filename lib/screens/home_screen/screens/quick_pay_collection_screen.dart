@@ -19,6 +19,8 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../Services/models/MsgModel.dart';
+
 class QuickPayCollectionScreen extends StatefulWidget {
   final List<UnpaidCollection> unpaidCollections;
   const QuickPayCollectionScreen({super.key, required this.unpaidCollections});
@@ -36,14 +38,13 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   String? statecode;
   bool isChecked = false;
 
-  SignatureController? signatureController;
+  SignatureController? controller;
   Uint8List? signature;
 
   @override
   void initState() {
     super.initState();
-    signatureController =
-        SignatureController(penStrokeWidth: 2, penColor: Colors.black);
+    controller = SignatureController(penStrokeWidth: 2, penColor: Colors.black);
 
     collectionDetailsData = getCollectionDetails();
   }
@@ -56,7 +57,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 
     List<CollectionDetails> details = await Future.wait(
       widget.unpaidCollections.map(
-        (item) async {
+            (item) async {
           var value = await getQuickPayDetails(
             districtId: districtId,
             docDate: item.docDate,
@@ -86,7 +87,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     districtId = prefs.getInt(SharedPrefsKeys.districtId);
     statecode = prefs.getString(SharedPrefsKeys.statecode);
- 
+
     widget.unpaidCollections.map(
       (item) async {
        return getQuickPayDetails(
@@ -116,7 +117,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     required double? quantity,
     required String? stateCode,
   }) async {
-    const apiUrl = '$baseUrl$quickPayRequest';
+    final apiUrl = '$baseUrl$quickPayRequest';
     final requestBody = jsonEncode({
       "districtId": districtId,
       "docDate": docDate,
@@ -125,16 +126,62 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       "quantity": quantity,
       "stateCode": stateCode,
     });
-    final jsonResponse = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: requestBody,
-    );
-    final response = jsonDecode(jsonResponse.body);
-    return response['listResult'][0];
+
+    try {
+      final jsonResponse = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      );
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+
+        // Check if listResult is null or empty
+        if (response['listResult'] == null || response['listResult'].isEmpty) {
+          _showErrorDialog(tr(LocaleKeys.ffbratenorthere));
+          throw Exception('One of your Collections does not have Quick Pay Rate');
+        }
+
+        return response['listResult'][0];
+      } else {
+        throw Exception('Failed to fetch Quick Pay details. Status code: ${jsonResponse.statusCode}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+     throw Exception('');
+    }
   }
+
+  // Future<Map<String, dynamic>> getQuickPayDetails({
+  //   required int? districtId,
+  //   required String? docDate,
+  //   required String? farmerCode,
+  //   required bool? isSpecialPay,
+  //   required double? quantity,
+  //   required String? stateCode,
+  // }) async {
+  //   final apiUrl = '$baseUrl$quickPayRequest';
+  //   final requestBody = jsonEncode({
+  //     "districtId": districtId,
+  //     "docDate": docDate,
+  //     "farmerCode": farmerCode,
+  //     "isSpecialPay": isSpecialPay,
+  //     "quantity": quantity,
+  //     "stateCode": stateCode,
+  //   });
+  //   final jsonResponse = await http.post(
+  //     Uri.parse(apiUrl),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: requestBody,
+  //   );
+  //   final response = jsonDecode(jsonResponse.body);
+  //   return response['listResult'][0];
+  // }
 
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -142,7 +189,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     if (result != null) {
       Map<String, dynamic> response = json.decode(result);
       Map<String, dynamic> farmerResult =
-          response['result']['farmerDetails'][0];
+      response['result']['farmerDetails'][0];
       return FarmerModel.fromJson(farmerResult);
     }
     return FarmerModel();
@@ -154,7 +201,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
     String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    const apiUrl = '$baseUrl$addQuickpayRequest';
+    final apiUrl = '$baseUrl$addQuickpayRequest';
     final requestBody = jsonEncode({
       "closingBalance": collections[0].dues,
       "clusterId": farmerData.clusterId,
@@ -247,9 +294,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       future: collectionDetailsData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CommonStyles.rectangularShapeShimmerEffect();
+          return shimmerEffect();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text('');
         } else if (!snapshot.hasData) {
           return const Text('No data');
         }
@@ -266,7 +313,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 buildQuickPayRow(
                     label: 'QuickPay Cost (RS)',
                     data:
-                        '${calculateDynamicSum(collections, 'quickPayCost')}'),
+                    '${calculateDynamicSum(collections, 'quickPayCost')}'),
                 buildQuickPayRow(
                     label: 'Transaction Fee (RS)',
                     data: '-${collections[0].transactionFee}'),
@@ -299,9 +346,24 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 //  sumoftotalamounttopay = (totalFFBcost - totaltransactionfee - totalquickfee) - totalDueamount;
   double totalSum(List<CollectionDetails> collections) {
     return (calculateDynamicSum(collections, 'quickPayCost') -
-            collections[0].transactionFee! -
-            calculateDynamicSum(collections, 'quickPay')) -
+        collections[0].transactionFee! -
+        calculateDynamicSum(collections, 'quickPay')) -
         calculateDynamicSum(collections, 'dues');
+  }
+
+  Widget shimmerEffect() {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: 140,
+          width: double.infinity,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ));
   }
 
 /*   String calculateDynamicSum(
@@ -368,9 +430,10 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         future: collectionDetailsData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CommonStyles.rectangularShapeShimmerEffect();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return shimmerEffect();
+          }
+          else if (snapshot.hasError) {
+          return Text('');
           } else if (!snapshot.hasData) {
             return const Text('No data');
           }
@@ -460,11 +523,25 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         const SizedBox(height: 5),
         CustomBtn(
           label: 'Confirm Request',
-          onPressed: () => processRequest(),
+          onPressed: () {
+            processRequest();
+            //test();
+          },
           // onPressed: processRequest,
         ),
       ],
     );
+  }
+
+  void test() {
+    CommonStyles.customDialog(
+        context,
+        Container(
+          width: 200,
+          height: 200,
+          color: Colors.blue,
+          child: const Text('Test'),
+        ));
   }
 
   //MARK: loadPdf
@@ -515,10 +592,10 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     style: CommonStyles.txSty_16b_fb),
                 GestureDetector(
                     onTap: () {
-                      signatureController?.clear();
+                      controller?.clear();
                     },
                     child:
-                        const Text('Clear', style: CommonStyles.txSty_16p_fb)),
+                    const Text('Clear', style: CommonStyles.txSty_16p_fb)),
               ],
             ),
             Expanded(
@@ -526,7 +603,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 // width: 300,
                 height: 200,
                 backgroundColor: Colors.white,
-                controller: signatureController!,
+                controller: controller!,
               ),
             ),
             Row(
@@ -535,12 +612,11 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 CustomBtn(
                   label: 'Ok',
                   onPressed: () async {
-                    Uint8List? signatureBytes =
-                        await signatureController?.toPngBytes();
+                    Uint8List? signatureBytes = await controller?.toPngBytes();
                     if (signatureBytes != null) {
                       String base64Signature = base64Encode(signatureBytes);
                       collectionDetailsData.then(
-                        (value) => submitRequest(value, base64Signature),
+                            (value) => submitRequest(value, base64Signature),
                       );
                       print('base64Signature:  $base64Signature');
                     } else {
@@ -582,7 +658,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     String collectionIds = '';
     for (int i = 0; i < unpaidCollections.length; i++) {
       collectionIds +=
-          '${unpaidCollections[i].uColnid!}|${unpaidCollections[i].quantity}|${unpaidCollections[i].docDate}|${collectionDetails[i].quickPayRate}';
+      '${unpaidCollections[i].uColnid!}|${unpaidCollections[i].quantity}|${unpaidCollections[i].docDate}|${collectionDetails[i].quickPayRate}';
       if (i != unpaidCollections.length - 1) {
         collectionIds += ',';
       }
@@ -599,6 +675,110 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     );
   }
 
+  void _showErrorDialog(String message) {
+    Future.delayed(Duration.zero, () {
+      showquickDialog(context, message);
+    });
+  }
+  void showquickDialog(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+            side: const BorderSide(
+              color: Color(0x8D000000),
+              width: 2.0, // Adding border to the dialog
+            ),
+          ),
+          child: Container(
+            color: CommonStyles.blackColor,
+            padding: const EdgeInsets.all(0.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                // Header with "X" icon and "Error" text
+                Container(
+                  padding: const EdgeInsets.all(10.0),
+                  color: CommonStyles.RedColor,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.close, color: Colors.white),
+                      Text('  Error', style: CommonStyles.txSty_20w_fb),
+                      SizedBox(width: 24.0), // Spacer to align text in the center
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                // Message Text
+                Text(
+                  msg,
+                  textAlign: TextAlign.center,
+                  style: CommonStyles.text16white,
+                ),
+                const SizedBox(height: 20.0),
+                // OK Button
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0), // Rounded corners
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFCCCCCC), // Start color (light gray)
+                          Color(0xFFFFFFFF), // Center color (white)
+                          Color(0xFFCCCCCC), // End color (light gray)
+                        ],
+                      ),
+                      border: Border.all(
+                        color: const Color(0xFFe86100), // Orange border color
+                        width: 2.0,
+                      ),
+                    ),
+                    child: SizedBox(
+                      height: 30.0, // Set the desired height
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Close the dialog and navigate to the previous screen
+                          Navigator.of(context).pop(); // Closes the dialog
+                          List<MsgModel> displayList = [];
+
+                          // Show success dialog
+                          showSuccessDialog(context, displayList, tr(LocaleKeys.qucick_success));
+                          Navigator.of(context).pop(); // Navigates to the previous screen
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                        ),
+                        child: const Text(
+                          'OK',
+                          style: CommonStyles.txSty_16b_fb,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showSuccessDialog(BuildContext context, List<MsgModel> displayList, String tr) {}
+
+
 /*   String collectionIds(List<UnpaidCollection> unpaidCollections) {
     // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
 
@@ -613,7 +793,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 class PdfViewerPopup extends StatefulWidget {
   final String pdfUrl;
 
-  const PdfViewerPopup({super.key, required this.pdfUrl});
+  PdfViewerPopup({required this.pdfUrl});
 
   @override
   _PdfViewerPopupState createState() => _PdfViewerPopupState();
@@ -638,7 +818,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
         ),
       )
       ..loadRequest(Uri.parse(
-          "https://docs.google.com/gview?embedded=true&url=${widget.pdfUrl}"));
+          "https://docs.google.com/gview?embedded=true&url=" + widget.pdfUrl));
   }
 
   @override
@@ -651,10 +831,10 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
         children: <Widget>[
           // Header
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             color: Colors.red,
             width: double.infinity,
-            child: const Center(
+            child: Center(
               child: Text(
                 'QuickPay Request PDF',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -666,7 +846,8 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
             child: Stack(
               children: [
                 WebViewWidget(controller: _controller),
-                if (isLoading) const Center(child: CircularProgressIndicator()),
+                if (isLoading)
+                  Center(child: CircularProgressIndicator()),
               ],
             ),
           ),
@@ -675,13 +856,12 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                minimumSize:
-                    const Size(double.infinity, 50), // Full width button
+                minimumSize: Size(double.infinity, 50), // Full width button
               ),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: const Text('OK'),
+              child: Text('OK'),
             ),
           ),
         ],
