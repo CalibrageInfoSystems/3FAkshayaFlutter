@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:share_plus/share_plus.dart';
@@ -25,7 +28,26 @@ class _PDFViewScreenState extends State<PDFViewScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: CustomAppBar(
+        title: tr(LocaleKeys.document),
+        actionIcon: IconButton(
+          icon: const Icon(Icons.share, color: Colors.white),
+          onPressed: () async {
+            final result = await Share.shareXFiles([XFile(widget.path!)],
+                text: 'Thank you for sharing');
+
+            if (result.status == ShareResultStatus.success) {
+              print('ShareResultStatus.success');
+            } else if (result.status == ShareResultStatus.unavailable) {
+              print('ShareResultStatus.unavailable');
+            } else {
+              print('else..........');
+            }
+          },
+        ),
+      ),
+
+      /* appBar: AppBar(
         title: const Text("Document"),
         actions: <Widget>[
           IconButton(
@@ -44,7 +66,7 @@ class _PDFViewScreenState extends State<PDFViewScreen>
             },
           ),
         ],
-      ),
+      ), */
       body: Stack(
         children: <Widget>[
           PDFView(

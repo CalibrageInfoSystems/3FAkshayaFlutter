@@ -1,4 +1,5 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
 class CustomBtn extends StatelessWidget {
@@ -6,6 +7,7 @@ class CustomBtn extends StatelessWidget {
   final double borderRadius;
   final Color borderColor;
   final TextStyle? btnTextStyle;
+  final double? height;
   final EdgeInsetsGeometry? padding;
   final void Function()? onPressed;
   const CustomBtn({
@@ -13,11 +15,12 @@ class CustomBtn extends StatelessWidget {
     required this.label,
     this.borderRadius = 12,
     this.onPressed,
-    this.btnTextStyle = CommonStyles.txStyF12CpFF6,
-    this.borderColor = const Color(0xFFe86100),
+    this.btnTextStyle,
+    this.borderColor = CommonStyles.primaryTextColor2,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 20,
     ),
+    this.height = 40.0,
   });
 
   @override
@@ -25,7 +28,7 @@ class CustomBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 40.0,
+        height: height,
         alignment: Alignment.center,
         padding: padding,
         decoration: BoxDecoration(
@@ -46,7 +49,13 @@ class CustomBtn extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: btnTextStyle,
+          style: btnTextStyle ??
+              const TextStyle(
+                fontSize: 14,
+                fontFamily: FontFamily.hind,
+                fontWeight: FontWeight.w600,
+                color: CommonStyles.primaryTextColor2,
+              ),
         ),
       ),
     );

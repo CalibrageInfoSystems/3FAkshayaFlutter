@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final remainingHeight = screenHeight - appBarHeight;
 
     Size size = MediaQuery.of(context).size;
-    return WillPopScope (
+    return WillPopScope(
       onWillPop: () async {
         SystemNavigator.pop();
         return false;
@@ -368,65 +368,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-/* 
-  Container menuSection(Size size) {
-    return Container(
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Color(0xffe46f5d),
-            Color(0xffe49962),
-          ])),
-      child: Column(
-        children: [
-          Text(
-            tr(LocaleKeys.view),
-            style: CommonStyles.txSty_16b_fb
-                .copyWith(color: CommonStyles.whiteColor),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              viewOption(size, Assets.images.ffbCollection.path,
-                  tr(LocaleKeys.collection), onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const FfbCollectionScreen(),
-                  ),
-                );
-                // context.push(
-                //     context.namedLocation(Routes.ffbCollectionScreen.name));
-              }),
-              viewOption(
-                  size, Assets.images.passbook.path, tr(LocaleKeys.payments),
-                  onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => FarmerPassbookScreen_1(),
-                  ),
-                );
-              }),
-              viewOption(size, Assets.images.mainVisit.path,
-                  tr(LocaleKeys.recommendationss), onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const PlotSelectionScreen(
-                      serviceTypeId: 101,
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
- */
 
   Container menuSection(Size size, double remainingHeight) {
     return Container(
@@ -457,8 +398,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context) => const FfbCollectionScreen(),
                   ),
                 );
-                // context.push(
-                //     context.namedLocation(Routes.ffbCollectionScreen.name));
               }),
               viewOption(
                   size, Assets.images.passbook.path, tr(LocaleKeys.payments),
@@ -510,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: CommonStyles.txStyF14CwFF6,
+                  style: CommonStyles.txStyF14CwFF6.copyWith(height: 1.2),
                 ),
               ),
             ],
@@ -522,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void navigateToSelectedServiceScreen(int serviceTypeId) {
     switch (serviceTypeId) {
-      case 12: // Fertilizer Request
+      case 12:
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -641,7 +580,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 5),
                 Text(
                   title,
-                  style: CommonStyles.txStyF14CbFF6,
+                  textAlign: TextAlign.center,
+                  style: CommonStyles.txStyF14CbFF6.copyWith(height: 1),
                 ),
               ],
             ),

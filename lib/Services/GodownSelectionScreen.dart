@@ -54,7 +54,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: isLoading
-            ? CommonStyles.rectangularShapeShimmerEffect()
+            ? const SizedBox()
             : ListView.builder(
                 itemCount: godowndata.length,
                 itemBuilder: (context, index) {

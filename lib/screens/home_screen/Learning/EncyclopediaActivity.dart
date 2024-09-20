@@ -6,7 +6,7 @@ import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/screens/home_screen/Learning/Model/media_info_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/Learning/pdf_view_screen.dart';
-import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/Learning/vidio_player_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -38,7 +38,8 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
     // 'http://182.18.157.215/3FAkshaya/API/api/Encyclopedia/GetEncyclopediaDetails/1/AP/true';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-    // print('getMediaData: ${jsonResponse.body}');
+/*     print('getMediaData: $apiUrl');
+    print('getMediaData: ${jsonResponse.body}'); */
 
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
@@ -59,7 +60,7 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
       child: Scaffold(
         body: Stack(
           children: [
-            // Positioned gradient background
+            /*   // Positioned gradient background
             Positioned(
               top: -90,
               bottom: 450, // Adjust as needed
@@ -71,15 +72,41 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                     begin: Alignment.topCenter, // 90 degrees
                     end: Alignment.bottomCenter,
                     colors: [
-                      //Color(0xffDB5D4B),.
                       Color(0xFFDB5D4B),
-                      Color(0xFFE39A63), // startColor
+                      Color(0xFFE39A63),
                       // endColor
                     ],
                   ),
                 ),
               ),
-            ),
+            ), */
+
+            Positioned.fill(
+                child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFFDB5D4B),
+                          Color(0xFFE39A63),
+                          // endColor
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: CommonStyles.screenBgColor,
+                    // color: CommonStyles.whiteColor,
+                  ),
+                ),
+              ],
+            )),
 
             // Main content with AppBar and TabBar
             Scaffold(
@@ -118,6 +145,10 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                   ),
                 ],
                 bottom: TabBar(
+                  dividerColor: Colors.transparent,
+                  labelStyle: CommonStyles.txStyF14CbFF6.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
                   indicatorColor: CommonStyles.primaryTextColor,
                   indicatorWeight: 2.0,
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -132,13 +163,61 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                   ),
                   tabs: widget.index == 1
                       ? [
-                          Tab(text: tr(LocaleKeys.str_standard)),
-                          Tab(text: tr(LocaleKeys.str_pdf)),
-                          Tab(text: tr(LocaleKeys.str_videos)),
+                          /* Tab(text: tr(LocaleKeys.str_standard)),
+                          Tab(text: tr(LocaleKeys.str_pdf)), 
+                          Tab(text: tr(LocaleKeys.str_videos)),*/
+                          Tab(
+                            child: Text(
+                              tr(LocaleKeys.str_standard),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              tr(LocaleKeys.str_pdf),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              tr(LocaleKeys.str_videos),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
                         ]
                       : [
-                          Tab(text: tr(LocaleKeys.str_pdf)),
-                          Tab(text: tr(LocaleKeys.str_videos)),
+                          Tab(
+                            child: Text(
+                              tr(LocaleKeys.str_pdf),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
+                          Tab(
+                            child: Text(
+                              tr(LocaleKeys.str_videos),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                height: 1.2,
+                              ),
+                            ),
+                          ),
                         ],
                 ),
               ),
@@ -177,17 +256,6 @@ class _PdfTabViewState extends State<PdfTabView> {
   }
 
   String pdfPath = "";
-
-  @override
-  void initState() {
-    super.initState();
-
-    /*  createFileOfPdfUrl().then((f) {
-      setState(() {
-        pdfPath = f.path;
-      });
-    }); */
-  }
 
   Future<File> createFileOfPdfUrl(String pdfpath) async {
     Completer<File> completer = Completer();
@@ -232,24 +300,19 @@ class _PdfTabViewState extends State<PdfTabView> {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0,
-                  mainAxisExtent: 260,
-                  childAspectRatio: 8 / 6,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  // mainAxisExtent: 260,
+                  childAspectRatio: 1,
                 ),
                 itemCount: mediaData.length,
                 itemBuilder: (context, index) {
-                  final imagePath = mediaData[index].fileUrl;
+                  final fileUrl = mediaData[index].fileUrl;
                   final title = mediaData[index].name;
                   final description = mediaData[index].description;
-                  /* return MediaView(
-                    imagePath: imagePath,
-                    title: title,
-                    description: description); */
-
                   return GestureDetector(
                       onTap: () {
-                        createFileOfPdfUrl(imagePath!
+                        createFileOfPdfUrl(fileUrl!
                                 // "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
                                 )
                             .then((item) => {
@@ -262,11 +325,14 @@ class _PdfTabViewState extends State<PdfTabView> {
                                   )
                                 });
                       },
-                      child: pdfTemplate(imagePath, title, description));
+                      child: pdfTemplate(fileUrl, title, description));
                 },
               );
             } else {
-              return Center(child: Text(tr(LocaleKeys.no_pdfs)));
+              return Center(
+                  child: Text(tr(LocaleKeys.no_pdfs),
+                      style:
+                          CommonStyles.txStyF14CpFF6.copyWith(fontSize: 18)));
             }
           }
         },
@@ -279,29 +345,39 @@ class _PdfTabViewState extends State<PdfTabView> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: CommonStyles.whiteColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
               child: Center(
             child: CachedNetworkImage(
-              imageUrl: '$imagePath',
+              imageUrl: Assets.images.icPdf.path,
               placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => Image.asset(
-                Assets.images.icLogo.path,
+                Assets.images.icPdf.path,
                 fit: BoxFit.cover,
               ),
             ),
           )),
           const SizedBox(height: 10),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('$title'),
-              Text('$description'),
+              Text(
+                '$title',
+                style: CommonStyles.txStyF16CbFF6.copyWith(
+                  color: CommonStyles.dataTextColor,
+                ),
+              ),
+              Text(
+                '$description',
+                style: CommonStyles.txStyF14CbFF6.copyWith(
+                  color: CommonStyles.dataTextColor,
+                ),
+              ),
             ],
           ),
         ],
@@ -384,7 +460,6 @@ class _VideoTabViewState extends State<VideoTabView> {
             return Text('Error: ${snapshot.error}');
           } else {
             final data = snapshot.data as List<MediaInfo>;
-            print('yyy: ${data.length}');
             final mediaData = filterMediaData(data, 4);
             if (mediaData.isNotEmpty) {
               return GridView.builder(
@@ -401,17 +476,38 @@ class _VideoTabViewState extends State<VideoTabView> {
 
                   return YoutubePlayerBuilder(
                     player: YoutubePlayer(
+                      bottomActions: [
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.zoom_out_map_outlined,
+                            size: 22,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VideoPlayerScreen(
+                                  fileUrl: mediaInfo.fileUrl,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                       controller: YoutubePlayerController(
                         initialVideoId: mediaInfo.fileUrl!,
                         flags: const YoutubePlayerFlags(
-                          mute: false,
-                          autoPlay: false,
-                          disableDragSeek: false,
-                          loop: false,
-                          isLive: false,
-                          forceHD: false,
-                          enableCaption: true,
-                        ),
+                            mute: false,
+                            autoPlay: false,
+                            disableDragSeek: false,
+                            loop: false,
+                            isLive: false,
+                            forceHD: false,
+                            enableCaption: true,
+                            // controlsVisibleAtStart: true,
+                            useHybridComposition: true),
                       ),
                       showVideoProgressIndicator: true,
                       progressIndicatorColor: Colors.blueAccent,
@@ -438,7 +534,10 @@ class _VideoTabViewState extends State<VideoTabView> {
                 },
               );
             } else {
-              return Center(child: Text(tr(LocaleKeys.no_videos)));
+              return Center(
+                  child: Text(tr(LocaleKeys.no_videos),
+                      style:
+                          CommonStyles.txStyF14CpFF6.copyWith(fontSize: 18)));
             }
           }
         },
@@ -490,7 +589,7 @@ class Standard extends StatefulWidget {
   const Standard({super.key});
 
   @override
-  _StandardState createState() => _StandardState();
+  State<Standard> createState() => _StandardState();
 }
 
 class _StandardState extends State<Standard> {
@@ -504,8 +603,7 @@ class _StandardState extends State<Standard> {
     _fetchAges();
     if (ages.isNotEmpty) {
       selectedAge = ages.first.displayName;
-      _fetchFertilizers(
-          selectedAge!); // Fetch fertilizers for the default selected age
+      _fetchFertilizers(selectedAge!);
     }
   }
 
@@ -550,146 +648,147 @@ class _StandardState extends State<Standard> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+            alignment: Alignment.topCenter,
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.white),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                iconStyleData: const IconStyleData(
+                  icon: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+                isExpanded: true,
+                value: selectedAge,
+                items: ages.map((age) {
+                  return DropdownMenuItem<String>(
+                    value: age.displayName,
+                    child: Center(
+                      child: Text(
+                        age.displayName,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: CommonStyles.txStyF14CwFF6,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedAge = value!;
+                  });
+                  _fetchFertilizers(value!);
+                },
+                dropdownStyleData: DropdownStyleData(
+                  decoration: const BoxDecoration(
+                    //    borderRadius: BorderRadius.circular(14),
+                    color: CommonStyles.dropdownListBgColor,
+                  ),
+                  offset: const Offset(0, 0),
+                  scrollbarTheme: ScrollbarThemeData(
+                    radius: const Radius.circular(40),
+                    thickness: WidgetStateProperty.all<double>(6),
+                    thumbVisibility: WidgetStateProperty.all<bool>(true),
+                  ),
+                ),
+                menuItemStyleData: const MenuItemStyleData(
+                  height: 40,
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                ),
+              ),
+            )),
+        const SizedBox(height: 8),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          child: RichText(
+            text: const TextSpan(
+              text: 'Note: ',
+              style: CommonStyles.text18orangeeader,
+              children: [
+                TextSpan(
+                  text: 'Quantity in gm/plant/year',
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: ListView.builder(
+            itemCount: fertilizers.length,
+            itemBuilder: (context, index) {
+              final fertilizer = fertilizers[index];
+              final isEvenIndex = index % 2 == 0;
+
+              return standardBox(isEvenIndex, fertilizer);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Container standardBox(bool isEvenIndex, FertilizerRecommendation fertilizer) {
     return Container(
+      padding: const EdgeInsets.all(12.0),
+      color: isEvenIndex ? Colors.white : CommonStyles.listOddColor,
+      margin: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-              alignment: Alignment.topCenter,
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.white),
+          Row(
+            children: [
+              const SizedBox(
+                width: 100, // Equal space for the label
+                child: Text('Fertilizer', style: CommonStyles.txStyF14CbFF6),
               ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton2<String>(
-                  iconStyleData: const IconStyleData(
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: Colors.white,
-                    ),
-                  ),
-                  isExpanded: true,
-                  value: selectedAge,
-                  items: ages.map((age) {
-                    return DropdownMenuItem<String>(
-                      value: age.displayName,
-                      child: Text(age.displayName,
-                          style: CommonStyles.txSty_12W_fb),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAge = value!;
-                    });
-                    _fetchFertilizers(value!);
-                  },
-                  dropdownStyleData: DropdownStyleData(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: Colors.black87,
-                    ),
-                    offset: const Offset(0, 0),
-                    scrollbarTheme: ScrollbarThemeData(
-                      radius: const Radius.circular(40),
-                      thickness: WidgetStateProperty.all<double>(6),
-                      thumbVisibility: WidgetStateProperty.all<bool>(true),
-                    ),
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                  ),
+              Expanded(
+                child: Text(
+                  fertilizer.fertilizer,
+                  style: CommonStyles.txStyF14CpFF6,
                 ),
-              )),
-          const SizedBox(height: 8), // Spacing between dropdown and note
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            child: RichText(
-              text: const TextSpan(
-                text: 'Note: ',
-                style: CommonStyles.text18orangeeader,
-                children: [
-                  TextSpan(
-                    text: 'Quantity in gm/plant/year',
-                    style: CommonStyles.text14white,
-                  ),
-                ],
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: ListView.builder(
-              itemCount: fertilizers.length,
-              itemBuilder: (context, index) {
-                final fertilizer = fertilizers[index];
-                final isEvenIndex = index % 2 == 0;
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 12), // Adding margin
-                  child: Card(
-                    color: isEvenIndex
-                        ? Colors.white
-                        : Colors.grey.shade300, // Alternate colors
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 100, // Equal space for the label
-                                child: Text('Fertilizer',
-                                    style: CommonStyles.txSty_14b_f6),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  fertilizer.fertilizer,
-                                  style: CommonStyles.text18orangeeader,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 100, // Equal space for the label
-                                child: Text(
-                                  'Quantity',
-                                  style: CommonStyles.txSty_14b_f6,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text('${fertilizer.quantity}',
-                                    style: CommonStyles.txSty_14b_f5),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 100, // Equal space for the label
-                                child: Text('Remarks',
-                                    style: CommonStyles.txSty_14b_f6),
-                              ),
-                              Expanded(
-                                child: Text(fertilizer.remarks,
-                                    style: CommonStyles.txSty_14b_f5),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const SizedBox(
+                width: 100,
+                child: Text(
+                  'Quantity',
+                  style: CommonStyles.txStyF14CbFF6,
+                ),
+              ),
+              Expanded(
+                child: Text('${fertilizer.quantity}',
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.dataTextColor)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              const SizedBox(
+                width: 100, // Equal space for the label
+                child: Text('Remarks', style: CommonStyles.txStyF14CbFF6),
+              ),
+              Expanded(
+                child: Text(fertilizer.remarks,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.dataTextColor)),
+              ),
+            ],
           ),
         ],
       ),

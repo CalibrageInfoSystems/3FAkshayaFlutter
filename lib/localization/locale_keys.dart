@@ -3,6 +3,7 @@
 class LocaleKeys {
   static const String App_version = "App_version";
   static const String Avb_subcd_amt = "Avb_subcd_amt";
+  static const String document = "document";
   static const String Categorytype = "Categorytype";
   static const String Cgst = "Cgst";
   static const String Chemical = "Chemical";

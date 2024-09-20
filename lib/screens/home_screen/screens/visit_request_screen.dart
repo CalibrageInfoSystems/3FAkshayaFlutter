@@ -359,7 +359,6 @@ class _VisitRequestState extends State<VisitRequest> {
               plotdata: widget.plot,
               index: 0,
               isIconVisible: false,
-              dataTextColor: CommonStyles.blackColor,
             ),
             const SizedBox(height: 10),
             mainSection(),
@@ -412,11 +411,12 @@ class _VisitRequestState extends State<VisitRequest> {
               RichText(
                 text: TextSpan(
                   text: tr(LocaleKeys.issue_type),
-                  style: CommonStyles.txSty_16w_fb,
+                  style: CommonStyles.txStyF14CwFF6,
                   children: const <TextSpan>[
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(
+                          color: CommonStyles.formFieldErrorBorderColor),
                     ),
                   ],
                 ),
@@ -463,7 +463,7 @@ class _VisitRequestState extends State<VisitRequest> {
                                 value: item.typeCdId,
                                 child: Text(
                                   '${item.desc}',
-                                  style: CommonStyles.txSty_14w_fb,
+                                  style: CommonStyles.txStyF14CwFF6,
                                 ),
                               );
                             }).toList(),
@@ -488,12 +488,13 @@ class _VisitRequestState extends State<VisitRequest> {
               RichText(
                 text: TextSpan(
                   text: tr(LocaleKeys.comments),
-                  style: CommonStyles.txSty_16w_fb,
+                  style: CommonStyles.txStyF14CwFF6,
                   children: <TextSpan>[
                     if (selectedTypeOfIssueId == 35)
                       const TextSpan(
                         text: ' *',
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                            color: CommonStyles.formFieldErrorBorderColor),
                       ),
                   ],
                 ),
@@ -504,113 +505,158 @@ class _VisitRequestState extends State<VisitRequest> {
                 style: CommonStyles.txSty_14w_fb,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.only(left: 10),
+                  hintText: tr(LocaleKeys.comments),
+                  hintStyle: CommonStyles.txStyF14CwFF6,
                   border: outlineInputBorder(),
                   enabledBorder: outlineInputBorder(),
                   focusedBorder: outlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 10),
-              /* const Text('Upload Image *', 
-                          style: CommonStyles.txSty_16w_fb,), */
+              Text(
+                tr(LocaleKeys.select_imagee),
+                style: CommonStyles.txStyF14CwFF6,
+              ),
+              const SizedBox(height: 10),
               RichText(
                 text: TextSpan(
                   text: tr(LocaleKeys.image),
-                  style: CommonStyles.txSty_16w_fb,
+                  style: CommonStyles.txStyF14CwFF6,
                   children: const <TextSpan>[
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(
+                          color: CommonStyles.formFieldErrorBorderColor),
                     ),
                   ],
                 ),
               ),
               // const SizedBox(height: 5),
-              GestureDetector(
+              /* GestureDetector(
                 onTap: () {
                   mobileImagePicker(context);
                 },
                 child: Image.asset(
                   Assets.images.icAdd.path,
-                  width: 100,
+                  width: 75,
+                  fit: BoxFit.cover,
                 ),
-              ),
+              ), */
               const SizedBox(height: 5),
-              _images.isEmpty
-                  ? (isImageList
-                      ? const Text(
-                          'No images selected.',
-                          style: TextStyle(
-                            color: Colors.grey,
+              Row(
+                children: [
+                  _images.isEmpty
+                      ? (isImageList
+                          ? const Text(
+                              'No images selected.',
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            )
+                          : const SizedBox())
+                      //MARK: Images
+                      : Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _images.map((image) {
+                            final int index = _images.indexOf(image);
+                            return Stack(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: MemoryImage(image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: GestureDetector(
+                                    onTap: () => _deleteImage(index),
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: const BoxDecoration(
+                                        color: CommonStyles
+                                            .formFieldErrorBorderColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.grey,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                  if (_images.length < 3)
+                    Column(
+                      children: [
+                        const SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () {
+                            mobileImagePicker(context);
+                          },
+                          child: Image.asset(
+                            Assets.images.icAdd.path,
+                            width: 75,
+                            fit: BoxFit.cover,
                           ),
-                        )
-                      : const SizedBox())
-                  //MARK: Images
-                  : Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: _images.map((image) {
-                        final int index = _images.indexOf(image);
-                        return Stack(
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image: MemoryImage(image),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () => _deleteImage(index),
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.close,
-                                    color: Colors.grey,
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                        ),
+                      ],
                     ),
+                ],
+              ),
+
               const SizedBox(height: 10),
               //MARK: Audio
               RichText(
                 text: TextSpan(
                   text: tr(LocaleKeys.record),
-                  style: CommonStyles.txSty_16w_fb,
+                  style: CommonStyles.txStyF14CwFF6,
                   children: const <TextSpan>[
                     TextSpan(
                       text: ' *',
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(
+                          color: CommonStyles.formFieldErrorBorderColor),
                     ),
                   ],
                 ),
               ),
-              if (_isRecording)
-                Text(
-                  'Recording... ${_formatTime(_recordedSeconds)}',
-                  style: CommonStyles.txSty_14p_f5,
+              if (!isAudioRecorded)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _isRecording
+                        ? Text(
+                            _formatTime(_recordedSeconds),
+                            style: CommonStyles.txStyF16CwFF6
+                                .copyWith(fontSize: 26),
+                          )
+                        : Text(
+                            '0:00',
+                            style: CommonStyles.txStyF16CwFF6
+                                .copyWith(fontSize: 26),
+                          ),
+                  ],
                 ),
               if (isAudioRecorded)
                 Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.play_arrow_rounded),
+                      icon: const Icon(
+                        Icons.play_arrow_rounded,
+                        color: CommonStyles.whiteColor,
+                      ),
                       onPressed: !_isRecording ? _playRecording : null,
                     ),
                     // if (_totalDuration > 0)
@@ -619,7 +665,8 @@ class _VisitRequestState extends State<VisitRequest> {
                         children: [
                           Expanded(
                             child: SeekBar(
-                              progressColor: Colors.red,
+                              progressColor:
+                                  CommonStyles.formFieldErrorBorderColor,
                               backgroundColor: Colors.white,
                               value: _currentPosition,
                               min: 0,
@@ -636,7 +683,7 @@ class _VisitRequestState extends State<VisitRequest> {
                           ),
                           Text(
                             _formatTime(_currentPosition.toInt()),
-                            style: const TextStyle(color: Colors.black),
+                            style: CommonStyles.txStyF14CwFF6,
                           ),
                         ],
                       ),
@@ -658,7 +705,7 @@ class _VisitRequestState extends State<VisitRequest> {
                 ],
               ),
 
-              const SizedBox(height: 10),
+              // const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -682,6 +729,114 @@ class _VisitRequestState extends State<VisitRequest> {
       borderSide: BorderSide(
         color: Colors.white,
       ),
+    );
+  }
+}
+
+class CropPlotDetails extends StatelessWidget {
+  final PlotDetailsModel plotdata;
+  final int index;
+  final void Function()? onTap;
+  final bool isIconVisible;
+
+  const CropPlotDetails({
+    super.key,
+    required this.plotdata,
+    required this.index,
+    this.onTap,
+    this.isIconVisible = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        GestureDetector(onTap: onTap, child: plot(context)),
+      ],
+    );
+  }
+
+  Widget plot(BuildContext context) {
+    final df = NumberFormat("#,##0.00");
+    String? dateOfPlanting = plotdata.dateOfPlanting;
+    DateTime parsedDate = DateTime.parse(dateOfPlanting!);
+    String year = parsedDate.year.toString();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      // margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: index.isEven ? CommonStyles.listEvenColor : Colors.transparent,
+      ),
+      child: Stack(
+        children: [
+          plotCard(df, year),
+          if (isIconVisible)
+            const Positioned(
+                top: 0,
+                bottom: 0,
+                right: 0,
+                child: Icon(Icons.arrow_forward_ios_rounded))
+        ],
+      ),
+    );
+  }
+
+  Column plotCard(NumberFormat df, String year) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        plotDetailsBox(
+          label: tr(LocaleKeys.plot_code),
+          data: '${plotdata.plotcode}',
+        ),
+        plotDetailsBox(
+          label: tr(LocaleKeys.plot_size),
+          data:
+              '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
+        ),
+        plotDetailsBox(
+          label: tr(LocaleKeys.village),
+          data: '${plotdata.villageName}',
+        ),
+        plotDetailsBox(
+          label: tr(LocaleKeys.land_mark),
+          data: '${plotdata.landMark}',
+        ),
+        plotDetailsBox(
+          label: tr(LocaleKeys.address),
+          data: '${plotdata.clusterName}',
+        ),
+        plotDetailsBox(
+          label: tr(LocaleKeys.yop),
+          data: year,
+        ),
+      ],
+    );
+  }
+
+  Widget plotDetailsBox(
+      {required String label,
+      required String data,
+      Color? dataTextColor = CommonStyles.dataTextColor}) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                flex: 5,
+                child: Text(
+                  label,
+                  style: CommonStyles.txStyF14CbFF6,
+                )),
+            Expanded(
+              flex: 6,
+              child: Text(data, style: CommonStyles.txStyF14CbFF6),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 }
@@ -843,7 +998,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 child: SeekBar(
                   value: currentPositionDialog,
-                  progressColor: Colors.red,
+                  progressColor: CommonStyles.formFieldErrorBorderColor,
                   backgroundColor: Colors.grey.shade300,
                   min: 0,
                   max: totalDurationDialog,

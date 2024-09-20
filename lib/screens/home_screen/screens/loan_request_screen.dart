@@ -5,13 +5,10 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
-import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
-import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,9 +41,6 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     if (_loanAmountController.text.isEmpty) {
       CommonStyles.errorDialog(context,
           errorMessage: tr(LocaleKeys.str_enter_loan_amount));
-      /*  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Please enter Loan Amount.'),
-      )); */
     } else if (!_isAgree) {
       CommonStyles.errorDialog(context,
           errorMessage: tr(LocaleKeys.terms_agree));
@@ -112,10 +106,10 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
       List<MsgModel> displayList = [
-        MsgModel(key: tr(LocaleKeys.loan_amount), value: _loanAmountController.text!),
-        if(_reasonController.text != null)
-        MsgModel(key: tr(LocaleKeys.reason_loan), value: _reasonController.text!),
-
+        MsgModel(
+            key: tr(LocaleKeys.loan_amount), value: _loanAmountController.text),
+        MsgModel(
+            key: tr(LocaleKeys.reason_loan), value: _reasonController.text),
       ];
 
       // Show success dialog
@@ -153,11 +147,13 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   RichText(
                     text: TextSpan(
                       text: tr(LocaleKeys.loan_amount),
-                      style: CommonStyles.txSty_16w_fb,
-                      children: const <TextSpan>[
+                      style: CommonStyles.txStyF14CwFF6,
+                      children: <TextSpan>[
                         TextSpan(
                           text: ' *',
-                          style: TextStyle(color: Colors.red),
+                          style: CommonStyles.txStyF14CwFF6.copyWith(
+                            color: CommonStyles.formFieldErrorBorderColor,
+                          ),
                         ),
                       ],
                     ),
@@ -168,7 +164,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     style: CommonStyles.text14white,
                     decoration: InputDecoration(
                       hintText: tr(LocaleKeys.loan_amount),
-                      hintStyle: const TextStyle(color: Colors.white),
+                      hintStyle: CommonStyles.txStyF14CwFF6,
                       border: outlineInputBorder(),
                       enabledBorder: outlineInputBorder(),
                       focusedBorder: outlineInputBorder(),
@@ -178,7 +174,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   const SizedBox(height: 20),
                   Text(
                     tr(LocaleKeys.reason_loan),
-                    style: CommonStyles.txSty_16w_fb,
+                    style: CommonStyles.txStyF14CwFF6,
                   ),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -186,13 +182,13 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     style: CommonStyles.text14white,
                     decoration: InputDecoration(
                       hintText: tr(LocaleKeys.reason_loan),
-                      hintStyle: const TextStyle(color: Colors.white),
+                      hintStyle: CommonStyles.txStyF14CwFF6,
                       border: outlineInputBorder(),
                       enabledBorder: outlineInputBorder(),
                       focusedBorder: outlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Checkbox(
@@ -209,13 +205,14 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'I Agree ',
-                          style: const TextStyle(color: Colors.white),
+                          text: tr(LocaleKeys.i_have_agree),
+                          style: CommonStyles.txStyF14CwFF6,
                           children: <TextSpan>[
                             TextSpan(
-                              text: tr(LocaleKeys.terms_conditionsss),
-                              style: const TextStyle(
-                                  color: CommonStyles.primaryTextColor),
+                              text: ' ${tr(LocaleKeys.terms_conditionsss)}',
+                              style: CommonStyles.txStyF14CpFF6.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: CommonStyles.primaryTextColor2),
                             ),
                           ],
                         ),
@@ -229,6 +226,11 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                       CustomBtn(
                         label: 'Submit Request',
                         onPressed: submitForm,
+                        height: 50,
+                        borderRadius: 16,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -259,7 +261,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
               alignment: Alignment.center,
               child: Text(
                 tr(LocaleKeys.terms_conditionss),
-                style: CommonStyles.txSty_16w_fb,
+                style: CommonStyles.txStyF14CwFF6,
               ),
             ),
             Container(
@@ -294,8 +296,10 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       borderSide: BorderSide(color: Colors.white),
     );
   }
+
 // Function to show the dialog
-  void showSuccessDialog(BuildContext context, List<MsgModel> msg, String summary) {
+  void showSuccessDialog(
+      BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

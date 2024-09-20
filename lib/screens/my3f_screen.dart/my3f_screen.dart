@@ -158,40 +158,6 @@ class _My3fScreenState extends State<My3fScreen> {
       ),
     );
   }
-/*   AppBar tabBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: const Color(0xffe46f5d),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: TabBar(
-          labelPadding: const EdgeInsets.all(0),
-          labelStyle: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'hind_semibold',
-          ),
-          indicatorColor: CommonStyles.primaryTextColor,
-          indicatorWeight: 2.0,
-          indicatorSize: TabBarIndicatorSize.tab,
-          labelColor: CommonStyles.primaryTextColor,
-          unselectedLabelColor: CommonStyles.whiteColor,
-          indicator: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            color: CommonStyles.whiteColor,
-          ),
-          tabs: [
-            Tab(text: tr(LocaleKeys.basic_info)),
-            Tab(text: tr(LocaleKeys.important_contacts)),
-            Tab(text: tr(LocaleKeys.places)),
-          ],
-        ),
-      ),
-    );
-  } */
 
   Widget tabView() {
     return Padding(

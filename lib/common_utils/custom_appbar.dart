@@ -31,7 +31,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: Text(
         title,
-        style: CommonStyles.txStyF14CwFF6,
+        textAlign: TextAlign.center,
+        style: CommonStyles.txStyF16CwFF6,
       ),
       actions: [
         actionIcon ??

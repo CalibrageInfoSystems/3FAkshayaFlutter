@@ -21,7 +21,7 @@ class CommonStyles {
   static const listOddColor = Color(0xFFdfdfdf);
   static const listEvenColor = Color(0xFFf5f5f5);
   static const primaryTextColor = Color(0xFFf07566);
-
+  static const primaryTextColor2 = Color(0xFFe86100);
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);

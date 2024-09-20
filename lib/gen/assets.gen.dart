@@ -131,6 +131,9 @@ class $AssetsImagesGen {
   AssetGenImage get icPause =>
       const AssetGenImage('assets/images/ic_pause.png');
 
+  /// File path: assets/images/ic_pdf.png
+  AssetGenImage get icPdf => const AssetGenImage('assets/images/ic_pdf.png');
+
   /// File path: assets/images/ic_play.png
   AssetGenImage get icPlay => const AssetGenImage('assets/images/ic_play.png');
 
@@ -218,6 +221,7 @@ class $AssetsImagesGen {
         icMySvg,
         icMyprofile,
         icPause,
+        icPdf,
         icPlay,
         icRequest,
         icUser,
