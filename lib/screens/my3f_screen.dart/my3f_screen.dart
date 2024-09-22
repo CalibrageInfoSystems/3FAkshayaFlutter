@@ -182,7 +182,8 @@ class _My3fScreenState extends State<My3fScreen> {
           return const ShimmerWid();
         }
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text('Error: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6);
         }
         final data = snapshot.data as Map<String, dynamic>;
 
@@ -201,7 +202,8 @@ class _My3fScreenState extends State<My3fScreen> {
           return const ShimmerWid();
         }
         if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text('Error: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6);
         }
         final data = snapshot.data as Map<String, dynamic>;
 
@@ -218,7 +220,8 @@ class _My3fScreenState extends State<My3fScreen> {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6);
           }
           final controller = snapshot.data as WebViewController;
           return Padding(

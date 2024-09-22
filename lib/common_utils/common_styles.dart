@@ -113,6 +113,12 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: RedColor,
   );
+  static const TextStyle txStyF16CpFF6 = TextStyle(
+    fontSize: 16,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: primaryTextColor,
+  );
 
   /* ...................................... */
   static const TextStyle txSty_12b_f5 = TextStyle(

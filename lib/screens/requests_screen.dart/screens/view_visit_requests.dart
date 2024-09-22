@@ -112,7 +112,8 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
               return shimmerLoading();
             } else if (snapshot.hasError) {
               return Text(
-                  snapshot.error.toString().replaceFirst('Exception: ', ''));
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6);
             } else {
               final visitRequests = snapshot.data as List<ViewVisitModel>;
               return ListView.builder(

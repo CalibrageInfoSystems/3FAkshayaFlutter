@@ -73,9 +73,8 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
-                    snapshot.error.toString().replaceFirst('Exception: ', ''),
-                    style: CommonStyles.txSty_14p_f5,
-                  ),
+                      snapshot.error.toString().replaceFirst('Exception: ', ''),
+                      style: CommonStyles.txStyF16CpFF6),
                 );
               } else {
                 final data = snapshot.data as List<UnpaidCollection>;

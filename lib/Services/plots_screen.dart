@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class PlotSelection extends StatefulWidget {
+  const PlotSelection({super.key});
+
   // const PlotSelectionScreen({super.key});
 
   @override
@@ -68,34 +70,32 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
               future: plotsData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                      style: CommonStyles.txStyF16CpFF6);
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
                   return ListView.builder(
-
-
                     itemCount: plots.length,
                     itemBuilder: (context, index) {
                       if (plots.isNotEmpty && index < plots.length) {
-                        return
-                          CropPlotDetails(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Labourscreen(  plotdata: plots[index],)),
-                                );
-
-                              },
-                              plotdata: plots[index],
-                              index: index);
+                        return CropPlotDetails(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Labourscreen(
+                                          plotdata: plots[index],
+                                        )),
+                              );
+                            },
+                            plotdata: plots[index],
+                            index: index);
                       } else {
                         // Handle the case when the list is empty or index is out of range.
                         print("Plots list is empty or index is out of range");
-                       // Return nothing or handle the error appropriately
+                        // Return nothing or handle the error appropriately
                       }
                       return Container(); // or return any widget that makes sense in your context
-
-
                     },
                   );
                 } else {
@@ -117,10 +117,10 @@ class CropPlotDetails extends StatelessWidget {
 
   const CropPlotDetails(
       {super.key,
-        required this.plotdata,
-        required this.index,
-        this.onTap,
-        this.isIconVisible = true});
+      required this.plotdata,
+      required this.index,
+      this.onTap,
+      this.isIconVisible = true});
 
   @override
   Widget build(BuildContext context) {
@@ -140,15 +140,15 @@ class CropPlotDetails extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        // border:
-        //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
+          // border:
+          //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
           borderRadius: BorderRadius.circular(10),
           color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
       child: Stack(
         children: [
           plotCard(df, year),
           if (isIconVisible)
-             Positioned(
+            const Positioned(
                 top: 0,
                 bottom: 0,
                 right: 0,
@@ -169,7 +169,7 @@ class CropPlotDetails extends StatelessWidget {
         plotDetailsBox(
           label: tr(LocaleKeys.plot_size),
           data:
-          '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
+              '${df.format(plotdata.palmArea)} Ha (${df.format(plotdata.palmArea! * 2.5)} Acre)',
         ),
         plotDetailsBox(
           label: tr(LocaleKeys.village),

@@ -432,10 +432,10 @@ class _VisitRequestState extends State<VisitRequest> {
                   } else if (snapshot.hasError) {
                     return Center(
                       child: Text(
-                        snapshot.error
-                            .toString()
-                            .replaceFirst('Exception: ', ''),
-                      ),
+                          snapshot.error
+                              .toString()
+                              .replaceFirst('Exception: ', ''),
+                          style: CommonStyles.txStyF16CpFF6),
                     );
                   } else {
                     // Casting the response to a list of TypeIssue

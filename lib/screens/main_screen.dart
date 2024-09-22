@@ -173,251 +173,190 @@ class _MainScreenPageState extends State<MainScreen> {
             final farmer = snapshot.data as FarmerModel;
             return Drawer(
               backgroundColor: Colors.black,
-              child: ListView(
-                children: [
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Container(
-                    width: 120.0,
-                    height: 120.0,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child:CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: farmer.farmerPictureLocation != null
-                          ? Image.network(
-                        farmer.farmerPictureLocation!,
-                        fit: BoxFit.fill,
-                        errorBuilder: (context, error, stackTrace) {
-                          // Show icUser image if there's an error loading the farmer image
-                          return Image.asset(
-                            Assets.images.icUser.path,
-                            fit: BoxFit.fill,
-                          );
-                        },
-                      )
-                          : Image.asset(
-                        Assets.images.icUser.path, // Placeholder image if farmerImage is null
-                        fit: BoxFit.fill,
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Container(
+                      width: 120.0,
+                      height: 120.0,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.transparent,
+                        child: farmer.farmerPictureLocation != null
+                            ? Image.network(
+                                farmer.farmerPictureLocation!,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Show icUser image if there's an error loading the farmer image
+                                  return Image.asset(
+                                    Assets.images.icUser.path,
+                                    fit: BoxFit.fill,
+                                  );
+                                },
+                              )
+                            : Image.asset(
+                                Assets.images.icUser
+                                    .path, // Placeholder image if farmerImage is null
+                                fit: BoxFit.fill,
+                              ),
                       ),
                     ),
-
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        farmer.firstName! + ' '+ (farmer.middleName ?? '') + ' '+ farmer.lastName!,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'hind_semibold',
-                          color: Colors.white,
-                        ),
-                      ),
-
-                      // const SizedBox(
-                      //   width: 10.0,
-                      // ),
-                      // Text(
-                      //   farmer.lastName!,
-                      //   style: const TextStyle(
-                      //     fontSize: 16.0,
-                      //     color: Colors.white,
-                      //     fontFamily: 'hind_semibold',
-                      //     fontWeight: FontWeight.bold,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-
-                  // Row(
-                  //   // mainAxisAlignment: MainAxisAlignment.center,
-                  //   // crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0), // Add padding around the text
-                  //    child:  Flexible(
-                  //
-                  //       child: Text(
-                  //         farmer.addressLine1! + "-" + farmer.addressLine2!,
-                  //         maxLines: 3,
-                  //         overflow: TextOverflow.ellipsis,
-                  //         style: const TextStyle(
-                  //           fontSize: 16.0,
-                  //           color: Colors.white,
-                  //           fontFamily: 'hind_semibold',
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     )],
-                  // ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          farmer.addressLine1! + " - " + farmer.addressLine2!,
-                          textAlign: TextAlign.center,  // Center-align the text
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${'${farmer.firstName!} ' + (farmer.middleName ?? '')} ${farmer.lastName!}',
                           style: const TextStyle(
                             fontSize: 16.0,
-                            color: Colors.white,
-                            fontFamily: 'hind_semibold',
                             fontWeight: FontWeight.bold,
+                            fontFamily: 'hind_semibold',
+                            color: Colors.white,
                           ),
                         ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "${farmer.addressLine1!} - ${farmer.addressLine2!}",
+                            textAlign:
+                                TextAlign.center, // Center-align the text
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontFamily: 'hind_semibold',
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5.0,
+                    ),
+                    Container(
+                      height: 1.0,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xFFFF4500),
+                            Color(0xFFA678EF),
+                            Color(0xFFFF4500),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.center,
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          menuOption(
+                              title: tr(LocaleKeys.home),
+                              menuIcon: Assets.images.icHome.path,
+                              onTap: () {
+                                _onItemTapped(0);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.choose_language_str),
+                              menuIcon: Assets.images.icLang.path,
+                              isPng: true,
+                              onTap: () {
+                                openLanguageDialog(context);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.profile),
+                              menuIcon: Assets.images.icMyprofile.path,
+                              onTap: () {
+                                _onItemTapped(1);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.my3F),
+                              menuIcon: Assets.images.icMySvg.path,
+                              onTap: () {
+                                _onItemTapped(2);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.requests),
+                              menuIcon: Assets.images.icRequest.path,
+                              onTap: () {
+                                _onItemTapped(3);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.logout),
+                              menuIcon: Assets.images.icLogout.path,
+                              isPng: true,
+                              onTap: () {
+                                logOutDialog(context);
+                              }),
 
-                  const SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    height: 2.0,
-                    width: 10.0,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFFF4500),
-                          Color(0xFFA678EF),
-                          Color(0xFFFF4500),
+                          // menuOption(title: 'Version 1.0.1', onTap: () {}),
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.center,
                       ),
                     ),
-                  ),
-                  ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_home.svg',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      color: Colors.white,
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Version 1.0.1',
+                            style: CommonStyles.txStyF14CwFF6),
+                      ],
                     ),
-                    title: Text(
-                      tr(LocaleKeys.home),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'hind_semibold',
-                      ),
+                    const SizedBox(
+                      height: 5.0,
                     ),
-                    onTap: () {
-                      _onItemTapped(0);
-                    },
-                  ),
-                  ListTile(
-                    leading: Image.asset(
-                      'assets/images/ic_lang.png',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      tr(LocaleKeys.choose_language_str),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16, // Uncommented to include font size
-                        fontFamily: 'hind_semibold',
-                      ),
-                    ),
-                    onTap: () {
-                      //  Navigator.pop(context);  // Uncommented to pop the current screen
-                      openLanguageDialog(context);
-                    },
-                  ),
-                  ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_myprofile.svg',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      tr(LocaleKeys.profile),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'hind_semibold',
-                      ),
-                    ),
-                    onTap: () {
-                      _onItemTapped(1);
-                    },
-                  ),
-                  ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_my.svg',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.fill,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      tr(LocaleKeys.my3F),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'hind_semibold',
-                      ),
-                    ),
-                    onTap: () {
-                      _onItemTapped(2);
-                    },
-                  ),
-                  ListTile(
-                    leading: SvgPicture.asset(
-                      'assets/images/ic_request.svg',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      tr(LocaleKeys.requests),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'hind_semibold',
-                      ),
-                    ),
-                    onTap: () {
-                      _onItemTapped(3);
-                    },
-                  ),
-                  ListTile(
-                    leading: Image.asset(
-                      'assets/images/ic_logout.png',
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      color: Colors.white,
-                    ),
-                    title: Text(
-                      tr(LocaleKeys.logout),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'hind_semibold',
-                      ),
-                    ),
-                    onTap: () async {
-                      logOutDialog(context);
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text(
+              'Error: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6,
+            );
           } else {
             return const Center(child: CircularProgressIndicator());
           }
         });
+  }
+
+  ListTile menuOption(
+      {String? menuIcon,
+      required String title,
+      void Function()? onTap,
+      bool isPng = false}) {
+    return ListTile(
+      leading: menuIcon != null
+          ? (isPng
+              ? Image.asset(
+                  menuIcon,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                )
+              : SvgPicture.asset(
+                  menuIcon,
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                  color: Colors.white,
+                ))
+          : null,
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontFamily: 'hind_semibold',
+        ),
+      ),
+      onTap: onTap,
+    );
   }
 
   void _onItemTapped(int index) {

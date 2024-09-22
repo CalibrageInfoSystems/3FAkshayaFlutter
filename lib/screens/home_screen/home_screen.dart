@@ -174,7 +174,10 @@ class _HomeScreenState extends State<HomeScreen> {
             style: CommonStyles.txStyF12CbFF6,
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text(
+            'Error: ${snapshot.error}',
+            style: CommonStyles.txStyF16CpFF6,
+          );
         }
         return const ShimmerWidn();
       },
@@ -240,7 +243,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text(
+            'Error: ${snapshot.error}',
+            style: CommonStyles.txStyF16CpFF6,
+          );
         }
         return const ShimmerWidn(); // Placeholder when loading
       },
@@ -271,7 +277,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const ShimmerWidn();
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Text(
+                          'Error: ${snapshot.error}',
+                          style: CommonStyles.txStyF16CpFF6,
+                        );
                       } else {
                         final serviceTypeIdList = snapshot.data as List<int>;
                         return GridView.builder(
@@ -331,7 +340,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const ShimmerWidn();
                       } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
+                        return Text(
+                          'Error: ${snapshot.error}',
+                          style: CommonStyles.txStyF16CpFF6,
+                        );
                       } else {
                         final learningsList = snapshot.data as List<String?>;
 

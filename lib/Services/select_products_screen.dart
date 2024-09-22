@@ -147,8 +147,11 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               );
             },
             child: Container(
+              // width: 120,
               margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5,
+              ),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
                 borderRadius: BorderRadius.circular(10),
@@ -197,7 +200,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   final categories = snapshot.data as List<CategoryItem>;
                   return filterDropDown(categories);
                 } else if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                      style: CommonStyles.txStyF16CpFF6);
                 }
                 return Container(
                   padding: const EdgeInsets.all(10),
@@ -215,7 +219,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   return shimmerLoading();
                 }
                 if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                      style: CommonStyles.txStyF16CpFF6);
                 } else {
                   final products = snapshot.data as List<ProductItem>;
                   if (products.isNotEmpty) {
@@ -294,6 +299,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           icon: Icon(
             Icons.arrow_drop_down_sharp,
             color: CommonStyles.blackColorShade,
+            // color: CommonStyles.blackColorShade,
           ),
         ),
         isExpanded: true,
@@ -304,7 +310,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               Expanded(
                 child: Text(
                   'Select',
-                  style: CommonStyles.txSty_14b_f6,
+                  style: CommonStyles.txStyF14CbFF6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -326,6 +332,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 ))
             .toList(),
         value: selectedDropDownValue,
+        style: CommonStyles.txStyF14CwFF6,
         onChanged: (String? value) {
           setState(() {
             selectedDropDownValue = value;
@@ -337,8 +344,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         },
         dropdownStyleData: DropdownStyleData(
           decoration: const BoxDecoration(
-            //    borderRadius: BorderRadius.circular(14),
-            color: CommonStyles.dropdownListBgColor,
+            color: CommonStyles.screenBgColor,
           ),
           offset: const Offset(0, 0),
           scrollbarTheme: ScrollbarThemeData(
@@ -535,13 +541,13 @@ class _ProductCardState extends State<ProductCard> {
                   GestureDetector(
                     onTap: removeProduct,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey),
                       ),
                       child: const Icon(Icons.remove,
-                          color: CommonStyles.primaryTextColor),
+                          size: 20, color: CommonStyles.primaryTextColor),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -554,13 +560,13 @@ class _ProductCardState extends State<ProductCard> {
                   GestureDetector(
                     onTap: addProduct,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey),
                       ),
                       child: const Icon(Icons.add,
-                          color: CommonStyles.statusGreenText),
+                          size: 20, color: CommonStyles.statusGreenText),
                     ),
                   )
 
@@ -667,7 +673,7 @@ class _ProductCardState extends State<ProductCard> {
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Image.asset(
                       Assets.images.icLogo.path,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),

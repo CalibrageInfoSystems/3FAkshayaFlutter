@@ -23,17 +23,15 @@ import '../common_utils/shared_prefs_keys.dart';
 import 'models/MsgModel.dart';
 import 'models/RequestPoleDetails.dart';
 
-
 class EquipProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
   final Godowndata godown;
 
   const EquipProductCardScreen({
-    Key? key,
+    super.key,
     required this.products,
     required this.godown,
-  }) : super(key: key);
-
+  });
 
   @override
   State<EquipProductCardScreen> createState() => _ProductCardScreenState();
@@ -44,14 +42,14 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   late double subsidyAmount = 0.0;
   late double payableAmount = 0.0;
   late Future<FarmerModel> farmerData;
-  late String farmerCode,farmerName,Statecode,StateName;
-  late int  Cluster_id;
+  late String farmerCode, farmerName, Statecode, StateName;
+  late int Cluster_id;
   bool _isCheckboxChecked = false;
   int _selectedPaymentType = -1;
-  late int  paymentmodeId = 0;
+  late int paymentmodeId = 0;
   List<String> selectedList = [];
   String? selectedName;
-  double displayamountWithoutGst  = 0.0;
+  double displayamountWithoutGst = 0.0;
   double displaytotalProductCostGst = 0.0;
   double displaytotalGst = 0.0;
   double displayTransportamountWithoutGst = 0.0;
@@ -84,12 +82,11 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     farmerData.then((farmer) {
       print('farmerData==${farmer.code}');
       farmerCode = '${farmer.code}';
-      farmerName =  '${farmer.firstName} ${farmer.middleName ?? ''} ${farmer.lastName}';
+      farmerName =
+          '${farmer.firstName} ${farmer.middleName ?? ''} ${farmer.lastName}';
       Cluster_id = farmer.clusterId!;
       Statecode = '${farmer.stateCode}';
       StateName = '${farmer.stateName}';
-
-
     });
     calculateCosts();
   }
@@ -124,15 +121,15 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child:
-          Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text(tr(LocaleKeys.payment_mode), style: CommonStyles.txSty_16black_f5),
-                  SizedBox(width: 5),
-                  Text('*', style: TextStyle(color: Colors.red)),
+                  Text(tr(LocaleKeys.payment_mode),
+                      style: CommonStyles.txSty_16black_f5),
+                  const SizedBox(width: 5),
+                  const Text('*', style: TextStyle(color: Colors.red)),
                 ],
               ),
               const SizedBox(height: 5),
@@ -150,12 +147,14 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                         });
                       },
                     ),
-                    Text(tr(LocaleKeys.imdpayment), style: CommonStyles.txSty_16black_f5),
+                    Text(tr(LocaleKeys.imdpayment),
+                        style: CommonStyles.txSty_16black_f5),
                   ],
                 ),
               const SizedBox(height: 10),
 
-              Text(tr(LocaleKeys.product_details), style: CommonStyles.txSty_16black_f5),
+              Text(tr(LocaleKeys.product_details),
+                  style: CommonStyles.txSty_16black_f5),
               const SizedBox(height: 5),
               Column(
                 children: [
@@ -176,10 +175,18 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                     const Color(0xFFFF4500),
                   ]),
                   noteBox(),
-                  productCostbox(title: tr(LocaleKeys.amount), data: amountWithoutGst.toStringAsFixed(2)),
-                  productCostbox(title: tr(LocaleKeys.cgst_amount), data: totalCGST.toStringAsFixed(2)),
-                  productCostbox(title: tr(LocaleKeys.sgst_amount), data: totalSGST.toStringAsFixed(2)),
-                  productCostbox(title: tr(LocaleKeys.total_amt), data: totalProductCostGst.toStringAsFixed(2)),
+                  productCostbox(
+                      title: tr(LocaleKeys.amount),
+                      data: amountWithoutGst.toStringAsFixed(2)),
+                  productCostbox(
+                      title: tr(LocaleKeys.cgst_amount),
+                      data: totalCGST.toStringAsFixed(2)),
+                  productCostbox(
+                      title: tr(LocaleKeys.sgst_amount),
+                      data: totalSGST.toStringAsFixed(2)),
+                  productCostbox(
+                      title: tr(LocaleKeys.total_amt),
+                      data: totalProductCostGst.toStringAsFixed(2)),
                   // productCostbox(title: tr(LocaleKeys.transamount), data: TransportamountWithoutGst.toStringAsFixed(2)),
                   // productCostbox(title: tr(LocaleKeys.tcgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
                   // productCostbox(title: tr(LocaleKeys.tsgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
@@ -193,10 +200,11 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                   ]),
 
                   CustomBtn(
-                    label:tr(LocaleKeys.submit),
+                    label: tr(LocaleKeys.submit),
                     borderColor: CommonStyles.primaryTextColor,
                     borderRadius: 12,
-                    onPressed: () async { // Disable button when loading
+                    onPressed: () async {
+                      // Disable button when loading
                       if (validations()) {
                         if (await isOnline()) {
                           final request = FertilizerRequest(
@@ -205,7 +213,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                             farmerCode: farmerCode,
                             farmerName: farmerName,
                             plotCode: null,
-                            requestCreatedDate: DateTime.now().toIso8601String(),
+                            requestCreatedDate:
+                                DateTime.now().toIso8601String(),
                             isFarmerRequest: true,
                             createdByUserId: null,
                             createdDate: DateTime.now().toIso8601String(),
@@ -233,12 +242,12 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                           print('CHECK BOX VALUE: $_isCheckboxChecked');
                           await submitFertilizerRequest(request);
                         } else {
-                          CommonStyles.showCustomDialog(context, tr(LocaleKeys.Internet));
+                          CommonStyles.showCustomDialog(
+                              context, tr(LocaleKeys.Internet));
                         }
                       }
                     },
                   ),
-
                 ],
               ),
             ],
@@ -247,7 +256,6 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       ),
     );
   }
-
 
   Widget productCostbox({
     required String title,
@@ -311,7 +319,6 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     );
   }
 
-
   Container dropdownWidget() {
     return Container(
       width: double.infinity,
@@ -329,7 +336,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             final paymentModes = snapshot.data as List<dynamic>;
             return filterDropDown(paymentModes);
           } else if (snapshot.hasError) {
-            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6);
           }
           return Container(
             padding: const EdgeInsets.all(10),
@@ -376,13 +384,14 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               _selectedPaymentType = value!;
               if (_selectedPaymentType != -1) {
                 paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
-                final paymentmodeName = paymentModes[_selectedPaymentType]['desc'];
+                final paymentmodeName =
+                    paymentModes[_selectedPaymentType]['desc'];
 
                 print('setState paymentmodeId: $paymentmodeId');
 
-
                 // Adjust the condition for showing the checkbox based on the payment mode ID
-                _isCheckboxChecked = false; // Reset the checkbox when changing payment mode
+                _isCheckboxChecked =
+                    false; // Reset the checkbox when changing payment mode
               }
             });
           },
@@ -402,7 +411,9 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           dropdownStyleData: DropdownStyleData(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: Colors.grey,
+              // color: Colors.grey,
+
+              color: CommonStyles.screenBgColor,
             ),
             offset: const Offset(0, 0),
             scrollbarTheme: ScrollbarThemeData(
@@ -425,7 +436,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     final quantity = productinfo.quantity;
     final productQuantity = product.actualPriceInclGst! * quantity;
     final totalTrasport = product.transPortActualPriceInclGst! * quantity;
-    final totalAmount = productQuantity + totalTrasport!;
+    final totalAmount = productQuantity + totalTrasport;
     return Container(
       padding: const EdgeInsets.all(5),
       margin: const EdgeInsets.only(bottom: 5),
@@ -449,11 +460,13 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           Row(
             children: [
               Expanded(
-                child: Text(tr(LocaleKeys.product), style: CommonStyles.txSty_14b_f5),
+                child: Text(tr(LocaleKeys.product),
+                    style: CommonStyles.txSty_14b_f5),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text('${product.name}', style: CommonStyles.txSty_14p_f5),
+                child:
+                    Text('${product.name}', style: CommonStyles.txSty_14p_f5),
               ),
             ],
           ),
@@ -461,14 +474,14 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             label1: tr(LocaleKeys.each_product),
             //  label1: 'Item Cost(Rs)',
             data1: '${product.actualPriceInclGst?.toStringAsFixed(2)}',
-            label2:  tr(LocaleKeys.gst),
+            label2: tr(LocaleKeys.gst),
             data2: '${product.gstPercentage?.toStringAsFixed(2)}',
           ),
           productInfo(
-            label1:  tr(LocaleKeys.quantity),
+            label1: tr(LocaleKeys.quantity),
             data1: '$quantity',
-            label2:  tr(LocaleKeys.amount),
-            data2: '${productQuantity.toStringAsFixed(2)}',
+            label2: tr(LocaleKeys.amount),
+            data2: productQuantity.toStringAsFixed(2),
           ),
           // productInfo(
           //   label1:  tr(LocaleKeys.transportprice),
@@ -506,7 +519,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                     flex: 4, // Adjust the flex value as needed for the label
                     child: Text(label1, style: CommonStyles.txSty_12b_f5),
                   ),
-                  const SizedBox(width: 3), // Optional spacing between label and data
+                  const SizedBox(
+                      width: 3), // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
                     child: Text(data1, style: CommonStyles.txSty_12b_f5),
@@ -523,7 +537,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                     flex: 4, // Adjust the flex value as needed for the label
                     child: Text(label2, style: CommonStyles.txSty_12b_f5),
                   ),
-                  const SizedBox(width: 3), // Optional spacing between label and data
+                  const SizedBox(
+                      width: 3), // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
                     child: Text(data2, style: CommonStyles.txSty_12b_f5),
@@ -537,18 +552,17 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     );
   }
 
-
   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
-
     });
 // Show the horizontal dots loading dialog after button click
     Future.delayed(Duration.zero, () {
-      CommonStyles.showHorizontalDotsLoadingDialog(context); // Show loading dialog
+      CommonStyles.showHorizontalDotsLoadingDialog(
+          context); // Show loading dialog
     });
-  //  const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
-    final url = '$baseUrl$productsubRequest';
+    //  const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
+    const url = '$baseUrl$productsubRequest';
     // Print the request object
     print('Submitting request:');
     print('Request Object: ${jsonEncode(request.toJson())}');
@@ -582,14 +596,18 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           displayTransportamountWithGst += transportCost;
 
           final productGSTPercentage = product.gstPercentage!;
-          displayamountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+          displayamountWithoutGst +=
+              productCost / (1 + (productGSTPercentage / 100));
 
-          displaytotalGst = displaytotalProductCostGst - displayamountWithoutGst;
+          displaytotalGst =
+              displaytotalProductCostGst - displayamountWithoutGst;
 
           final transportGSTPercentage = product.transportGstPercentage!;
-          displayTransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
+          displayTransportamountWithoutGst +=
+              transportCost / (1 + (transportGSTPercentage / 100));
 
-          displaytotaltransportGst = displayTransportamountWithGst - displayTransportamountWithoutGst;
+          displaytotaltransportGst =
+              displayTransportamountWithGst - displayTransportamountWithoutGst;
 
           selectedList.add('$productName : $quantity');
         }
@@ -598,9 +616,15 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
         List<MsgModel> displayList = [
           MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
           MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
-          MsgModel(key: tr(LocaleKeys.amount), value: displayamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(key: tr(LocaleKeys.gst_amount), value: displaytotalGst.toStringAsFixed(2)),
-          MsgModel(key: tr(LocaleKeys.total_amt), value: displaytotalProductCostGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.amount),
+              value: displayamountWithoutGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.gst_amount),
+              value: displaytotalGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.total_amt),
+              value: displaytotalProductCostGst.toStringAsFixed(2)),
           // MsgModel(key: tr(LocaleKeys.transamount), value: displayTransportamountWithoutGst.toStringAsFixed(2)),
           // MsgModel(key: tr(LocaleKeys.transgst), value: displaytotaltransportGst.toStringAsFixed(2)),
           // MsgModel(key: tr(LocaleKeys.totaltransportcost), value: displayTransportamountWithGst.toStringAsFixed(2)),
@@ -622,6 +646,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       });
     }
   }
+
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
@@ -632,7 +657,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   }
 
 // Function to show the dialog
-  void showSuccessDialog(BuildContext context, List<MsgModel> msg, String summary) {
+  void showSuccessDialog(
+      BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -648,8 +674,10 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
         final quantity = productWithQuantity.quantity;
 
         // Null checks before accessing values
-        if (product.actualPriceInclGst != null && product.transPortActualPriceInclGst != null && product.gstPercentage != null && product.transportGstPercentage != null) {
-
+        if (product.actualPriceInclGst != null &&
+            product.transPortActualPriceInclGst != null &&
+            product.gstPercentage != null &&
+            product.transportGstPercentage != null) {
           final productCost = product.actualPriceInclGst! * quantity;
           totalProductCostGst += productCost;
 
@@ -664,21 +692,25 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           totalSGST = totalGST / 2;
 
           final transportGSTPercentage = product.transportGstPercentage!;
-          TransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
+          TransportamountWithoutGst +=
+              transportCost / (1 + (transportGSTPercentage / 100));
 
-          totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
+          totalTransportGST =
+              totalTransportCostwithgst - TransportamountWithoutGst;
           totalTransCGST = totalTransportGST / 2;
           totalTrasSGST = totalTransportGST / 2;
 
           // Safely handle product.size by casting or parsing to double?
-          final size = product.size != null ? double.tryParse(product.size.toString()) : null;
+          final size = product.size != null
+              ? double.tryParse(product.size.toString())
+              : null;
 
           productDetailsList.add(
             RequestPoleDetails(
               productId: product.id!,
               quantity: quantity,
               bagCost: product.actualPriceInclGst!,
-              size: size,  // Use size as double?
+              size: size, // Use size as double?
               gstPersentage: product.gstPercentage!,
               productCode: product.code!,
             ),
@@ -693,9 +725,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     // Call getFertilizerSubsidies only once when the calculation is done
   }
 
-
   bool validations() {
-    print('----- analysis ----->> imdpayment  : ${_selectedPaymentType}');
+    print('----- analysis ----->> imdpayment  : $_selectedPaymentType');
     if (_selectedPaymentType == -1) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.paym_validation));
       return false;
@@ -705,14 +736,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   }
 
   Future<bool> isOnline() async {
-    final ConnectivityResult connectivityResult = await Connectivity().checkConnectivity();
+    final ConnectivityResult connectivityResult =
+        await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
   }
-
-
-
-
-
 }
-
-

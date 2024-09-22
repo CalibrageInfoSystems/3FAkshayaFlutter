@@ -291,7 +291,10 @@ class _PdfTabViewState extends State<PdfTabView> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text(
+              'Error: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6,
+            );
           } else {
             final data = snapshot.data as List<MediaInfo>;
             final mediaData = filterMediaData(data, 5);
@@ -457,7 +460,10 @@ class _VideoTabViewState extends State<VideoTabView> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Text(
+              'Error: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6,
+            );
           } else {
             final data = snapshot.data as List<MediaInfo>;
             final mediaData = filterMediaData(data, 4);

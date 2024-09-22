@@ -249,42 +249,46 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       context,
       Container(
         width: size.width * 0.8,
+        height: size.height * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              color: CommonStyles.primaryTextColor,
-              padding: const EdgeInsets.all(12),
-              alignment: Alignment.center,
-              child: Text(
-                tr(LocaleKeys.terms_conditionss),
-                style: CommonStyles.txStyF14CwFF6,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                color: CommonStyles.primaryTextColor,
+                padding: const EdgeInsets.all(12),
+                alignment: Alignment.center,
+                child: Text(
+                  tr(LocaleKeys.terms_conditionss),
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
               ),
-            ),
-            Container(
-              // height: size.height * 0.5,
-              padding: const EdgeInsets.all(12),
-              color: CommonStyles.whiteColor,
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                child: Text(tr(LocaleKeys.loan_terms),
-                    style: CommonStyles.txSty_14b_f5),
+              Container(
+                // height: size.height * 0.5,
+                padding: const EdgeInsets.all(12),
+                color: CommonStyles.whiteColor,
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  child: Text(tr(LocaleKeys.loan_terms),
+                      style: CommonStyles.txSty_14b_f5),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomBtn(
-                      label: 'Got it', onPressed: () => Navigator.pop(context)),
-                ],
-              ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                        label: 'Got it',
+                        onPressed: () => Navigator.pop(context)),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -307,74 +311,4 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       },
     );
   }
-  // void showSuccessDialog(BuildContext context, List<MsgModel> displayList, String tr) {}
-
-  // void showSuccessDialog() {
-  //   CommonStyles.errorDialog(
-  //     context,
-  //     errorMessage: 'errorMessage',
-  //     errorIcon: SvgPicture.asset(Assets.images.progressComplete.path),
-  //     bodyBackgroundColor: Colors.white,
-  //     errorLabel: 'errorLabel',
-  //     errorMessageColor: Colors.orange,
-  //     onPressed: () {
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => const HomeScreen(),
-  //         ),
-  //       );
-  //     },
-  //     errorBodyWidget: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Text(tr(LocaleKeys.success_Loan), style: CommonStyles.txSty_14p_f5),
-  //         const SizedBox(height: 20),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //           children: [
-  //             Expanded(
-  //               flex: 6,
-  //               child: Text(tr(LocaleKeys.loan_amount),
-  //                   style: CommonStyles.txSty_14p_f5),
-  //             ),
-  //             const Expanded(
-  //                 flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
-  //             Expanded(
-  //               flex: 5,
-  //               child: Text(_loanAmountController.text,
-  //                   style: CommonStyles.txSty_14b_f5),
-  //             ),
-  //           ],
-  //         ),
-  //         const SizedBox(
-  //           height: 10,
-  //         ),
-  //         _reasonController.text.isNotEmpty
-  //             ? Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                 children: [
-  //                   Expanded(
-  //                     flex: 6,
-  //                     child: Text(tr(LocaleKeys.reason_loan),
-  //                         style: CommonStyles.txSty_14p_f5),
-  //                   ),
-  //                   const Expanded(
-  //                       flex: 1,
-  //                       child: Text(':', style: CommonStyles.txSty_14b_f5)),
-  //                   Expanded(
-  //                     flex: 5,
-  //                     child: Text(_reasonController.text,
-  //                         style: CommonStyles.txF14Fw5Cb),
-  //                   ),
-  //                 ],
-  //               )
-  //             : const SizedBox(),
-  //         const SizedBox(
-  //           height: 10,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

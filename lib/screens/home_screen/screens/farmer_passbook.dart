@@ -65,13 +65,13 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
         ),
         body: Center(
           child: Card(
-            child: IntrinsicHeight(
-                child: Container(
+            child: Container(
               width: size.width * 0.9,
               decoration: const BoxDecoration(
                   color: Color(0x8D000000),
                   borderRadius: BorderRadius.all(Radius.circular(8))),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const SizedBox(
                     height: 10,
@@ -97,273 +97,12 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    height: 1.0,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFFF4500),
-                          Color(0xFFA678EF),
-                          Color(0xFFFF4500),
-                        ],
-                        end: Alignment.topRight,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
-                              child: Text(
-                                tr(LocaleKeys.bank_holder),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ":",
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
-                              child: Text(
-                                accountholdername ?? '',
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
-                              child: Text(
-                                tr(LocaleKeys.account_no),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ":",
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                accountnum ?? '',
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
-                              child: Text(
-                                tr(LocaleKeys.bank_name),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ":",
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                bankname ?? '',
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
-                              child: Text(
-                                tr(LocaleKeys.branch_name),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ":",
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                branchname ?? '',
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
-                              child: Text(
-                                tr(LocaleKeys.ifsc),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ":",
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
-                              child: Text(
-                                ifscode ?? '',
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  infoBox(
+                      label: tr(LocaleKeys.bank_holder),
+                      data: accountholdername),
+                  infoBox(label: tr(LocaleKeys.account_no), data: accountnum),
+                  infoBox(label: tr(LocaleKeys.bank_name), data: bankname),
+                  infoBox(label: tr(LocaleKeys.ifsc), data: ifscode),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Row(
@@ -399,9 +138,62 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
                   ),
                 ],
               ),
-            )),
+            ),
           ),
         ));
+  }
+
+  Row infoBox({required String label, String? data}) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
+                child: Text(
+                  label,
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 15, 0, 5),
+                child: Text(
+                  ":",
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
+                child: Text(
+                  data ?? '',
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Future<FarmerInfo?> farmerbankdetails(String fc) async {

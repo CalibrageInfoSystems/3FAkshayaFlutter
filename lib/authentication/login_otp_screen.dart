@@ -280,12 +280,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           } catch (e) {
             print("Navigation to MainScreen failed: $e");
           }
-
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => MainScreen(),
-          //   ),
-          // );
         } else {
           print("OTP validation failed: ${data['endUserMessage']}");
           _showErrorDialog(data['endUserMessage']);
@@ -359,14 +353,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                 backgroundColor: Colors.black,
                 textColor: Colors.white,
                 fontSize: 16.0);
-
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => LoginOtpScreen(mobile: _mobileNumber),
-            //   ),
-            // );
-            //   context.push(Routes.loginOtpScreen.path);
           } else {
             CommonStyles.showCustomDialog(
                 context, 'No Register Mobile Number for Send Otp');

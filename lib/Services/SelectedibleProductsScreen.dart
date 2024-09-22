@@ -124,7 +124,8 @@ class _SelectEdibleProductsScreenState
           return shimmerLoading();
         }
         if (snapshot.hasError) {
-          return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+          return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+              style: CommonStyles.txStyF16CpFF6);
         } else {
           final products = snapshot.data as List<ProductItem>;
           if (products.isNotEmpty) {
@@ -319,6 +320,8 @@ class _ProductCardState extends State<ProductCard> {
               const SizedBox(),
               Text(
                 '${widget.product.name}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: CommonStyles.txStyF14CpFF6,
               ),
               GestureDetector(

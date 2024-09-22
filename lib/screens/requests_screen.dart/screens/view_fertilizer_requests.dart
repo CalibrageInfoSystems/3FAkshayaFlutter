@@ -91,7 +91,8 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              return Text('Error: ${snapshot.error}',
+                  style: CommonStyles.txStyF16CpFF6);
             } else if (!snapshot.hasData) {
               return const Text('No data');
             }

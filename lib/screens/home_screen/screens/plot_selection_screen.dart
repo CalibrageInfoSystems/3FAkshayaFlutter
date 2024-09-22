@@ -68,7 +68,10 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
               future: plotsData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                  return Text(
+                    '${tr(LocaleKeys.error)}: ${snapshot.error}',
+                    style: CommonStyles.txStyF16CpFF6,
+                  );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
                   return ListView.builder(

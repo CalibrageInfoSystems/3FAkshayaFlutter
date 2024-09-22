@@ -442,7 +442,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         dropdownStyleData: DropdownStyleData(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            color: CommonStyles.dropdownListBgColor,
+                            // color: CommonStyles.dropdownListBgColor,
+                            color: CommonStyles.screenBgColor,
                           ),
                           offset: const Offset(0, 0),
                           scrollbarTheme: ScrollbarThemeData(

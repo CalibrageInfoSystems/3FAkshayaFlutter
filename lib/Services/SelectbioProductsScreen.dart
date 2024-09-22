@@ -125,7 +125,8 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                     return shimmerLoading();
                   }
                   if (snapshot.hasError) {
-                    return Text('${tr(LocaleKeys.error)}: ${snapshot.error}');
+                    return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                        style: CommonStyles.txStyF16CpFF6);
                   } else {
                     final products = snapshot.data as List<ProductItem>;
                     if (products.isNotEmpty) {
@@ -325,9 +326,8 @@ class _ProductCardState extends State<ProductCard> {
               child: Text(
                 widget.product.name!,
                 style: CommonStyles.txStyF14CpFF6,
-                maxLines: 3, // Allow up to 3 lines
-                overflow:
-                    TextOverflow.ellipsis, // Add ellipsis if it exceeds 3 lines
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             GestureDetector(
@@ -379,13 +379,17 @@ class _ProductCardState extends State<ProductCard> {
             ),
             Row(
               children: [
-                IconButton(
-                  iconSize: 16,
-                  style: iconBtnStyle(
-                    foregroundColor: CommonStyles.primaryTextColor,
+                GestureDetector(
+                  onTap: removeProduct,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: const Icon(Icons.remove,
+                        size: 20, color: CommonStyles.primaryTextColor),
                   ),
-                  icon: const Icon(Icons.remove),
-                  onPressed: removeProduct,
                 ),
                 const SizedBox(width: 2),
                 Text(
@@ -393,14 +397,18 @@ class _ProductCardState extends State<ProductCard> {
                   style: CommonStyles.texthintstyle,
                 ),
                 const SizedBox(width: 2),
-                IconButton(
-                  iconSize: 16,
-                  style: iconBtnStyle(
-                    foregroundColor: CommonStyles.statusGreenText,
+                GestureDetector(
+                  onTap: addProduct,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: const Icon(Icons.add,
+                        size: 20, color: CommonStyles.statusGreenText),
                   ),
-                  icon: const Icon(Icons.add),
-                  onPressed: addProduct,
-                ),
+                )
               ],
             ),
             const SizedBox(),
