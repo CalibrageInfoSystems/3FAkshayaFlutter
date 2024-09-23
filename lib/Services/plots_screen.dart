@@ -193,7 +193,9 @@ class CropPlotDetails extends StatelessWidget {
   }
 
   Widget plotDetailsBox(
-      {required String label, required String data, Color? dataTextColor}) {
+      {required String label,
+      required String data,
+      Color? dataTextColor = CommonStyles.dataTextColor}) {
     return Column(
       children: [
         Row(
@@ -202,13 +204,13 @@ class CropPlotDetails extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txSty_14b_f5,
+                  style: CommonStyles.txStyF14CbFF6,
                 )),
             Expanded(
                 flex: 6,
                 child: Text(
                   data,
-                  style: CommonStyles.txF14Fw5Cb.copyWith(
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
                     color: dataTextColor,
                   ),
                 )),

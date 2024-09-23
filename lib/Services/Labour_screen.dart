@@ -15,10 +15,8 @@ import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:akshaya_flutter/Services/models/LabourRequest.dart';
-import 'package:akshaya_flutter/Services/models/Popupmodel.dart';
 import 'package:akshaya_flutter/Services/models/ResponseModel.dart';
 import 'package:akshaya_flutter/Services/models/ServiceType.dart';
-import 'package:akshaya_flutter/Services/product_card_screen.dart';
 import 'package:akshaya_flutter/common_utils/SuccessDialog.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -28,7 +26,6 @@ import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 
 import '../common_utils/custom_appbar.dart';
-import '../common_utils/custom_btn.dart';
 import 'models/MsgModel.dart';
 
 class Labourscreen extends StatefulWidget {
@@ -168,8 +165,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       appBar: CustomAppBar(
         title: tr(LocaleKeys.labour_lable),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -179,553 +176,558 @@ class _LabourscreenScreenState extends State<Labourscreen> {
               index: 0,
               isIconVisible: false,
             ),
-            SingleChildScrollView(
-                child: Container(
+            const SizedBox(height: 10),
+            Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
                 color: CommonStyles.dropdownListBgColor,
                 // color: CommonStyles.screenBgColor,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.select_labour_type),
-                        style: CommonStyles.txStyF14CwFF6,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Icon(
-                        Icons.star,
-                        size: 8,
-                        color: CommonStyles.formFieldErrorBorderColor,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  //MARK: Multi selecter
-                  GestureDetector(
-                    onTap: () {
-                      CommonStyles.customDialog(
-                          context,
-                          borderRadius: BorderRadius.circular(2),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            padding: const EdgeInsets.all(16),
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 13,
-                                    ),
-                                    Text(
-                                      tr(LocaleKeys.multistring),
-                                      style:
-                                          CommonStyles.txStyF16CbFF6.copyWith(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      pruningCheck = !pruningCheck;
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Checkbox(
-                                        value: pruningCheck,
-                                        activeColor:
-                                            CommonStyles.primaryTextColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            pruningCheck = value!;
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text('Pruning (ప్రూనింగ్)',
-                                          style: CommonStyles.txStyF16CbFF6
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w400)),
-                                    ],
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      harvestingCheck = !harvestingCheck;
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Checkbox(
-                                        value: harvestingCheck,
-                                        activeColor:
-                                            CommonStyles.primaryTextColor,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            harvestingCheck = value!;
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        'Harvesting (గెలల కోత)',
-                                        // 'Harvesting (data)',
-                                        style: CommonStyles.txStyF16CbFF6
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    const Spacer(),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3.0, horizontal: 10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        'CANCEL',
-                                        style: TextStyle(
-                                            color:
-                                                CommonStyles.primaryTextColor),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        print(
-                                            'Submitted: pruningCheck: $pruningCheck, harvestingCheck: $harvestingCheck');
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        shadowColor: Colors.transparent,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3.0, horizontal: 10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        'SUBMIT',
-                                        style: TextStyle(
-                                            color:
-                                                CommonStyles.primaryTextColor),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ));
-                    },
-                    child: Container(
-                      height: 48,
-                      padding: const EdgeInsets.only(left: 13),
-                      alignment: Alignment.centerLeft,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.5),
-                        borderRadius: BorderRadius.circular(8.0),
-                        color: Colors.transparent,
-                      ),
-                      child: const Text(
-                        'Tap to select',
-                        style: CommonStyles.txStyF14CwFF6,
-                      ),
-                    ),
-                  ),
-                  /* 
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: MultiSelectDialogField(
-                      listType: MultiSelectListType.LIST,
-                      dialogHeight: MediaQuery.of(context).size.width / 4.10,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5)),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                      ),
-                      title: const Text("Services Types"),
-                      buttonText: Text(
-                        _selectedServiceTypes.isEmpty
-                            ? "Tap to select"
-                            : _selectedServiceTypes
-                                .map((e) => e.desc)
-                                .join(', '),
-                        style: CommonStyles.txStyF14CwFF6,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      items: ServiceType_list.map((service) =>
-                          MultiSelectItem<ServiceType>(
-                              service, service.desc!)).toList(),
-                      chipDisplay: MultiSelectChipDisplay.none(),
-                      buttonIcon: const Icon(
-                        Icons.keyboard_arrow_down_sharp,
-                        color: Colors.white,
-                      ),
-                      onConfirm: (List<dynamic> selected) {
-                        setState(() {
-                          _selectedDesc = null;
-                          _selectedServiceTypes = selected.cast<ServiceType>();
-                        });
-                        service_id = _selectedServiceTypes
-                            .map((e) => e.typeCdId)
-                            .where((id) => id != null)
-                            .map((id) => id.toString())
-                            .join(',');
-                        servicename =
-                            _selectedServiceTypes.map((e) => e.desc).join(', ');
-                        if (service_id == "19") {
-                          selectduration_id = _labourRequests[0].typeCdId;
-                          _selectedDesc = _labourRequests[0].desc;
-                        }
-                        fetchlabourservicecost();
-                      },
-                    ),
-                  ),
-                   */
-
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Visibility(
-                    visible: pruningCheck,
-                    /*  visible: _selectedServiceTypes
-                        .any((service) => service.typeCdId == 19), */
-                    child: Column(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
                       children: [
+                        Text(
+                          tr(LocaleKeys.select_labour_type),
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
                         const SizedBox(
-                          height: 4,
+                          width: 5,
                         ),
-                        plotDetailsBox(
-                          label: tr(LocaleKeys.pru_amount),
-                          data: '${prunningCost ?? 0.0}',
-                        ),
+                        const Icon(
+                          Icons.star,
+                          size: 8,
+                          color: CommonStyles.formFieldErrorBorderColor,
+                        )
                       ],
                     ),
-                  ),
-                  Visibility(
-                    visible: harvestingCheck,
-                    /*  visible: _selectedServiceTypes
-                        .any((service) => service.typeCdId == 20), */
-                    child: plotDetailsBox(
-                      label: tr(LocaleKeys.harv_amount),
-                      data: "${harvestCost ?? 0.0}",
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            _isChecked = value!;
-                          });
-                        },
-                        checkColor: Colors.grey,
-                        fillColor:
-                            WidgetStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(WidgetState.selected)) {
-                            return Colors.white;
-                          }
-                          return Colors
-                              .transparent; // Transparent background when unchecked
-                        }),
-                        side: const BorderSide(
-                          color: Colors.black, // Black border when unchecked
-                          width: 2, // Border width
-                        ),
-                      ),
-                      //SizedBox(width: 8),
-                      Text(
-                        tr(LocaleKeys.have_pole),
-                        style: CommonStyles.txStyF14CwFF6,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.startDate),
-                        style: CommonStyles.txStyF14CwFF6,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Icon(
-                        Icons.star,
-                        size: 8,
-                        color: CommonStyles.formFieldErrorBorderColor,
-                      )
-                    ],
-                  ),
-                  Container(
-                    height: 55,
-                    padding:
-                        const EdgeInsets.only(left: 0, top: 10.0, right: 0),
-                    child: GestureDetector(
-                      onTap: () async {
-                        _selectDate(context);
+                    //MARK: Multi selecter
+                    GestureDetector(
+                      onTap: () {
+                        CommonStyles.customDialog(
+                            context,
+                            borderRadius: BorderRadius.circular(2),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              padding: const EdgeInsets.all(16),
+                              color: Colors.white,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 13,
+                                      ),
+                                      Text(
+                                        tr(LocaleKeys.multistring),
+                                        style:
+                                            CommonStyles.txStyF16CbFF6.copyWith(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        pruningCheck = !pruningCheck;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          value: pruningCheck,
+                                          activeColor:
+                                              CommonStyles.primaryTextColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              pruningCheck = value!;
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text('Pruning (ప్రూనింగ్)',
+                                            style: CommonStyles.txStyF16CbFF6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                      ],
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        harvestingCheck = !harvestingCheck;
+                                      });
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Checkbox(
+                                          value: harvestingCheck,
+                                          activeColor:
+                                              CommonStyles.primaryTextColor,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              harvestingCheck = value!;
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Text(
+                                          'Harvesting (గెలల కోత)',
+                                          // 'Harvesting (data)',
+                                          style: CommonStyles.txStyF16CbFF6
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Spacer(),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3.0, horizontal: 10.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'CANCEL',
+                                          style: TextStyle(
+                                              color: CommonStyles
+                                                  .primaryTextColor),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          print(
+                                              'Submitted: pruningCheck: $pruningCheck, harvestingCheck: $harvestingCheck');
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          shadowColor: Colors.transparent,
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3.0, horizontal: 10.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'SUBMIT',
+                                          style: TextStyle(
+                                              color: CommonStyles
+                                                  .primaryTextColor),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ));
                       },
                       child: Container(
-                        height: 55,
+                        height: 48,
+                        padding: const EdgeInsets.only(left: 13),
+                        alignment: Alignment.centerLeft,
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1.5),
                           borderRadius: BorderRadius.circular(8.0),
                           color: Colors.transparent,
                         ),
-                        child: AbsorbPointer(
-                          child: SizedBox(
-                            height: 55,
-                            child: TextFormField(
-                              controller: _dateController,
-                              style: CommonStyles.txStyF14CwFF6,
-                              decoration: const InputDecoration(
-                                hintText: 'Preferred Date',
-                                hintStyle: CommonStyles.txStyF14CwFF6,
-                                contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 10.0),
-                                // Adjust padding as needed
-                                suffixIcon: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Icon(
-                                    Icons.calendar_today,
-                                    // Replace with your desired icon
-                                    color: Colors.white,
+                        child: const Text(
+                          'Tap to select',
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                      ),
+                    ),
+                    /* 
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width,
+                                        child: MultiSelectDialogField(
+                                          listType: MultiSelectListType.LIST,
+                                          dialogHeight: MediaQuery.of(context).size.width / 4.10,
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            borderRadius:
+                          const BorderRadius.all(Radius.circular(5)),
+                                            border: Border.all(
+                                              color: Colors.white,
+                                              width: 2,
+                                            ),
+                                          ),
+                                          title: const Text("Services Types"),
+                                          buttonText: Text(
+                                            _selectedServiceTypes.isEmpty
+                          ? "Tap to select"
+                          : _selectedServiceTypes
+                              .map((e) => e.desc)
+                              .join(', '),
+                                            style: CommonStyles.txStyF14CwFF6,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          items: ServiceType_list.map((service) =>
+                                              MultiSelectItem<ServiceType>(
+                            service, service.desc!)).toList(),
+                                          chipDisplay: MultiSelectChipDisplay.none(),
+                                          buttonIcon: const Icon(
+                                            Icons.keyboard_arrow_down_sharp,
+                                            color: Colors.white,
+                                          ),
+                                          onConfirm: (List<dynamic> selected) {
+                                            setState(() {
+                                              _selectedDesc = null;
+                                              _selectedServiceTypes = selected.cast<ServiceType>();
+                                            });
+                                            service_id = _selectedServiceTypes
+                          .map((e) => e.typeCdId)
+                          .where((id) => id != null)
+                          .map((id) => id.toString())
+                          .join(',');
+                                            servicename =
+                          _selectedServiceTypes.map((e) => e.desc).join(', ');
+                                            if (service_id == "19") {
+                                              selectduration_id = _labourRequests[0].typeCdId;
+                                              _selectedDesc = _labourRequests[0].desc;
+                                            }
+                                            fetchlabourservicecost();
+                                          },
+                                        ),
+                                      ),
+                                       */
+
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Visibility(
+                      visible: pruningCheck,
+                      /*  visible: _selectedServiceTypes
+                                            .any((service) => service.typeCdId == 19), */
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          plotDetailsBox(
+                            label: tr(LocaleKeys.pru_amount),
+                            data: '${prunningCost ?? 0.0}',
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: harvestingCheck,
+                      /*  visible: _selectedServiceTypes
+                                            .any((service) => service.typeCdId == 20), */
+                      child: plotDetailsBox(
+                        label: tr(LocaleKeys.harv_amount),
+                        data: "${harvestCost ?? 0.0}",
+                      ),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: _isChecked,
+                          onChanged: (value) {
+                            setState(() {
+                              _isChecked = value!;
+                            });
+                          },
+                          checkColor: Colors.grey,
+                          fillColor:
+                              WidgetStateProperty.resolveWith<Color>((states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.white;
+                            }
+                            return Colors
+                                .transparent; // Transparent background when unchecked
+                          }),
+                          side: const BorderSide(
+                            color: Colors.black, // Black border when unchecked
+                            width: 2, // Border width
+                          ),
+                        ),
+                        //SizedBox(width: 8),
+                        Text(
+                          tr(LocaleKeys.have_pole),
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          tr(LocaleKeys.startDate),
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(
+                          Icons.star,
+                          size: 8,
+                          color: CommonStyles.formFieldErrorBorderColor,
+                        )
+                      ],
+                    ),
+                    Container(
+                      height: 55,
+                      padding:
+                          const EdgeInsets.only(left: 0, top: 10.0, right: 0),
+                      child: GestureDetector(
+                        onTap: () async {
+                          _selectDate(context);
+                        },
+                        child: Container(
+                          height: 55,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.transparent,
+                          ),
+                          child: AbsorbPointer(
+                            child: SizedBox(
+                              height: 55,
+                              child: TextFormField(
+                                controller: _dateController,
+                                style: CommonStyles.txStyF14CwFF6,
+                                decoration: const InputDecoration(
+                                  hintText: 'Preferred Date',
+                                  hintStyle: CommonStyles.txStyF14CwFF6,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 10.0),
+                                  // Adjust padding as needed
+                                  suffixIcon: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.calendar_today,
+                                      // Replace with your desired icon
+                                      color: Colors.white,
+                                    ),
                                   ),
+                                  border: InputBorder.none,
+                                  isDense: true,
                                 ),
-                                border: InputBorder.none,
-                                isDense: true,
+                                textAlignVertical: TextAlignVertical.center,
                               ),
-                              textAlignVertical: TextAlignVertical.center,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.labour_duration),
-                        style: CommonStyles.txStyF14CwFF6,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Icon(
-                        Icons.star,
-                        size: 8,
-                        color: CommonStyles.formFieldErrorBorderColor,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  // _labourRequests.isEmpty
-                  //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
-                  //     :
-                  Container(
-                    height: 45,
-                    padding: const EdgeInsets.only(right: 10),
-                    // padding: const EdgeInsets.symmetric(vertical: 15),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color: CommonStyles.whiteColor, width: 1.5),
+                    const SizedBox(
+                      height: 8,
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2<String>(
-                        // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                        //     ? null // Show hint if 20 is selected
-                        //     : _selectedDesc,
-                        value: _getSelectedValue(),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: Colors.white,
-                          ),
-                        ),
-                        isExpanded: true,
-                        hint: const Text(
-                          'Select',
+                    Row(
+                      children: [
+                        Text(
+                          tr(LocaleKeys.labour_duration),
                           style: CommonStyles.txStyF14CwFF6,
                         ),
-                        items: _getDropdownItems(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedDesc = newValue;
-                            print('_selectedDesc$_selectedDesc');
-                            LabourRequest? selectedRequest =
-                                _labourRequests.firstWhere(
-                              (request) => request.desc == newValue,
-                            );
-
-                            print(
-                                'Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
-                            selectduration_id = selectedRequest.typeCdId;
-                          });
-                        },
-
-                        dropdownStyleData: DropdownStyleData(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(14),
-                            color: CommonStyles.dropdownListBgColor,
-                          ),
-                          offset: const Offset(0, 0),
-                          scrollbarTheme: ScrollbarThemeData(
-                            radius: const Radius.circular(40),
-                            thickness: WidgetStateProperty.all<double>(6),
-                            thumbVisibility:
-                                WidgetStateProperty.all<bool>(true),
-                          ),
+                        const SizedBox(
+                          width: 5,
                         ),
-                        menuItemStyleData: const MenuItemStyleData(
-                          height: 40,
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                        ),
-                      ),
+                        const Icon(
+                          Icons.star,
+                          size: 8,
+                          color: CommonStyles.formFieldErrorBorderColor,
+                        )
+                      ],
                     ),
-                  ),
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  if (_selectedDesc != null &&
-                      (_selectedDesc == _labourRequests[1].desc ||
-                          _selectedDesc == _labourRequests[2].desc ||
-                          _selectedDesc == _labourRequests[3].desc))
-                    Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: Text(
-                        tr(LocaleKeys.text),
-                        style: const TextStyle(
-                          fontFamily: "hind_semibold",
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF34A350),
-                        ),
-                      ),
+                    const SizedBox(
+                      height: 4,
                     ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        tr(LocaleKeys.comments),
-                        style: CommonStyles.txStyF14CwFF6,
+                    // _labourRequests.isEmpty
+                    //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
+                    //     :
+                    Container(
+                      height: 45,
+                      padding: const EdgeInsets.only(right: 10),
+                      // padding: const EdgeInsets.symmetric(vertical: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: CommonStyles.whiteColor, width: 1.5),
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Container(
-                    height: 45,
-                    padding: const EdgeInsets.all(0.0),
-                    child: TextFormField(
-                      controller: _commentController,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(top: 5, left: 15),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                              color: Colors.white, width: 1.5), // White border
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                          //     ? null // Show hint if 20 is selected
+                          //     : _selectedDesc,
+                          value: _getSelectedValue(),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
                               color: Colors.white,
-                              width: 1.5), // White border on focus
-                          borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          isExpanded: true,
+                          hint: const Text(
+                            'Select',
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                          items: _getDropdownItems(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedDesc = newValue;
+                              print('_selectedDesc$_selectedDesc');
+                              LabourRequest? selectedRequest =
+                                  _labourRequests.firstWhere(
+                                (request) => request.desc == newValue,
+                              );
+
+                              print(
+                                  'Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                              selectduration_id = selectedRequest.typeCdId;
+                            });
+                          },
+
+                          dropdownStyleData: DropdownStyleData(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              color: CommonStyles.dropdownListBgColor,
+                            ),
+                            offset: const Offset(0, 0),
+                            scrollbarTheme: ScrollbarThemeData(
+                              radius: const Radius.circular(40),
+                              thickness: WidgetStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  WidgetStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                          ),
                         ),
-                        hintText: tr(LocaleKeys.comments),
-                        hintStyle: CommonStyles.txStyF14CwFF6,
                       ),
-                      style: CommonStyles.txStyF14CwFF6,
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Checkbox(
-                        value: _isagreed,
-                        onChanged: (value) {
-                          setState(() {
-                            _isagreed = value!;
-                            showRateChartDialog(context);
-                          });
-                        },
-                        checkColor: Colors.grey,
-                        fillColor:
-                            WidgetStateProperty.resolveWith<Color>((states) {
-                          if (states.contains(WidgetState.selected)) {
-                            return Colors.white;
-                          }
-                          return Colors.transparent;
-                        }),
-                        side: const BorderSide(
-                          color: Colors.black,
-                          width: 2,
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    if (_selectedDesc != null &&
+                        (_selectedDesc == _labourRequests[1].desc ||
+                            _selectedDesc == _labourRequests[2].desc ||
+                            _selectedDesc == _labourRequests[3].desc))
+                      Padding(
+                        padding: const EdgeInsets.all(0),
+                        child: Text(
+                          tr(LocaleKeys.text),
+                          style: const TextStyle(
+                            fontFamily: "hind_semibold",
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF34A350),
+                          ),
                         ),
                       ),
-                      Text(
-                        tr(LocaleKeys.i_have_agree),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          tr(LocaleKeys.comments),
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Container(
+                      height: 45,
+                      padding: const EdgeInsets.all(0.0),
+                      child: TextFormField(
+                        controller: _commentController,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.only(top: 5, left: 15),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5), // White border
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5), // White border on focus
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          hintText: tr(LocaleKeys.comments),
+                          hintStyle: CommonStyles.txStyF14CwFF6,
+                        ),
                         style: CommonStyles.txStyF14CwFF6,
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        tr(LocaleKeys.terms_conditions),
-                        style: CommonStyles.txStyF14CpFF6.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: CommonStyles.primaryTextColor2),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  submitBtn(context, tr(LocaleKeys.submit_req)),
-                ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          value: _isagreed,
+                          onChanged: (value) {
+                            setState(() {
+                              _isagreed = value!;
+                              showRateChartDialog(context);
+                            });
+                          },
+                          checkColor: Colors.grey,
+                          fillColor:
+                              WidgetStateProperty.resolveWith<Color>((states) {
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.white;
+                            }
+                            return Colors.transparent;
+                          }),
+                          side: const BorderSide(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                        ),
+                        Text(
+                          tr(LocaleKeys.i_have_agree),
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          tr(LocaleKeys.terms_conditions),
+                          style: CommonStyles.txStyF14CpFF6.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: CommonStyles.primaryTextColor2),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    submitBtn(context, tr(LocaleKeys.submit_req)),
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
       ),
@@ -1450,8 +1452,7 @@ class CropPlotDetails extends StatelessWidget {
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
     String year = parsedDate.year.toString();
     return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      // padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
           // border:
           //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
@@ -1531,7 +1532,7 @@ class CropPlotDetails extends StatelessWidget {
                     )),
           ],
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 8),
       ],
     );
   }
