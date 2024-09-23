@@ -66,7 +66,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
         body: Center(
           child: Card(
             child: Container(
-              width: size.width * 0.9,
+              width: size.width * 0.94,
               decoration: const BoxDecoration(
                   color: Color(0x8D000000),
                   borderRadius: BorderRadius.all(Radius.circular(8))),
@@ -147,12 +147,12 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
     return Row(
       children: [
         Expanded(
-          flex: 3,
+          flex: 4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 15, 12, 5),
+                padding: const EdgeInsets.fromLTRB(10, 15, 12, 5),
                 child: Text(
                   label,
                   style: CommonStyles.txStyF14CwFF6,
@@ -177,7 +177,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,

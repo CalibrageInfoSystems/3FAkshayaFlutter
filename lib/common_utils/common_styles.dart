@@ -20,8 +20,10 @@ class CommonStyles {
   static const blackColorShade = Color(0xFF636363);
   static const listOddColor = Color(0xFFdfdfdf);
   static const listEvenColor = Color(0xFFf5f5f5);
-  static const primaryTextColor = Color(0xFFf07566);
-  static const primaryTextColor2 = Color(0xFFe86100);
+  static const primaryTextColor = Color(0xFFe86100);
+  static const primaryTextColor2 = Color(0xFFf07566);
+  static const tabBorderColor = Color(0xFFeb7a00);
+  static const impPlacesDataColor = Color(0xFF535353);
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -556,7 +558,11 @@ class CommonStyles {
     }
   }
 
-  static void customDialog(BuildContext context, Widget child) {
+  static void customDialog(
+    BuildContext context,
+    Widget child, {
+    BorderRadiusGeometry? borderRadius,
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -568,7 +574,7 @@ class CommonStyles {
           child: Material(
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: borderRadius ?? BorderRadius.circular(10)),
               child: child),
         );
       },

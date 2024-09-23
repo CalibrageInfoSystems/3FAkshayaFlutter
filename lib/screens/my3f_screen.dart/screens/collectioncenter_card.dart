@@ -41,7 +41,8 @@ class CollectionCenterCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${data.collectionCenter}',
-                      style: CommonStyles.txStyF16CbFF6),
+                      style: CommonStyles.txStyF16CbFF6
+                          .copyWith(color: CommonStyles.impPlacesDataColor)),
                   const Divider(
                     color: CommonStyles.primaryTextColor,
                     thickness: 0.3,
@@ -67,7 +68,8 @@ class CollectionCenterCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(tr(LocaleKeys.view_in_map),
-                            style: CommonStyles.txStyF14CbFF6),
+                            style: CommonStyles.txStyF14CbFF6.copyWith(
+                                color: CommonStyles.impPlacesDataColor)),
                         const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
@@ -92,12 +94,18 @@ class CollectionCenterCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 3, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
-            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
+                flex: 3,
+                child: Text(label,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.impPlacesDataColor))),
+            Text(':  ',
+                style: CommonStyles.txStyF14CbFF6
+                    .copyWith(color: CommonStyles.impPlacesDataColor)),
             Expanded(
               flex: 7,
               child: Text('$data',
-                  style: CommonStyles.txStyF14CbFF6,
+                  style: CommonStyles.txStyF14CbFF6
+                      .copyWith(color: CommonStyles.impPlacesDataColor),
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis),
             ),

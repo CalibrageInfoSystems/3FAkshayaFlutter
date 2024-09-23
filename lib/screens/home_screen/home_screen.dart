@@ -149,8 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
               remainingHeight: remainingHeight,
             ),
             SizedBox(
-              height: remainingHeight * 0.03,
-              // color: Colors.orange,
+              // height: remainingHeight * 0.03,
+              height: remainingHeight * 0.024,
               child: marqueeText(),
             ),
             Expanded(
@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: remainingHeight * 0.16,
+            height: remainingHeight * 0.13,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -532,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 11: // Labour Request
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlotSelection()),
+          MaterialPageRoute(builder: (context) => const PlotSelection()),
         );
         break;
 

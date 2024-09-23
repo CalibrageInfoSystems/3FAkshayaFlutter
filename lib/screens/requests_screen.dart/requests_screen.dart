@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
-import '../../../common_utils/api_config.dart';
-import '../../../common_utils/common_styles.dart';
-import '../../../common_utils/shimmer.dart';
-import '../../../gen/assets.gen.dart';
-import '../../../localization/locale_keys.dart';
-import '../../../models/service_model.dart';
-import 'viewQuickPayScreen.dart';
+import '../../common_utils/api_config.dart';
+import '../../common_utils/common_styles.dart';
+import '../../common_utils/shimmer.dart';
+import '../../gen/assets.gen.dart';
+import '../../localization/locale_keys.dart';
+import '../../models/service_model.dart';
+import 'screens/viewQuickPayScreen.dart';
 
 class RequestsScreen extends StatefulWidget {
   const RequestsScreen({super.key});
@@ -104,13 +104,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
   Widget serviceListItem(int serviceTypeId) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
-      //  margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 0.8),
+      margin: const EdgeInsets.only(bottom: 2),
+      decoration: const BoxDecoration(
+          // border: Border.all(color: Colors.green, width: 0.8),
           color: CommonStyles.whiteColor
           //borderRadius: BorderRadius.circular(8),
           ),
       child: ListTile(
+        // minTileHeight: 50,
         // trailing: const IconButton(
         //     onPressed: null, icon: Icon(Icons.arrow_right_rounded)),
         leading: Image.asset(

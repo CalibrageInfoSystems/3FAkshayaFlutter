@@ -6,11 +6,12 @@ import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/gen/fonts.gen.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/requests_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -242,6 +243,7 @@ class _MainScreenPageState extends State<MainScreen> {
                     ),
                     Container(
                       height: 1.0,
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -249,8 +251,6 @@ class _MainScreenPageState extends State<MainScreen> {
                             Color(0xFFA678EF),
                             Color(0xFFFF4500),
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.center,
                         ),
                       ),
                     ),
@@ -303,12 +303,12 @@ class _MainScreenPageState extends State<MainScreen> {
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Version 1.0.1',
+                        Text('App Version 1.0.1',
                             style: CommonStyles.txStyF14CwFF6),
                       ],
                     ),
                     const SizedBox(
-                      height: 5.0,
+                      height: 10.0,
                     ),
                   ],
                 ),
@@ -351,9 +351,9 @@ class _MainScreenPageState extends State<MainScreen> {
       title: Text(
         title,
         style: const TextStyle(
-          color: Colors.white,
-          fontFamily: 'hind_semibold',
-        ),
+            color: Colors.white,
+            fontFamily: FontFamily.hind,
+            fontWeight: FontWeight.w500),
       ),
       onTap: onTap,
     );

@@ -30,72 +30,69 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(0),
             child: Container(
-              clipBehavior: Clip.antiAlias,
+              height: 40,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                // color: Colors.white,
                 border: Border.all(
-                  color: CommonStyles.primaryTextColor,
+                  color: CommonStyles.tabBorderColor,
                 ),
-                borderRadius: BorderRadius.circular(8.0),
+                borderRadius: BorderRadius.circular(6.0),
               ),
               child: Stack(
                 children: [
-                  SizedBox(
-                    // height: 40,
-                    child: TabBar(
-                      dividerColor: Colors.transparent,
-                      labelColor: Colors.white,
-                      labelPadding: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      unselectedLabelColor: CommonStyles.primaryTextColor,
-                      indicator: const BoxDecoration(
-                        color: CommonStyles.primaryTextColor,
-                        // borderRadius: borderForSelectedTab(selectedTab),
-                      ),
-                      onTap: (tab) {
-                        setState(() {
-                          selectedTab = tab;
-                        });
-                      },
-                      labelStyle: CommonStyles.txStyF12CbFF6,
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            tr(LocaleKeys.fertgodown),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                            style: tabLabelStyle(),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            tr(LocaleKeys.collection_centres),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                            style: tabLabelStyle(),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            tr(LocaleKeys.Mills),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                            style: tabLabelStyle(),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            tr(LocaleKeys.Nurseries),
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.visible,
-                            style: tabLabelStyle(),
-                          ),
-                        ),
-                      ],
+                  TabBar(
+                    dividerColor: Colors.transparent,
+                    labelColor: Colors.white,
+                    labelPadding: const EdgeInsets.symmetric(
+                      horizontal: 2,
                     ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    unselectedLabelColor: CommonStyles.primaryTextColor,
+                    indicator: const BoxDecoration(
+                      color: CommonStyles.tabBorderColor,
+                    ),
+                    onTap: (tab) {
+                      setState(() {
+                        selectedTab = tab;
+                      });
+                    },
+                    labelStyle: CommonStyles.txStyF12CbFF6,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          tr(LocaleKeys.fertgodown),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: tabLabelStyle(),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          tr(LocaleKeys.collection_centres),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: tabLabelStyle(),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          tr(LocaleKeys.Mills),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: tabLabelStyle(),
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          tr(LocaleKeys.Nurseries),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.visible,
+                          style: tabLabelStyle(),
+                        ),
+                      ),
+                    ],
                   ),
                   Positioned.fill(
                     child: Row(
@@ -103,17 +100,17 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
                         Expanded(child: Container()),
                         Container(
                           width: 1.0,
-                          color: CommonStyles.primaryTextColor,
+                          color: CommonStyles.tabBorderColor,
                         ),
                         Expanded(child: Container()),
                         Container(
                           width: 1.0,
-                          color: CommonStyles.primaryTextColor,
+                          color: CommonStyles.tabBorderColor,
                         ),
                         Expanded(child: Container()),
                         Container(
                           width: 1.0,
-                          color: CommonStyles.primaryTextColor,
+                          color: CommonStyles.tabBorderColor,
                         ),
                         Expanded(child: Container()),
                       ],
@@ -142,7 +139,7 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
   TextStyle tabLabelStyle() {
     return const TextStyle(
       height: 1.2,
-      fontSize: 10,
+      fontSize: 11,
       fontWeight: FontWeight.w400,
     );
   }

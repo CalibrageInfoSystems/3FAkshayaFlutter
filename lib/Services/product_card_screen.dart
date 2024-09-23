@@ -129,7 +129,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               Row(
                 children: [
                   Text(tr(LocaleKeys.payment_mode),
-                      style: CommonStyles.txSty_16black_f5),
+                      style: CommonStyles.txStyF16CbFF6.copyWith(
+                        color: CommonStyles.impPlacesDataColor,
+                      )),
                   const SizedBox(width: 5),
                   const Text('*', style: TextStyle(color: Colors.red)),
                 ],
@@ -150,14 +152,18 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                       },
                     ),
                     Text(tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txSty_16black_f5),
+                        style: CommonStyles.txStyF16CbFF6.copyWith(
+                          color: CommonStyles.impPlacesDataColor,
+                        )),
                   ],
                 ),
               const SizedBox(height: 10),
 
               Text(tr(LocaleKeys.product_details),
-                  style: CommonStyles.txSty_16black_f5),
-              const SizedBox(height: 5),
+                  style: CommonStyles.txStyF16CbFF6.copyWith(
+                    color: CommonStyles.impPlacesDataColor,
+                  )),
+              // const SizedBox(height: 5),
               Column(
                 children: [
                   ListView.builder(
@@ -463,8 +469,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             Color(0xFFCCCCCC),
           ],
         ),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(2),
+        // border: Border.all(color: Colors.grey.shade400),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

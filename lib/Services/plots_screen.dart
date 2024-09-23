@@ -62,6 +62,7 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CommonStyles.screenBgColor,
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
@@ -138,12 +139,12 @@ class CropPlotDetails extends StatelessWidget {
     String year = parsedDate.year.toString();
     return Container(
       padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
           // border:
           //     Border.all(color: CommonStyles.primaryTextColor, width: 0.3),
           borderRadius: BorderRadius.circular(10),
-          color: index % 2 == 0 ? Colors.transparent : Colors.grey.shade200),
+          color: Colors.white),
       child: Stack(
         children: [
           plotCard(df, year),
@@ -213,7 +214,7 @@ class CropPlotDetails extends StatelessWidget {
                 )),
           ],
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 8),
       ],
     );
   }

@@ -422,7 +422,7 @@ class PlotDetails extends StatelessWidget {
             data: year,
           ),
           CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.address),
+            label: tr(LocaleKeys.cluster_officer),
             dataTextColor: CommonStyles.dataTextColor,
             data: '${plotdata.clusterName}',
           ),

@@ -147,7 +147,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               );
             },
             child: Container(
-              // width: 120,
+              width: 120,
               margin: const EdgeInsets.fromLTRB(5, 5, 0, 5),
               padding: const EdgeInsets.symmetric(
                 horizontal: 5,
@@ -631,7 +631,7 @@ class _ProductCardState extends State<ProductCard> {
   Widget infoDialogContent(ProductItem product) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.75,
+      width: size.width * 0.8,
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),

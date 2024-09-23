@@ -4,7 +4,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
 import 'package:akshaya_flutter/screens/my3f_screen.dart/my3f_screen.dart';
 import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/requests_screen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/requests_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

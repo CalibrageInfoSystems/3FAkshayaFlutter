@@ -41,7 +41,7 @@ class NurseriesContentCard extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Image.asset(
                 Assets.images.nurseriesIcon.path,
                 fit: BoxFit.contain,
@@ -56,7 +56,8 @@ class NurseriesContentCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${nursery.nurseryName}',
-                      style: CommonStyles.txStyF16CbFF6),
+                      style: CommonStyles.txStyF16CbFF6
+                          .copyWith(color: CommonStyles.impPlacesDataColor)),
                   const Divider(
                     color: CommonStyles.primaryTextColor,
                     thickness: 0.3,
@@ -83,7 +84,8 @@ class NurseriesContentCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(tr(LocaleKeys.view_in_map),
-                            style: CommonStyles.txStyF14CbFF6),
+                            style: CommonStyles.txStyF14CbFF6.copyWith(
+                                color: CommonStyles.impPlacesDataColor)),
                         const SizedBox(width: 5),
                         Image.asset(
                           Assets.images.icMapList.path,
@@ -108,12 +110,18 @@ class NurseriesContentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                flex: 4, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
-            const Text(':  ', style: CommonStyles.txStyF14CbFF6),
+                flex: 4,
+                child: Text(label,
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.impPlacesDataColor))),
+            Text(':  ',
+                style: CommonStyles.txStyF14CbFF6
+                    .copyWith(color: CommonStyles.impPlacesDataColor)),
             Expanded(
               flex: 6,
               child: Text('$nursery',
-                  style: CommonStyles.txStyF14CbFF6,
+                  style: CommonStyles.txStyF14CbFF6
+                      .copyWith(color: CommonStyles.impPlacesDataColor),
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis),
             ),

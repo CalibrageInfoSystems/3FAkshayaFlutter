@@ -1,5 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 import 'dart:convert';
 import 'dart:convert';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:akshaya_flutter/Services/models/LabourRequest.dart';
 import 'package:akshaya_flutter/Services/models/Popupmodel.dart';
@@ -13,19 +26,8 @@ import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../common_utils/custom_appbar.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multi_select_flutter/util/multi_select_list_type.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 
+import '../common_utils/custom_appbar.dart';
 import '../common_utils/custom_btn.dart';
 import 'models/MsgModel.dart';
 
@@ -41,7 +43,7 @@ class Labourscreen extends StatefulWidget {
 class _LabourscreenScreenState extends State<Labourscreen> {
   List<ServiceType> ServiceType_list = [];
   List<ResponseModel> ResponseModel_list = [];
-  List<ServiceType> _selectedServiceTypes = [];
+  final List<ServiceType> _selectedServiceTypes = [];
   late List<dynamic> appointmentsData;
   bool _isChecked = false;
   bool _isagreed = false;
@@ -64,6 +66,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       service_id;
   late int Cluster_id;
   late int selectduration_id;
+
+  bool harvestingCheck = false;
+  bool pruningCheck = false;
 
   // List<String>? service_id;
 
@@ -119,8 +124,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
     if (picked != null) {
       setState(() {
-        _dateController.text =
-            "${picked.day}/${picked.month}/${picked.year}"; // Format the date
+        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
       });
     }
   }
@@ -149,6 +153,14 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
+  ButtonStyle elevatedButtonStyle = ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(
+        vertical: 16.0, horizontal: 32.0), // Adjust padding as needed
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5), // Set border radius to 5
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,6 +185,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
                 color: CommonStyles.dropdownListBgColor,
+                // color: CommonStyles.screenBgColor,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -196,9 +209,160 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   const SizedBox(
                     height: 10,
                   ),
+                  //MARK: Multi selecter
+                  GestureDetector(
+                    onTap: () {
+                      CommonStyles.customDialog(
+                          context,
+                          borderRadius: BorderRadius.circular(2),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            padding: const EdgeInsets.all(16),
+                            color: Colors.white,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 13,
+                                    ),
+                                    Text(
+                                      tr(LocaleKeys.multistring),
+                                      style:
+                                          CommonStyles.txStyF16CbFF6.copyWith(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      pruningCheck = !pruningCheck;
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: pruningCheck,
+                                        activeColor:
+                                            CommonStyles.primaryTextColor,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            pruningCheck = value!;
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text('Pruning (ప్రూనింగ్)',
+                                          style: CommonStyles.txStyF16CbFF6
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w400)),
+                                    ],
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      harvestingCheck = !harvestingCheck;
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                        value: harvestingCheck,
+                                        activeColor:
+                                            CommonStyles.primaryTextColor,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            harvestingCheck = value!;
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        'Harvesting (గెలల కోత)',
+                                        // 'Harvesting (data)',
+                                        style: CommonStyles.txStyF16CbFF6
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    const Spacer(),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 3.0, horizontal: 10.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'CANCEL',
+                                        style: TextStyle(
+                                            color:
+                                                CommonStyles.primaryTextColor),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        print(
+                                            'Submitted: pruningCheck: $pruningCheck, harvestingCheck: $harvestingCheck');
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        shadowColor: Colors.transparent,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 3.0, horizontal: 10.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'SUBMIT',
+                                        style: TextStyle(
+                                            color:
+                                                CommonStyles.primaryTextColor),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ));
+                    },
+                    child: Container(
+                      height: 48,
+                      padding: const EdgeInsets.only(left: 13),
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1.5),
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.transparent,
+                      ),
+                      child: const Text(
+                        'Tap to select',
+                        style: CommonStyles.txStyF14CwFF6,
+                      ),
+                    ),
+                  ),
+                  /* 
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    // height: 50,
                     child: MultiSelectDialogField(
                       listType: MultiSelectListType.LIST,
                       dialogHeight: MediaQuery.of(context).size.width / 4.10,
@@ -249,21 +413,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       },
                     ),
                   ),
+                   */
+
                   const SizedBox(
                     height: 8,
                   ),
                   Visibility(
-                    visible: _selectedServiceTypes
-                        .any((service) => service.typeCdId == 20),
-                    child: plotDetailsBox(
-                      label: tr(LocaleKeys.harv_amount),
-                      data: "${harvestCost ?? 0.0}",
-                    ),
-                  ),
-
-                  Visibility(
-                    visible: _selectedServiceTypes
-                        .any((service) => service.typeCdId == 19),
+                    visible: pruningCheck,
+                    /*  visible: _selectedServiceTypes
+                        .any((service) => service.typeCdId == 19), */
                     child: Column(
                       children: [
                         const SizedBox(
@@ -276,6 +434,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ],
                     ),
                   ),
+                  Visibility(
+                    visible: harvestingCheck,
+                    /*  visible: _selectedServiceTypes
+                        .any((service) => service.typeCdId == 20), */
+                    child: plotDetailsBox(
+                      label: tr(LocaleKeys.harv_amount),
+                      data: "${harvestCost ?? 0.0}",
+                    ),
+                  ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -287,12 +455,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           });
                         },
                         checkColor: Colors.grey,
-                        // Grey tick mark color
                         fillColor:
                             WidgetStateProperty.resolveWith<Color>((states) {
                           if (states.contains(WidgetState.selected)) {
-                            return Colors
-                                .white; // White background when checked
+                            return Colors.white;
                           }
                           return Colors
                               .transparent; // Transparent background when unchecked
@@ -338,9 +504,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: BorderRadius.circular(5.0),
-                          color:
-                              Colors.transparent, // Add white background color
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Colors.transparent,
                         ),
                         child: AbsorbPointer(
                           child: SizedBox(
@@ -442,8 +607,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         dropdownStyleData: DropdownStyleData(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(14),
-                            // color: CommonStyles.dropdownListBgColor,
-                            color: CommonStyles.screenBgColor,
+                            color: CommonStyles.dropdownListBgColor,
                           ),
                           offset: const Offset(0, 0),
                           scrollbarTheme: ScrollbarThemeData(
@@ -493,11 +657,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     height: 4,
                   ),
                   Container(
-                    height: 50,
+                    height: 45,
                     padding: const EdgeInsets.all(0.0),
                     child: TextFormField(
                       controller: _commentController,
                       decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(top: 5, left: 15),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
                               color: Colors.white, width: 1.5), // White border
@@ -923,7 +1088,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   children: [
                     // Title
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
                       color: CommonStyles.primaryTextColor,
                       alignment: Alignment.center, // Center the title
                       padding: const EdgeInsets.all(
@@ -1130,6 +1294,129 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         content,
         style: CommonStyles.txSty_12b_f5,
         textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class MultiDialogContent extends StatelessWidget {
+  final void Function(bool?)? pruningOnChanged;
+  final void Function()? pruningOnTap;
+  final void Function(bool?)? harvestingOnChanged;
+  final void Function()? harvestingOnTap;
+  final void Function()? onSubmit;
+  final bool? pruningCheck;
+  final bool? harvestingCheck;
+
+  const MultiDialogContent({
+    super.key,
+    this.pruningOnChanged,
+    this.pruningOnTap,
+    this.harvestingOnChanged,
+    this.harvestingOnTap,
+    this.onSubmit,
+    this.pruningCheck,
+    this.harvestingCheck,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.9,
+      padding: const EdgeInsets.all(16),
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const SizedBox(
+                width: 13,
+              ),
+              Text(
+                tr(LocaleKeys.multistring),
+                style: CommonStyles.txStyF16CbFF6.copyWith(
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onTap: pruningOnTap,
+            child: Row(
+              children: [
+                Checkbox(
+                  value: pruningCheck,
+                  activeColor: CommonStyles.primaryTextColor,
+                  onChanged: pruningOnChanged,
+                ),
+                const SizedBox(width: 12),
+                Text('Pruning (ప్రూనింగ్)',
+                    style: CommonStyles.txStyF16CbFF6
+                        .copyWith(fontWeight: FontWeight.w400)),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: harvestingOnTap,
+            child: Row(
+              children: [
+                Checkbox(
+                  value: harvestingCheck,
+                  activeColor: CommonStyles.primaryTextColor,
+                  onChanged: harvestingOnChanged,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Harvesting (గెలల కోత)',
+                  // 'Harvesting (data)',
+                  style: CommonStyles.txStyF16CbFF6
+                      .copyWith(fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
+          ),
+          Row(
+            children: [
+              const Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 3.0, horizontal: 10.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: const Text(
+                  'CANCEL',
+                  style: TextStyle(color: CommonStyles.primaryTextColor),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: onSubmit,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 3.0, horizontal: 10.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                child: const Text(
+                  'SUBMIT',
+                  style: TextStyle(color: CommonStyles.primaryTextColor),
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
