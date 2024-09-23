@@ -282,11 +282,17 @@ class _VisitRequestState extends State<VisitRequest> {
     });
     _timer?.cancel();
   }
-
+/* 
   String _formatTime(int seconds) {
     final int minutes = seconds ~/ 60;
     final int remainingSeconds = seconds % 60;
     return '$minutes:${remainingSeconds.toString().padLeft(2, '0')}';
+  } */
+
+  String _formatTime(int seconds) {
+    final int minutes = seconds ~/ 60;
+    final int remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 
   Future<void> _playRecording() async {
@@ -643,7 +649,7 @@ class _VisitRequestState extends State<VisitRequest> {
                                 .copyWith(fontSize: 26),
                           )
                         : Text(
-                            '0:00',
+                            '00:00',
                             style: CommonStyles.txStyF16CwFF6
                                 .copyWith(fontSize: 26),
                           ),
