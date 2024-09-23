@@ -77,12 +77,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   void initState() {
     super.initState();
     farmerData = getFarmerInfoFromSharedPrefs();
-    print('Selected Godown name: ${widget.godown.name}');
-    print('Selected Godown ID: ${widget.godown.id}');
-    print('Selected Godown code: ${widget.godown.code}');
 
     farmerData.then((farmer) {
-      print('farmerData==${farmer.code}');
       farmerCode = '${farmer.code}';
       farmerName =
           '${farmer.firstName} ${farmer.middleName ?? ''} ${farmer.lastName}';
@@ -97,8 +93,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl = '$baseUrl$GetPaymentsTypeByFarmerCode$farmerCode';
-    print('GetPaymentsTypeByFarmerCode==$apiUrl');
-    // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetPaymentsTypeByFarmerCode/APWGBDAB00010005';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -129,11 +123,14 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               Row(
                 children: [
                   Text(tr(LocaleKeys.payment_mode),
-                      style: CommonStyles.txStyF16CbFF6.copyWith(
+                      style: CommonStyles.txStyF16CbFF6),
+                  /*   style: CommonStyles.txStyF16CbFF6.copyWith(
                         color: CommonStyles.impPlacesDataColor,
-                      )),
+                      )), */
                   const SizedBox(width: 5),
-                  const Text('*', style: TextStyle(color: Colors.red)),
+                  const Text('*',
+                      style: TextStyle(
+                          color: CommonStyles.formFieldErrorBorderColor)),
                 ],
               ),
               const SizedBox(height: 5),
@@ -152,18 +149,14 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                       },
                     ),
                     Text(tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txStyF16CbFF6.copyWith(
-                          color: CommonStyles.impPlacesDataColor,
-                        )),
+                        style: CommonStyles.txStyF16CbFF6),
                   ],
                 ),
               const SizedBox(height: 10),
 
               Text(tr(LocaleKeys.product_details),
-                  style: CommonStyles.txStyF16CbFF6.copyWith(
-                    color: CommonStyles.impPlacesDataColor,
-                  )),
-              // const SizedBox(height: 5),
+                  style: CommonStyles.txStyF16CbFF6),
+              const SizedBox(height: 5),
               Column(
                 children: [
                   ListView.builder(
@@ -182,7 +175,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
+                  const SizedBox(height: 10),
                   noteBox(),
+                  const SizedBox(height: 10),
                   productCostbox(
                       title: tr(LocaleKeys.amount),
                       data: amountWithoutGst.toStringAsFixed(2)),
@@ -213,11 +208,13 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   productCostbox(
                       title: tr(LocaleKeys.amount_payble),
                       data: payableAmount.toStringAsFixed(2)),
-                  CommonStyles.horizontalGradientDivider(colors: [
+                  const SizedBox(height: 10),
+
+                  /* CommonStyles.horizontalGradientDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
-                  ]),
+                  ]), */
                   CustomBtn(
                     label: tr(LocaleKeys.submit),
                     borderColor: CommonStyles.primaryTextColor,
@@ -287,28 +284,30 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           const Color(0xFFA678EF),
           const Color(0xFFFF4500),
         ]),
+        const SizedBox(height: 2),
         Row(
           children: [
             Expanded(
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
           ],
         ),
+        const SizedBox(height: 2),
       ],
     );
   }
@@ -327,11 +326,11 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         children: [
           Text(
             'Note',
-            style: CommonStyles.text18orangeeader,
+            style: CommonStyles.txStyF14CpFF6,
           ),
           Text(
             'If the products has not been picked with in 5 days of requested date, Your order will be cancelled.',
-            style: CommonStyles.txSty_14b_f5,
+            style: CommonStyles.txStyF14CbFF6,
           ),
         ],
       ),
@@ -390,7 +389,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 value: index,
                 child: Text(
                   item['desc'],
-                  style: CommonStyles.txSty_14b_f6,
+                  style: CommonStyles.txStyF14CbFF6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -419,6 +418,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             width: double.infinity,
             padding: EdgeInsets.only(left: 14, right: 14),
           ),
+          style: CommonStyles.txStyF14CbFF6,
           iconStyleData: const IconStyleData(
             icon: Icon(
               Icons.arrow_drop_down_sharp,
@@ -469,8 +469,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             Color(0xFFCCCCCC),
           ],
         ),
-        borderRadius: BorderRadius.circular(2),
-        // border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.shade400),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,14 +534,13 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label1, style: CommonStyles.txSty_12b_f5),
+                    flex: 4,
+                    child: Text(label1, style: CommonStyles.txStyF14CbFF6),
                   ),
-                  const SizedBox(
-                      width: 3), // Optional spacing between label and data
+                  const SizedBox(width: 3),
                   Expanded(
-                    flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data1, style: CommonStyles.txSty_12b_f5),
+                    flex: 2,
+                    child: Text(data1, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -552,14 +551,13 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label2, style: CommonStyles.txSty_12b_f5),
+                    flex: 4,
+                    child: Text(label2, style: CommonStyles.txStyF14CbFF6),
                   ),
-                  const SizedBox(
-                      width: 3), // Optional spacing between label and data
+                  const SizedBox(width: 3),
                   Expanded(
-                    flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data2, style: CommonStyles.txSty_12b_f5),
+                    flex: 2,
+                    child: Text(data2, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -806,7 +804,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   }
 
   bool validations() {
-    print('----- analysis ----->> imdpayment  : $_selectedPaymentType');
     if (_selectedPaymentType == -1) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.paym_validation));
       return false;

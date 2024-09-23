@@ -42,6 +42,7 @@ const getLoanRequestDetails = 'RequestHeader/GetLoanRequestDetails';
 const getVisitRequestCompleteDetails =
     'RequestHeader/GetVisitRequestRepository/';
 const getFertilizerDetails = 'GetFertilizerDetails';
+const getFertilizerProductDetails = 'GetProductDetailsByRequestCode/';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

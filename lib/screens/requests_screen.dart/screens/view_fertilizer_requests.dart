@@ -7,6 +7,7 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/common_view_request_model.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/fertilizer_product_details.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -102,7 +103,18 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             return ListView.separated(
               itemCount: requests.length,
               itemBuilder: (context, index) {
-                return request(index, requests[index]);
+                return request(
+                  index,
+                  requests[index],
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FertilizerProductDetails(
+                                  requestCode: requests[index].requestCode,
+                                )));
+                  },
+                );
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(height: 10);
@@ -114,9 +126,11 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     );
   }
 
-  Widget request(int index, CommonViewRequestModel request) {
+  Widget request(int index, CommonViewRequestModel request,
+      {void Function()? onTap}) {
     return CommonWidgets.viewTemplate(
       bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
+      onTap: onTap,
       child: Column(
         children: [
           CommonWidgets.commonRow(
@@ -137,7 +151,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
           ),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.amount_payble),
-            data: '${request.transportPayableAmount}', // check this field
+            data: '${request.transportPayableAmount}',
           ),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.subcd_amt),

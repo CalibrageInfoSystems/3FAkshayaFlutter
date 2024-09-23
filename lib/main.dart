@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
-      // home: const FfbCollectionScreen(),
     );
   }
 }

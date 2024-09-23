@@ -78,6 +78,7 @@ class CommonWidgets {
   static Widget viewTemplate({
     Color? bgColor = Colors.white,
     required Widget child,
+    void Function()? onTap,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -91,17 +92,22 @@ class CommonWidgets {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: child,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
                 // borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.shade400),
-            child: const Text(
-              'Click Here to See Compete Details',
-              style: TextStyle(
-                  color: CommonStyles.viewMoreBtnTextColor,
-                  fontWeight: FontWeight.w600),
+                color: CommonStyles.listOddColor,
+              ),
+              child: Text(
+                'Click Here to See Complete Details',
+                style: CommonStyles.txStyF16CbFF6.copyWith(
+                    color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
+                /*  style: TextStyle(
+                    fontWeight: FontWeight.w600), */
+              ),
             ),
           ),
         ],
