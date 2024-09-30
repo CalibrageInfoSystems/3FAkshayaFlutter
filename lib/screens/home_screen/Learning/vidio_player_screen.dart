@@ -1,4 +1,3 @@
-
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +15,8 @@ class VideoPlayerScreen extends StatefulWidget {
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late YoutubePlayerController _controller;
 
-  late PlayerState _playerState;
-  late YoutubeMetaData _videoMetaData;
+  late PlayerState playerState;
+  late YoutubeMetaData videoMetaData;
   bool _isPlayerReady = false;
 
   @override
@@ -41,15 +40,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         enableCaption: true,
       ),
     )..addListener(listener);
-    _videoMetaData = const YoutubeMetaData();
-    _playerState = PlayerState.unknown;
+    videoMetaData = const YoutubeMetaData();
+    playerState = PlayerState.unknown;
   }
 
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
       setState(() {
-        _playerState = _controller.value.playerState;
-        _videoMetaData = _controller.metadata;
+        playerState = _controller.value.playerState;
+        videoMetaData = _controller.metadata;
       });
     }
   }
