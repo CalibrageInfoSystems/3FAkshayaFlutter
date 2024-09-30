@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
 import 'package:akshaya_flutter/Services/select_products_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
@@ -16,10 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
-import '../gen/assets.gen.dart';
 import '../models/farmer_model.dart';
-import '../screens/home_screen/home_screen.dart';
-import '../screens/main_screen.dart';
 import 'models/Godowndata.dart';
 import 'models/MsgModel.dart';
 import 'models/RequestProductDetails.dart';

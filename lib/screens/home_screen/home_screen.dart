@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:akshaya_flutter/Services/plots_screen.dart';
-import 'package:akshaya_flutter/common_utils/Constants.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
@@ -11,9 +10,6 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/banner_model.dart';
 import 'package:akshaya_flutter/models/learning_model.dart';
 import 'package:akshaya_flutter/models/service_model.dart';
-import 'package:akshaya_flutter/navigation/app_routes.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/loan_request_screen.dart';
 
@@ -23,10 +19,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:go_router/go_router.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../Services/GodownSelectionScreen.dart';

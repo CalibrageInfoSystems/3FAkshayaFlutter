@@ -10,8 +10,6 @@ import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/models/type_issue.dart';
-import 'package:akshaya_flutter/screens/home_screen/home_screen.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:akshaya_flutter/screens/main_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

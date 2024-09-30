@@ -1,5 +1,4 @@
 import 'package:akshaya_flutter/Services/models/RequestPoleDetails.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../models/farmer_model.dart';
 

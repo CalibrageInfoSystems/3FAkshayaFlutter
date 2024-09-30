@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 
 import '../models/farmer_model.dart';
 import 'SelectEquipProductsScreen.dart';

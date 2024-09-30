@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
 import 'package:akshaya_flutter/Services/models/product_item_model.dart';
-import 'package:akshaya_flutter/Services/product_card_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,8 +16,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
-import '../screens/home_screen/screens/plot_selection_screen.dart';
-import 'EquipProductCardScreen.dart';
 import 'bioProductCardScreen.dart';
 import 'models/Godowndata.dart';
 

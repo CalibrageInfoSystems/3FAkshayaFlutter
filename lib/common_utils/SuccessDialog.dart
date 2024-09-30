@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../Services/models/MsgModel.dart';
-import '../Services/product_card_screen.dart';
 import '../gen/assets.gen.dart';
 import '../screens/main_screen.dart';
 import 'common_styles.dart';
@@ -12,12 +10,12 @@ class SuccessDialog extends StatelessWidget {
   final List<MsgModel> msg;
   final String summary;
 
-  SuccessDialog({required this.msg, required this.summary});
+  const SuccessDialog({super.key, required this.msg, required this.summary});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             //  borderRadius: BorderRadius.circular(20.0),
             ),
         child: Container(
@@ -52,13 +50,13 @@ class SuccessDialog extends StatelessWidget {
                 children: [
                   Text(
                     summary,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.orange),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   // List of messages
                   ListView.builder(
                     shrinkWrap: true,
@@ -87,7 +85,7 @@ class SuccessDialog extends StatelessWidget {
                     },
                   ),
 
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
 
                   // OK Button
                   Padding(
@@ -116,7 +114,7 @@ class SuccessDialog extends StatelessWidget {
                           onPressed: () {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => MainScreen(),
+                                builder: (context) => const MainScreen(),
                               ),
                             );
                           },

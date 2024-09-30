@@ -48,7 +48,7 @@ class farmer_passbook_2 extends StatefulWidget {
   String village;
 
   farmer_passbook_2(
-      {required this.accountHolderName,
+      {super.key, required this.accountHolderName,
       required this.accountNumber,
       required this.bankName,
       required this.branchName,
@@ -99,7 +99,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     setState(() {
       farmercode = farmerCode;
-      modifiedCode = "V" + farmercode!.substring(2);
+      modifiedCode = "V${farmercode!.substring(2)}";
       print('modifiedCode$modifiedCode');
       callApiMethod(selectedPosition!, modifiedCode!);
     });
@@ -145,7 +145,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
 
       // Calculate the date range for the "Last 30 Days" option
       DateTime currentDate = DateTime.now();
-      DateTime startDate = currentDate.subtract(Duration(days: 30));
+      DateTime startDate = currentDate.subtract(const Duration(days: 30));
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       DateFormat dateFormat1 = DateFormat('yyyy-MM-dd');
 
@@ -278,7 +278,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
           left: -60,
           right: -1000,
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter, // 90 degrees
                 end: Alignment.bottomCenter,
@@ -319,7 +319,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  HomeScreen(),
+                        builder: (context) =>  const HomeScreen(),
                       ),
                     );
                   },
@@ -336,7 +336,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
 
             Container(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(left: 12,right:12),
+              margin: const EdgeInsets.only(left: 12,right:12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: CommonStyles.whiteColor),
@@ -383,7 +383,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         //alignment: Alignment.center,
                         child: Text(
                           tr(LocaleKeys.last_month),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: "hind_semibold",
                           ),
@@ -397,7 +397,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         //alignment: Alignment.center,
                         child: Text(
                           tr(LocaleKeys.last_threemonth),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: "hind_semibold",
                           ),
@@ -410,7 +410,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         //alignment: Alignment.center,
                         child: Text(
                           tr(LocaleKeys.currentfinicialP),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: "hind_semibold",
                           ),
@@ -423,7 +423,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         //alignment: Alignment.center,
                         child: Text(
                           tr(LocaleKeys.selectedP),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: "hind_semibold",
                           ),
@@ -476,7 +476,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
             Visibility(
               visible: datesavaiablity,
               child: Padding(
-                padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0),
+                padding: const EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0),
                 child: Column(
                   children: [
                     Container(
@@ -507,24 +507,24 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                               readOnly: true,
                               decoration: InputDecoration(
                                 hintText: tr(LocaleKeys.from_date),
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                                 enabled: true,
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
                                 ),
                               ),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             //  ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 4,
                           ),
                           Flexible(
@@ -544,20 +544,20 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                               controller: toDateController,
                               decoration: InputDecoration(
                                 hintText: tr(LocaleKeys.to_date),
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                                 enabled: true,
-                                enabledBorder: UnderlineInputBorder(
+                                enabledBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
                                 ),
-                                focusedBorder: UnderlineInputBorder(
+                                focusedBorder: const UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
                                 ),
                               ),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             //  ),
                           ),
@@ -631,10 +631,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                       // right: 0.0,
                     ),
                     child: TabBar(
-                      labelColor: Color(0xFFe86100),
+                      labelColor: const Color(0xFFe86100),
 
                       unselectedLabelColor: Colors.white,
-                      indicator: BoxDecoration(
+                      indicator: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10.0),
@@ -646,24 +646,24 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                       ),
                       tabs: [
                         Tab(
-                            child: Container(
+                            child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: Text(
                                   tr(LocaleKeys.payments),
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'hind_semibold',
                                   ),
                                 ))),
 
                         Tab(
-                            child: Container(
+                            child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: Text(
                                   tr(LocaleKeys.trans),
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontFamily: 'hind_semibold',
                                   ),
@@ -672,7 +672,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 1.0,
                   ),
                   //
@@ -692,24 +692,24 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                           //farmer_passbook( payemntlistresp: paymentDetailsResponse_list, totalffbcollections: '$totalquantityffb', closingbalance: '$closingbalance', accountHolderName: '',),
                           farmer_passbook(
                             payemntlistresp: paymentDetailsResponse_list,
-                            totalffbcollections: '$totalquantityffb',
+                            totalffbcollections: totalquantityffb,
                             closingbalance: closingbalance,
-                            accountHolderName: '${widget.accountHolderName}',
-                            accountNumber: '${widget.accountNumber}',
-                            bankName: '${widget.bankName}',
-                            district: '${widget.district}',
-                            farmerCode: '${widget.farmerCode}',
-                            guardianName: '${widget.guardianName}',
-                            ifscCode: '${widget.ifscCode}',
-                            mandal: '${widget.mandal}',
-                            state: '${widget.state}',
-                            village: '${widget.village}',
+                            accountHolderName: widget.accountHolderName,
+                            accountNumber: widget.accountNumber,
+                            bankName: widget.bankName,
+                            district: widget.district,
+                            farmerCode: widget.farmerCode,
+                            guardianName: widget.guardianName,
+                            ifscCode: widget.ifscCode,
+                            mandal: widget.mandal,
+                            state: widget.state,
+                            village: widget.village,
                             totalAdjusted: totalAdjusted,
                             totalAmount: totalAmount,
                             totalBalance: totalBalance,
                             totalGRAmount: totalGRAmount,
                             totalQuanitity: totalQuanitity,
-                            branchname: '${widget.branchName}',
+                            branchname: widget.branchName,
                           ),
 
 
@@ -719,7 +719,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                if (_transportationCharges != null && _transportationCharges.isNotEmpty)
+                                if (_transportationCharges.isNotEmpty)
                                   Expanded(
                                     // flex: 3,
                                     child: ListView.builder(
@@ -734,7 +734,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                         return
                                           Padding(
                                             //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                                              padding: EdgeInsets.only(left: 10, right: 10),
+                                              padding: const EdgeInsets.only(left: 10, right: 10),
                                               child: IntrinsicHeight(
                                                 child: ClipRRect(
                                                     borderRadius: BorderRadius.circular(12.0),
@@ -749,20 +749,20 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
 
                                                           child: Container(
 
-                                                            color: index.isEven ?Color(0xFFFAF5F5F5) : Color(0xFFDFDFDF),
+                                                            color: index.isEven ?const Color(0xfffaf5f5f5) : const Color(0xFFDFDFDF),
                                                             // color:    Colors.white,
                                                             child: Row(
                                                               crossAxisAlignment: CrossAxisAlignment.center,
                                                               children: [
                                                                 Padding(
-                                                                  padding: EdgeInsets.only(left: 5.0, right: 5),
+                                                                  padding: const EdgeInsets.only(left: 5.0, right: 5),
                                                                   child: Center(
                                                                     child: Column(
                                                                       crossAxisAlignment: CrossAxisAlignment.center,
                                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                                       children: [
                                                                         Container(
-                                                                          margin: EdgeInsets.only(right: 10.0, left: 10),
+                                                                          margin: const EdgeInsets.only(right: 10.0, left: 10),
                                                                           child: ClipRRect(
                                                                             borderRadius: BorderRadius.circular(7.0),
                                                                             child: Image.asset( Assets.images.icCalender.path,
@@ -772,11 +772,11 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        SizedBox(height: 2.0),
+                                                                        const SizedBox(height: 2.0),
                                                                         // Add some spacing between the image and text
                                                                         Text(
-                                                                          '$formattedDate',
-                                                                          style: TextStyle(
+                                                                          formattedDate,
+                                                                          style: const TextStyle(
                                                                             color: Colors.grey,
                                                                             fontFamily: "hind_semibold",
                                                                           ),
@@ -789,8 +789,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                 Container(
                                                                   width: 2.0,
                                                                   // height: MediaQuery.of(context).size.height,
-                                                                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                                  decoration: BoxDecoration(
+                                                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                                                  decoration: const BoxDecoration(
                                                                     gradient: LinearGradient(
                                                                       colors: [
                                                                         Color(0xFFFF4500),
@@ -803,7 +803,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                 ),
                                                                 Expanded(
                                                                     child: Padding(
-                                                                      padding: EdgeInsets.only(left: 5.0),
+                                                                      padding: const EdgeInsets.only(left: 5.0),
                                                                       child: Column(
                                                                           mainAxisAlignment: MainAxisAlignment.start,
                                                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -814,7 +814,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                   Padding(
                                                                                     padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
                                                                                     child: Card(
-                                                                                      color: index.isEven ? Colors.white : Color(0xFFDFDFDF),                                                                           shadowColor: Colors.transparent,
+                                                                                      color: index.isEven ? Colors.white : const Color(0xFFDFDFDF),                                                                           shadowColor: Colors.transparent,
                                                                                       surfaceTintColor: Colors.transparent,
                                                                                       child: Container(
                                                                                         decoration: BoxDecoration(
@@ -834,7 +834,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                       padding: const EdgeInsets.only(top: 15.0),
                                                                                                       child: Text(
                                                                                                         _transportationCharges[index].collectionCode,
-                                                                                                        style: TextStyle(
+                                                                                                        style: const TextStyle(
                                                                                                           fontSize: 14,
                                                                                                           color: Color(0xFFFB4110),
                                                                                                           fontWeight: FontWeight.bold,
@@ -842,7 +842,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                         ),
                                                                                                       ),
                                                                                                     ),
-                                                                                                    SizedBox(height: 4.0),
+                                                                                                    const SizedBox(height: 4.0),
                                                                                                     Row(
                                                                                                       children: [
                                                                                                         Expanded(
@@ -851,7 +851,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                             children: [
                                                                                                               Padding(
-                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                                                 child: Text(
                                                                                                                     tr(LocaleKeys.trans_charges),
                                                                                                                     style:CommonStyles.txSty_14SB_fb
@@ -904,7 +904,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                             children: [
                                                                                                               Padding(
-                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                                                 child: Text(
                                                                                                                     tr(LocaleKeys.net_weightt),
                                                                                                                     style:CommonStyles.txSty_14SB_fb
@@ -955,7 +955,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                             children: [
                                                                                                               Padding(
-                                                                                                                padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                                                                                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                                                                                 child: Text(
                                                                                                                     tr(LocaleKeys.total_amt),
                                                                                                                     style:CommonStyles.txSty_14SB_fb
@@ -1022,15 +1022,15 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                       },
                                     ),
                                   ),
-                                if (_transportationCharges == null || _transportationCharges.isEmpty)
+                                if (_transportationCharges.isEmpty)
                                   Expanded(
                                       child: Center(
-                                          child: Container(
+                                          child: SizedBox(
                                               height: MediaQuery.of(context).size.height / 2,
                                               child: Center(
                                                   child: Text(
                                                     tr(LocaleKeys.no_trans_found),
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       fontSize: 14,
                                                       color: Color(0xFFFB4110),
                                                     //  fontWeight: FontWeight.bold,
@@ -1039,7 +1039,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                   ))))),
 
                                 Padding(
-                                  padding: EdgeInsets.only(top:10.0,left: 10,right:10),
+                                  padding: const EdgeInsets.only(top:10.0,left: 10,right:10),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -1056,14 +1056,6 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                   print('button1clicked');
                                                   //openFile();
                                                 },
-                                                child: Text(
-                                                  '',
-                                                  style: TextStyle(
-                                                    // color: Color(0xFFe86100),
-                                                    fontSize: 12,
-                                                    fontFamily: 'hind_semibold',
-                                                  ),
-                                                ),
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: Colors.transparent,
                                                   elevation: 0,
@@ -1071,10 +1063,18 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                     borderRadius: BorderRadius.circular(10.0),
                                                   ),
                                                 ),
+                                                child: const Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                    // color: Color(0xFFe86100),
+                                                    fontSize: 12,
+                                                    fontFamily: 'hind_semibold',
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 8.0),
+                                          const SizedBox(width: 8.0),
                                           IntrinsicWidth(
                                             //flex: 2,
                                             child:
@@ -1082,10 +1082,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                               // width: MediaQuery.of(context).size.width,
                                               // height: 45,
                                               child:Container(
-                                                padding: EdgeInsets.all(7),
+                                                padding: const EdgeInsets.all(7),
                                                 // width: MediaQuery.of(context).size.width,
                                                 decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
+                                                  gradient: const LinearGradient(
                                                     colors: [
                                                       Color(0xFFCCCCCC),
                                                       Color(0xFFFFFFFF),
@@ -1097,7 +1097,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                   borderRadius: BorderRadius.circular(20.0),
                                                   border: Border.all(
                                                     width: 2.0,
-                                                    color: Color(0xFFe86100),
+                                                    color: const Color(0xFFe86100),
                                                   ),
                                                 ),
                                                 child: Row(
@@ -1108,12 +1108,12 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                       height: 20,
                                                       width:20,
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       width: 5,
                                                     ),
                                                     Text(
                                                       tr(LocaleKeys.transportationrates),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Color(0xFFe86100),
                                                         fontSize: 12,
                                                         fontFamily: 'hind_semibold',
@@ -1137,20 +1137,20 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                         child: Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12.0),
-                                            side: BorderSide(
+                                            side: const BorderSide(
                                               color: Color(0xFFBE9747), // Border color
                                             ),
                                           ),
-                                          color: Color(0xFFFFFACB), // Background color
+                                          color: const Color(0xFFFFFACB), // Background color
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.only(left: 10,right:4,top: 4),
+                                                padding: const EdgeInsets.only(left: 10,right:4,top: 4),
 
                                                 child: Text(
                                                   tr(LocaleKeys.notee),
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.normal,
                                                     fontFamily: "hind_semibold",
@@ -1158,7 +1158,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                   ),
                                                 ),
                                               ),
-                                              Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
+                                              Padding(padding:  const EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
                                                 // style: TextStyle(
                                                 //   fontSize: 14,
                                                 //   fontWeight: FontWeight.normal,
@@ -1214,7 +1214,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
               //  padding: EdgeInsets.only(left: 10.0,right: 10,top: 6,bottom: 10),
                 child: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 12.0,
                     ),
                     Row(
@@ -1223,7 +1223,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                       children: [
                         Text(
                           tr(LocaleKeys.transportationrates),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontFamily: 'Calibri',
                             color: Color(0xFFf15f22),
@@ -1237,8 +1237,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         // ),
                       ],
                     ),
-                    if (transportratelist != null && transportratelist.isNotEmpty)
-                    Container(
+                    if (transportratelist.isNotEmpty)
+                    SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height / 6.0, // Adjust the height as needed
                         child: ListView.builder(
@@ -1254,10 +1254,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                 elevation: 2,
                                 child: Container(
                                     width: MediaQuery.of(context).size.width,
-                                    color: index.isEven ? Colors.white : Color(0xFFDFDFDF),
+                                    color: index.isEven ? Colors.white : const Color(0xFFDFDFDF),
                                     // height: MediaQuery.of(context).size.height / 3.0,
                                     // height: MediaQuery.of(context).size.height, // Adjust the height as needed
-                                    padding: EdgeInsets.only(left: 5.0, right: 5, bottom: 5, top: 5),
+                                    padding: const EdgeInsets.only(left: 5.0, right: 5, bottom: 5, top: 5),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1270,7 +1270,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
                                                       tr(LocaleKeys.village),
                                                         style:CommonStyles.txSty_14SB_fb
@@ -1279,7 +1279,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                 ],
                                               ),
                                             ),
-                                            Expanded(
+                                            const Expanded(
                                               flex: 0,
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -1321,7 +1321,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
                                                       tr(LocaleKeys.mandal),
                                                         style:CommonStyles.txSty_14SB_fb
@@ -1372,7 +1372,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
+                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                                                     child: Text(
                                                       tr(LocaleKeys.rate),
                                                         style:CommonStyles.txSty_14SB_fb
@@ -1421,13 +1421,13 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                     )));
                           },
                         )),
-                    if (transportratelist == null || transportratelist.isEmpty)
-                      SizedBox.shrink(),
+                    if (transportratelist.isEmpty)
+                      const SizedBox.shrink(),
                     Container(
                       width: 90,
                       height: 30,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             Color(0xFFCCCCCC),
                             Color(0xFFFFFFFF),
@@ -1439,26 +1439,26 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                         borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
                           width: 2.0,
-                          color: Color(0xFFe86100),
+                          color: const Color(0xFFe86100),
                         ),
                       ),
                       child: ElevatedButton(
                         onPressed: () {
                           print('button1clicked');
                         },
-                        child: Text(
-                          tr(LocaleKeys.ok),
-                          style: TextStyle(
-                            color: Color(0xFFe86100),
-                            fontSize: 12,
-                            fontFamily: 'hind_semibold',
-                          ),
-                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.ok),
+                          style: const TextStyle(
+                            color: Color(0xFFe86100),
+                            fontSize: 12,
+                            fontFamily: 'hind_semibold',
                           ),
                         ),
                       ),
@@ -1480,17 +1480,17 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     // API body data
     Map<String, dynamic> requestBody = {
       "bankDetails": {
-        "accountHolderName": "${widget.accountHolderName}",
-        "accountNumber": "${widget.accountNumber}",
-        "bankName": "${widget.bankName}",
-        "branchName": "${widget.branchName}",
-        "district": "${widget.district}",
-        "farmerCode": "${widget.farmerCode}",
-        "guardianName": "${widget.guardianName}",
-        "ifscCode": "${widget.ifscCode}",
-        "mandal": "${widget.mandal}",
-        "state": "${widget.state}",
-        "village": "${widget.village}"
+        "accountHolderName": widget.accountHolderName,
+        "accountNumber": widget.accountNumber,
+        "bankName": widget.bankName,
+        "branchName": widget.branchName,
+        "district": widget.district,
+        "farmerCode": widget.farmerCode,
+        "guardianName": widget.guardianName,
+        "ifscCode": widget.ifscCode,
+        "mandal": widget.mandal,
+        "state": widget.state,
+        "village": widget.village
       },
       "paymentResponce": paymentResponseMaps,
       "totalAdjusted": totalAdjusted,
@@ -1566,10 +1566,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   }
 
   Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
-    String _base64String = sanitizeBase64(base64String);
-    print('_base64String${_base64String}');
+    String base64String0 = sanitizeBase64(base64String);
+    print('_base64String$base64String0');
     // Decode the Base64 String
-    List<int> excelBytes = base64Decode(_base64String);
+    List<int> excelBytes = base64Decode(base64String0);
 
     // Get the directory to save the file (external storage for visibility)
     //  Directory? directory = await getExternalStorageDirectory()!;
@@ -1589,7 +1589,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     String fileName = "3F_Akshaya.xlsx";
 
     final File file = File('$filePath/$fileName');
-    print('file${file}');
+    print('file$file');
     await file.create(recursive: true);
     await file.writeAsBytes(excelBytes);
 
@@ -1635,6 +1635,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       double doublePosition = position / 0.05;
       return [0.06, 0.29, 0.091, 0.19];
     }
+    return null;
     // double doublePosition = position / 0.05;
     // //double positionPercentage = (position + 0.005) * 0.005;
     // return [0.1225, doublePosition + 0.0325, doublePosition + 0.0545, doublePosition + 0.0765];
@@ -1913,11 +1914,11 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
             totalAdjusted = responseData['result']['totalAdjusted'];
             totalAmount = responseData['result']['totalAmount'];
             String formattedtotalBalance = totalBalance!.toStringAsFixed(2);
-            String formattedtotalQuanitity = totalQuanitity!.toStringAsFixed(2);
+            String formattedtotalQuanitity = totalQuanitity.toStringAsFixed(2);
 
             print('paymentresponse: ${paymentresponse.length}');
-            print('formattedtotalBalance: ${formattedtotalBalance}');
-            print('formattedtotalQuanitity: ${formattedtotalQuanitity}');
+            print('formattedtotalBalance: $formattedtotalBalance');
+            print('formattedtotalQuanitity: $formattedtotalQuanitity');
 
             setState(() {
               closingbalance = formattedtotalBalance;
@@ -2093,8 +2094,8 @@ class farmer_passbook extends StatefulWidget {
   final double totalGRAmount;
   final double totalQuanitity;
 
-  farmer_passbook(
-      {required this.payemntlistresp,
+  const farmer_passbook(
+      {super.key, required this.payemntlistresp,
       required this.totalffbcollections,
       required this.closingbalance,
       required this.accountHolderName,
@@ -2144,12 +2145,12 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                   borderRadius: BorderRadius.circular(6.0),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
+                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
                   child: Container(
                     //  height: 50,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      color: Color(0x8D000000),
+                      color: const Color(0x8D000000),
                       borderRadius: BorderRadius.circular(6.0),
                     ),
                     child: Column(children: [
@@ -2161,10 +2162,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(8, 7, 12, 0),
+                                  padding: const EdgeInsets.fromLTRB(8, 7, 12, 0),
                                   child: Text(
                                     tr(LocaleKeys.ffb_qty),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'hind_semibold',
@@ -2174,7 +2175,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               ],
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 1,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -2201,10 +2202,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                                   child: Text(
                                     '${widget.totalffbcollections ?? 0.0}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -2225,10 +2226,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(8, 6, 12, 8),
+                                  padding: const EdgeInsets.fromLTRB(8, 6, 12, 8),
                                   child: Text(
                                     tr(LocaleKeys.totalBalance),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'hind_semibold',
@@ -2238,7 +2239,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               ],
                             ),
                           ),
-                          Expanded(
+                          const Expanded(
                             flex: 1,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -2265,10 +2266,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                                   child: Text(
                                     '${widget.closingbalance ?? 0.0}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -2297,10 +2298,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
 
                 // Format the date to dd/MM/yyyy
                 String formattedDate = DateFormat('dd/MM/yyyy').format(widget.payemntlistresp[index].refDate);
-                if (widget.payemntlistresp.length != 0) {
+                if (widget.payemntlistresp.isNotEmpty) {
                   return Padding(
                     //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                      padding: EdgeInsets.only(left: 10, right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       child: IntrinsicHeight(
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(12.0),
@@ -2308,7 +2309,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               onTap: () {},
                               child: Card(
                                 //elevation: 8,
-                                color: index.isEven ?Color(0xFFFAF5F5F5) : Color(0xFFDFDFDF),
+                                color: index.isEven ?const Color(0xfffaf5f5f5) : const Color(0xFFDFDFDF),
                                 // #FAF5F5F5
                                 // #DFDFDF
 
@@ -2319,13 +2320,13 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
 
                                   child: Container(
 
-                                    padding: EdgeInsets.only(left: 0, right: 5,bottom: 7),
+                                    padding: const EdgeInsets.only(left: 0, right: 5,bottom: 7),
 
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Container(
-                                            padding: EdgeInsets.all(12),
+                                            padding: const EdgeInsets.all(12),
                                             child: Row(
                                               children: [
                                                 Center(
@@ -2344,11 +2345,11 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 2.0),
+                                                      const SizedBox(height: 2.0),
                                                       // Add some spacing between the image and text
                                                       Text(
-                                                        '$formattedDate',
-                                                        style: TextStyle(
+                                                        formattedDate,
+                                                        style: const TextStyle(
                                                           color: Colors.grey,
                                                         ),
                                                         textAlign: TextAlign.center,
@@ -2356,13 +2357,13 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(width: 5.0),
+                                                const SizedBox(width: 5.0),
                                                 Container(
                                                   width: 2.0,
-                                                  padding: EdgeInsets.all(5),
+                                                  padding: const EdgeInsets.all(5),
                                                   // height: MediaQuery.of(context).size.height,
                                                   //  padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                  decoration: BoxDecoration(
+                                                  decoration: const BoxDecoration(
                                                     gradient: LinearGradient(
                                                       colors: [
                                                         Color(0xFFFF4500),
@@ -2377,7 +2378,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                             )),
                                         Expanded(
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: 0.0),
+                                              padding: const EdgeInsets.only(left: 0.0),
                                               child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2385,8 +2386,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                     Expanded(
                                                       child: Column(
                                                         children: [
-                                                          widget.payemntlistresp[index].amount != null &&
-                                                              widget.payemntlistresp[index].amount != 0
+                                                          widget.payemntlistresp[index].amount != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2395,7 +2395,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.amount),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2404,7 +2404,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2426,9 +2426,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].amount?.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].amount.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2437,9 +2437,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].adjusted != null &&
-                                                              widget.payemntlistresp[index].adjusted != 0
+                                                              : const SizedBox.shrink(),
+                                                          widget.payemntlistresp[index].adjusted != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2448,7 +2447,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.adjusted),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2457,7 +2456,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2479,9 +2478,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2490,8 +2489,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].grAmount != null && widget.payemntlistresp[index].grAmount != 0
+                                                              : const SizedBox.shrink(),
+                                                          widget.payemntlistresp[index].grAmount != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2500,7 +2499,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.gr),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2509,7 +2508,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2531,9 +2530,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2542,8 +2541,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].quantity != null && widget.payemntlistresp[index].quantity != 0
+                                                              : const SizedBox.shrink(),
+                                                          widget.payemntlistresp[index].quantity != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2552,7 +2551,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.ffb),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2561,7 +2560,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2583,9 +2582,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2594,8 +2593,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].adhocRate != null && widget.payemntlistresp[index].adhocRate != 0
+                                                              : const SizedBox.shrink(),
+                                                          widget.payemntlistresp[index].adhocRate != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2604,7 +2603,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.adhoc_rate),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2613,7 +2612,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2635,9 +2634,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2646,9 +2645,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].invoiceRate != null &&
-                                                              widget.payemntlistresp[index].invoiceRate != 0
+                                                              : const SizedBox.shrink(),
+                                                          widget.payemntlistresp[index].invoiceRate != 0
                                                               ? Row(
                                                             children: [
                                                               Expanded(
@@ -2657,7 +2655,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.invoice_rate),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2666,7 +2664,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2688,9 +2686,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? ''}',
+                                                                        widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? '',
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2699,7 +2697,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                               ),
                                                             ],
                                                           )
-                                                              : SizedBox.shrink(),
+                                                              : const SizedBox.shrink(),
                                                           Row(
                                                             children: [
                                                               Expanded(
@@ -2708,7 +2706,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
                                                                       child: Text(
                                                                         tr(LocaleKeys.descriptionn),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2717,7 +2715,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2739,9 +2737,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].memo}',
+                                                                        widget.payemntlistresp[index].memo,
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2749,18 +2747,18 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                 ),
                                                               ),
                                                             ],
-                                                          ),SizedBox(height: 3,),
+                                                          ),const SizedBox(height: 3,),
                                                           // widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
                                                           //     ?
                                                               Container(
-                                                                padding: EdgeInsets.only(right: 8),
+                                                                padding: const EdgeInsets.only(right: 8),
                                                                   decoration: BoxDecoration(
                                                                     //color: Colors.white, // Background color
                                                                     border: Border.all(
                                                                       color: Colors.white, // Border color
                                                                       width: 1.0, // Border width
                                                                     ),
-                                                                    borderRadius: BorderRadius.all(Radius.circular(8))
+                                                                    borderRadius: const BorderRadius.all(Radius.circular(8))
                                                                   ),
                                                                   child:
                                                           Row(
@@ -2771,7 +2769,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 12, 8),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 8),
                                                                       child: Text(
                                                                         tr(LocaleKeys.balance),
                                                                           style:CommonStyles.txSty_14SB_fb
@@ -2780,7 +2778,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Expanded(
+                                                              const Expanded(
                                                                 flex: 1,
                                                                 child: Column(
                                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -2802,9 +2800,9 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   children: [
                                                                     Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 0, 8),
+                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 8),
                                                                       child: Text(
-                                                                        '${widget.payemntlistresp[index].balance.toStringAsFixed(2)}',
+                                                                        widget.payemntlistresp[index].balance.toStringAsFixed(2),
                                                                           style:CommonStyles.txSty_14SB_fb
                                                                       ),
                                                                     ),
@@ -2827,7 +2825,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                             )),
                       ));
                 } else {
-                  return Center(child: Text('No Farmer Passbook available'));
+                  return const Center(child: Text('No Farmer Passbook available'));
                 }
               },
             ),
@@ -2844,7 +2842,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                   children: [
                     Container(
                       ///  padding: EdgeInsets.all(10),
-                      padding: EdgeInsets.only(left: 10,right:10,bottom: 0),
+                      padding: const EdgeInsets.only(left: 10,right:10,bottom: 0),
 
                       child:  Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -2856,7 +2854,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                               //  width: 175,
                               height: 75,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   colors: [
                                     Color(0xFFCCCCCC),
                                     Color(0xFFFFFFFF),
@@ -2868,7 +2866,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(
                                   width: 2.0,
-                                  color: Color(0xFFe86100),
+                                  color: const Color(0xFFe86100),
                                 ),
                               ),
                               child: ElevatedButton(
@@ -2876,14 +2874,6 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                   print('button1clicked');
                                   _openFile();
                                 },
-                                child: Text(
-                                  tr(LocaleKeys.download),
-                                  style: TextStyle(
-                                    color: Color(0xFFe86100),
-                                    fontSize: 12,
-                                    fontFamily: 'hind_semibold',
-                                  ),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   elevation: 0,
@@ -2891,17 +2881,25 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
+                                child: Text(
+                                  tr(LocaleKeys.download),
+                                  style: const TextStyle(
+                                    color: Color(0xFFe86100),
+                                    fontSize: 12,
+                                    fontFamily: 'hind_semibold',
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(width: 8.0),
+                          const SizedBox(width: 8.0),
                           Expanded(
                             flex: 1,
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               height: 75,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   colors: [
                                     Color(0xFFCCCCCC),
                                     Color(0xFFFFFFFF),
@@ -2913,7 +2911,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 border: Border.all(
                                   width: 2.0,
-                                  color: Color(0xFFe86100),
+                                  color: const Color(0xFFe86100),
                                 ),
                               ),
                               child: ElevatedButton(
@@ -2932,7 +2930,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                   alignment: Alignment.center,
                                   child: Text(
                                     tr(LocaleKeys.click_downlad),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Color(0xFFe86100),
                                       fontSize: 12,
                                       fontFamily: 'hind_semibold',
@@ -2949,29 +2947,29 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                       ),
                     ),
 
-                    SizedBox(height: 0.0),
+                    const SizedBox(height: 0.0),
                     Container(
-                      padding: EdgeInsets.only(left: 8,right:8,bottom: 0,),
+                      padding: const EdgeInsets.only(left: 8,right:8,bottom: 0,),
 
                       /// flex: 1,
                       width: MediaQuery.of(context).size.width,
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(
+                          side: const BorderSide(
                             color: Color(0xFFBE9747), // Border color
                           ),
                         ),
-                        color: Color(0xFFFFFACB),
+                        color: const Color(0xFFFFFACB),
                         // Background color
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(    padding: EdgeInsets.only(left: 10,right:4,bottom: 0,top: 4),
+                            Padding(    padding: const EdgeInsets.only(left: 10,right:4,bottom: 0,top: 4),
 
                               child: Text(
                                 tr(LocaleKeys.notee),
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                   fontFamily: "hind_semibold",
@@ -2979,7 +2977,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
                                 ),
                               ),
                             ),
-                            Padding(padding:  EdgeInsets.only(left: 10,right:4,bottom: 4) ,child:Text( tr(LocaleKeys.paymentnote_note),
+                            Padding(padding:  const EdgeInsets.only(left: 10,right:4,bottom: 4) ,child:Text( tr(LocaleKeys.paymentnote_note),
                               // style: TextStyle(
                               //   fontSize: 14,
                               //   fontWeight: FontWeight.normal,
@@ -3182,13 +3180,13 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   }
 
  Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
-    String _base64String = sanitizeBase64(base64String);
-    print('_base64String${_base64String}');
+    String base64String0 = sanitizeBase64(base64String);
+    print('_base64String$base64String0');
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     int sdkInt = androidInfo.version.sdkInt;
     if (await Permission.storage.request().isGranted) {
-      List<int> excelBytes = base64Decode(_base64String);
+      List<int> excelBytes = base64Decode(base64String0);
 
       Directory directoryPath;
 

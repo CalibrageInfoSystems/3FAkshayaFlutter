@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class viewLoanRequestScreen extends StatefulWidget {
 
 
-  viewLoanRequestScreen();
+  const viewLoanRequestScreen({super.key});
 
   @override
   _LoanRequestViewState createState() => _LoanRequestViewState();
@@ -23,10 +22,10 @@ class _LoanRequestViewState extends State<viewLoanRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Loan Request"),
+        title: const Text("Loan Request"),
 
       ),
-      body: Stack(
+      body: const Stack(
 
       ),
     );

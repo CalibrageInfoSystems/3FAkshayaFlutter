@@ -4,7 +4,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class PdfWebView extends StatefulWidget {
   final String pdfUrl;
 
-  PdfWebView({required this.pdfUrl});
+  const PdfWebView({super.key, required this.pdfUrl});
 
   @override
   _PdfWebViewState createState() => _PdfWebViewState();
@@ -29,16 +29,16 @@ class _PdfWebViewState extends State<PdfWebView> {
         ),
       )
       ..loadRequest(Uri.parse(
-          "https://docs.google.com/gview?embedded=true&url=" + widget.pdfUrl));
+          "https://docs.google.com/gview?embedded=true&url=${widget.pdfUrl}"));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("PDF Viewer"),
+        title: const Text("PDF Viewer"),
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -48,7 +48,7 @@ class _PdfWebViewState extends State<PdfWebView> {
         children: [
           WebViewWidget(controller: _controller),
           if (isLoading)
-            Center(child: CircularProgressIndicator())
+            const Center(child: CircularProgressIndicator())
         ],
       ),
     );

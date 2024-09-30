@@ -1,4 +1,3 @@
-import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/models/important_places_model.dart';
 import 'package:akshaya_flutter/screens/my3f_screen.dart/screens/collectioncenter_card.dart';
