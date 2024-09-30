@@ -51,18 +51,16 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
     final apiUrl =
         '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
     print('apiUrl$apiUrl');
-    setState(() {
+    /*  setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
-    });
+    }); */
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
-
-        setState(() {
-          CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        });
 
         if (response['healthPlantationData'] != null) {
           // Assuming the list is under a key inside healthPlantationData

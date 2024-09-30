@@ -40,6 +40,9 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
 
   Future<List<CommonViewRequestModel>> getFertilizerRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
 
@@ -60,7 +63,9 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     print('getFertilizerRequests: $apiUrl');
     print('getFertilizerRequests: ${jsonEncode(requestBody)}');
     print('getFertilizerRequests: ${jsonResponse.body}');
-
+    setState(() {
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
+    });
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null) {
@@ -88,9 +93,10 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
           future: futureRequests,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
+              /*   return const Center(
                 child: CircularProgressIndicator(),
-              );
+              ); */
+              return const SizedBox();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}',
                   style: CommonStyles.txStyF16CpFF6);

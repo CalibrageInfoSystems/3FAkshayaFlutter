@@ -562,7 +562,6 @@ class _MainScreenPageState extends State<MainScreen> {
         builder: (context) => const LoginScreen(),
       ),
     );
-    //context.go(Routes.loginScreen.path);
   }
 
   void openLanguageDialog(BuildContext context) {

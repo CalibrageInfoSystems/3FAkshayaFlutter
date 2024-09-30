@@ -7,13 +7,14 @@ class CommonWidgets {
     required String data,
     Color? labelTextColor,
     Color? dataTextColor = CommonStyles.dataTextColor,
+    bool isColon = false,
   }) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-              flex: 4,
+              flex: 5,
               child: Text(
                 label,
                 style: CommonStyles.txSty_14b_f5.copyWith(
@@ -22,7 +23,9 @@ class CommonWidgets {
               ),
             ),
             Expanded(
-              flex: 6,
+                flex: 1, child: isColon ? const Text(':') : const SizedBox()),
+            Expanded(
+              flex: 7,
               child: Text(
                 data,
                 style: CommonStyles.txF14Fw5Cb.copyWith(
