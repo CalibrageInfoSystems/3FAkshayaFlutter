@@ -110,7 +110,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                 return request(
                   index,
                   requests[index],
-                  onTap: () => viewCompleteDetails(requests[index]),
+                  onTap: () => showCompleteDetailsOnDialog(requests[index]),
                 );
               },
               separatorBuilder: (context, index) {
@@ -194,7 +194,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
     );
   }
 
-  void viewCompleteDetails(ViewLabourModel request) {
+  void showCompleteDetailsOnDialog(ViewLabourModel request) {
     CommonStyles.customDialog(
         context,
         Container(
