@@ -548,14 +548,22 @@ class CommonStyles {
     );
   }
 
-  static String? formateDate(String? formateDate) {
-    if (formateDate != null) {
+  static String? formatDate(String? date) {
+    if (date != null) {
       DateFormat formatter = DateFormat('dd/MM/yyyy');
-      DateTime date = DateTime.parse(formateDate);
-      return formatter.format(date);
+      DateTime parsedDate = DateTime.parse(date);
+      return formatter.format(parsedDate);
     } else {
-      return formateDate;
+      return date;
     }
+  }
+
+  static String? formatDate2(DateTime? date) {
+    if (date == null) {
+      return null;
+    }
+    DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+    return dateFormat.format(date);
   }
 
   static void customDialog(

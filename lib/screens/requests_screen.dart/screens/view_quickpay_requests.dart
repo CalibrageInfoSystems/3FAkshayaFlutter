@@ -13,20 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ViewFertilizerRequests extends StatefulWidget {
-  const ViewFertilizerRequests({super.key});
+class ViewQuickpayRequests extends StatefulWidget {
+  const ViewQuickpayRequests({super.key});
 
   @override
-  State<ViewFertilizerRequests> createState() => _ViewFertilizerRequestsState();
+  State<ViewQuickpayRequests> createState() => _ViewQuickpayRequestsState();
 }
 
-class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
+class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
   late Future<List<CommonViewRequestModel>> futureRequests;
 
   @override
   void initState() {
     super.initState();
-    futureRequests = getFertilizerRequests();
+    futureRequests = getQuickpayRequests();
   }
 
   String? formatDate(String? dateString) {
@@ -38,7 +38,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return DateFormat('dd/MM/yyyy').format(parsedDate);
   }
 
-  Future<List<CommonViewRequestModel>> getFertilizerRequests() async {
+  Future<List<CommonViewRequestModel>> getQuickpayRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
@@ -46,7 +46,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
 
-    const apiUrl = '$baseUrl$getFertilizerDetails';
+    const apiUrl = '$baseUrl$getQuickpayProductDetails';
 
     final requestBody = {
       "farmerCode": farmerCode,
@@ -86,7 +86,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.fert_req),
+        title: tr(LocaleKeys.quick_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
@@ -96,7 +96,8 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}',
+              return Text(
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
                   style: CommonStyles.txStyF16CpFF6);
             } else if (!snapshot.hasData) {
               return const Text('No data');
@@ -117,14 +118,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                   return request(
                     index,
                     requests[index],
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FertilizerProductDetails(
-                                    requestCode: requests[index].requestCode,
-                                  )));
-                    },
+                    onTap: () {},
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -148,11 +142,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
           CommonWidgets.commonRow(
               label: tr(LocaleKeys.requestCodeLabel),
               data: '${request.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.Godown_name),
-            data: '${request.goDownName}',
-          ),
+              dataTextColor: CommonStyles.appBarColor),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.req_date),
             data: '${formatDate(request.reqCreatedDate)}',
@@ -162,26 +152,9 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             data: '${request.status}',
           ),
           CommonWidgets.commonRow(
-            label: tr(LocaleKeys.amount_payble),
-            data: '${request.transportPayableAmount}',
+            label: tr(LocaleKeys.total_amt),
+            data: '${request.totalAmount}',
           ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.subcd_amt),
-            data: '${request.subsidyAmount}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.payment_mode),
-            data: '${request.paymentMode}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.imdpayment),
-            data: '${request.isImmediatePayment}',
-          ),
-          if (request.paymentMode == 'Against FFB')
-            CommonWidgets.commonRow(
-              label: tr(LocaleKeys.pinn),
-              data: '${request.pin}',
-            ),
         ],
       ),
     );

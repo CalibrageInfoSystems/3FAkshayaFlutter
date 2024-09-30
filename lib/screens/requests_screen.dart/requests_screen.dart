@@ -1,8 +1,12 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/viewLabourRequestScreen.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_biolab_requests.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_edibleoil_requests.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_equipment_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_fertilizer_requests.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_labour_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_loan_requests.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_quickpay_requests.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_visit_requests.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -16,7 +20,6 @@ import '../../common_utils/shimmer.dart';
 import '../../gen/assets.gen.dart';
 import '../../localization/locale_keys.dart';
 import '../../models/service_model.dart';
-import 'screens/viewQuickPayScreen.dart';
 
 class RequestsScreen extends StatefulWidget {
   const RequestsScreen({super.key});
@@ -134,10 +137,25 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     builder: (context) => const ViewFertilizerRequests()),
               );
               break;
+            case 10: // Pole Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewEquipmentRequests()),
+              );
+              break;
+            case 11: // Labour Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewLabourRequests()),
+              );
+              break;
             case 13: // Quick Pay Request
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => viewQuickPayScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const ViewQuickpayRequests()),
               );
             case 14: // Visit Request
               Navigator.push(
@@ -154,11 +172,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     builder: (context) => const ViewLoanRequests()),
               );
               break;
-            case 11: // Pole Request
+            case 107: // Bio Lab Request
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => viewLabourRequestScreen()),
+                    builder: (context) => const ViewBioLabRequests()),
+              );
+              break;
+            case 116: // Edible Oils Request
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewEdibleoilRequests()),
               );
               break;
 

@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -177,6 +178,41 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
     );
   }
 
+  Widget request(int index, ViewVisitModel request, {void Function()? onTap}) {
+    return CommonWidgets.viewTemplate(
+      bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
+      onTap: onTap,
+      child: Column(
+        children: [
+          CommonWidgets.commonRow(
+              label: tr(LocaleKeys.requestCodeLabel),
+              data: '${request.requestCode}',
+              dataTextColor: CommonStyles.primaryTextColor),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.plot_code),
+            data: '${request.plotCode}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.plot_size),
+            data: '${request.palmArea}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.village),
+            data: '${request.plotVillage}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.req_date),
+            data: '${CommonStyles.formatDate(request.reqCreatedDate)}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.status),
+            data: '${request.statusType}',
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget shimmerLoading() {
     return ShimmerWid(
       child: Container(
@@ -196,7 +232,7 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           color: index.isEven ? Colors.transparent : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(5)),
       margin: const EdgeInsets.only(bottom: 10),
       child: Column(
         children: [
@@ -219,11 +255,23 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
           plotDetailBox(
               label: tr(LocaleKeys.status), data: '${visitRequest.statusType}'),
           const SizedBox(height: 5),
-          CustomBtn(
-            label: tr(LocaleKeys.complete_details),
-            borderColor: Colors.transparent,
-            borderRadius: 4,
-            onPressed: onPressed,
+          GestureDetector(
+            onTap: onPressed,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                // borderRadius: BorderRadius.circular(10),
+                color: CommonStyles.listOddColor,
+              ),
+              child: Text(
+                'Click Here to See Complete Details',
+                style: CommonStyles.txStyF16CbFF6.copyWith(
+                    color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
+                /*  style: TextStyle(
+                    fontWeight: FontWeight.w600), */
+              ),
+            ),
           ),
         ],
       ),

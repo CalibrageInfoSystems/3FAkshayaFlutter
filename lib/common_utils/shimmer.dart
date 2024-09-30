@@ -10,7 +10,7 @@ class ShimmerWid extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView.separated(
-        itemCount: 10,
+        itemCount: 5,
         itemBuilder: (context, index) {
           return Shimmer.fromColors(
               baseColor: Colors.grey.shade300,

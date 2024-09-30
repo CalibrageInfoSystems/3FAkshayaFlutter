@@ -218,7 +218,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       ),
                       Expanded(
                           child: Text(
-                        '${CommonStyles.formateDate(data.docDate)}',
+                        '${CommonStyles.formatDate(data.docDate)}',
                         style: CommonStyles.txStyF14CbFF6
                             .copyWith(color: CommonStyles.dataTextColor),
                       )),
@@ -964,7 +964,7 @@ class InfoDialog extends StatelessWidget {
           buildInfoRow(tr(LocaleKeys.tareWeight), info.tareWeight.toString()),
           buildInfoRow(tr(LocaleKeys.net_weight), info.netWeight.toString()),
           buildInfoRow(tr(LocaleKeys.only_date),
-              CommonStyles.formateDate(info.receiptGeneratedDate)),
+              CommonStyles.formatDate(info.receiptGeneratedDate)),
           buildInfoRow(tr(LocaleKeys.operatorName), info.operatorName),
           if (info.comments!.isNotEmpty)
             buildInfoRow(tr(LocaleKeys.comments), info.comments),

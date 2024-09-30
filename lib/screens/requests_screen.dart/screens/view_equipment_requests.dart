@@ -7,26 +7,27 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/common_view_request_model.dart';
+import 'package:akshaya_flutter/screens/requests_screen.dart/screens/equipment_product_details.dart';
 import 'package:akshaya_flutter/screens/requests_screen.dart/screens/fertilizer_product_details.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ViewFertilizerRequests extends StatefulWidget {
-  const ViewFertilizerRequests({super.key});
+class ViewEquipmentRequests extends StatefulWidget {
+  const ViewEquipmentRequests({super.key});
 
   @override
-  State<ViewFertilizerRequests> createState() => _ViewFertilizerRequestsState();
+  State<ViewEquipmentRequests> createState() => _ViewEquipmentRequestsState();
 }
 
-class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
+class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
   late Future<List<CommonViewRequestModel>> futureRequests;
 
   @override
   void initState() {
     super.initState();
-    futureRequests = getFertilizerRequests();
+    futureRequests = getEquipmentRequests();
   }
 
   String? formatDate(String? dateString) {
@@ -38,7 +39,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return DateFormat('dd/MM/yyyy').format(parsedDate);
   }
 
-  Future<List<CommonViewRequestModel>> getFertilizerRequests() async {
+  Future<List<CommonViewRequestModel>> getEquipmentRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
@@ -46,7 +47,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
 
-    const apiUrl = '$baseUrl$getFertilizerDetails';
+    const apiUrl = '$baseUrl$getEquipmentProductDetails';
 
     final requestBody = {
       "farmerCode": farmerCode,
@@ -86,7 +87,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.fert_req),
+        title: tr(LocaleKeys.pole_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
@@ -96,7 +97,8 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}',
+              return Text(
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
                   style: CommonStyles.txStyF16CpFF6);
             } else if (!snapshot.hasData) {
               return const Text('No data');
@@ -121,7 +123,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FertilizerProductDetails(
+                              builder: (context) => EquipmentProductDetails(
                                     requestCode: requests[index].requestCode,
                                   )));
                     },
@@ -162,20 +164,12 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             data: '${request.status}',
           ),
           CommonWidgets.commonRow(
-            label: tr(LocaleKeys.amount_payble),
-            data: '${request.transportPayableAmount}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.subcd_amt),
-            data: '${request.subsidyAmount}',
+            label: tr(LocaleKeys.total_amt),
+            data: '${request.totalAmount}',
           ),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.payment_mode),
             data: '${request.paymentMode}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.imdpayment),
-            data: '${request.isImmediatePayment}',
           ),
           if (request.paymentMode == 'Against FFB')
             CommonWidgets.commonRow(

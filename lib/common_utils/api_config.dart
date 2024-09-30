@@ -43,6 +43,14 @@ const getVisitRequestCompleteDetails =
     'RequestHeader/GetVisitRequestRepository/';
 const getFertilizerDetails = 'GetFertilizerDetails';
 const getFertilizerProductDetails = 'GetProductDetailsByRequestCode/';
+const getEquipmentProductDetails = 'FertilizerRequest/GetPoleRequestDetails';
+const getEdibleOilsProductDetails =
+    'FertilizerRequest/GetEdibleOilsRequestDetails';
+const getQuickpayProductDetails = 'QuickPayRequest/GetQuickpayRequestDetails';
+const getLoanProductDetails = 'RequestHeader/GetLoanRequestDetails';
+const getVisitProductDetails = 'RequestHeader/GetVisitRequestDetails';
+const getLabProductDetails = 'FertilizerRequest/GetChemicalRequestDetails';
+const getLabourProductDetails = 'GetLabourRequestDetails';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

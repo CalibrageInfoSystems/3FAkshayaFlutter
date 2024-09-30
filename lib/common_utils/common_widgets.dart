@@ -1,4 +1,6 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CommonWidgets {
@@ -92,7 +94,8 @@ class CommonWidgets {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
             child: child,
           ),
           GestureDetector(
@@ -105,9 +108,11 @@ class CommonWidgets {
                 color: CommonStyles.listOddColor,
               ),
               child: Text(
-                'Click Here to See Complete Details',
+                tr(LocaleKeys.complete_details),
                 style: CommonStyles.txStyF16CbFF6.copyWith(
-                    color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
+                    color: CommonStyles.viewMoreBtnTextColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
                 /*  style: TextStyle(
                     fontWeight: FontWeight.w600), */
               ),

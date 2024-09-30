@@ -154,11 +154,30 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
               label: tr(LocaleKeys.total_amt),
               data: '${loanRequest.totalCost}'),
           const SizedBox(height: 5),
-          CustomBtn(
+          /* CustomBtn(
             label: tr(LocaleKeys.complete_details),
             borderColor: Colors.transparent,
             borderRadius: 4,
             onPressed: viewMoreDetails,
+          ), */
+
+          GestureDetector(
+            onTap: viewMoreDetails,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                // borderRadius: BorderRadius.circular(10),
+                color: CommonStyles.listOddColor,
+              ),
+              child: Text(
+                tr(LocaleKeys.complete_details),
+                style: CommonStyles.txStyF16CbFF6.copyWith(
+                    color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
+                /*  style: TextStyle(
+                    fontWeight: FontWeight.w600), */
+              ),
+            ),
           ),
         ],
       ),

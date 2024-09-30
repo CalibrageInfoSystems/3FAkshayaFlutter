@@ -134,25 +134,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               ),
               const SizedBox(height: 5),
               dropdownWidget(),
-
-              // Conditionally display the checkbox
-              if (paymentmodeId == 26)
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _isCheckboxChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _isCheckboxChecked = value ?? false;
-                        });
-                      },
-                    ),
-                    Text(tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txSty_16black_f5),
-                  ],
-                ),
               const SizedBox(height: 10),
-
               Text(tr(LocaleKeys.product_details),
                   style: CommonStyles.txSty_16black_f5),
               const SizedBox(height: 5),

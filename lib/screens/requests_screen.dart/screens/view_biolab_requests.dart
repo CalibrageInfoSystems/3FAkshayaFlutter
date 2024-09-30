@@ -13,20 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ViewFertilizerRequests extends StatefulWidget {
-  const ViewFertilizerRequests({super.key});
+class ViewBioLabRequests extends StatefulWidget {
+  const ViewBioLabRequests({super.key});
 
   @override
-  State<ViewFertilizerRequests> createState() => _ViewFertilizerRequestsState();
+  State<ViewBioLabRequests> createState() => _ViewBioLabRequestsState();
 }
 
-class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
+class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
   late Future<List<CommonViewRequestModel>> futureRequests;
 
   @override
   void initState() {
     super.initState();
-    futureRequests = getFertilizerRequests();
+    futureRequests = getBioLabRequests();
   }
 
   String? formatDate(String? dateString) {
@@ -38,7 +38,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return DateFormat('dd/MM/yyyy').format(parsedDate);
   }
 
-  Future<List<CommonViewRequestModel>> getFertilizerRequests() async {
+  Future<List<CommonViewRequestModel>> getBioLabRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
@@ -46,7 +46,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
 
-    const apiUrl = '$baseUrl$getFertilizerDetails';
+    const apiUrl = '$baseUrl$getLabProductDetails';
 
     final requestBody = {
       "farmerCode": farmerCode,
@@ -86,7 +86,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.fert_req),
+        title: tr(LocaleKeys.labproduct_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
