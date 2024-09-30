@@ -1287,7 +1287,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         content,
-        style: CommonStyles.txSty_12b_f5,
+        style: CommonStyles.txStyF12CbFF6,
         textAlign: TextAlign.center,
       ),
     );

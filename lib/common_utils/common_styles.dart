@@ -109,6 +109,13 @@ class CommonStyles {
     color: whiteColor,
   );
 
+  static const txStyF20CwFF6 = TextStyle(
+    fontSize: 20,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: whiteColor,
+  );
+
   static const TextStyle txStyF16CrFF6 = TextStyle(
     fontSize: 16,
     fontFamily: FontFamily.hind,
@@ -123,12 +130,7 @@ class CommonStyles {
   );
 
   /* ...................................... */
-  static const TextStyle txSty_12b_f5 = TextStyle(
-    fontSize: 12,
-    fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w500,
-    color: blackColor,
-  );
+
   static const TextStyle texthintstyle = TextStyle(
     fontSize: 14,
     fontFamily: "hind_semibold",
@@ -143,18 +145,6 @@ class CommonStyles {
     color: Color.fromARGB(255, 71, 71, 71),
   );
 
-  static const TextStyle texterrorstyle = TextStyle(
-    fontSize: 14,
-    fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w500,
-    color: Color.fromARGB(255, 175, 15, 4),
-  );
-  static const TextStyle txSty_20wh_fb = TextStyle(
-    fontSize: 20,
-    fontFamily: "hind_semibold",
-    fontWeight: FontWeight.w500,
-    color: whiteColor,
-  );
   static const TextStyle txSty_20hint_fb = TextStyle(
     fontSize: 20,
     fontFamily: "hind_semibold",

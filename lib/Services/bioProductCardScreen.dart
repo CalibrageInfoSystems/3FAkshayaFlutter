@@ -515,13 +515,13 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                 children: [
                   Flexible(
                     flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label1, style: CommonStyles.txSty_12b_f5),
+                    child: Text(label1, style: CommonStyles.txStyF12CbFF6),
                   ),
                   const SizedBox(width: 3),
                   // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data1, style: CommonStyles.txSty_12b_f5),
+                    child: Text(data1, style: CommonStyles.txStyF12CbFF6),
                   ),
                 ],
               ),
@@ -533,13 +533,13 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                 children: [
                   Flexible(
                     flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label2, style: CommonStyles.txSty_12b_f5),
+                    child: Text(label2, style: CommonStyles.txStyF12CbFF6),
                   ),
                   const SizedBox(width: 3),
                   // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data2, style: CommonStyles.txSty_12b_f5),
+                    child: Text(data2, style: CommonStyles.txStyF12CbFF6),
                   ),
                 ],
               ),
