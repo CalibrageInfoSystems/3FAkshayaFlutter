@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:akshaya_flutter/Services/plots_screen.dart';
+import 'package:akshaya_flutter/services/plots_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
@@ -23,7 +23,7 @@ import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
-import '../../Services/GodownSelectionScreen.dart';
+import '../../services/GodownSelectionScreen.dart';
 import 'Learning/EncyclopediaActivity.dart';
 import 'screens/farmer_passbook.dart';
 

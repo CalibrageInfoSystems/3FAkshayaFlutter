@@ -11,7 +11,7 @@ import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/screens/profile_screen/profile_screen.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/requests_screen.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/requests_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,6 +132,7 @@ class _MainScreenPageState extends State<MainScreen> {
   AppBar appBar() {
     return AppBar(
       elevation: 0,
+      scrolledUnderElevation: 0,
       backgroundColor: const Color(0xffe46f5d),
       leading: Builder(
         builder: (context) => IconButton(

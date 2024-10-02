@@ -1,9 +1,9 @@
+import 'package:akshaya_flutter/Services/SelectbioProductsScreen.dart';
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
+import 'package:akshaya_flutter/Services/models/MsgModel.dart';
 import 'package:akshaya_flutter/Services/models/RequestPoleDetails.dart';
-
-import '../models/farmer_model.dart';
-
-import 'SelectbioProductsScreen.dart';
-import 'models/Godowndata.dart';
 
 import 'dart:convert';
 
@@ -11,6 +11,7 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -21,23 +22,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
-import 'models/MsgModel.dart';
 
-class bioProductCardScreen extends StatefulWidget {
+class BioProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
   final Godowndata godown;
 
-  const bioProductCardScreen({
+  const BioProductCardScreen({
     super.key,
     required this.products,
     required this.godown,
   });
 
   @override
-  State<bioProductCardScreen> createState() => _ProductCardScreenState();
+  State<BioProductCardScreen> createState() => _ProductCardScreenState();
 }
 
-class _ProductCardScreenState extends State<bioProductCardScreen> {
+class _ProductCardScreenState extends State<BioProductCardScreen> {
   int? selectedDropDownValue = -1;
   late double subsidyAmount = 0.0;
   late double payableAmount = 0.0;
@@ -127,15 +127,15 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
               Row(
                 children: [
                   Text(tr(LocaleKeys.payment_mode),
-                      style: CommonStyles.txSty_16black_f5),
+                      style: CommonStyles.txStyF16CbFF6),
                   const SizedBox(width: 5),
-                  const Text('*', style: TextStyle(color: Colors.red)),
+                  const Text('*',
+                      style: TextStyle(
+                          color: CommonStyles.formFieldErrorBorderColor)),
                 ],
               ),
               const SizedBox(height: 5),
               dropdownWidget(),
-
-              // Conditionally display the checkbox
               if (paymentmodeId == 26)
                 Row(
                   children: [
@@ -148,33 +148,37 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                       },
                     ),
                     Text(tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txSty_16black_f5),
+                        style: CommonStyles.txStyF16CbFF6),
                   ],
                 ),
               const SizedBox(height: 10),
-
               Text(tr(LocaleKeys.product_details),
-                  style: CommonStyles.txSty_16black_f5),
+                  style: CommonStyles.txStyF16CbFF6),
               const SizedBox(height: 5),
               Column(
                 children: [
-                  ListView.builder(
-                    itemCount: widget.products.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return widget.products[index].quantity == 0
-                          ? const SizedBox()
-                          : productBox(widget.products[index]);
-                    },
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: ListView.builder(
+                      itemCount: widget.products.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return widget.products[index].quantity == 0
+                            ? const SizedBox()
+                            : productBox(widget.products[index]);
+                      },
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   CommonStyles.horizontalGradientDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
+                  const SizedBox(height: 10),
                   noteBox(),
+                  const SizedBox(height: 10),
                   productCostbox(
                       title: tr(LocaleKeys.amount),
                       data: amountWithoutGst.toStringAsFixed(2)),
@@ -199,6 +203,7 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                     const Color(0xFFFF4500),
                   ]),
 
+                  const SizedBox(height: 10),
                   CustomBtn(
                     label: tr(LocaleKeys.submit),
                     borderColor: CommonStyles.primaryTextColor,
@@ -239,8 +244,7 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                             stateCode: Statecode,
                             stateName: StateName,
                           );
-                          print('CHECK BOX VALUE: $_isCheckboxChecked');
-                          await submitFertilizerRequest(request);
+                          await submitBioLabRequest(request);
                         } else {
                           CommonStyles.showCustomDialog(
                               context, tr(LocaleKeys.Internet));
@@ -274,19 +278,19 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
           ],
         ),
@@ -308,11 +312,11 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
         children: [
           Text(
             'Note',
-            style: CommonStyles.text18orangeeader,
+            style: CommonStyles.txStyF14CpFF6,
           ),
           Text(
             'If the products has not been picked with in 5 days of requested date, Your order will be cancelled.',
-            style: CommonStyles.txSty_14b_f5,
+            style: CommonStyles.txStyF14CbFF6,
           ),
         ],
       ),
@@ -411,7 +415,7 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
           dropdownStyleData: DropdownStyleData(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: Colors.grey,
+              color: CommonStyles.screenBgColor,
             ),
             offset: const Offset(0, 0),
             scrollbarTheme: ScrollbarThemeData(
@@ -459,12 +463,12 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
             children: [
               Expanded(
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child:
-                    Text('${product.name}', style: CommonStyles.txSty_14p_f5),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),
@@ -515,13 +519,13 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                 children: [
                   Flexible(
                     flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label1, style: CommonStyles.txStyF12CbFF6),
+                    child: Text(label1, style: CommonStyles.txStyF14CbFF6),
                   ),
                   const SizedBox(width: 3),
                   // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data1, style: CommonStyles.txStyF12CbFF6),
+                    child: Text(data1, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -533,13 +537,13 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
                 children: [
                   Flexible(
                     flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label2, style: CommonStyles.txStyF12CbFF6),
+                    child: Text(label2, style: CommonStyles.txStyF14CbFF6),
                   ),
                   const SizedBox(width: 3),
                   // Optional spacing between label and data
                   Expanded(
                     flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data2, style: CommonStyles.txStyF12CbFF6),
+                    child: Text(data2, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -549,8 +553,8 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
       ],
     );
   }
-
-  Future<void> submitFertilizerRequest(FertilizerRequest request) async {
+/* 
+  Future<void> submitBioLabRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
     });
@@ -644,6 +648,119 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
       });
     }
   }
+ */
+
+  Future<void> submitBioLabRequest(FertilizerRequest request) async {
+    setState(() {
+      _isLoading = true;
+    });
+// Show the horizontal dots loading dialog after button click
+    Future.delayed(Duration.zero, () {
+      CommonStyles.showHorizontalDotsLoadingDialog(
+          context); // Show loading dialog
+    });
+    // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
+    const url = '$baseUrl$productsubRequest';
+    //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
+    // Print the request object
+    print('Submitting request:');
+    print('Request Object: ${jsonEncode(request.toJson())}');
+
+    try {
+      final jsonResponse = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(request.toJson()),
+      );
+
+      print('Request JSON: ${jsonEncode(request.toJson())}');
+
+      if (jsonResponse.statusCode == 200) {
+        // Successfully submitted request
+        final response = jsonDecode(jsonResponse.body);
+        if (response['result'] != null) {
+          for (int i = 0; i < widget.products.length; i++) {
+            String productName = widget.products[i].product.name!;
+            int quantity = widget.products[i].quantity;
+            final product = widget.products[i].product;
+
+            final productCost = product.actualPriceInclGst! * quantity;
+            displaytotalProductCostGst += productCost;
+
+            final transportCost =
+                product.transPortActualPriceInclGst! * quantity;
+            displayTransportamountWithGst += transportCost;
+
+            final productGSTPercentage = product.gstPercentage!;
+            displayamountWithoutGst +=
+                productCost / (1 + (productGSTPercentage / 100));
+
+            displaytotalGst =
+                displaytotalProductCostGst - displayamountWithoutGst;
+
+            final transportGSTPercentage = product.transportGstPercentage!;
+            displayTransportamountWithoutGst +=
+                transportCost / (1 + (transportGSTPercentage / 100));
+
+            displaytotaltransportGst = displayTransportamountWithGst -
+                displayTransportamountWithoutGst;
+
+            selectedList.add('$productName : $quantity');
+          }
+
+          selectedName = selectedList.join(', ');
+          List<MsgModel> displayList = [
+            MsgModel(
+                key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+            MsgModel(
+                key: tr(LocaleKeys.product_quantity), value: selectedName!),
+            MsgModel(
+                key: tr(LocaleKeys.amount),
+                value: displayamountWithoutGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.gst_amount),
+                value: displaytotalGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.total_amt),
+                value: displaytotalProductCostGst.toStringAsFixed(2)),
+          ];
+
+          // Show success dialog
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_fertilizer));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Result got null: ${response['result']}'),
+            ),
+          );
+          throw Exception('Result got null');
+        }
+        // Process the product list
+      } else {
+        print('Failed to submit request: ${jsonResponse.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+          ),
+        );
+        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    } finally {
+      setState(() {
+        _isLoading = false;
+        Future.delayed(Duration.zero, () {
+          CommonStyles.hideHorizontalDotsLoadingDialog(
+              context); // Show loading dialog
+        });
+      });
+    }
+  }
 
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -660,7 +777,7 @@ class _ProductCardScreenState extends State<bioProductCardScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: summary);
       },
     );
   }

@@ -1,10 +1,15 @@
-import '../models/farmer_model.dart';
-import 'SelectEquipProductsScreen.dart';
-import 'models/Godowndata.dart';
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+import 'package:akshaya_flutter/Services/models/RequestPoleDetails.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
+
+import 'package:akshaya_flutter/Services/SelectEquipProductsScreen.dart';
 
 import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/Services/models/MsgModel.dart';
+
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
@@ -18,8 +23,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
-import 'models/MsgModel.dart';
-import 'models/RequestPoleDetails.dart';
 
 class EquipProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
@@ -642,7 +645,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: summary);
       },
     );
   }

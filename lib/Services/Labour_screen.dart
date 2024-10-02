@@ -871,7 +871,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: summary);
       },
     );
   }

@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/Services/EquipProductCardScreen.dart';
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
 import 'package:akshaya_flutter/Services/models/product_item_model.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
@@ -16,8 +20,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
-import 'EquipProductCardScreen.dart';
-import 'models/Godowndata.dart';
 
 class SelectEquipProductsScreen extends StatefulWidget {
   final Godowndata godown;
@@ -167,7 +169,7 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                     return const Center(
                       child: Text(
                         'No products found',
-                        style: CommonStyles.txSty_14b_f6,
+                        style: CommonStyles.txStyF16CpFF6,
                       ),
                     );
                   }

@@ -7,26 +7,26 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/common_view_request_model.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/equipment_product_details.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/fertilizer_product_details.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ViewEquipmentRequests extends StatefulWidget {
-  const ViewEquipmentRequests({super.key});
+class ViewBioLabRequests extends StatefulWidget {
+  const ViewBioLabRequests({super.key});
 
   @override
-  State<ViewEquipmentRequests> createState() => _ViewEquipmentRequestsState();
+  State<ViewBioLabRequests> createState() => _ViewBioLabRequestsState();
 }
 
-class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
+class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
   late Future<List<CommonViewRequestModel>> futureRequests;
 
   @override
   void initState() {
     super.initState();
-    futureRequests = getEquipmentRequests();
+    futureRequests = getBioLabRequests();
   }
 
   String? formatDate(String? dateString) {
@@ -38,7 +38,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
     return DateFormat('dd/MM/yyyy').format(parsedDate);
   }
 
-  Future<List<CommonViewRequestModel>> getEquipmentRequests() async {
+  Future<List<CommonViewRequestModel>> getBioLabRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
@@ -46,7 +46,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
 
-    const apiUrl = '$baseUrl$getEquipmentProductDetails';
+    const apiUrl = '$baseUrl$getLabProductDetails';
 
     final requestBody = {
       "farmerCode": farmerCode,
@@ -86,7 +86,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.pole_req),
+        title: tr(LocaleKeys.labproduct_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
@@ -96,8 +96,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text(
-                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+              return Text('Error: ${snapshot.error}',
                   style: CommonStyles.txStyF16CpFF6);
             } else if (!snapshot.hasData) {
               return const Text('No data');
@@ -122,7 +121,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EquipmentProductDetails(
+                              builder: (context) => FertilizerProductDetails(
                                     requestCode: requests[index].requestCode,
                                   )));
                     },
@@ -163,12 +162,20 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
             data: '${request.status}',
           ),
           CommonWidgets.commonRow(
-            label: tr(LocaleKeys.total_amt),
-            data: '${request.totalAmount}',
+            label: tr(LocaleKeys.amount_payble),
+            data: '${request.transportPayableAmount}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.subcd_amt),
+            data: '${request.subsidyAmount}',
           ),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.payment_mode),
             data: '${request.paymentMode}',
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.imdpayment),
+            data: '${request.isImmediatePayment}',
           ),
           if (request.paymentMode == 'Against FFB')
             CommonWidgets.commonRow(

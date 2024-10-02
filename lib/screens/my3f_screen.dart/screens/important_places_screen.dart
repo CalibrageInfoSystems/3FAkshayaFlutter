@@ -27,6 +27,7 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(0),
             child: Container(

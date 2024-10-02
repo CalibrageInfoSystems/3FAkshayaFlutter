@@ -1,11 +1,16 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/Services/bioProductCardScreen.dart';
 import 'package:akshaya_flutter/Services/models/product_item_model.dart';
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +21,6 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
-import 'bioProductCardScreen.dart';
-import 'models/Godowndata.dart';
 
 class SelectbioProductsScreen extends StatefulWidget {
   final Godowndata godown;
@@ -82,9 +85,10 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
   Future<List<ProductItem>> getProducts() async {
     try {
       final apiUrl = '$baseUrl$Getproductdata/11/${widget.godown.code}';
-      print('products url $apiUrl');
+      print('getProducts: $apiUrl');
 
       final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getProducts: ${jsonResponse.body}');
 
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
@@ -108,10 +112,44 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
       appBar: CustomAppBar(
         title: tr(LocaleKeys.select_product),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
+      body: FutureBuilder(
+        future: productsData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return shimmerLoading();
+          }
+          if (snapshot.hasError) {
+            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6);
+          } else {
+            final products = snapshot.data as List<ProductItem>;
+            if (products.isNotEmpty) {
+              return Column(
+                children: [
+                  headerSection(),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: productsGridView(products),
+                  ),
+                ],
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  'No products found',
+                  style: CommonStyles.txStyF16CpFF6,
+                ),
+              );
+            }
+          }
+        },
+      ),
+
+/*       Padding(
+        padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+        child: Column(
+          children: [
+            Container(
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
               child: FutureBuilder(
                 future: productsData,
@@ -129,31 +167,8 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                         children: [
                           headerSection(),
                           const SizedBox(height: 10),
-                          GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 10.0,
-                                    mainAxisSpacing: 10.0,
-                                    mainAxisExtent: 250,
-                                    childAspectRatio: 8 / 2),
-                            itemCount: products.length,
-                            itemBuilder: (context, index) {
-                              final product = products[index];
-                              final quantity =
-                                  productQuantities[product.id] ?? 0;
-                              return ProductCard(
-                                product: product,
-                                quantity: quantity,
-                                onQuantityChanged: (newQuantity) {
-                                  setState(() {
-                                    productQuantities[product.id!] =
-                                        newQuantity;
-                                    updateBadgeCount();
-                                  });
-                                },
-                              );
-                            },
+                          Expanded(
+                            child: productsGridView(products),
                           ),
                         ],
                       );
@@ -161,7 +176,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                       return const Center(
                         child: Text(
                           'No products found',
-                          style: CommonStyles.txStyF14CpFF6,
+                          style: CommonStyles.txStyF16CpFF6,
                         ),
                       );
                     }
@@ -169,42 +184,74 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                 },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ), */
+    );
+  }
+
+  Widget productsGridView(List<ProductItem> products) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+            mainAxisExtent: 250,
+            childAspectRatio: 8 / 2),
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          final quantity = productQuantities[product.id] ?? 0;
+          return ProductCard(
+            product: product,
+            quantity: quantity,
+            onQuantityChanged: (newQuantity) {
+              setState(() {
+                productQuantities[product.id!] = newQuantity;
+                updateBadgeCount();
+              });
+            },
+          );
+        },
       ),
     );
   }
 
-  GridView shimmerLoading() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          mainAxisExtent: 250,
-          childAspectRatio: 8 / 2),
-      itemCount: 12,
-      itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            width: 220,
-            height: 300,
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(10),
+  Padding shimmerLoading() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+            mainAxisExtent: 250,
+            childAspectRatio: 8 / 2),
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: 220,
+              height: 300,
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
   Container headerSection() {
     return Container(
-      color: Colors.grey.shade300,
+      color: const Color(0xffc6c6c6),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -241,11 +288,11 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
-              if (fetchCardProducts().isNotEmpty) {
+              if (calculateTotalAmount() != 0) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => bioProductCardScreen(
+                    builder: (context) => BioProductCardScreen(
                       products: fetchCardProducts(),
                       godown: widget.godown,
                     ),
@@ -308,108 +355,156 @@ class _ProductCardState extends State<ProductCard> {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 5),
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: CommonStyles.whiteColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(),
-            // Allow product.name to wrap into multiple lines
-            Expanded(
-              child: Text(
-                widget.product.name!,
-                style: CommonStyles.txStyF14CpFF6,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*  Expanded(
+                child: Text(
+                  '${widget.product.name}',
+                  style: CommonStyles.txStyF14CpFF6,
+                ),
+              ), */
+              Expanded(
+                child: AnimatedReadMoreText(
+                  '${widget.product.name}',
+                  textStyle: CommonStyles.txStyF14CpFF6,
+                  maxLines: 2,
+                  readMoreText: '..',
+                  readLessText: '.',
+                  buttonTextStyle: CommonStyles.txSty_14p_f5,
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: openProductInfoDialog,
-              child: Image.asset(
-                Assets.images.infoIcon.path,
-                width: 20,
-                height: 20,
+              GestureDetector(
+                onTap: openProductInfoDialog,
+                child: Image.asset(
+                  Assets.images.infoIcon.path,
+                  width: 25,
+                  height: 25,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${widget.product.priceInclGst}',
-              style: CommonStyles.txStyF14CbFF6,
-            ),
-            // Conditionally show product size and uomType if product.size is not null
-            if (widget.product.size != null)
-              Text(
-                '${widget.product.size} ${widget.product.uomType}',
-                style: CommonStyles.txStyF14CpFF6,
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '₹${widget.product.priceInclGst}',
+                    style: CommonStyles.txStyF14CbFF6,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '₹${widget.product.actualPriceInclGst}',
+                    style: CommonStyles.txStyF14CbFF6.copyWith(
+                      decoration: TextDecoration.lineThrough,
+                      decorationColor: CommonStyles.primaryTextColor,
+                      color: CommonStyles.dataTextColor,
+                    ),
+                  ),
+                ],
               ),
-          ],
-        ),
-        const SizedBox(height: 5),
-        Expanded(
-          child: Center(
-            child: CachedNetworkImage(
-              imageUrl: widget.product.imageUrl!,
-              placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Image.asset(
-                Assets.images.icLogo.path,
-                fit: BoxFit.cover,
+              widget.product.size != null && widget.product.uomType != null
+                  ? Text(
+                      '${widget.product.size} ${widget.product.uomType}',
+                      style: CommonStyles.txStyF14CpFF6,
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+          const SizedBox(height: 5),
+          Expanded(
+            child: Center(
+              child: CachedNetworkImage(
+                width: 100,
+                height: 100,
+                imageUrl: '${widget.product.imageUrl}',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Image.asset(
+                  Assets.images.icLogo.path,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 3),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Qty:',
-              style: CommonStyles.txStyF14CbFF6,
-            ),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: removeProduct,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey),
+          const SizedBox(height: 3),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                'Qty:',
+                style: CommonStyles.txSty_14b_f5,
+              ),
+              const SizedBox(width: 5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: removeProduct,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: const Icon(Icons.remove,
+                          size: 20, color: CommonStyles.primaryTextColor),
                     ),
-                    child: const Icon(Icons.remove,
-                        size: 20, color: CommonStyles.primaryTextColor),
                   ),
-                ),
-                const SizedBox(width: 2),
-                Text(
-                  '$productQuantity',
-                  style: CommonStyles.texthintstyle,
-                ),
-                const SizedBox(width: 2),
-                GestureDetector(
-                  onTap: addProduct,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.grey),
+                  const SizedBox(width: 10),
+                  Text(
+                    '$productQuantity',
+                    style: CommonStyles.txStyF14CbFF6
+                        .copyWith(color: CommonStyles.blackColorShade),
+                  ),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: addProduct,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: const Icon(Icons.add,
+                          size: 20, color: CommonStyles.statusGreenText),
                     ),
-                    child: const Icon(Icons.add,
-                        size: 20, color: CommonStyles.statusGreenText),
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(),
-          ],
-        ),
-      ]),
+                  )
+
+                  /*  IconButton(
+                    iconSize: 16,
+                    style: iconBtnStyle(
+                      foregroundColor: CommonStyles.primaryTextColor,
+                    ),
+                    icon: const Icon(Icons.remove, color: CommonStyles.primaryTextColor),
+                    onPressed: removeProduct,
+                  ), */
+                  // const SizedBox(width: 12),
+                  ,
+
+                  // const SizedBox(width: 12),
+                  /*  IconButton(
+                    iconSize: 16,
+                    style: iconBtnStyle(
+                      foregroundColor: CommonStyles.statusGreenText,
+                    ),
+                    icon: const Icon(Icons.add),
+                    onPressed: addProduct,
+                  ), */
+                ],
+              ),
+              // const SizedBox(),
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -444,164 +539,187 @@ class _ProductCardState extends State<ProductCard> {
   Widget infoDialogContent(ProductItem product) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.75,
-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      width: size.width * 0.8,
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: CommonStyles.primaryTextColor, width: 2),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(children: [
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Name',
-                style: CommonStyles.txSty_16b_fb,
-              ),
-              const Text(
-                '     : ',
-                style: CommonStyles.txSty_14b_fb,
-              ),
-              Text(
-                '${product.name}',
-                style: CommonStyles.txSty_16p_fb,
-              ),
-              const Spacer(),
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  padding: const EdgeInsets.all(0),
-                  icon: const Icon(
-                    Icons.close,
-                    color: CommonStyles.primaryTextColor,
-                    size: 24,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    tr(LocaleKeys.name),
+                    style: CommonStyles.txStyF14CbFF6,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  const Text(
+                    '     : ',
+                    style: CommonStyles.txStyF14CbFF6,
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${product.name}',
+                      style: CommonStyles.txStyF14CpFF6,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: GestureDetector(
+                  onTap: () => showZoomedAttachment('${product.imageUrl}'),
+                  child: CachedNetworkImage(
+                    imageUrl: '${product.imageUrl}',
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Image.asset(
+                      Assets.images.icLogo.path,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(height: 10),
+              if (product.description != null &&
+                  product.description!.isNotEmpty)
+                Column(
+                  children: [
+                    Text(
+                      tr(LocaleKeys.description),
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                    Text(
+                      '${product.description}',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ],
+                ),
+              CommonStyles.horizontalGradientDivider(),
+              infoRow(
+                label1: tr(LocaleKeys.price),
+                data1: '${product.actualPriceInclGst}',
+                label2: tr(LocaleKeys.gst),
+                data2: '${product.gstPercentage}',
+              ),
+              CommonStyles.horizontalGradientDivider(),
+              infoRow(
+                  label1: tr(LocaleKeys.product_size),
+                  data1: product.size?.toString(),
+                  label2: 'label2',
+                  data2: '${product.description}',
+                  isSingle: true),
             ],
           ),
-          const SizedBox(height: 10),
-          Center(
-            child: GestureDetector(
-              onTap: () => showZoomedAttachment('${product.imageUrl}'),
-              child: CachedNetworkImage(
-                imageUrl: '${product.imageUrl}',
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Image.asset(
-                  Assets.images.icLogo.path,
-                  fit: BoxFit.cover,
-                ),
+        ),
+        Positioned(
+          top: 5,
+          right: 5,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              margin: const EdgeInsets.only(
+                top: 5,
+                right: 5,
+              ),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: CommonStyles.primaryTextColor,
+                  )),
+              child: const Icon(
+                Icons.close,
+                color: CommonStyles.primaryTextColor,
+                size: 24,
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Description:',
-            style: CommonStyles.txSty_14b_fb,
-          ),
-          Text(
-            '${product.description}',
-            style: CommonStyles.txSty_14b_fb,
-          ),
-          CommonStyles.horizontalGradientDivider(),
-          infoRow(
-            label1: 'Price (Rs)',
-            data1: '${product.actualPriceInclGst}',
-            label2: 'GST (%)',
-            data2: '${product.gstPercentage}',
-          ),
-          CommonStyles.horizontalGradientDivider(),
-          infoRow(
-              label1: 'Size',
-              data1: '${product.size}',
-              label2: 'label2',
-              data2: '${product.description}',
-              isSingle: true),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 
   Widget infoRow({
     required String label1,
-    required String data1,
+    required String? data1,
     required String label2,
-    required String data2,
+    required String? data2,
     bool isSingle = false,
   }) {
     return Column(
       children: [
         const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-                child: Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    label1,
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-                const Expanded(
-                  flex: 1,
-                  child: Text(
-                    ':',
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Text(
-                    data1,
-                    style: CommonStyles.txSty_14b_fb,
-                  ),
-                ),
-              ],
-            )),
-            const SizedBox(width: 10),
-            isSingle
-                ? const Expanded(
-                    child: SizedBox(),
-                  )
-                : Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            label2,
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                        const Expanded(
-                          flex: 1,
-                          child: Text(
-                            ':',
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            data2,
-                            style: CommonStyles.txSty_14b_fb,
-                          ),
-                        ),
-                      ],
+        if (data1 != null)
+          Row(
+            children: [
+              Expanded(
+                  child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      label1,
+                      style: CommonStyles.txStyF14CbFF6,
                     ),
                   ),
-          ],
-        ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      data1,
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                ],
+              )),
+              const SizedBox(width: 10),
+              isSingle
+                  ? const Expanded(
+                      child: SizedBox(),
+                    )
+                  : Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              label2,
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 1,
+                            child: Text(
+                              ':',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              '$data2',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
       ],
     );
   }
@@ -674,4 +792,12 @@ class ProductWithQuantity {
   });
 
   double get totalPrice => product.priceInclGst! * quantity;
+
+  // Convert Product to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product,
+      'quantity': quantity,
+    };
+  }
 }

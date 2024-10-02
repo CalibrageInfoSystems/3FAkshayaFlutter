@@ -16,8 +16,8 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
-import 'EdibleProductCardScreen.dart';
-import 'models/Godowndata.dart';
+import 'package:akshaya_flutter/Services/EdibleProductCardScreen.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
 
 class SelectedibleProductsScreen extends StatefulWidget {
   final Godowndata godown;
@@ -162,7 +162,7 @@ class _SelectEdibleProductsScreenState
             return const Center(
               child: Text(
                 'No products found',
-                style: CommonStyles.txStyF14CpFF6,
+                style: CommonStyles.txStyF16CpFF6,
               ),
             );
           }

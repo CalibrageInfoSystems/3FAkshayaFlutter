@@ -19,7 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../../Services/models/MsgModel.dart';
+import '../../../services/models/MsgModel.dart';
 
 class QuickPayCollectionScreen extends StatefulWidget {
   final List<UnpaidCollection> unpaidCollections;

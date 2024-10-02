@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
 import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
 import 'package:akshaya_flutter/Services/models/product_item_model.dart';
 import 'package:akshaya_flutter/Services/product_card_screen.dart';
@@ -8,6 +11,7 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,7 +24,6 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
 import '../screens/home_screen/screens/plot_selection_screen.dart';
-import 'models/Godowndata.dart';
 
 class SelectProductsScreen extends StatefulWidget {
   final Godowndata godown;
@@ -63,13 +66,16 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   }
 
   List<ProductWithQuantity> fetchCardProducts() {
-    return copyProductsData
+    final result = copyProductsData
         .where((product) => productQuantities.containsKey(product.id))
         .map((product) => ProductWithQuantity(
               product: product,
               quantity: productQuantities[product.id] ?? 0,
             ))
         .toList();
+    print(
+        'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
+    return result;
   }
 
   Future<List<CategoryItem>> getDropdownData() async {
@@ -98,8 +104,9 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Products/GetProductsByGodown/1/AgrGAPYG';
     try {
       final apiUrl = '$baseUrl$Getproductdata/1/${widget.godown.code}';
-      print('products url $apiUrl');
+      print('getProducts: $apiUrl');
       final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getProducts: ${jsonResponse.body}');
 
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
@@ -120,14 +127,38 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: CommonStyles.screenBgColor2,
-        appBar: appBar(context),
-        body: Column(
-          children: [
-            headerSection(),
-            Expanded(child: filterAndProductSection()),
-          ],
-        ));
+      backgroundColor: CommonStyles.screenBgColor2,
+      appBar: appBar(context),
+      body: FutureBuilder(
+        future: productsData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return shimmerLoading();
+          }
+          if (snapshot.hasError) {
+            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6);
+          } else {
+            final products = snapshot.data as List<ProductItem>;
+            if (products.isNotEmpty) {
+              return Column(
+                children: [
+                  headerSection(),
+                  Expanded(child: filterAndProductSection(products)),
+                ],
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  'No products found',
+                  style: CommonStyles.txStyF16CpFF6,
+                ),
+              );
+            }
+          }
+        },
+      ),
+    );
   }
 
   CustomAppBar appBar(BuildContext context) {
@@ -158,7 +189,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               ),
               child: Center(
                 child: Text(
-                  tr(LocaleKeys.crop),
+                  tr(LocaleKeys.recommendationss),
                   textAlign: TextAlign.center,
                   style: CommonStyles.txStyF12CwFF6,
                 ),
@@ -171,7 +202,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     );
   }
 
-  Widget filterAndProductSection() {
+  Widget filterAndProductSection(List<ProductItem> products) {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Column(
@@ -212,54 +243,29 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: FutureBuilder(
-              future: productsData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return shimmerLoading();
-                }
-                if (snapshot.hasError) {
-                  return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                      style: CommonStyles.txStyF16CpFF6);
-                } else {
-                  final products = snapshot.data as List<ProductItem>;
-                  if (products.isNotEmpty) {
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 5.0,
-                              mainAxisSpacing: 5.0,
-                              mainAxisExtent: 250,
-                              childAspectRatio: 8 / 2),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-                        final quantity = productQuantities[product.id] ?? 0;
-                        return ProductCard(
-                          product: product,
-                          quantity: quantity,
-                          onQuantityChanged: (newQuantity) {
-                            setState(() {
-                              productQuantities[product.id!] = newQuantity;
-                              updateBadgeCount();
-                            });
-                          },
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text(
-                        'No products found',
-                        style: CommonStyles.txStyF14CpFF6,
-                      ),
-                    );
-                  }
-                }
-              },
-            ),
-          ),
+              child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+                mainAxisExtent: 250,
+                childAspectRatio: 8 / 2),
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              final quantity = productQuantities[product.id] ?? 0;
+              return ProductCard(
+                product: product,
+                quantity: quantity,
+                onQuantityChanged: (newQuantity) {
+                  setState(() {
+                    productQuantities[product.id!] = newQuantity;
+                    updateBadgeCount();
+                  });
+                },
+              );
+            },
+          )),
         ],
       ),
     );
@@ -406,7 +412,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               horizontal: 25,
             ),
             onPressed: () {
-              if (fetchCardProducts().isNotEmpty) {
+              // if (fetchCardProducts().isNotEmpty) {
+              if (calculateTotalAmount() != 0) {
+                print(
+                    'xxx: calculateTotalAmount().length: ${calculateTotalAmount()}');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -479,12 +488,23 @@ class _ProductCardState extends State<ProductCard> {
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(),
-              Text(
-                '${widget.product.name}',
-                style: CommonStyles.txStyF14CpFF6,
+              /*  Expanded(
+                child: Text(
+                  '${widget.product.name}',
+                  style: CommonStyles.txStyF14CpFF6,
+                ),
+              ), */
+              Expanded(
+                child: AnimatedReadMoreText(
+                  '${widget.product.name}',
+                  textStyle: CommonStyles.txStyF14CpFF6,
+                  maxLines: 2,
+                  readMoreText: '..',
+                  readLessText: '.',
+                  buttonTextStyle: CommonStyles.txSty_14p_f5,
+                ),
               ),
               GestureDetector(
                 onTap: openProductInfoDialog,
@@ -504,10 +524,12 @@ class _ProductCardState extends State<ProductCard> {
                 '₹${widget.product.priceInclGst}',
                 style: CommonStyles.txStyF14CbFF6,
               ),
-              Text(
-                '${widget.product.size} ${widget.product.uomType}',
-                style: CommonStyles.txStyF14CpFF6,
-              ),
+              widget.product.size != null && widget.product.uomType != null
+                  ? Text(
+                      '${widget.product.size} ${widget.product.uomType}',
+                      style: CommonStyles.txStyF14CpFF6,
+                    )
+                  : const SizedBox(),
             ],
           ),
           const SizedBox(height: 5),
@@ -682,6 +704,7 @@ class _ProductCardState extends State<ProductCard> {
               if (product.description != null &&
                   product.description!.isNotEmpty)
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       tr(LocaleKeys.description),
@@ -884,4 +907,12 @@ class ProductWithQuantity {
   });
 
   double get totalPrice => product.priceInclGst! * quantity;
+
+  // Convert Product to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product,
+      'quantity': quantity,
+    };
+  }
 }

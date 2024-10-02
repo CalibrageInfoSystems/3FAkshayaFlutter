@@ -1,3 +1,15 @@
+// To parse this JSON data, do
+//
+//     final commonViewRequestModel = commonViewRequestModelFromJson(jsonString);
+
+import 'dart:convert';
+
+CommonViewRequestModel commonViewRequestModelFromJson(String str) =>
+    CommonViewRequestModel.fromJson(json.decode(str));
+
+String commonViewRequestModelToJson(CommonViewRequestModel data) =>
+    json.encode(data.toJson());
+
 class CommonViewRequestModel {
   final String? requestCode;
   final int? requestTypeId;
@@ -16,7 +28,7 @@ class CommonViewRequestModel {
   final String? status;
   final int? paymentModeTypeId;
   final String? paymentMode;
-  final String? headerTotalCost;
+  final double? headerTotalCost;
   final int? statusTypeId;
   final String? fileName;
   final String? fileLocation;
@@ -88,7 +100,7 @@ class CommonViewRequestModel {
         status: json["status"],
         paymentModeTypeId: json["paymentModeTypeId"],
         paymentMode: json["paymentMode"],
-        headerTotalCost: json["headerTotalCost"],
+        headerTotalCost: json["headerTotalCost"]?.toDouble(),
         statusTypeId: json["statusTypeId"],
         fileName: json["fileName"],
         fileLocation: json["fileLocation"],

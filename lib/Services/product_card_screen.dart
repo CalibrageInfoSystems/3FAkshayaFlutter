@@ -1,5 +1,11 @@
 import 'dart:convert';
 
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
+import 'package:akshaya_flutter/Services/models/MsgModel.dart';
+import 'package:akshaya_flutter/Services/models/RequestProductDetails.dart';
+import 'package:akshaya_flutter/Services/models/SubsidyResponse.dart';
 import 'package:akshaya_flutter/Services/select_products_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
@@ -16,10 +22,6 @@ import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
 import '../models/farmer_model.dart';
-import 'models/Godowndata.dart';
-import 'models/MsgModel.dart';
-import 'models/RequestProductDetails.dart';
-import 'models/SubsidyResponse.dart';
 
 class ProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
@@ -120,9 +122,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 children: [
                   Text(tr(LocaleKeys.payment_mode),
                       style: CommonStyles.txStyF16CbFF6),
-                  /*   style: CommonStyles.txStyF16CbFF6.copyWith(
-                        color: CommonStyles.impPlacesDataColor,
-                      )), */
                   const SizedBox(width: 5),
                   const Text('*',
                       style: TextStyle(
@@ -131,8 +130,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               ),
               const SizedBox(height: 5),
               dropdownWidget(),
-
-              // Conditionally display the checkbox
               if (paymentmodeId == 26)
                 Row(
                   children: [
@@ -149,21 +146,21 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   ],
                 ),
               const SizedBox(height: 10),
-
               Text(tr(LocaleKeys.product_details),
                   style: CommonStyles.txStyF16CbFF6),
               const SizedBox(height: 5),
               Column(
                 children: [
-                  ListView.builder(
-                    itemCount: widget.products.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return widget.products[index].quantity == 0
-                          ? const SizedBox()
-                          : productBox(widget.products[index]);
-                    },
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: ListView.builder(
+                      itemCount: widget.products.length,
+                      itemBuilder: (context, index) {
+                        return widget.products[index].quantity == 0
+                            ? const SizedBox()
+                            : productBox(widget.products[index]);
+                      },
+                    ),
                   ),
                   const SizedBox(height: 20),
                   CommonStyles.horizontalGradientDivider(colors: [
@@ -207,10 +204,10 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   const SizedBox(height: 10),
 
                   /* CommonStyles.horizontalGradientDivider(colors: [
-                    const Color(0xFFFF4500),
-                    const Color(0xFFA678EF),
-                    const Color(0xFFFF4500),
-                  ]), */
+                        const Color(0xFFFF4500),
+                        const Color(0xFFA678EF),
+                        const Color(0xFFFF4500),
+                      ]), */
                   CustomBtn(
                     label: tr(LocaleKeys.submit),
                     borderColor: CommonStyles.primaryTextColor,
@@ -251,7 +248,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                             stateCode: Statecode,
                             stateName: StateName,
                           );
-                          print('CHECK BOX VALUE: $_isCheckboxChecked');
                           await submitFertilizerRequest(request);
                         } else {
                           CommonStyles.showCustomDialog(
@@ -475,12 +471,12 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             children: [
               Expanded(
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child:
-                    Text('${product.name}', style: CommonStyles.txSty_14p_f5),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),
@@ -627,7 +623,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     print('Request Object: ${jsonEncode(request.toJson())}');
 
     try {
-      final response = await http.post(
+      final jsonResponse = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -637,82 +633,102 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
       print('Request JSON: ${jsonEncode(request.toJson())}');
 
-      if (response.statusCode == 200) {
+      if (jsonResponse.statusCode == 200) {
         // Successfully submitted request
-        print('Request submitted successfully');
-        print('Response Body: ${response.body}');
+        final response = jsonDecode(jsonResponse.body);
+        if (response['result'] != null) {
+          for (int i = 0; i < widget.products.length; i++) {
+            String productName = widget.products[i].product.name!;
+            int quantity = widget.products[i].quantity;
+            final product = widget.products[i].product;
 
-        // Process the product list
-        for (int i = 0; i < widget.products.length; i++) {
-          String productName = widget.products[i].product.name!;
-          int quantity = widget.products[i].quantity;
-          final product = widget.products[i].product;
+            final productCost = product.actualPriceInclGst! * quantity;
+            displaytotalProductCostGst += productCost;
 
-          final productCost = product.actualPriceInclGst! * quantity;
-          displaytotalProductCostGst += productCost;
+            final transportCost =
+                product.transPortActualPriceInclGst! * quantity;
+            displayTransportamountWithGst += transportCost;
 
-          final transportCost = product.transPortActualPriceInclGst! * quantity;
-          displayTransportamountWithGst += transportCost;
+            final productGSTPercentage = product.gstPercentage!;
+            displayamountWithoutGst +=
+                productCost / (1 + (productGSTPercentage / 100));
 
-          final productGSTPercentage = product.gstPercentage!;
-          displayamountWithoutGst +=
-              productCost / (1 + (productGSTPercentage / 100));
+            displaytotalGst =
+                displaytotalProductCostGst - displayamountWithoutGst;
 
-          displaytotalGst =
-              displaytotalProductCostGst - displayamountWithoutGst;
+            final transportGSTPercentage = product.transportGstPercentage!;
+            displayTransportamountWithoutGst +=
+                transportCost / (1 + (transportGSTPercentage / 100));
 
-          final transportGSTPercentage = product.transportGstPercentage!;
-          displayTransportamountWithoutGst +=
-              transportCost / (1 + (transportGSTPercentage / 100));
+            displaytotaltransportGst = displayTransportamountWithGst -
+                displayTransportamountWithoutGst;
 
-          displaytotaltransportGst =
-              displayTransportamountWithGst - displayTransportamountWithoutGst;
+            selectedList.add('$productName : $quantity');
+          }
 
-          selectedList.add('$productName : $quantity');
+          selectedName = selectedList.join(', ');
+          List<MsgModel> displayList = [
+            MsgModel(
+                key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+            MsgModel(
+                key: tr(LocaleKeys.product_quantity), value: selectedName!),
+            MsgModel(
+                key: tr(LocaleKeys.amount),
+                value: displayamountWithoutGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.gst_amount),
+                value: displaytotalGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.total_amt),
+                value: displaytotalProductCostGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.transamount),
+                value: displayTransportamountWithoutGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.transgst),
+                value: displaytotaltransportGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.totaltransportcost),
+                value: displayTransportamountWithGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.subcd_amt),
+                value: subsidyAmount.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.amount_payble),
+                value: payableAmount.toStringAsFixed(2)),
+          ];
+
+          // Show success dialog
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_fertilizer));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Result got null: ${response['result']}'),
+            ),
+          );
+          throw Exception('Result got null');
         }
-
-        selectedName = selectedList.join(', ');
-        List<MsgModel> displayList = [
-          MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-          MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
-          MsgModel(
-              key: tr(LocaleKeys.amount),
-              value: displayamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.gst_amount),
-              value: displaytotalGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.total_amt),
-              value: displaytotalProductCostGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.transamount),
-              value: displayTransportamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.transgst),
-              value: displaytotaltransportGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.totaltransportcost),
-              value: displayTransportamountWithGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.subcd_amt),
-              value: subsidyAmount.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.amount_payble),
-              value: payableAmount.toStringAsFixed(2)),
-        ];
-
-        // Show success dialog
-        showSuccessDialog(
-            context, displayList, tr(LocaleKeys.success_fertilizer));
+        // Process the product list
       } else {
-        print('Failed to submit request: ${response.statusCode}');
-        print('Error Response: ${response.body}');
+        print('Failed to submit request: ${jsonResponse.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+          ),
+        );
+        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
       }
     } catch (e) {
-      print('Error occurred: $e');
+      rethrow;
     } finally {
       setState(() {
-        _isLoading = false; // Hide loading
+        _isLoading = false;
+        Future.delayed(Duration.zero, () {
+          CommonStyles.hideHorizontalDotsLoadingDialog(
+              context); // Show loading dialog
+        });
       });
     }
   }
@@ -728,11 +744,12 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
 // Function to show the dialog
   void showSuccessDialog(
-      BuildContext context, List<MsgModel> msg, String summary) {
+      BuildContext context, List<MsgModel> msg, String title) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: title);
       },
     );
   }
@@ -762,14 +779,14 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         final transportCost = product.transPortActualPriceInclGst! * quantity;
         totalTransportCostwithgst += transportCost;
 
-        final productGSTPercentage = product.gstPercentage!;
+        final productGSTPercentage = product.gstPercentage ?? 0;
         amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
 
         totalGST = totalProductCostGst - amountWithoutGst;
         totalCGST = totalGST / 2;
         totalSGST = totalGST / 2;
 
-        final transportGSTPercentage = product.transportGstPercentage!;
+        final transportGSTPercentage = product.transportGstPercentage ?? 0;
         TransportamountWithoutGst +=
             transportCost / (1 + (transportGSTPercentage / 100));
 
@@ -781,12 +798,12 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           RequestProductDetails(
             productId: product.id!,
             quantity: quantity,
-            bagCost: product.actualPriceInclGst!,
-            size: product.size!,
-            gstPersentage: product.gstPercentage!,
+            bagCost: product.actualPriceInclGst ?? 0,
+            size: product.size ?? 0,
+            gstPersentage: product.gstPercentage ?? 0,
             productCode: product.code!,
-            transGstPercentage: product.size!,
-            transportCost: product.transPortActualPriceInclGst!,
+            transGstPercentage: product.size ?? 0,
+            transportCost: product.transPortActualPriceInclGst ?? 0,
           ),
         );
       }

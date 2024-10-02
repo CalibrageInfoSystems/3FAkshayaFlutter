@@ -48,7 +48,8 @@ class farmer_passbook_2 extends StatefulWidget {
   String village;
 
   farmer_passbook_2(
-      {super.key, required this.accountHolderName,
+      {super.key,
+      required this.accountHolderName,
       required this.accountNumber,
       required this.bankName,
       required this.branchName,
@@ -64,7 +65,8 @@ class farmer_passbook_2 extends StatefulWidget {
   _farmer_passbook_2 createState() => _farmer_passbook_2();
 }
 
-class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProviderStateMixin {
+class _farmer_passbook_2 extends State<farmer_passbook_2>
+    with SingleTickerProviderStateMixin {
   String selectedValue = 'Option 1';
   double? selectedPosition = 0.0;
   bool datesavaiablity = false;
@@ -79,8 +81,11 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   List<PaymentResponse> paymentDetailsResponse_list = [];
   String totalquantityffb = '';
   String closingbalance = '';
-   double? totalBalance;
-  double totalQuanitity=0.0, totalGRAmount=0.0, totalAdjusted=0.0, totalAmount=0.0;
+  double? totalBalance;
+  double totalQuanitity = 0.0,
+      totalGRAmount = 0.0,
+      totalAdjusted = 0.0,
+      totalAmount = 0.0;
   String? fromdatetosendtab2;
   String? todatetosendtab2;
   String? farmercode;
@@ -158,15 +163,20 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         todatetosendtab2 = startDateString;
         _transportRates.clear();
         _transportationCharges.clear();
-        Provider.of<DataProvider>(context, listen: false)
-            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false).updateData(
+            fromdatetosendtab2!,
+            todatetosendtab2!,
+            modifiedCode!,
+            _transportRates,
+            _transportationCharges);
         closingbalance = '';
         totalquantityffb = '';
         paymentlistapi(currentDate, startDate, modifiedCode!);
-          transportlistapi(currentDate, startDate, modifiedCode!);
+        transportlistapi(currentDate, startDate, modifiedCode!);
       });
 
-      print('Date range for   Last 30 Days: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
+      print(
+          'Date range for   Last 30 Days: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
     } else if (position == 1.0) {
       setState(() {
         datesavaiablity = false;
@@ -175,9 +185,10 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       // Calculate the date range for the "Last 3 Months" option
       DateTime currentDate = DateTime.now();
       //  DateTime startDate = DateTime(currentDate.year, currentDate.month - 3, currentDate.day);
-      DateTime startDate = DateTime(currentDate.year, currentDate.month - 3, 1).month > 0
-          ? DateTime(currentDate.year, currentDate.month - 3, 1)
-          : DateTime(currentDate.year - 1, 12 + (currentDate.month - 3), 1);
+      DateTime startDate =
+          DateTime(currentDate.year, currentDate.month - 3, 1).month > 0
+              ? DateTime(currentDate.year, currentDate.month - 3, 1)
+              : DateTime(currentDate.year - 1, 12 + (currentDate.month - 3), 1);
 
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       String strstartdate = dateFormat.format(startDate);
@@ -186,23 +197,29 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       setState(() {
         fromdatetosendtab2 = strstartdate;
         todatetosendtab2 = strtodate;
-        Provider.of<DataProvider>(context, listen: false)
-            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
-        print('Date range for Last 3 Months: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
+        Provider.of<DataProvider>(context, listen: false).updateData(
+            fromdatetosendtab2!,
+            todatetosendtab2!,
+            modifiedCode!,
+            _transportRates,
+            _transportationCharges);
+        print(
+            'Date range for Last 3 Months: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
         paymentDetailsResponse_list.clear();
         _transportRates.clear();
         _transportationCharges.clear();
         closingbalance = '';
         totalquantityffb = '';
         paymentlistapi(currentDate, startDate, modifiedCode!);
-          transportlistapi(currentDate, startDate, modifiedCode!);
+        transportlistapi(currentDate, startDate, modifiedCode!);
       });
     } else if (position == 2.0) {
       datesavaiablity = false;
 
       // Calculate the date range for the "Last 1 Year" option
       DateTime currentDate = DateTime.now();
-      DateTime startDate = DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
+      DateTime startDate =
+          DateTime(currentDate.year - 1, currentDate.month, currentDate.day);
       DateFormat dateFormat = DateFormat('yyyy-MM-dd');
       String strfystartdate = dateFormat.format(startDate);
       String strfytodate = dateFormat.format(currentDate);
@@ -210,18 +227,23 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       setState(() {
         fromdatetosendtab2 = strfystartdate;
         todatetosendtab2 = strfytodate;
-        Provider.of<DataProvider>(context, listen: false)
-            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false).updateData(
+            fromdatetosendtab2!,
+            todatetosendtab2!,
+            modifiedCode!,
+            _transportRates,
+            _transportationCharges);
         paymentDetailsResponse_list.clear();
         _transportRates.clear();
         _transportationCharges.clear();
         closingbalance = '';
         totalquantityffb = '';
         paymentlistapi(currentDate, startDate, modifiedCode!);
-         transportlistapi(currentDate, startDate, modifiedCode!);
+        transportlistapi(currentDate, startDate, modifiedCode!);
       });
 
-      print('Date range for Last 1 Year: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
+      print(
+          'Date range for Last 1 Year: ${dateFormat.format(startDate)} to ${dateFormat.format(currentDate)}');
     } else if (position == 3.0) {
       // fromDate =null;
       // toDate=null;
@@ -245,8 +267,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     // double containerWidth = (screenWidth - 35.0) / 2;
     List<double>? dynamicStops = calculateDynamicStops(selectedPosition!);
 
-    return
-      Scaffold(
+    return Scaffold(
 
         // appBar: AppBar(
         //   title: Text("Farmer PassBook"),
@@ -268,9 +289,9 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         //     ),
         //   ),
         // ),
-            //  appBar:  CustomAppBar(title: 'Farmer Passbook'),
+        //  appBar:  CustomAppBar(title: 'Farmer Passbook'),
 
-    body: Stack(
+        body: Stack(
       children: [
         Positioned(
           top: -90,
@@ -283,7 +304,6 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                 begin: Alignment.topCenter, // 90 degrees
                 end: Alignment.bottomCenter,
                 colors: [
-
                   Color(0xFFDB5D4B),
                   Color(0xFFE39A63), // startColor
                   // endColor
@@ -292,10 +312,12 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
             ),
           ),
         ),
-          Scaffold(
-            backgroundColor: Colors.transparent, // To make the scaffold background transparent
+        Scaffold(
+            backgroundColor: Colors
+                .transparent, // To make the scaffold background transparent
             appBar: AppBar(
-              backgroundColor: Colors.transparent, // Transparent background for gradient to show through
+              backgroundColor: Colors
+                  .transparent, // Transparent background for gradient to show through
               leading: GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
@@ -303,6 +325,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                 child: Image.asset(Assets.images.icLeft.path),
               ),
               elevation: 0,
+              scrolledUnderElevation: 0,
               title: Text(
                 tr(LocaleKeys.payments),
                 style: CommonStyles.txSty_14black_f5.copyWith(
@@ -319,494 +342,533 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  const HomeScreen(),
+                        builder: (context) => const HomeScreen(),
                       ),
                     );
                   },
                 ),
               ],
-
             ),
-         body:
-         Container(
-
-         // startColor,
-          //height: MediaQuery.of(context).size.height,
-          child: Column(children: [
-
-            Container(
-              alignment: Alignment.topCenter,
-              margin: const EdgeInsets.only(left: 12,right:12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: CommonStyles.whiteColor),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton2<double>(
-                  iconStyleData: const IconStyleData(
-                    icon: Icon(
-                      Icons.keyboard_arrow_down_rounded,
-                      color: Colors.white,
-                    ),
+            body: Container(
+              // startColor,
+              //height: MediaQuery.of(context).size.height,
+              child: Column(children: [
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: const EdgeInsets.only(left: 12, right: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: CommonStyles.whiteColor),
                   ),
-                  isExpanded: true,
-                  onChanged: (position) {
-                    setState(() {
-                      selectedPosition = position;
-                      print('selectedposition $selectedPosition');
-                    });
-                    callApiMethod(selectedPosition!, vendorcode);
-
-                    // Now, call your API method based on the selected position
-                  },
-                  dropdownStyleData: DropdownStyleData(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: Colors.black87,
-                    ),
-                    offset: const Offset(0, 0),
-                    scrollbarTheme: ScrollbarThemeData(
-                      radius: const Radius.circular(40),
-                      thickness: WidgetStateProperty.all<double>(6),
-                      thumbVisibility: WidgetStateProperty.all<bool>(true),
-                    ),
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                  ),
-                  value: selectedPosition,
-                  items: [
-                    DropdownMenuItem<double>(
-                      value: 0.0,
-                      child: Center(
-                        //alignment: Alignment.center,
-                        child: Text(
-                          tr(LocaleKeys.last_month),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "hind_semibold",
-                          ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2<double>(
+                      iconStyleData: const IconStyleData(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Colors.white,
                         ),
                       ),
+                      isExpanded: true,
+                      onChanged: (position) {
+                        setState(() {
+                          selectedPosition = position;
+                          print('selectedposition $selectedPosition');
+                        });
+                        callApiMethod(selectedPosition!, vendorcode);
 
-                    ),
-                    DropdownMenuItem<double>(
-                      value: 1.0,
-                      child: Center(
-                        //alignment: Alignment.center,
-                        child: Text(
-                          tr(LocaleKeys.last_threemonth),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "hind_semibold",
-                          ),
+                        // Now, call your API method based on the selected position
+                      },
+                      dropdownStyleData: DropdownStyleData(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: Colors.black87,
+                        ),
+                        offset: const Offset(0, 0),
+                        scrollbarTheme: ScrollbarThemeData(
+                          radius: const Radius.circular(40),
+                          thickness: WidgetStateProperty.all<double>(6),
+                          thumbVisibility: WidgetStateProperty.all<bool>(true),
                         ),
                       ),
-                    ),
-                    DropdownMenuItem<double>(
-                      value: 2.0,
-                      child: Center(
-                        //alignment: Alignment.center,
-                        child: Text(
-                          tr(LocaleKeys.currentfinicialP),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "hind_semibold",
-                          ),
-                        ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
+                        padding: EdgeInsets.only(left: 20, right: 20),
                       ),
-                    ),
-                    DropdownMenuItem<double>(
-                      value: 3.0,
-                      child: Center(
-                        //alignment: Alignment.center,
-                        child: Text(
-                          tr(LocaleKeys.selectedP),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: "hind_semibold",
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-
-                  // ButtonTheme(
-                  //   alignedDropdown: true,
-                  //   child: Container(
-                  //     width: double.infinity,
-                  //     decoration: BoxDecoration(
-                  //       border: Border.all(color: Colors.white, width: 1.0),
-                  //       borderRadius: BorderRadius.circular(6.0),
-                  //     ),
-                  //     child: DropdownButton<double>(
-                  //       alignment: Alignment.center,
-                  //       value: selectedPosition,
-                  //       iconSize: 22,
-                  //       icon: Icon(
-                  //         Icons.arrow_drop_down,
-                  //         color: Colors.white,
-                  //       ),
-                  //       style: TextStyle(
-                  //         color: Colors.black,
-                  //       ),
-                  //       onChanged: (position) {
-                  //         setState(() {
-                  //           selectedPosition = position;
-                  //           print('selectedposition $selectedPosition');
-                  //         });
-                  //         callApiMethod(selectedPosition!, vendorcode);
-                  //
-                  //         // Now, call your API method based on the selected position
-                  //       },
-                  //
-
-                  //
-                  //     ),
-                  //
-                  //   ),
-                  //
-                  // )
-                ),
-
-              ),
-
-            ),
-            Visibility(
-              visible: datesavaiablity,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0),
-                child: Column(
-                  children: [
-                    Container(
-                      //    padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0, bottom: 10.0),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: CommonStyles.whiteColor),
-                      ),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            // child:
-                            // GestureDetector(
-                            //   onTap: () {
-                            //
-                            //     _selectDate(context, fromDateController);
-                            //     // Handle From Date tap
-                            //   },
-                            child: TextFormField(
-                              controller: fromDateController,
-                              onTap: () {
-                                _selectDate(context, fromDateController);
-                                print('clickedonfromdate');
-                              },
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                hintText: tr(LocaleKeys.from_date),
-                                hintStyle: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                                enabled: true,
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                ),
+                      value: selectedPosition,
+                      items: [
+                        DropdownMenuItem<double>(
+                          value: 0.0,
+                          child: Center(
+                            //alignment: Alignment.center,
+                            child: Text(
+                              tr(LocaleKeys.last_month),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: "hind_semibold",
                               ),
-                              style: const TextStyle(color: Colors.white),
                             ),
-                            //  ),
                           ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Flexible(
-                            flex: 1,
-                            // child: GestureDetector(
-                            //   onTap: () {
-                            //     // Handle To Date tap
-                            //     print('clickedontodate');
-                            //     _selectDate(context, toDateController);
-                            //   },
-                            child: TextFormField(
-                              onTap: () {
-                                print('clickedontodate');
-                                _selectDate(context, toDateController);
-                              },
-                              readOnly: true,
-                              controller: toDateController,
-                              decoration: InputDecoration(
-                                hintText: tr(LocaleKeys.to_date),
-                                hintStyle: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                                enabled: true,
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                ),
+                        ),
+                        DropdownMenuItem<double>(
+                          value: 1.0,
+                          child: Center(
+                            //alignment: Alignment.center,
+                            child: Text(
+                              tr(LocaleKeys.last_threemonth),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: "hind_semibold",
                               ),
-                              style: const TextStyle(color: Colors.white),
                             ),
-                            //  ),
                           ),
-                          CustomBtn(
-                              label: tr(LocaleKeys.submit),
-                              // label: 'Submit',
-                              onPressed: () {
-                                datevalidation();
-                                //    validateAndSubmit(selectedFromDate, selectedToDate);
-                              }),
-                          // Container(
-                          //   decoration: BoxDecoration(
-                          //     gradient: LinearGradient(
-                          //       colors: [
-                          //         Color(0xFFCCCCCC),
-                          //         Color(0xFFFFFFFF),
-                          //         Color(0xFFCCCCCC),
-                          //       ],
-                          //       begin: Alignment.topCenter,
-                          //       end: Alignment.bottomCenter,
-                          //     ),
-                          //     borderRadius: BorderRadius.circular(10.0),
-                          //     border: Border.all(
-                          //       width: 2.0,
-                          //       color: Color(0xFFe86100),
-                          //     ),
-                          //   ),
-                          //   child: ElevatedButton(
-                          //     onPressed: () async {
-                          //       print('Submit button is clicked');
-                          //       // bool validation = await datevalidation();
-                          //       // if(validation){
-                          //       //   paymentlistapi(currentDate, startDate, vc);
-                          //       // }
-                          //
-                          //
-                          //     },
-                          //     child: Text(
-                          //       'Submit',
-                          //       style: TextStyle(
-                          //         color: Color(0xFFe86100),
-                          //         fontSize: 16,
-                          //         fontFamily: 'hind_semibold',
-                          //       ),
-                          //     ),
-                          //     style: ElevatedButton.styleFrom(
-                          //       backgroundColor: Colors.transparent,
-                          //       elevation: 0,
-                          //       shape: RoundedRectangleBorder(
-                          //         borderRadius: BorderRadius.circular(10.0),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ),
+                        ),
+                        DropdownMenuItem<double>(
+                          value: 2.0,
+                          child: Center(
+                            //alignment: Alignment.center,
+                            child: Text(
+                              tr(LocaleKeys.currentfinicialP),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: "hind_semibold",
+                              ),
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem<double>(
+                          value: 3.0,
+                          child: Center(
+                            //alignment: Alignment.center,
+                            child: Text(
+                              tr(LocaleKeys.selectedP),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: "hind_semibold",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+
+                      // ButtonTheme(
+                      //   alignedDropdown: true,
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     decoration: BoxDecoration(
+                      //       border: Border.all(color: Colors.white, width: 1.0),
+                      //       borderRadius: BorderRadius.circular(6.0),
+                      //     ),
+                      //     child: DropdownButton<double>(
+                      //       alignment: Alignment.center,
+                      //       value: selectedPosition,
+                      //       iconSize: 22,
+                      //       icon: Icon(
+                      //         Icons.arrow_drop_down,
+                      //         color: Colors.white,
+                      //       ),
+                      //       style: TextStyle(
+                      //         color: Colors.black,
+                      //       ),
+                      //       onChanged: (position) {
+                      //         setState(() {
+                      //           selectedPosition = position;
+                      //           print('selectedposition $selectedPosition');
+                      //         });
+                      //         callApiMethod(selectedPosition!, vendorcode);
+                      //
+                      //         // Now, call your API method based on the selected position
+                      //       },
+                      //
+
+                      //
+                      //     ),
+                      //
+                      //   ),
+                      //
+                      // )
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Expanded(child:
-            DefaultTabController(
-              length: 2,
-              child: Column(
-                children: [
-                  Padding(
+                Visibility(
+                  visible: datesavaiablity,
+                  child: Padding(
                     padding: const EdgeInsets.only(
-                      top: 10.0,
-                      // left: 0.0,
-                      // right: 0.0,
-                    ),
-                    child: TabBar(
-                      labelColor: const Color(0xFFe86100),
-
-                      unselectedLabelColor: Colors.white,
-                      indicator: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          topRight: Radius.circular(10.0),
-                        ),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.transparent),
-                        ),
-                      ),
-                      tabs: [
-                        Tab(
-                            child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  tr(LocaleKeys.payments),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'hind_semibold',
+                        top: 10.0, left: 12.0, right: 12.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          //    padding: EdgeInsets.only(top: 10.0, left: 12.0, right: 12.0, bottom: 10.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: CommonStyles.whiteColor),
+                          ),
+                          child: Flex(
+                            direction: Axis.horizontal,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                // child:
+                                // GestureDetector(
+                                //   onTap: () {
+                                //
+                                //     _selectDate(context, fromDateController);
+                                //     // Handle From Date tap
+                                //   },
+                                child: TextFormField(
+                                  controller: fromDateController,
+                                  onTap: () {
+                                    _selectDate(context, fromDateController);
+                                    print('clickedonfromdate');
+                                  },
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    hintText: tr(LocaleKeys.from_date),
+                                    hintStyle: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    enabled: true,
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
                                   ),
-                                ))),
-
-                        Tab(
-                            child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  tr(LocaleKeys.trans),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'hind_semibold',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                //  ),
+                              ),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Flexible(
+                                flex: 1,
+                                // child: GestureDetector(
+                                //   onTap: () {
+                                //     // Handle To Date tap
+                                //     print('clickedontodate');
+                                //     _selectDate(context, toDateController);
+                                //   },
+                                child: TextFormField(
+                                  onTap: () {
+                                    print('clickedontodate');
+                                    _selectDate(context, toDateController);
+                                  },
+                                  readOnly: true,
+                                  controller: toDateController,
+                                  decoration: InputDecoration(
+                                    hintText: tr(LocaleKeys.to_date),
+                                    hintStyle: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    enabled: true,
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
                                   ),
-                                ))),
-                        // Tab(text: 'Direct Farmer Transport Reimbursement'),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                //  ),
+                              ),
+                              CustomBtn(
+                                  label: tr(LocaleKeys.submit),
+                                  // label: 'Submit',
+                                  onPressed: () {
+                                    datevalidation();
+                                    //    validateAndSubmit(selectedFromDate, selectedToDate);
+                                  }),
+                              // Container(
+                              //   decoration: BoxDecoration(
+                              //     gradient: LinearGradient(
+                              //       colors: [
+                              //         Color(0xFFCCCCCC),
+                              //         Color(0xFFFFFFFF),
+                              //         Color(0xFFCCCCCC),
+                              //       ],
+                              //       begin: Alignment.topCenter,
+                              //       end: Alignment.bottomCenter,
+                              //     ),
+                              //     borderRadius: BorderRadius.circular(10.0),
+                              //     border: Border.all(
+                              //       width: 2.0,
+                              //       color: Color(0xFFe86100),
+                              //     ),
+                              //   ),
+                              //   child: ElevatedButton(
+                              //     onPressed: () async {
+                              //       print('Submit button is clicked');
+                              //       // bool validation = await datevalidation();
+                              //       // if(validation){
+                              //       //   paymentlistapi(currentDate, startDate, vc);
+                              //       // }
+                              //
+                              //
+                              //     },
+                              //     child: Text(
+                              //       'Submit',
+                              //       style: TextStyle(
+                              //         color: Color(0xFFe86100),
+                              //         fontSize: 16,
+                              //         fontFamily: 'hind_semibold',
+                              //       ),
+                              //     ),
+                              //     style: ElevatedButton.styleFrom(
+                              //       backgroundColor: Colors.transparent,
+                              //       elevation: 0,
+                              //       shape: RoundedRectangleBorder(
+                              //         borderRadius: BorderRadius.circular(10.0),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 1.0,
-                  ),
-                  //
-                  // SizedBox(
-                  //   height: 10.0,
-                  // ),
-                  Expanded(
-
-                      child:
-                  Container(
-                     // height: MediaQuery.of(context).size.height,
-                      color: Colors.white,
-
-                          child:
-                      TabBarView(
-                        children: [
-                          //farmer_passbook( payemntlistresp: paymentDetailsResponse_list, totalffbcollections: '$totalquantityffb', closingbalance: '$closingbalance', accountHolderName: '',),
-                          farmer_passbook(
-                            payemntlistresp: paymentDetailsResponse_list,
-                            totalffbcollections: totalquantityffb,
-                            closingbalance: closingbalance,
-                            accountHolderName: widget.accountHolderName,
-                            accountNumber: widget.accountNumber,
-                            bankName: widget.bankName,
-                            district: widget.district,
-                            farmerCode: widget.farmerCode,
-                            guardianName: widget.guardianName,
-                            ifscCode: widget.ifscCode,
-                            mandal: widget.mandal,
-                            state: widget.state,
-                            village: widget.village,
-                            totalAdjusted: totalAdjusted,
-                            totalAmount: totalAmount,
-                            totalBalance: totalBalance,
-                            totalGRAmount: totalGRAmount,
-                            totalQuanitity: totalQuanitity,
-                            branchname: widget.branchName,
+                ),
+                Expanded(
+                  child: DefaultTabController(
+                    length: 2,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 10.0,
+                            // left: 0.0,
+                            // right: 0.0,
                           ),
+                          child: TabBar(
+                            labelColor: const Color(0xFFe86100),
+                            unselectedLabelColor: Colors.white,
+                            indicator: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10.0),
+                                topRight: Radius.circular(10.0),
+                              ),
+                              border: Border(
+                                bottom: BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                            tabs: [
+                              Tab(
+                                  child: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Text(
+                                        tr(LocaleKeys.payments),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'hind_semibold',
+                                        ),
+                                      ))),
 
+                              Tab(
+                                  child: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Text(
+                                        tr(LocaleKeys.trans),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontFamily: 'hind_semibold',
+                                        ),
+                                      ))),
+                              // Tab(text: 'Direct Farmer Transport Reimbursement'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 1.0,
+                        ),
+                        //
+                        // SizedBox(
+                        //   height: 10.0,
+                        // ),
+                        Expanded(
+                          child: Container(
+                              // height: MediaQuery.of(context).size.height,
+                              color: Colors.white,
+                              child: TabBarView(
+                                children: [
+                                  //farmer_passbook( payemntlistresp: paymentDetailsResponse_list, totalffbcollections: '$totalquantityffb', closingbalance: '$closingbalance', accountHolderName: '',),
+                                  farmer_passbook(
+                                    payemntlistresp:
+                                        paymentDetailsResponse_list,
+                                    totalffbcollections: totalquantityffb,
+                                    closingbalance: closingbalance,
+                                    accountHolderName: widget.accountHolderName,
+                                    accountNumber: widget.accountNumber,
+                                    bankName: widget.bankName,
+                                    district: widget.district,
+                                    farmerCode: widget.farmerCode,
+                                    guardianName: widget.guardianName,
+                                    ifscCode: widget.ifscCode,
+                                    mandal: widget.mandal,
+                                    state: widget.state,
+                                    village: widget.village,
+                                    totalAdjusted: totalAdjusted,
+                                    totalAmount: totalAmount,
+                                    totalBalance: totalBalance,
+                                    totalGRAmount: totalGRAmount,
+                                    totalQuanitity: totalQuanitity,
+                                    branchname: widget.branchName,
+                                  ),
 
-                          Container(
-                         //   height: MediaQuery.of(context).size.height,
-                            child:
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (_transportationCharges.isNotEmpty)
-                                  Expanded(
-                                    // flex: 3,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
+                                  Container(
+                                      //   height: MediaQuery.of(context).size.height,
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (_transportationCharges.isNotEmpty)
+                                        Expanded(
+                                          // flex: 3,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
 
-                                      ///     itemCount: dataProvider.transportchargelist.length,_transportRates
-                                      itemCount: _transportationCharges.length,
-                                      itemBuilder: (context, index) {
-                                        print('fffffffff${_transportationCharges[index].receiptGeneratedDate}');
-                                        String formattedDate = DateFormat('dd/MM/yyyy').format(_transportationCharges[index].receiptGeneratedDate);
+                                            ///     itemCount: dataProvider.transportchargelist.length,_transportRates
+                                            itemCount:
+                                                _transportationCharges.length,
+                                            itemBuilder: (context, index) {
+                                              print(
+                                                  'fffffffff${_transportationCharges[index].receiptGeneratedDate}');
+                                              String formattedDate = DateFormat(
+                                                      'dd/MM/yyyy')
+                                                  .format(_transportationCharges[
+                                                          index]
+                                                      .receiptGeneratedDate);
 
-                                        return
-                                          Padding(
-                                            //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                                              padding: const EdgeInsets.only(left: 10, right: 10),
-                                              child: IntrinsicHeight(
-                                                child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(12.0),
-                                                    child: GestureDetector(
-                                                      onTap: () {},
-                                                      child: Card(
-                                                        shadowColor: Colors.transparent,
-                                                        surfaceTintColor: Colors.transparent,
-                                                        child: ClipRRect(
-                                                          borderRadius: BorderRadius.circular(12.0),
-                                                          //surfaceTintColor : Colors.red,
+                                              return Padding(
+                                                  //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10, right: 10),
+                                                  child: IntrinsicHeight(
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(12.0),
+                                                        child: GestureDetector(
+                                                          onTap: () {},
+                                                          child: Card(
+                                                            shadowColor: Colors
+                                                                .transparent,
+                                                            surfaceTintColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12.0),
+                                                              //surfaceTintColor : Colors.red,
 
-                                                          child: Container(
-
-                                                            color: index.isEven ?const Color(0xfffaf5f5f5) : const Color(0xFFDFDFDF),
-                                                            // color:    Colors.white,
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.only(left: 5.0, right: 5),
-                                                                  child: Center(
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                                      children: [
-                                                                        Container(
-                                                                          margin: const EdgeInsets.only(right: 10.0, left: 10),
-                                                                          child: ClipRRect(
-                                                                            borderRadius: BorderRadius.circular(7.0),
-                                                                            child: Image.asset( Assets.images.icCalender.path,
-                                                                              //  color: CommonStyles.primaryTextColor,
-                                                                              height: 25,
-                                                                              width: 25,
+                                                              child: Container(
+                                                                color: index
+                                                                        .isEven
+                                                                    ? const Color(
+                                                                        0xfffaf5f5f5)
+                                                                    : const Color(
+                                                                        0xFFDFDFDF),
+                                                                // color:    Colors.white,
+                                                                child: Row(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              5.0,
+                                                                          right:
+                                                                              5),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Container(
+                                                                              margin: const EdgeInsets.only(right: 10.0, left: 10),
+                                                                              child: ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(7.0),
+                                                                                child: Image.asset(
+                                                                                  Assets.images.icCalender.path,
+                                                                                  //  color: CommonStyles.primaryTextColor,
+                                                                                  height: 25,
+                                                                                  width: 25,
+                                                                                ),
+                                                                              ),
                                                                             ),
-                                                                          ),
+                                                                            const SizedBox(height: 2.0),
+                                                                            // Add some spacing between the image and text
+                                                                            Text(
+                                                                              formattedDate,
+                                                                              style: const TextStyle(
+                                                                                color: Colors.grey,
+                                                                                fontFamily: "hind_semibold",
+                                                                              ),
+                                                                              textAlign: TextAlign.center,
+                                                                            ),
+                                                                          ],
                                                                         ),
-                                                                        const SizedBox(height: 2.0),
-                                                                        // Add some spacing between the image and text
-                                                                        Text(
-                                                                          formattedDate,
-                                                                          style: const TextStyle(
-                                                                            color: Colors.grey,
-                                                                            fontFamily: "hind_semibold",
-                                                                          ),
-                                                                          textAlign: TextAlign.center,
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      width:
+                                                                          2.0,
+                                                                      // height: MediaQuery.of(context).size.height,
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          top:
+                                                                              10,
+                                                                          bottom:
+                                                                              10),
+                                                                      decoration:
+                                                                          const BoxDecoration(
+                                                                        gradient:
+                                                                            LinearGradient(
+                                                                          colors: [
+                                                                            Color(0xFFFF4500),
+                                                                            Color(0xFFA678EF),
+                                                                            Color(0xFFFF4500),
+                                                                          ],
+                                                                          end: Alignment
+                                                                              .topRight,
                                                                         ),
-                                                                      ],
+                                                                      ),
                                                                     ),
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  width: 2.0,
-                                                                  // height: MediaQuery.of(context).size.height,
-                                                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                                                                  decoration: const BoxDecoration(
-                                                                    gradient: LinearGradient(
-                                                                      colors: [
-                                                                        Color(0xFFFF4500),
-                                                                        Color(0xFFA678EF),
-                                                                        Color(0xFFFF4500),
-                                                                      ],
-                                                                      end: Alignment.topRight,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Expanded(
-                                                                    child: Padding(
-                                                                      padding: const EdgeInsets.only(left: 5.0),
+                                                                    Expanded(
+                                                                        child:
+                                                                            Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              5.0),
                                                                       child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          mainAxisAlignment: MainAxisAlignment
+                                                                              .start,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
                                                                           children: [
                                                                             Expanded(
                                                                               child: Column(
@@ -814,7 +876,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                   Padding(
                                                                                     padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
                                                                                     child: Card(
-                                                                                      color: index.isEven ? Colors.white : const Color(0xFFDFDFDF),                                                                           shadowColor: Colors.transparent,
+                                                                                      color: index.isEven ? Colors.white : const Color(0xFFDFDFDF),
+                                                                                      shadowColor: Colors.transparent,
                                                                                       surfaceTintColor: Colors.transparent,
                                                                                       child: Container(
                                                                                         decoration: BoxDecoration(
@@ -852,10 +915,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    tr(LocaleKeys.trans_charges),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(tr(LocaleKeys.trans_charges), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -868,10 +928,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                child: Text(
-                                                                                                                    ":",
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(":", style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -884,12 +941,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    _transportationCharges[index]
-                                                                                                                        .tonnageCost
-                                                                                                                        .toStringAsFixed(2),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(_transportationCharges[index].tonnageCost.toStringAsFixed(2), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -905,10 +957,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    tr(LocaleKeys.net_weightt),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(tr(LocaleKeys.net_weightt), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -921,10 +970,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                child: Text(
-                                                                                                                    ":",
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(":", style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -937,10 +983,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    _transportationCharges[index].qty.toStringAsFixed(2),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(_transportationCharges[index].qty.toStringAsFixed(2), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -956,10 +999,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    tr(LocaleKeys.total_amt),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(tr(LocaleKeys.total_amt), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -972,10 +1012,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: EdgeInsets.fromLTRB(40, 8, 5, 0),
-                                                                                                                child: Text(
-                                                                                                                    ":",
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(":", style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -988,10 +1025,7 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                                                             children: [
                                                                                                               Padding(
                                                                                                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                                                                                child: Text(
-                                                                                                                    _transportationCharges[index].rate.toStringAsFixed(2),
-                                                                                                                    style:CommonStyles.txSty_14SB_fb
-                                                                                                                ),
+                                                                                                                child: Text(_transportationCharges[index].rate.toStringAsFixed(2), style: CommonStyles.txSty_14SB_fb),
                                                                                                               ),
                                                                                                             ],
                                                                                                           ),
@@ -1012,470 +1046,556 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
                                                                             ),
                                                                           ]),
                                                                     ))
-                                                              ],
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    )),
-                                              ));
-                                      },
-                                    ),
-                                  ),
-                                if (_transportationCharges.isEmpty)
-                                  Expanded(
-                                      child: Center(
-                                          child: SizedBox(
-                                              height: MediaQuery.of(context).size.height / 2,
-                                              child: Center(
-                                                  child: Text(
-                                                    tr(LocaleKeys.no_trans_found),
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Color(0xFFFB4110),
-                                                    //  fontWeight: FontWeight.bold,
-                                                      fontFamily: 'Calibri',
-                                                    ),
-                                                  ))))),
-
-                                Padding(
-                                  padding: const EdgeInsets.only(top:10.0,left: 10,right:10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child:
-                                            IntrinsicHeight(
-
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  print('button1clicked');
-                                                  //openFile();
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.transparent,
-                                                  elevation: 0,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10.0),
-                                                  ),
-                                                ),
-                                                child: const Text(
-                                                  '',
-                                                  style: TextStyle(
-                                                    // color: Color(0xFFe86100),
-                                                    fontSize: 12,
-                                                    fontFamily: 'hind_semibold',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8.0),
-                                          IntrinsicWidth(
-                                            //flex: 2,
-                                            child:
-                                            IntrinsicHeight(
-                                              // width: MediaQuery.of(context).size.width,
-                                              // height: 45,
-                                              child:Container(
-                                                padding: const EdgeInsets.all(7),
-                                                // width: MediaQuery.of(context).size.width,
-                                                decoration: BoxDecoration(
-                                                  gradient: const LinearGradient(
-                                                    colors: [
-                                                      Color(0xFFCCCCCC),
-                                                      Color(0xFFFFFFFF),
-                                                      Color(0xFFCCCCCC),
-                                                    ],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(20.0),
-                                                  border: Border.all(
-                                                    width: 2.0,
-                                                    color: const Color(0xFFe86100),
-                                                  ),
-                                                ),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Image.asset( Assets.images.delivery.path,
-                                                      //  color: CommonStyles.primaryTextColor,
-                                                      height: 20,
-                                                      width:20,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      tr(LocaleKeys.transportationrates),
-                                                      style: const TextStyle(
-                                                        color: Color(0xFFe86100),
-                                                        fontSize: 12,
-                                                        fontFamily: 'hind_semibold',
-                                                      ),
-                                                      maxLines: 1,
-                                                      textAlign: TextAlign.center,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                )
-
-                                              ),
-                                            ),
-                                          ),],
-                                      ),
-
-                                      ///  SizedBox(height: 5.0),
-                                      Container(
-                                        /// flex: 1,
-
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12.0),
-                                            side: const BorderSide(
-                                              color: Color(0xFFBE9747), // Border color
-                                            ),
-                                          ),
-                                          color: const Color(0xFFFFFACB), // Background color
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 10,right:4,top: 4),
-
-                                                child: Text(
-                                                  tr(LocaleKeys.notee),
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.normal,
-                                                    fontFamily: "hind_semibold",
-                                                    color: Color(0xFFe86100), // Color for "Note: \n"
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(padding:  const EdgeInsets.only(left: 10,right:4,bottom: 5) ,child:Text( tr(LocaleKeys.tansportation_note),
-                                                // style: TextStyle(
-                                                //   fontSize: 14,
-                                                //   fontWeight: FontWeight.normal,
-                                                //   color: Colors.black, // Color for the rest of the text
-                                                // ),
-                                                style: CommonStyles.txSty_14b_f5,),)
-
-                                            ],
+                                                        )),
+                                                  ));
+                                            },
                                           ),
                                         ),
-                                      ),
+                                      if (_transportationCharges.isEmpty)
+                                        Expanded(
+                                            child: Center(
+                                                child: SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height /
+                                                            2,
+                                                    child: Center(
+                                                        child: Text(
+                                                      tr(LocaleKeys
+                                                          .no_trans_found),
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            Color(0xFFFB4110),
+                                                        //  fontWeight: FontWeight.bold,
+                                                        fontFamily: 'Calibri',
+                                                      ),
+                                                    ))))),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10.0, left: 10, right: 10),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: IntrinsicHeight(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        print('button1clicked');
+                                                        //openFile();
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        elevation: 0,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                        ),
+                                                      ),
+                                                      child: const Text(
+                                                        '',
+                                                        style: TextStyle(
+                                                          // color: Color(0xFFe86100),
+                                                          fontSize: 12,
+                                                          fontFamily:
+                                                              'hind_semibold',
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8.0),
+                                                IntrinsicWidth(
+                                                  //flex: 2,
+                                                  child: IntrinsicHeight(
+                                                    // width: MediaQuery.of(context).size.width,
+                                                    // height: 45,
+                                                    child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(7),
+                                                        // width: MediaQuery.of(context).size.width,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              const LinearGradient(
+                                                            colors: [
+                                                              Color(0xFFCCCCCC),
+                                                              Color(0xFFFFFFFF),
+                                                              Color(0xFFCCCCCC),
+                                                            ],
+                                                            begin: Alignment
+                                                                .topCenter,
+                                                            end: Alignment
+                                                                .bottomCenter,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20.0),
+                                                          border: Border.all(
+                                                            width: 2.0,
+                                                            color: const Color(
+                                                                0xFFe86100),
+                                                          ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Image.asset(
+                                                              Assets
+                                                                  .images
+                                                                  .delivery
+                                                                  .path,
+                                                              //  color: CommonStyles.primaryTextColor,
+                                                              height: 20,
+                                                              width: 20,
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(
+                                                              tr(LocaleKeys
+                                                                  .transportationrates),
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Color(
+                                                                    0xFFe86100),
+                                                                fontSize: 12,
+                                                                fontFamily:
+                                                                    'hind_semibold',
+                                                              ),
+                                                              maxLines: 1,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ],
+                                                        )),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+
+                                            ///  SizedBox(height: 5.0),
+                                            Container(
+                                              /// flex: 1,
+
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12.0),
+                                                  side: const BorderSide(
+                                                    color: Color(
+                                                        0xFFBE9747), // Border color
+                                                  ),
+                                                ),
+                                                color: const Color(
+                                                    0xFFFFFACB), // Background color
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 4,
+                                                              top: 4),
+                                                      child: Text(
+                                                        tr(LocaleKeys.notee),
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.normal,
+                                                          fontFamily:
+                                                              "hind_semibold",
+                                                          color: Color(
+                                                              0xFFe86100), // Color for "Note: \n"
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 4,
+                                                              bottom: 5),
+                                                      child: Text(
+                                                        tr(LocaleKeys
+                                                            .tansportation_note),
+                                                        // style: TextStyle(
+                                                        //   fontSize: 14,
+                                                        //   fontWeight: FontWeight.normal,
+                                                        //   color: Colors.black, // Color for the rest of the text
+                                                        // ),
+                                                        style: CommonStyles
+                                                            .txSty_14b_f5,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                      //  )
                                     ],
-                                  ),
-                                )
-                                //  )
-                              ],
-                            )
-                          )
-                          //   _DirectFarmerTransport(transportlistview: _transportRates, TransportationChargelistview:_transportationCharges,)
-                        ],
-                      )
-                      ),
-
-                  )
-                ],
-              ),
-            ),
-
-
-
-
-            )]),
-
-        )
-          )],
-
-    )
-      );
+                                  ))
+                                  //   _DirectFarmerTransport(transportlistview: _transportRates, TransportationChargelistview:_transportationCharges,)
+                                ],
+                              )),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ]),
+            ))
+      ],
+    ));
   }
 
-
-  void Showdialogtransportrates(List<TransportRate> transportratelist, BuildContext context) {
+  void Showdialogtransportrates(
+      List<TransportRate> transportratelist, BuildContext context) {
     showDialog(
       barrierDismissible: true,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-           backgroundColor: Colors.white,
-
+            backgroundColor: Colors.white,
             content: IntrinsicHeight(
-              //   width: MediaQuery.of(context).size.width,
-              //height: MediaQuery.of(context).size.height / 3,
-              //  padding: EdgeInsets.only(left: 10.0,right: 10,top: 6,bottom: 10),
+                //   width: MediaQuery.of(context).size.width,
+                //height: MediaQuery.of(context).size.height / 3,
+                //  padding: EdgeInsets.only(left: 10.0,right: 10,top: 6,bottom: 10),
                 child: Column(
+              children: [
+                const SizedBox(
+                  height: 12.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 12.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          tr(LocaleKeys.transportationrates),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'Calibri',
-                            color: Color(0xFFf15f22),
-                          ),
-                        ),
-                        // IconButton(
-                        //   icon: Icon(Icons.close),
-                        //   onPressed: () {
-                        //     Navigator.of(context).pop();
-                        //   },
-                        // ),
-                      ],
-                    ),
-                    if (transportratelist.isNotEmpty)
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 6.0, // Adjust the height as needed
-                        child: ListView.builder(
-                          itemCount: transportratelist.length,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            ///  var member = transportrate[index];
-                            String transpporratelistvillage = transportratelist[index].village;
-                            print('transpporratelistvillage$transpporratelistvillage');
-
-
-                            return Card(
-                                elevation: 2,
-                                child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    color: index.isEven ? Colors.white : const Color(0xFFDFDFDF),
-                                    // height: MediaQuery.of(context).size.height / 3.0,
-                                    // height: MediaQuery.of(context).size.height, // Adjust the height as needed
-                                    padding: const EdgeInsets.only(left: 5.0, right: 5, bottom: 5, top: 5),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                    child: Text(
-                                                      tr(LocaleKeys.village),
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const Expanded(
-                                              flex: 0,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5, 8, 5, 0),
-                                                    child: Text(
-                                                      ":",
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
-                                                    child: Text(
-                                                      transportratelist[index].village,
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                    child: Text(
-                                                      tr(LocaleKeys.mandal),
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const Expanded(
-                                              flex: 0,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5, 8, 0, 0),
-                                                    child: Text(
-                                                      ":",
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
-                                                    child: Text(
-                                                      transportratelist[index].mandal,
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                                    child: Text(
-                                                      tr(LocaleKeys.rate),
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const Expanded(
-                                              flex: 0,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5, 8, 0, 0),
-                                                    child: Text(
-                                                      ":",
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
-                                                    child: Text(
-                                                      transportratelist[index].rate,
-                                                        style:CommonStyles.txSty_14SB_fb
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-
-                                        // Adjust spacing between entries
-                                      ],
-                                    )));
-                          },
-                        )),
-                    if (transportratelist.isEmpty)
-                      const SizedBox.shrink(),
-                    Container(
-                      width: 90,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFCCCCCC),
-                            Color(0xFFFFFFFF),
-                            Color(0xFFCCCCCC),
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                          width: 2.0,
-                          color: const Color(0xFFe86100),
-                        ),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print('button1clicked');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Text(
-                          tr(LocaleKeys.ok),
-                          style: const TextStyle(
-                            color: Color(0xFFe86100),
-                            fontSize: 12,
-                            fontFamily: 'hind_semibold',
-                          ),
-                        ),
+                    Text(
+                      tr(LocaleKeys.transportationrates),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'Calibri',
+                        color: Color(0xFFf15f22),
                       ),
                     ),
+                    // IconButton(
+                    //   icon: Icon(Icons.close),
+                    //   onPressed: () {
+                    //     Navigator.of(context).pop();
+                    //   },
+                    // ),
                   ],
-                )));
+                ),
+                if (transportratelist.isNotEmpty)
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height /
+                          6.0, // Adjust the height as needed
+                      child: ListView.builder(
+                        itemCount: transportratelist.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          ///  var member = transportrate[index];
+                          String transpporratelistvillage =
+                              transportratelist[index].village;
+                          print(
+                              'transpporratelistvillage$transpporratelistvillage');
+
+                          return Card(
+                              elevation: 2,
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  color: index.isEven
+                                      ? Colors.white
+                                      : const Color(0xFFDFDFDF),
+                                  // height: MediaQuery.of(context).size.height / 3.0,
+                                  // height: MediaQuery.of(context).size.height, // Adjust the height as needed
+                                  padding: const EdgeInsets.only(
+                                      left: 5.0, right: 5, bottom: 5, top: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 8, 0, 0),
+                                                  child: Text(
+                                                      tr(LocaleKeys.village),
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Expanded(
+                                            flex: 0,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      5, 8, 5, 0),
+                                                  child: Text(":",
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 8, 0, 0),
+                                                  child: Text(
+                                                      transportratelist[index]
+                                                          .village,
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 8, 0, 0),
+                                                  child: Text(
+                                                      tr(LocaleKeys.mandal),
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Expanded(
+                                            flex: 0,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      5, 8, 0, 0),
+                                                  child: Text(":",
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 8, 0, 0),
+                                                  child: Text(
+                                                      transportratelist[index]
+                                                          .mandal,
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          0, 8, 0, 0),
+                                                  child: Text(
+                                                      tr(LocaleKeys.rate),
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Expanded(
+                                            flex: 0,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      5, 8, 0, 0),
+                                                  child: Text(":",
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 8, 0, 0),
+                                                  child: Text(
+                                                      transportratelist[index]
+                                                          .rate,
+                                                      style: CommonStyles
+                                                          .txSty_14SB_fb),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // Adjust spacing between entries
+                                    ],
+                                  )));
+                        },
+                      )),
+                if (transportratelist.isEmpty) const SizedBox.shrink(),
+                Container(
+                  width: 90,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFCCCCCC),
+                        Color(0xFFFFFFFF),
+                        Color(0xFFCCCCCC),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(10.0),
+                    border: Border.all(
+                      width: 2.0,
+                      color: const Color(0xFFe86100),
+                    ),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      print('button1clicked');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      tr(LocaleKeys.ok),
+                      style: const TextStyle(
+                        color: Color(0xFFe86100),
+                        fontSize: 12,
+                        fontFamily: 'hind_semibold',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )));
       },
     );
   }
-  Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
+
+  Future<void> exportPayments(
+      List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
-    String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    String url =
+        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
     // List of payment responses
-    List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
+    List<Map<String, dynamic>> paymentResponseMaps =
+        paymentResponse.map((response) => response.toJson()).toList();
 
     // API body data
     Map<String, dynamic> requestBody = {
@@ -1534,7 +1654,6 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     }
   }
 
-
   String sanitizeBase64(String base64String) {
     return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
   }
@@ -1565,7 +1684,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     }
   }
 
-  Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
+  Future<void> convertBase64ToExcel(
+      String base64String, BuildContext context) async {
     String base64String0 = sanitizeBase64(base64String);
     print('_base64String$base64String0');
     // Decode the Base64 String
@@ -1581,7 +1701,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     //     await newFolder.create(recursive: true);
     //     print('Folder created at ${newFolder.path}');
     //   }
-    Directory directoryPath = Directory('/storage/emulated/0/Download/3F_Akshaya');
+    Directory directoryPath =
+        Directory('/storage/emulated/0/Download/3F_Akshaya');
     if (!directoryPath.existsSync()) {
       directoryPath.createSync(recursive: true);
     }
@@ -1647,7 +1768,6 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     });
   }
 
-
   bool datevalidation() {
     bool isValid = true;
     if (fromDate == null || toDate == null) {
@@ -1671,8 +1791,12 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
       setState(() {
         fromdatetosendtab2 = strcustomstartdate;
         todatetosendtab2 = strcustomtodate;
-        Provider.of<DataProvider>(context, listen: false)
-            .updateData(fromdatetosendtab2!, todatetosendtab2!, modifiedCode!, _transportRates, _transportationCharges);
+        Provider.of<DataProvider>(context, listen: false).updateData(
+            fromdatetosendtab2!,
+            todatetosendtab2!,
+            modifiedCode!,
+            _transportRates,
+            _transportationCharges);
         transportlistapi(fromDate!, toDate!, modifiedCode!);
         paymentlistapi(fromDate!, toDate!, modifiedCode!);
       });
@@ -1690,7 +1814,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     return isValid;
   }
 
-  Future<void> _selectDate(BuildContext context, TextEditingController controller) async {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
     DateTime initialDate = DateTime.now(); // Default value
 
     if (controller == fromDateController && fromDate != null) {
@@ -1717,7 +1842,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
               1,
             );
             fromDate = dateWithoutTime;
-            fromFormattedDate = DateFormat('dd/MM/yyyy').format(dateWithoutTime);
+            fromFormattedDate =
+                DateFormat('dd/MM/yyyy').format(dateWithoutTime);
             controller.text = fromFormattedDate;
           } else if (controller == toDateController) {
             // Set the date to the last day of the selected month
@@ -1871,7 +1997,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
   //     print('Error: $e');
   //   }
   // }
-  void paymentlistapi(DateTime fromDate, DateTime toDate, String farmervendorCode) async {
+  void paymentlistapi(
+      DateTime fromDate, DateTime toDate, String farmervendorCode) async {
     final url = Uri.parse(baseUrl + getvendordata);
     print('url==>555: $url');
     setState(() {
@@ -1907,8 +2034,11 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
 
           // Parsing paymentResponse list
           if (result.containsKey('paymentResponce')) {
-            List<PaymentResponse> paymentresponse = (result['paymentResponce'] as List).map((item) => PaymentResponse.fromJson(item)).toList();
-            totalBalance = responseData['result']['totalBalance']??0.0;
+            List<PaymentResponse> paymentresponse =
+                (result['paymentResponce'] as List)
+                    .map((item) => PaymentResponse.fromJson(item))
+                    .toList();
+            totalBalance = responseData['result']['totalBalance'] ?? 0.0;
             totalQuanitity = responseData['result']['totalQuanitity'];
             totalGRAmount = responseData['result']['totalGRAmount'];
             totalAdjusted = responseData['result']['totalAdjusted'];
@@ -1942,7 +2072,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
           CommonStyles.hideHorizontalDotsLoadingDialog(context);
         }
       } else {
-        print('Request was not successful. Status code: ${response.statusCode}');
+        print(
+            'Request was not successful. Status code: ${response.statusCode}');
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
       }
     } catch (e) {
@@ -1951,23 +2082,25 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     }
   }
 
-  void transportlistapi(DateTime fromDate, DateTime toDate, String farmervendorCode) async {
-      String url_ = 'http://103.241.144.240:9096/api/Payment/GetTranspotationChargesByFarmerCode';
-   // String url_ = baseUrl + getfarmerreimbursement;
+  void transportlistapi(
+      DateTime fromDate, DateTime toDate, String farmervendorCode) async {
+    String url_ =
+        'http://103.241.144.240:9096/api/Payment/GetTranspotationChargesByFarmerCode';
+    // String url_ = baseUrl + getfarmerreimbursement;
     final url = Uri.parse(url_);
     print('url==>588: $url');
     final String fromFormattedDateApi = formatDateToApi(fromDate);
     final String toFormattedDateApi = formatDateToApi(toDate);
     print('fromFormattedDateApi: $fromFormattedDateApi');
     print('toFormattedDateApi: $toFormattedDateApi');
-      setState(() {
-        CommonStyles.showHorizontalDotsLoadingDialog(context);
-      });
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
     final request = {
       "fromDate": toFormattedDateApi,
       "toDate": fromFormattedDateApi,
 
-       "vendorCode": 'APWGCGCK00080012',
+      "vendorCode": 'APWGCGCK00080012',
       //"vendorCode": '$farmervendorCode',
     };
     print('request of the 30 days: $request');
@@ -2056,7 +2189,8 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
         setState(() {
           CommonStyles.hideHorizontalDotsLoadingDialog(context);
         });
-        print('Request was not successful. Status code: ${response.statusCode}');
+        print(
+            'Request was not successful. Status code: ${response.statusCode}');
       }
     } catch (e) {
       setState(() {
@@ -2066,8 +2200,6 @@ class _farmer_passbook_2 extends State<farmer_passbook_2> with SingleTickerProvi
     }
   }
 }
-
-
 
 class farmer_passbook extends StatefulWidget {
   // final String FarmerTransportfromdate;
@@ -2095,7 +2227,8 @@ class farmer_passbook extends StatefulWidget {
   final double totalQuanitity;
 
   const farmer_passbook(
-      {super.key, required this.payemntlistresp,
+      {super.key,
+      required this.payemntlistresp,
       required this.totalffbcollections,
       required this.closingbalance,
       required this.accountHolderName,
@@ -2132,902 +2265,1166 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: MediaQuery.of(context).size.height,
-      color: Colors.white,
-      child:Column(
-        children: [
-          IntrinsicHeight(
-
-            //width: MediaQuery.of(context).size.width,
-            child: Container(
-                decoration: BoxDecoration(
-                  // color:  Color(0xFFe86100),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 12.0, right: 12.0, top: 12.0),
-                  child: Container(
-                    //  height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: const Color(0x8D000000),
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    child: Column(children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 7, 12, 0),
-                                  child: Text(
-                                    tr(LocaleKeys.ffb_qty),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
-                                  child: Text(
-                                    ":",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                                  child: Text(
-                                    '${widget.totalffbcollections ?? 0.0}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(8, 6, 12, 8),
-                                  child: Text(
-                                    tr(LocaleKeys.totalBalance),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                  child: Text(
-                                    ":",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                                  child: Text(
-                                    '${widget.closingbalance ?? 0.0}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'hind_semibold',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ]),
+        //height: MediaQuery.of(context).size.height,
+        color: Colors.white,
+        child: Column(
+          children: [
+            IntrinsicHeight(
+              //width: MediaQuery.of(context).size.width,
+              child: Container(
+                  decoration: BoxDecoration(
+                    // color:  Color(0xFFe86100),
+                    borderRadius: BorderRadius.circular(6.0),
                   ),
-                )),),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 12.0, right: 12.0, top: 12.0),
+                    child: Container(
+                      //  height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: const Color(0x8D000000),
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      child: Column(children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 7, 12, 0),
+                                    child: Text(
+                                      tr(LocaleKeys.ffb_qty),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                    child: Text(
+                                      ":",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                    child: Text(
+                                      '${widget.totalffbcollections ?? 0.0}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 6, 12, 8),
+                                    child: Text(
+                                      tr(LocaleKeys.totalBalance),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                    child: Text(
+                                      ":",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 4,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 8),
+                                    child: Text(
+                                      '${widget.closingbalance ?? 0.0}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ]),
+                    ),
+                  )),
+            ),
+            Expanded(
+              //  height: MediaQuery.of(context).size.height / 2.5,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: widget.payemntlistresp.length,
+                itemBuilder: (context, index) {
+                  //     BranchModel branch = brancheslist[index]; // Get the branch at the current index
+                  //    DateTime dateTime = DateTime.parse(paymentDetailsResponse_list[index].refDate as String);
 
-          Expanded(
-            //  height: MediaQuery.of(context).size.height / 2.5,
-            child:
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.payemntlistresp.length,
-              itemBuilder: (context, index) {
-                //     BranchModel branch = brancheslist[index]; // Get the branch at the current index
-                //    DateTime dateTime = DateTime.parse(paymentDetailsResponse_list[index].refDate as String);
+                  // Format the date to dd/MM/yyyy
+                  String formattedDate = DateFormat('dd/MM/yyyy')
+                      .format(widget.payemntlistresp[index].refDate);
+                  if (widget.payemntlistresp.isNotEmpty) {
+                    return Padding(
+                        //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: IntrinsicHeight(
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Card(
+                                  //elevation: 8,
+                                  color: index.isEven
+                                      ? const Color(0xfffaf5f5f5)
+                                      : const Color(0xFFDFDFDF),
+                                  // #FAF5F5F5
+                                  // #DFDFDF
 
-                // Format the date to dd/MM/yyyy
-                String formattedDate = DateFormat('dd/MM/yyyy').format(widget.payemntlistresp[index].refDate);
-                if (widget.payemntlistresp.isNotEmpty) {
-                  return Padding(
-                    //  padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: IntrinsicHeight(
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Card(
-                                //elevation: 8,
-                                color: index.isEven ?const Color(0xfffaf5f5f5) : const Color(0xFFDFDFDF),
-                                // #FAF5F5F5
-                                // #DFDFDF
+                                  surfaceTintColor: Colors.transparent,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    //surfaceTintColor : Colors.red,
 
-                                surfaceTintColor: Colors.transparent,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  //surfaceTintColor : Colors.red,
-
-                                  child: Container(
-
-                                    padding: const EdgeInsets.only(left: 0, right: 5,bottom: 7),
-
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Row(
-                                              children: [
-                                                Center(
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Container(
-                                                        //  margin: EdgeInsets.only(right: 10.0, left: 10),
-                                                        child: ClipRRect(
-                                                          borderRadius: BorderRadius.circular(7.0),
-                                                          child: Image.asset( Assets.images.icCalender.path,
-                                                            //  color: CommonStyles.primaryTextColor,
-                                                            height: 25,
-                                                            width: 25,
+                                    child: Container(
+                                      padding: const EdgeInsets.only(
+                                          left: 0, right: 5, bottom: 7),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Row(
+                                                children: [
+                                                  Center(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Container(
+                                                          //  margin: EdgeInsets.only(right: 10.0, left: 10),
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        7.0),
+                                                            child: Image.asset(
+                                                              Assets
+                                                                  .images
+                                                                  .icCalender
+                                                                  .path,
+                                                              //  color: CommonStyles.primaryTextColor,
+                                                              height: 25,
+                                                              width: 25,
+                                                            ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      const SizedBox(height: 2.0),
-                                                      // Add some spacing between the image and text
-                                                      Text(
-                                                        formattedDate,
-                                                        style: const TextStyle(
-                                                          color: Colors.grey,
+                                                        const SizedBox(
+                                                            height: 2.0),
+                                                        // Add some spacing between the image and text
+                                                        Text(
+                                                          formattedDate,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.grey,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.center,
                                                         ),
-                                                        textAlign: TextAlign.center,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 5.0),
-                                                Container(
-                                                  width: 2.0,
-                                                  padding: const EdgeInsets.all(5),
-                                                  // height: MediaQuery.of(context).size.height,
-                                                  //  padding: EdgeInsets.only(top: 10, bottom: 10),
-                                                  decoration: const BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        Color(0xFFFF4500),
-                                                        Color(0xFFA678EF),
-                                                        Color(0xFFFF4500),
                                                       ],
-                                                      end: Alignment.topRight,
                                                     ),
                                                   ),
-                                                )
-                                              ],
-                                            )),
-                                        Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(left: 0.0),
-                                              child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Column(
-                                                        children: [
-                                                          widget.payemntlistresp[index].amount != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.amount),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].amount.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].adjusted != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.adjusted),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].grAmount != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.gr),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].quantity != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.ffb),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].adhocRate != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.adhoc_rate),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          widget.payemntlistresp[index].invoiceRate != 0
-                                                              ? Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.invoice_rate),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? '',
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                              : const SizedBox.shrink(),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 0),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.descriptionn),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].memo,
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),const SizedBox(height: 3,),
-                                                          // widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
-                                                          //     ?
-                                                              Container(
-                                                                padding: const EdgeInsets.only(right: 8),
-                                                                  decoration: BoxDecoration(
-                                                                    //color: Colors.white, // Background color
-                                                                    border: Border.all(
-                                                                      color: Colors.white, // Border color
-                                                                      width: 1.0, // Border width
-                                                                    ),
-                                                                    borderRadius: const BorderRadius.all(Radius.circular(8))
-                                                                  ),
-                                                                  child:
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 12, 8),
-                                                                      child: Text(
-                                                                        tr(LocaleKeys.balance),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              const Expanded(
-                                                                flex: 1,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: EdgeInsets.fromLTRB(5, 5, 0, 8),
-                                                                      child: Text(
-                                                                        ":",
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                flex: 8,
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets.fromLTRB(5, 5, 0, 8),
-                                                                      child: Text(
-                                                                        widget.payemntlistresp[index].balance.toStringAsFixed(2),
-                                                                          style:CommonStyles.txSty_14SB_fb
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ))
-                                                             /// : SizedBox.shrink(),
+                                                  const SizedBox(width: 5.0),
+                                                  Container(
+                                                    width: 2.0,
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    // height: MediaQuery.of(context).size.height,
+                                                    //  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        colors: [
+                                                          Color(0xFFFF4500),
+                                                          Color(0xFFA678EF),
+                                                          Color(0xFFFF4500),
                                                         ],
+                                                        end: Alignment.topRight,
                                                       ),
                                                     ),
-                                                  ]),
-                                            ))
-                                      ],
+                                                  )
+                                                ],
+                                              )),
+                                          Expanded(
+                                              child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 0.0),
+                                            child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Column(
+                                                      children: [
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .amount !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.amount),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].amount.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .adjusted !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.adjusted),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].adjusted.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .grAmount !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.gr),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].grAmount.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .quantity !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.ffb),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].quantity.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .adhocRate !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.adhoc_rate),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].adhocRate.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        widget
+                                                                    .payemntlistresp[
+                                                                        index]
+                                                                    .invoiceRate !=
+                                                                0
+                                                            ? Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              5,
+                                                                              5,
+                                                                              12,
+                                                                              0),
+                                                                          child: Text(
+                                                                              tr(LocaleKeys.invoice_rate),
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  const Expanded(
+                                                                    flex: 1,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: EdgeInsets.fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              ":",
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child:
+                                                                        Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .fromLTRB(
+                                                                              0,
+                                                                              5,
+                                                                              0,
+                                                                              0),
+                                                                          child: Text(
+                                                                              widget.payemntlistresp[index].invoiceRate.toStringAsFixed(2) ?? '',
+                                                                              style: CommonStyles.txSty_14SB_fb),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              )
+                                                            : const SizedBox
+                                                                .shrink(),
+                                                        Row(
+                                                          children: [
+                                                            Expanded(
+                                                              flex: 8,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .fromLTRB(
+                                                                            5,
+                                                                            5,
+                                                                            12,
+                                                                            0),
+                                                                    child: Text(
+                                                                        tr(LocaleKeys
+                                                                            .descriptionn),
+                                                                        style: CommonStyles
+                                                                            .txSty_14SB_fb),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const Expanded(
+                                                              flex: 1,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .fromLTRB(
+                                                                            0,
+                                                                            5,
+                                                                            0,
+                                                                            0),
+                                                                    child: Text(
+                                                                        ":",
+                                                                        style: CommonStyles
+                                                                            .txSty_14SB_fb),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              flex: 8,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .fromLTRB(
+                                                                            0,
+                                                                            5,
+                                                                            0,
+                                                                            0),
+                                                                    child: Text(
+                                                                        widget
+                                                                            .payemntlistresp[
+                                                                                index]
+                                                                            .memo,
+                                                                        style: CommonStyles
+                                                                            .txSty_14SB_fb),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 3,
+                                                        ),
+                                                        // widget.payemntlistresp[index].balance != null && widget.payemntlistresp[index].balance != 0
+                                                        //     ?
+                                                        Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    right: 8),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    //color: Colors.white, // Background color
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: Colors
+                                                                          .white, // Border color
+                                                                      width:
+                                                                          1.0, // Border width
+                                                                    ),
+                                                                    borderRadius:
+                                                                        const BorderRadius
+                                                                            .all(
+                                                                            Radius.circular(8))),
+                                                            child: Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  flex: 8,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                            5,
+                                                                            5,
+                                                                            12,
+                                                                            8),
+                                                                        child: Text(
+                                                                            tr(LocaleKeys
+                                                                                .balance),
+                                                                            style:
+                                                                                CommonStyles.txSty_14SB_fb),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                const Expanded(
+                                                                  flex: 1,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: EdgeInsets.fromLTRB(
+                                                                            5,
+                                                                            5,
+                                                                            0,
+                                                                            8),
+                                                                        child: Text(
+                                                                            ":",
+                                                                            style:
+                                                                                CommonStyles.txSty_14SB_fb),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 8,
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .fromLTRB(
+                                                                            5,
+                                                                            5,
+                                                                            0,
+                                                                            8),
+                                                                        child: Text(
+                                                                            widget.payemntlistresp[index].balance.toStringAsFixed(
+                                                                                2),
+                                                                            style:
+                                                                                CommonStyles.txSty_14SB_fb),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ))
+
+                                                        /// : SizedBox.shrink(),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ))
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )),
-                      ));
-                } else {
-                  return const Center(child: Text('No Farmer Passbook available'));
-                }
-              },
+                              )),
+                        ));
+                  } else {
+                    return const Center(
+                        child: Text('No Farmer Passbook available'));
+                  }
+                },
+              ),
             ),
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  // height: 200,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        ///  padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, bottom: 0),
 
-
-                // height: 200,
-                child:   Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      ///  padding: EdgeInsets.all(10),
-                      padding: const EdgeInsets.only(left: 10,right:10,bottom: 0),
-
-                      child:  Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              //  width: 175,
-                              height: 75,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFCCCCCC),
-                                    Color(0xFFFFFFFF),
-                                    Color(0xFFCCCCCC),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                  width: 2.0,
-                                  color: const Color(0xFFe86100),
-                                ),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  print('button1clicked');
-                                  _openFile();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                //  width: 175,
+                                height: 75,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFCCCCCC),
+                                      Color(0xFFFFFFFF),
+                                      Color(0xFFCCCCCC),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                    width: 2.0,
+                                    color: const Color(0xFFe86100),
                                   ),
                                 ),
-                                child: Text(
-                                  tr(LocaleKeys.download),
-                                  style: const TextStyle(
-                                    color: Color(0xFFe86100),
-                                    fontSize: 12,
-                                    fontFamily: 'hind_semibold',
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    print('button1clicked');
+                                    _openFile();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8.0),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 75,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFCCCCCC),
-                                    Color(0xFFFFFFFF),
-                                    Color(0xFFCCCCCC),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                                border: Border.all(
-                                  width: 2.0,
-                                  color: const Color(0xFFe86100),
-                                ),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  print('button2clicked');
-                                  exportPayments(widget.payemntlistresp, context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
                                   child: Text(
-                                    tr(LocaleKeys.click_downlad),
+                                    tr(LocaleKeys.download),
                                     style: const TextStyle(
                                       color: Color(0xFFe86100),
                                       fontSize: 12,
                                       fontFamily: 'hind_semibold',
                                     ),
-                                    maxLines: 1,
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 0.0),
-                    Container(
-                      padding: const EdgeInsets.only(left: 8,right:8,bottom: 0,),
-
-                      /// flex: 1,
-                      width: MediaQuery.of(context).size.width,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: const BorderSide(
-                            color: Color(0xFFBE9747), // Border color
-                          ),
-                        ),
-                        color: const Color(0xFFFFFACB),
-                        // Background color
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(    padding: const EdgeInsets.only(left: 10,right:4,bottom: 0,top: 4),
-
-                              child: Text(
-                                tr(LocaleKeys.notee),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  fontFamily: "hind_semibold",
-                                  color: Color(0xFFe86100), // Color for "Note: \n"
+                            const SizedBox(width: 8.0),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 75,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFFCCCCCC),
+                                      Color(0xFFFFFFFF),
+                                      Color(0xFFCCCCCC),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border: Border.all(
+                                    width: 2.0,
+                                    color: const Color(0xFFe86100),
+                                  ),
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    print('button2clicked');
+                                    exportPayments(
+                                        widget.payemntlistresp, context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      tr(LocaleKeys.click_downlad),
+                                      style: const TextStyle(
+                                        color: Color(0xFFe86100),
+                                        fontSize: 12,
+                                        fontFamily: 'hind_semibold',
+                                      ),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                            Padding(padding:  const EdgeInsets.only(left: 10,right:4,bottom: 4) ,child:Text( tr(LocaleKeys.paymentnote_note),
-                              // style: TextStyle(
-                              //   fontSize: 14,
-                              //   fontWeight: FontWeight.normal,
-                              //   color: Colors.black, // Color for the rest of the text
-                              // ),
-                              style: CommonStyles.txSty_14b_f5,),)
-                            // Text( tr(LocaleKeys.paymentnote_note),
-                            //   // style: TextStyle(
-                            //   //   fontSize: 14,
-                            //   //   fontWeight: FontWeight.normal,
-                            //   //   color: Colors.black, // Color for the rest of the text
-                            //   // ),
-                            //   style: CommonStyles.txSty_14b_f5,),
-                            // ListTile(
-                            //   title: RichText(
-                            //     text: TextSpan(
-                            //       text: tr(LocaleKeys.notee),
-                            //       style: TextStyle(
-                            //         fontSize: 14,
-                            //         fontWeight: FontWeight.normal,
-                            //         fontFamily: "hind_semibold",
-                            //         color: Color(0xFFe86100), // Color for "Note: \n"
-                            //       ),
-                            //       children: [
-                            //         TextSpan(
-                            //           text:
-                            //           tr(LocaleKeys.paymentnote_note),
-                            //           // style: TextStyle(
-                            //           //   fontSize: 14,
-                            //           //   fontWeight: FontWeight.normal,
-                            //           //   color: Colors.black, // Color for the rest of the text
-                            //           // ),
-                            //           style: CommonStyles.txSty_14b_f5,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),))
-        ],
-      )
+                      const SizedBox(height: 0.0),
+                      Container(
+                        padding: const EdgeInsets.only(
+                          left: 8,
+                          right: 8,
+                          bottom: 0,
+                        ),
 
-
-    );
+                        /// flex: 1,
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: const BorderSide(
+                              color: Color(0xFFBE9747), // Border color
+                            ),
+                          ),
+                          color: const Color(0xFFFFFACB),
+                          // Background color
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 4, bottom: 0, top: 4),
+                                child: Text(
+                                  tr(LocaleKeys.notee),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                    fontFamily: "hind_semibold",
+                                    color: Color(
+                                        0xFFe86100), // Color for "Note: \n"
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 4, bottom: 4),
+                                child: Text(
+                                  tr(LocaleKeys.paymentnote_note),
+                                  // style: TextStyle(
+                                  //   fontSize: 14,
+                                  //   fontWeight: FontWeight.normal,
+                                  //   color: Colors.black, // Color for the rest of the text
+                                  // ),
+                                  style: CommonStyles.txSty_14b_f5,
+                                ),
+                              )
+                              // Text( tr(LocaleKeys.paymentnote_note),
+                              //   // style: TextStyle(
+                              //   //   fontSize: 14,
+                              //   //   fontWeight: FontWeight.normal,
+                              //   //   color: Colors.black, // Color for the rest of the text
+                              //   // ),
+                              //   style: CommonStyles.txSty_14b_f5,),
+                              // ListTile(
+                              //   title: RichText(
+                              //     text: TextSpan(
+                              //       text: tr(LocaleKeys.notee),
+                              //       style: TextStyle(
+                              //         fontSize: 14,
+                              //         fontWeight: FontWeight.normal,
+                              //         fontFamily: "hind_semibold",
+                              //         color: Color(0xFFe86100), // Color for "Note: \n"
+                              //       ),
+                              //       children: [
+                              //         TextSpan(
+                              //           text:
+                              //           tr(LocaleKeys.paymentnote_note),
+                              //           // style: TextStyle(
+                              //           //   fontSize: 14,
+                              //           //   fontWeight: FontWeight.normal,
+                              //           //   color: Colors.black, // Color for the rest of the text
+                              //           // ),
+                              //           style: CommonStyles.txSty_14b_f5,
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+          ],
+        ));
   }
+
   void _openFile() {
     if (_localFilePath != null) {
       OpenFilex.open(_localFilePath!);
@@ -3095,14 +3492,17 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   //     print('Error: $e');
   //   }
   // }
-  Future<void> exportPayments(List<PaymentResponse> paymentResponse, BuildContext context) async {
+  Future<void> exportPayments(
+      List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
-    String url = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    String url =
+        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
     // List of payment responses
-    List<Map<String, dynamic>> paymentResponseMaps = paymentResponse.map((response) => response.toJson()).toList();
+    List<Map<String, dynamic>> paymentResponseMaps =
+        paymentResponse.map((response) => response.toJson()).toList();
 
     // API body data
     Map<String, dynamic> requestBody = {
@@ -3154,7 +3554,6 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
             });
           });
         }
-
       } else {
         if (mounted) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -3179,7 +3578,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
     }
   }
 
- Future<void> convertBase64ToExcel(String base64String, BuildContext context) async {
+  Future<void> convertBase64ToExcel(
+      String base64String, BuildContext context) async {
     String base64String0 = sanitizeBase64(base64String);
     print('_base64String$base64String0');
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -3193,7 +3593,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
       // Apply different logic based on the Android version
       if (sdkInt <= 28) {
         // Android 9 (Pie) and below
-        directoryPath = Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
+        directoryPath =
+            Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
       } else {
         // Android 10 (Q) and above
         directoryPath = (await getExternalStorageDirectory())!;
@@ -3216,27 +3617,19 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
       if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            _localFilePath=  file.path;
+            _localFilePath = file.path;
             Fluttertoast.showToast(
                 msg: "Downloaded Successfully",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
                 textColor: Colors.white,
-                fontSize: 16.0
-            );
-
-          }
-          );
+                fontSize: 16.0);
+          });
         });
       }
-
-    }}
-
-
-
-
-
+    }
+  }
 
   Future<void> openFile(String filePath) async {
     final url = Uri.file(filePath).toString();
@@ -3246,6 +3639,7 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
       print('Could not open the file');
     }
   }
+
   String sanitizeBase64(String base64String) {
     return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
   }

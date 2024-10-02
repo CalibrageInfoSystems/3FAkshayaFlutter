@@ -21,6 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: appBarColor,
+      scrolledUnderElevation: 0,
       leading: GestureDetector(
         onTap: () {
           Navigator.pop(context);

@@ -110,6 +110,7 @@ class _My3fScreenState extends State<My3fScreen> {
       automaticallyImplyLeading: false,
       backgroundColor: CommonStyles.tabBarColor,
       elevation: 0,
+      scrolledUnderElevation: 0,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: TabBar(

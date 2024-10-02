@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_biolab_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_edibleoil_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_equipment_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_fertilizer_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_labour_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_loan_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_quickpay_requests.dart';
-import 'package:akshaya_flutter/screens/requests_screen.dart/screens/view_visit_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_biolab_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_edibleoil_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_equipment_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_fertilizer_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_labour_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_loan_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_quickpay_requests.dart';
+import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_visit_requests.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';

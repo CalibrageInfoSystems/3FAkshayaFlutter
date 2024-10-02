@@ -307,7 +307,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: summary);
       },
     );
   }

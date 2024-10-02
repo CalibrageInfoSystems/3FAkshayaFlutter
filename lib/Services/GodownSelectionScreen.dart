@@ -2,20 +2,21 @@
 
 import 'dart:convert';
 
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
 import 'package:akshaya_flutter/Services/select_products_screen.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../common_utils/api_config.dart';
 import '../common_utils/common_styles.dart';
 import '../gen/assets.gen.dart';
 import '../localization/locale_keys.dart';
-import 'SelectEquipProductsScreen.dart';
-import 'SelectbioProductsScreen.dart';
-import 'SelectedibleProductsScreen.dart';
-import 'models/Godowndata.dart';
+import 'package:akshaya_flutter/Services/SelectEquipProductsScreen.dart';
+import 'package:akshaya_flutter/Services/SelectbioProductsScreen.dart';
+import 'package:akshaya_flutter/Services/SelectedibleProductsScreen.dart';
 import 'package:http/http.dart' as http;
 
 class GodownSelectionScreen extends StatefulWidget {
@@ -35,14 +36,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
   @override
   void initState() {
     super.initState();
-    // Don't use context or localization here, defer it to didChangeDependencies or build.
     _fetchGodowndata();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // You can safely use context and localization here if needed.
   }
 
   @override
@@ -85,11 +79,7 @@ class GodownSelection extends State<GodownSelectionScreen> {
       print('stateCode -==$stateCode');
     });
     setState(() {
-      isLoading = true; // Start loading
-      // Show the horizontal dots loading dialog after button click
-      // Future.delayed(Duration.zero, () {
-      //   CommonStyles.showHorizontalDotsLoadingDialog(context);
-      // });
+      isLoading = true;
     });
 
     //Show loading dialog
@@ -108,21 +98,17 @@ class GodownSelection extends State<GodownSelectionScreen> {
         setState(() {
           godowndata =
               listResult.map((json) => Godowndata.fromJson(json)).toList();
-          // CommonStyles.hideHorizontalDotsLoadingDialog(context);
-          isLoading = false; // Stop loading after data is fetched
+          isLoading = false;
         });
       } else {
         throw Exception('Failed to load locations');
       }
     } catch (e) {
       setState(() {
-        // CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        isLoading = false; // Stop loading if there’s an error
+        isLoading = false;
       });
-      // Handle error (e.g., show a message)
       print(e);
     } finally {
-      // Dismiss the loading dialog
       Navigator.pop(context);
     }
   }
@@ -264,7 +250,7 @@ class GoDownsCard extends StatelessWidget {
                   style: CommonStyles.txStyF14CbFF6
                       .copyWith(color: CommonStyles.blackColorShade)),
               Expanded(
-                flex: 6,
+                flex: 7,
                 child: Text('$data',
                     style: CommonStyles.txStyF14CbFF6
                         .copyWith(color: CommonStyles.blackColorShade),

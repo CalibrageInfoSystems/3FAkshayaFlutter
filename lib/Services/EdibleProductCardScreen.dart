@@ -1,7 +1,12 @@
-import '../models/farmer_model.dart';
+// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/services/models/Godowndata.dart';
+
+import 'package:akshaya_flutter/Services/models/MsgModel.dart';
+import 'package:akshaya_flutter/Services/models/RequestProductDetails.dart';
+import 'package:akshaya_flutter/Services/models/SubsidyResponse.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
 
 import 'SelectedibleProductsScreen.dart';
-import 'models/Godowndata.dart';
 
 import 'dart:convert';
 
@@ -19,10 +24,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../common_utils/SuccessDialog.dart';
 import '../common_utils/api_config.dart';
 import '../common_utils/shared_prefs_keys.dart';
-import 'models/MsgModel.dart';
-
-import 'models/RequestProductDetails.dart';
-import 'models/SubsidyResponse.dart';
 
 class EdibleProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
@@ -730,7 +731,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, summary: summary);
+        return SuccessDialog(msg: msg, title: summary);
       },
     );
   }

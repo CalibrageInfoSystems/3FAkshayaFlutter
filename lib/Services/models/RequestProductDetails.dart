@@ -1,34 +1,46 @@
 class RequestProductDetails {
-  final int productId;
-  final int quantity;
-  final double bagCost;
+  final int? productId;
+  final int? quantity;
+  final double? bagCost;
   final double? size;
-  final double ?gstPersentage;
-  final String productCode;
+  final double? gstPersentage;
+  final String? productCode;
   final double? transGstPercentage;
   final double? transportCost;
 
   RequestProductDetails({
-    required this.productId,
-    required this.quantity,
-    required this.bagCost,
-    required this.size,
-    required this.gstPersentage,
-    required this.productCode,
-    required this.transGstPercentage,
-    required this.transportCost,
+    this.productId,
+    this.quantity,
+    this.bagCost,
+    this.size,
+    this.gstPersentage,
+    this.productCode,
+    this.transGstPercentage,
+    this.transportCost,
   });
 
   Map<String, dynamic> toJson() => {
-    'productId': productId,
-    'quantity': quantity,
-    'bagCost': bagCost,
-    'size': size,
-    'gstPersentage': gstPersentage,
-    'productCode': productCode,
-    'transGstPercentage': transGstPercentage,
-    'transportCost': transportCost,
-  };
+        'productId': productId,
+        'quantity': quantity,
+        'bagCost': bagCost,
+        'size': size,
+        'gstPersentage': gstPersentage,
+        'productCode': productCode,
+        'transGstPercentage': transGstPercentage,
+        'transportCost': transportCost,
+      };
+
+  factory RequestProductDetails.fromJson(Map<String, dynamic> json) =>
+      RequestProductDetails(
+        productId: json["productId"],
+        quantity: json["quantity"],
+        bagCost: json["bagCost"]?.toDouble(),
+        size: json["size"]?.toDouble(),
+        gstPersentage: json["gstPersentage"]?.toDouble(),
+        productCode: json["productCode"],
+        transGstPercentage: json["transGstPercentage"]?.toDouble(),
+        transportCost: json["transportCost"]?.toDouble(),
+      );
 }
 
 class FertilizerRequest {
@@ -94,38 +106,36 @@ class FertilizerRequest {
     required this.stateName,
   });
 
-
-
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'requestTypeId': requestTypeId,
-    'farmerCode': farmerCode,
-    'farmerName': farmerName,
-    'plotCode': plotCode,
-    'requestCreatedDate': requestCreatedDate,
-    'isFarmerRequest': isFarmerRequest,
-    'createdByUserId': createdByUserId,
-    'createdDate': createdDate,
-    'updatedByUserId': updatedByUserId,
-    'updatedDate': updatedDate,
-    'godownId': godownId,
-    'paymentModeType': paymentModeType,
-    'isImmediatePayment': isImmediatePayment,
-    'fileName': fileName,
-    'fileLocation': fileLocation,
-    'fileExtension': fileExtension,
-    'totalCost': totalCost,
-    'subcidyAmount': subcidyAmount,
-    'paybleAmount': paybleAmount,
-    'transportPayableAmount': transportPayableAmount,
-    'comments': comments,
-    'cropMaintainceDate': cropMaintainceDate,
-    'issueTypeId': issueTypeId,
-    'godownCode': godownCode,
-    'requestProductDetails':
-    requestProductDetails.map((e) => e.toJson()).toList(),
-    'clusterId': clusterId,
-    'stateCode': stateCode,
-    'stateName': stateName,
-  };
+        'id': id,
+        'requestTypeId': requestTypeId,
+        'farmerCode': farmerCode,
+        'farmerName': farmerName,
+        'plotCode': plotCode,
+        'requestCreatedDate': requestCreatedDate,
+        'isFarmerRequest': isFarmerRequest,
+        'createdByUserId': createdByUserId,
+        'createdDate': createdDate,
+        'updatedByUserId': updatedByUserId,
+        'updatedDate': updatedDate,
+        'godownId': godownId,
+        'paymentModeType': paymentModeType,
+        'isImmediatePayment': isImmediatePayment,
+        'fileName': fileName,
+        'fileLocation': fileLocation,
+        'fileExtension': fileExtension,
+        'totalCost': totalCost,
+        'subcidyAmount': subcidyAmount,
+        'paybleAmount': paybleAmount,
+        'transportPayableAmount': transportPayableAmount,
+        'comments': comments,
+        'cropMaintainceDate': cropMaintainceDate,
+        'issueTypeId': issueTypeId,
+        'godownCode': godownCode,
+        'requestProductDetails':
+            requestProductDetails.map((e) => e.toJson()).toList(),
+        'clusterId': clusterId,
+        'stateCode': stateCode,
+        'stateName': stateName,
+      };
 }

@@ -54,7 +54,7 @@ class CustomBtn extends StatelessWidget {
                 fontSize: 14,
                 fontFamily: FontFamily.hind,
                 fontWeight: FontWeight.w600,
-                color: CommonStyles.primaryTextColor2,
+                color: CommonStyles.primaryTextColor,
               ),
         ),
       ),

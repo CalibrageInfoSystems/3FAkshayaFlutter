@@ -122,6 +122,7 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                   child: Image.asset(Assets.images.icLeft.path),
                 ),
                 elevation: 0,
+                scrolledUnderElevation: 0,
                 title: Text(
                   widget.appBarTitle,
                   style: CommonStyles.txSty_14black_f5.copyWith(
