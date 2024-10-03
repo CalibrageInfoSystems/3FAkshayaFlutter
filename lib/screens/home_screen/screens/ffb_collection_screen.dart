@@ -86,9 +86,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       'Content-Type': 'application/json',
     });
 
-    print('getCollectionData: $apiUrl');
-    print('getCollectionData: ${json.encode(requestBody)}');
-    print('getCollectionData: ${jsonResponse.body}');
+    print('ffb getCollectionData: $apiUrl');
+    print('ffb getCollectionData: ${json.encode(requestBody)}');
+    print('ffb getCollectionData: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
@@ -547,7 +547,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           onChanged: (String? value) {
             setState(() {
               selectedDropDownValue = value;
-              print('selectedDropDownValue: $selectedDropDownValue');
+              print('ffb selectedDropDownValue: $selectedDropDownValue');
               getCollectionAccordingToDropDownSelection(
                   dropdownItems.indexOf(selectedDropDownValue!));
 

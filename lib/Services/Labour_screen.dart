@@ -60,12 +60,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   bool harvestingCheck = false;
   bool pruningCheck = false;
 
+  Set<int> selectedServiceIds = {}; // Track selected IDs
+  String selectedServiceNames = ''; // Track selected service names
   // List<String>? service_id;
 
   @override
   void initState() {
     super.initState();
     getspinnerdata(widget.plotdata.plotcode!);
+
     fetchLabourRequests();
     _fetchData();
     farmerData = getFarmerInfoFromSharedPrefs();
@@ -203,138 +206,178 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     //MARK: Multi selecter
                     GestureDetector(
                       onTap: () {
-                        CommonStyles.customDialog(
-                            context,
-                            borderRadius: BorderRadius.circular(2),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              padding: const EdgeInsets.all(16),
-                              color: Colors.white,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 13,
-                                      ),
-                                      Text(
-                                        tr(LocaleKeys.multistring),
-                                        style:
-                                            CommonStyles.txStyF16CbFF6.copyWith(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        pruningCheck = !pruningCheck;
-                                      });
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Checkbox(
-                                          value: pruningCheck,
-                                          activeColor:
-                                              CommonStyles.primaryTextColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              pruningCheck = value!;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Text('Pruning (ప్రూనింగ్)',
-                                            style: CommonStyles.txStyF16CbFF6
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w400)),
-                                      ],
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        harvestingCheck = !harvestingCheck;
-                                      });
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Checkbox(
-                                          value: harvestingCheck,
-                                          activeColor:
-                                              CommonStyles.primaryTextColor,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              harvestingCheck = value!;
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Text(
-                                          'Harvesting (గెలల కోత)',
-                                          // 'Harvesting (data)',
-                                          style: CommonStyles.txStyF16CbFF6
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w400),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Spacer(),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.transparent,
-                                          shadowColor: Colors.transparent,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3.0, horizontal: 10.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'CANCEL',
-                                          style: TextStyle(
-                                              color: CommonStyles
-                                                  .primaryTextColor),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          print(
-                                              'Submitted: pruningCheck: $pruningCheck, harvestingCheck: $harvestingCheck');
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white,
-                                          shadowColor: Colors.transparent,
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3.0, horizontal: 10.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          'SUBMIT',
-                                          style: TextStyle(
-                                              color: CommonStyles
-                                                  .primaryTextColor),
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
+                        // Open dialog when the container is tapped
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2),
                               ),
-                            ));
+                              child: StatefulBuilder(
+                                builder: (BuildContext context,
+                                    StateSetter setDialogState) {
+                                  return Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    padding: const EdgeInsets.all(16),
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const SizedBox(width: 13),
+                                            Text(
+                                              tr(LocaleKeys.multistring),
+                                              style: CommonStyles.txStyF16CbFF6
+                                                  .copyWith(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        ...ServiceType_list.map((service) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setDialogState(() {
+                                                if (selectedServiceIds.contains(
+                                                    service.typeCdId)) {
+                                                  selectedServiceIds
+                                                      .remove(service.typeCdId);
+                                                } else {
+                                                  selectedServiceIds
+                                                      .add(service.typeCdId!);
+                                                }
+                                              });
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Checkbox(
+                                                  value: selectedServiceIds
+                                                      .contains(
+                                                          service.typeCdId),
+                                                  activeColor: CommonStyles
+                                                      .primaryTextColor,
+                                                  onChanged: (value) {
+                                                    setDialogState(() {
+                                                      if (value == true) {
+                                                        selectedServiceIds.add(
+                                                            service.typeCdId!);
+                                                      } else {
+                                                        selectedServiceIds
+                                                            .remove(service
+                                                                .typeCdId);
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Text(
+                                                  '${service.desc} ', // Assuming service has 'name' and 'localName'
+                                                  style: CommonStyles
+                                                      .txStyF16CbFF6
+                                                      .copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                        Row(
+                                          children: [
+                                            const Spacer(),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3.0,
+                                                        horizontal: 10.0),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'CANCEL',
+                                                style: TextStyle(
+                                                  color: CommonStyles
+                                                      .primaryTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                // Get the selected service names
+                                                List<String?> selectedNames =
+                                                    ServiceType_list.where((service) =>
+                                                            selectedServiceIds
+                                                                .contains(service
+                                                                    .typeCdId!))
+                                                        .map((service) =>
+                                                            service.desc)
+                                                        .toList();
+
+                                                // Update the state to display selected names
+                                                setState(() {
+                                                  selectedServiceNames =
+                                                      selectedNames.join(', ');
+
+                                                  // Check if pruning is selected and set pruningCheck to true
+                                                  pruningCheck =
+                                                      selectedServiceNames.contains(
+                                                          'Pruning (ప్రూనింగ్)');
+
+                                                  // Check if harvesting is selected and set harvestingCheck to true
+                                                  harvestingCheck =
+                                                      selectedServiceNames.contains(
+                                                          'Harvesting (గెలల కోత)');
+                                                  print(
+                                                      '=========>$pruningCheck  =====$harvestingCheck');
+                                                });
+
+                                                Navigator.pop(
+                                                    context); // Close the dialog
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.white,
+                                                shadowColor: Colors.transparent,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3.0,
+                                                        horizontal: 10.0),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'SUBMIT',
+                                                style: TextStyle(
+                                                  color: CommonStyles
+                                                      .primaryTextColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
                       },
                       child: Container(
                         height: 48,
@@ -346,66 +389,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           borderRadius: BorderRadius.circular(8.0),
                           color: Colors.transparent,
                         ),
-                        child: const Text(
-                          'Tap to select',
+                        // Display the selected options or placeholder text
+                        child: Text(
+                          selectedServiceNames.isNotEmpty
+                              ? selectedServiceNames
+                              : 'Tap to select', // Placeholder when no service selected
                           style: CommonStyles.txStyF14CwFF6,
                         ),
                       ),
                     ),
-                    /* 
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width,
-                                        child: MultiSelectDialogField(
-                                          listType: MultiSelectListType.LIST,
-                                          dialogHeight: MediaQuery.of(context).size.width / 4.10,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                          const BorderRadius.all(Radius.circular(5)),
-                                            border: Border.all(
-                                              color: Colors.white,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          title: const Text("Services Types"),
-                                          buttonText: Text(
-                                            _selectedServiceTypes.isEmpty
-                          ? "Tap to select"
-                          : _selectedServiceTypes
-                              .map((e) => e.desc)
-                              .join(', '),
-                                            style: CommonStyles.txStyF14CwFF6,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          items: ServiceType_list.map((service) =>
-                                              MultiSelectItem<ServiceType>(
-                            service, service.desc!)).toList(),
-                                          chipDisplay: MultiSelectChipDisplay.none(),
-                                          buttonIcon: const Icon(
-                                            Icons.keyboard_arrow_down_sharp,
-                                            color: Colors.white,
-                                          ),
-                                          onConfirm: (List<dynamic> selected) {
-                                            setState(() {
-                                              _selectedDesc = null;
-                                              _selectedServiceTypes = selected.cast<ServiceType>();
-                                            });
-                                            service_id = _selectedServiceTypes
-                          .map((e) => e.typeCdId)
-                          .where((id) => id != null)
-                          .map((id) => id.toString())
-                          .join(',');
-                                            servicename =
-                          _selectedServiceTypes.map((e) => e.desc).join(', ');
-                                            if (service_id == "19") {
-                                              selectduration_id = _labourRequests[0].typeCdId;
-                                              _selectedDesc = _labourRequests[0].desc;
-                                            }
-                                            fetchlabourservicecost();
-                                          },
-                                        ),
-                                      ),
-                                       */
 
                     const SizedBox(
                       height: 8,
@@ -619,6 +611,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     const SizedBox(
                       height: 2,
                     ),
+
                     if (_selectedDesc != null &&
                         (_selectedDesc == _labourRequests[1].desc ||
                             _selectedDesc == _labourRequests[2].desc ||
@@ -720,7 +713,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                   ],
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -836,7 +829,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.terms_agree));
       return false;
     }
-    if (service_id.contains('20')) {
+    if (selectedServiceIds.contains('20')) {
       if (harvestCost == 0.0) {
         CommonStyles.showCustomDialog(context,
             "'You can't Raise the Request since Harvesting Amount is 0'");
@@ -844,19 +837,19 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       }
     }
 
-    if (service_id.contains('19')) {
+    if (selectedServiceIds.contains('19')) {
       if (harvestCost == 0.0) {
         CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
         return false;
       }
     }
-    if (service_id.contains('33')) {
+    if (selectedServiceIds.contains('33')) {
       if (pruningWithIntercropCost == 0.0) {
         CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
         return false;
       }
     }
-    if (service_id.contains('34')) {
+    if (selectedServiceIds.contains('34')) {
       if (harvestingWithIntercropCost == 0.0) {
         CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
         return false;
@@ -1014,8 +1007,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "preferredDate": formattedDate,
       "pruningAmount": prunningCost,
       "pruningWithIntercropAmount": harvestingWithIntercropCost,
-      "serviceTypes": service_id,
-      "services": servicename,
+      "serviceTypes": selectedServiceIds,
+      "services": selectedServiceNames,
       "stateCode": Statecode,
       "stateName": StateName,
       "updatedDate": "$cuurentdate",
@@ -1076,7 +1069,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
             ),
             child: SizedBox(
               //  padding: EdgeInsets.all(2),
-              width: MediaQuery.of(context).size.width * 0.9,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.8,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
