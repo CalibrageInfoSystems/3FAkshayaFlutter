@@ -606,6 +606,132 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     }
   }
 
+//   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
+//     setState(() {
+//       _isLoading = true;
+//     });
+// // Show the horizontal dots loading dialog after button click
+//     Future.delayed(Duration.zero, () {
+//       CommonStyles.showHorizontalDotsLoadingDialog(
+//           context); // Show loading dialog
+//     });
+//     // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
+//     const url = '$baseUrl$productsubRequest';
+//     //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
+//     // Print the request object
+//     print('Submitting request:');
+//     print('Request Object: ${jsonEncode(request.toJson())}');
+//
+//     try {
+//       final jsonResponse = await http.post(
+//         Uri.parse(url),
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: jsonEncode(request.toJson()),
+//       );
+//
+//       print('Request JSON: ${jsonEncode(request.toJson())}');
+//
+//       if (jsonResponse.statusCode == 200) {
+//         // Successfully submitted request
+//         final response = jsonDecode(jsonResponse.body);
+//         if (response['result'] != null) {
+//           for (int i = 0; i < widget.products.length; i++) {
+//             String productName = widget.products[i].product.name!;
+//             int quantity = widget.products[i].quantity;
+//             final product = widget.products[i].product;
+//
+//             final productCost = product.actualPriceInclGst! * quantity;
+//             displaytotalProductCostGst += productCost;
+//
+//             final transportCost =
+//                 product.transPortActualPriceInclGst! * quantity;
+//             displayTransportamountWithGst += transportCost;
+//
+//             final productGSTPercentage = product.gstPercentage!;
+//             displayamountWithoutGst +=
+//                 productCost / (1 + (productGSTPercentage / 100));
+//
+//             displaytotalGst =
+//                 displaytotalProductCostGst - displayamountWithoutGst;
+//
+//             final transportGSTPercentage = product.transportGstPercentage!;
+//             displayTransportamountWithoutGst +=
+//                 transportCost / (1 + (transportGSTPercentage / 100));
+//
+//             displaytotaltransportGst = displayTransportamountWithGst -
+//                 displayTransportamountWithoutGst;
+//
+//             selectedList.add('$productName : $quantity');
+//           }
+//
+//           selectedName = selectedList.join(', ');
+//           List<MsgModel> displayList = [
+//             MsgModel(
+//                 key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+//             MsgModel(
+//                 key: tr(LocaleKeys.product_quantity), value: selectedName!),
+//             MsgModel(
+//                 key: tr(LocaleKeys.amount),
+//                 value: displayamountWithoutGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.gst_amount),
+//                 value: displaytotalGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.total_amt),
+//                 value: displaytotalProductCostGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.transamount),
+//                 value: displayTransportamountWithoutGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.transgst),
+//                 value: displaytotaltransportGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.totaltransportcost),
+//                 value: displayTransportamountWithGst.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.subcd_amt),
+//                 value: subsidyAmount.toStringAsFixed(2)),
+//             MsgModel(
+//                 key: tr(LocaleKeys.amount_payble),
+//                 value: payableAmount.toStringAsFixed(2)),
+//           ];
+//
+//           // Show success dialog
+//           showSuccessDialog(
+//               context, displayList, tr(LocaleKeys.success_fertilizer));
+//         } else {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(
+//               content: Text('Result got null: ${response['result']}'),
+//             ),
+//           );
+//           throw Exception('Result got null');
+//         }
+//         // Process the product list
+//       } else {
+//         print('Failed to submit request: ${jsonResponse.statusCode}');
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(
+//             content:
+//                 Text('Failed to submit request: ${jsonResponse.statusCode}'),
+//           ),
+//         );
+//         throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+//       }
+//     } catch (e) {
+//       rethrow;
+//     } finally {
+//       setState(() {
+//         _isLoading = false;
+//         Future.delayed(Duration.zero, () {
+//           CommonStyles.hideHorizontalDotsLoadingDialog(
+//               context); // Show loading dialog
+//         });
+//       });
+//     }
+//   }
   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
@@ -623,7 +749,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     print('Request Object: ${jsonEncode(request.toJson())}');
 
     try {
-      final jsonResponse = await http.post(
+      final response = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -633,106 +759,85 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
       print('Request JSON: ${jsonEncode(request.toJson())}');
 
-      if (jsonResponse.statusCode == 200) {
+      if (response.statusCode == 200) {
         // Successfully submitted request
-        final response = jsonDecode(jsonResponse.body);
-        if (response['result'] != null) {
-          for (int i = 0; i < widget.products.length; i++) {
-            String productName = widget.products[i].product.name!;
-            int quantity = widget.products[i].quantity;
-            final product = widget.products[i].product;
+        print('Request submitted successfully');
+        print('Response Body: ${response.body}');
 
-            final productCost = product.actualPriceInclGst! * quantity;
-            displaytotalProductCostGst += productCost;
-
-            final transportCost =
-                product.transPortActualPriceInclGst! * quantity;
-            displayTransportamountWithGst += transportCost;
-
-            final productGSTPercentage = product.gstPercentage!;
-            displayamountWithoutGst +=
-                productCost / (1 + (productGSTPercentage / 100));
-
-            displaytotalGst =
-                displaytotalProductCostGst - displayamountWithoutGst;
-
-            final transportGSTPercentage = product.transportGstPercentage!;
-            displayTransportamountWithoutGst +=
-                transportCost / (1 + (transportGSTPercentage / 100));
-
-            displaytotaltransportGst = displayTransportamountWithGst -
-                displayTransportamountWithoutGst;
-
-            selectedList.add('$productName : $quantity');
-          }
-
-          selectedName = selectedList.join(', ');
-          List<MsgModel> displayList = [
-            MsgModel(
-                key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-            MsgModel(
-                key: tr(LocaleKeys.product_quantity), value: selectedName!),
-            MsgModel(
-                key: tr(LocaleKeys.amount),
-                value: displayamountWithoutGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.gst_amount),
-                value: displaytotalGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.total_amt),
-                value: displaytotalProductCostGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.transamount),
-                value: displayTransportamountWithoutGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.transgst),
-                value: displaytotaltransportGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.totaltransportcost),
-                value: displayTransportamountWithGst.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.subcd_amt),
-                value: subsidyAmount.toStringAsFixed(2)),
-            MsgModel(
-                key: tr(LocaleKeys.amount_payble),
-                value: payableAmount.toStringAsFixed(2)),
-          ];
-
-          // Show success dialog
-          showSuccessDialog(
-              context, displayList, tr(LocaleKeys.success_fertilizer));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Result got null: ${response['result']}'),
-            ),
-          );
-          throw Exception('Result got null');
-        }
         // Process the product list
+        for (int i = 0; i < widget.products.length; i++) {
+          String productName = widget.products[i].product.name!;
+          int quantity = widget.products[i].quantity;
+          final product = widget.products[i].product;
+
+          final productCost = product.actualPriceInclGst! * quantity;
+          displaytotalProductCostGst += productCost;
+
+          final transportCost = product.transPortActualPriceInclGst! * quantity;
+          displayTransportamountWithGst += transportCost;
+
+          final productGSTPercentage = product.gstPercentage!;
+          displayamountWithoutGst +=
+              productCost / (1 + (productGSTPercentage / 100));
+
+          displaytotalGst =
+              displaytotalProductCostGst - displayamountWithoutGst;
+
+          final transportGSTPercentage = product.transportGstPercentage!;
+          displayTransportamountWithoutGst +=
+              transportCost / (1 + (transportGSTPercentage / 100));
+
+          displaytotaltransportGst =
+              displayTransportamountWithGst - displayTransportamountWithoutGst;
+
+          selectedList.add('$productName : $quantity');
+        }
+
+        selectedName = selectedList.join(', ');
+        List<MsgModel> displayList = [
+          MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+          MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
+          MsgModel(
+              key: tr(LocaleKeys.amount),
+              value: displayamountWithoutGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.gst_amount),
+              value: displaytotalGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.total_amt),
+              value: displaytotalProductCostGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.transamount),
+              value: displayTransportamountWithoutGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.transgst),
+              value: displaytotaltransportGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.totaltransportcost),
+              value: displayTransportamountWithGst.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.subcd_amt),
+              value: subsidyAmount.toStringAsFixed(2)),
+          MsgModel(
+              key: tr(LocaleKeys.amount_payble),
+              value: payableAmount.toStringAsFixed(2)),
+        ];
+
+        // Show success dialog
+        showSuccessDialog(
+            context, displayList, tr(LocaleKeys.success_fertilizer));
       } else {
-        print('Failed to submit request: ${jsonResponse.statusCode}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('Failed to submit request: ${jsonResponse.statusCode}'),
-          ),
-        );
-        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+        print('Failed to submit request: ${response.statusCode}');
+        print('Error Response: ${response.body}');
       }
     } catch (e) {
-      rethrow;
+      print('Error occurred: $e');
     } finally {
       setState(() {
-        _isLoading = false;
-        Future.delayed(Duration.zero, () {
-          CommonStyles.hideHorizontalDotsLoadingDialog(
-              context); // Show loading dialog
-        });
+        _isLoading = false; // Hide loading
       });
     }
   }
-
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);

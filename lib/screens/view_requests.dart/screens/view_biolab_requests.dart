@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'ProductDetails.dart';
+
 class ViewBioLabRequests extends StatefulWidget {
   const ViewBioLabRequests({super.key});
 
@@ -121,7 +123,7 @@ class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FertilizerProductDetails(
+                              builder: (context) => ProductDetails(
                                     requestCode: requests[index].requestCode,
                                   )));
                     },

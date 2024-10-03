@@ -1,31 +1,34 @@
 import 'dart:convert';
 
-import 'package:akshaya_flutter/common_utils/api_config.dart';
-import 'package:akshaya_flutter/common_utils/common_styles.dart';
-import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
-import 'package:akshaya_flutter/localization/locale_keys.dart';
-import 'package:akshaya_flutter/models/fertilizer_view_product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-class FertilizerProductDetails extends StatefulWidget {
-  final String requestCode;
-  final String payableAmount;
-  final String subsidyAmount;
 
-  const FertilizerProductDetails({
-    Key? key,
-    required this.requestCode,
-    required this.payableAmount,
-    required this.subsidyAmount,
-  }) : super(key: key);
+import '../../../common_utils/api_config.dart';
+import '../../../common_utils/common_styles.dart';
+import '../../../common_utils/custom_appbar.dart';
+import '../../../localization/locale_keys.dart';
+import '../../../models/fertilizer_view_product_model.dart';
+import 'package:http/http.dart' as http;
+// class ProductDetails extends StatefulWidget {
+//   final String requestCode;
+//
+//
+//   const ProductDetails({
+//     Key? key,
+//     required this.requestCode,
+//
+//   }) : super(key: key);
+  class ProductDetails extends StatefulWidget {
+  final String? requestCode;
+  const ProductDetails({super.key, required this.requestCode});
 
   @override
-  State<FertilizerProductDetails> createState() =>
+  State<ProductDetails> createState() =>
       _FertilizerProductDetailsState();
 }
 
-class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
+class _FertilizerProductDetailsState extends State<ProductDetails> {
   late Future<List<FetilizerViewProduct>> futureData;
   // Initialize totals
   double totalBasePrice = 0.0;
@@ -78,7 +81,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
         // Calculate GST and ensure two decimal points
         double gstAmount = double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
         totalSGst = gstAmount/2;
-        double transgstAmount = double.parse((totalTransportAmount - totalBaseTransportAmount).toStringAsFixed(2));
+        double transgstAmount = double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
         totalTransportSGST = transgstAmount/2;
         // Ensure the values have two decimal places
         totalBasePrice = double.parse(totalBasePrice.toStringAsFixed(2));
@@ -97,8 +100,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           this.totalTransportAmount = totalTransportAmount;
           this.totalTransportGST = totalTransportGST;
           this.totalTransportSGST =  totalTransportSGST;
-          paybleamount = double.tryParse(widget.payableAmount) ?? 0.0;
-          subsidyAmount = double.tryParse(widget.subsidyAmount) ?? 0.0;
+
         });
 
         return products;
@@ -174,7 +176,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                           style: CommonStyles.txStyF16CpFF6);
                     }
                     final products =
-                        snapshot.data as List<FetilizerViewProduct>;
+                    snapshot.data as List<FetilizerViewProduct>;
 
                     return ListView.builder(
                       itemCount: products.length,
@@ -243,7 +245,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
               const SizedBox(width: 10),
               Expanded(
                 child:
-                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+                Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),

@@ -87,7 +87,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.fert_req),
-      ), // actionIcon: const SizedBox()
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: FutureBuilder(
@@ -96,8 +96,10 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}',
-                  style: CommonStyles.txStyF16CpFF6);
+              return Text(
+                'Error: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6,
+              );
             } else if (!snapshot.hasData) {
               return const Text('No data');
             }
@@ -114,16 +116,23 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
-                  return request(
+                  final request = requests[index];
+
+                  return this.request(
                     index,
-                    requests[index],
+                    request,
                     onTap: () {
+                      // Ensuring null safety for nullable fields
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FertilizerProductDetails(
-                                    requestCode: requests[index].requestCode,
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FertilizerProductDetails(
+                            requestCode: request.requestCode ?? 'N/A',
+                            payableAmount: request.transportPayableAmount.toString() ?? '0.0',
+                            subsidyAmount: request.subsidyAmount.toString() ?? '0.0',
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
@@ -137,6 +146,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
       ),
     );
   }
+
 
   Widget request(int index, CommonViewRequestModel request,
       {void Function()? onTap}) {
