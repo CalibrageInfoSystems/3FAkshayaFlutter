@@ -88,8 +88,8 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.ediableproduct_req),
-      ), // actionIcon: const SizedBox()
+        title: tr(LocaleKeys.fert_req),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: FutureBuilder(
@@ -98,8 +98,10 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}',
-                  style: CommonStyles.txStyF16CpFF6);
+              return Text(
+                'Error: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6,
+              );
             } else if (!snapshot.hasData) {
               return const Text('No data');
             }
@@ -116,16 +118,23 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
-                  return request(
+                  final request = requests[index];
+
+                  return this.request(
                     index,
-                    requests[index],
+                    request,
                     onTap: () {
+                      // Ensuring null safety for nullable fields
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductDetails(
-                                    requestCode: requests[index].requestCode,
-                                  )));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FertilizerProductDetails(
+                            requestCode: request.requestCode ?? 'N/A',
+                            payableAmount: request.transportPayableAmount.toString() ?? '0.0',
+                            subsidyAmount: request.subsidyAmount.toString() ?? '0.0',
+                          ),
+                        ),
+                      );
                     },
                   );
                 },

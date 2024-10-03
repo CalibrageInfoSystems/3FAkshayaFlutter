@@ -196,16 +196,16 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 productCostbox(title: tr(LocaleKeys.cgst_amount), data: totalSGst.toStringAsFixed(2)),
                 productCostbox(title: tr(LocaleKeys.sgst_amount), data: totalSGst.toStringAsFixed(2)),
                 productCostbox(title: tr(LocaleKeys.total_amt), data: totalAmount.toStringAsFixed(2)),  // Total base price
-                productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
-                productCostbox(
-                    title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
-                productCostbox(
-                    title: tr(LocaleKeys.tsgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
-                productCostbox(
-                    title: tr(LocaleKeys.trnstotal_amt), data: totalTransportAmount.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.subsidy_amt), data:  subsidyAmount.toStringAsFixed(2)),
-                productCostbox(
-                    title: tr(LocaleKeys.amount_payble), data: paybleamount.toStringAsFixed(2)),
+                // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
+                // productCostbox(
+                //     title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
+                // productCostbox(
+                //     title: tr(LocaleKeys.tsgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
+                // productCostbox(
+                //     title: tr(LocaleKeys.trnstotal_amt), data: totalTransportAmount.toStringAsFixed(2)),
+                // productCostbox(title: tr(LocaleKeys.subsidy_amt), data:  subsidyAmount.toStringAsFixed(2)),
+                // productCostbox(
+                //     title: tr(LocaleKeys.amount_payble), data: paybleamount.toStringAsFixed(2)),
                 const SizedBox(height: 20),
               ],
             )
