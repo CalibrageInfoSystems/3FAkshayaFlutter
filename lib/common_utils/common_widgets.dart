@@ -24,8 +24,9 @@ class CommonWidgets {
                 ),
               ),
             ),
-            Expanded(
-                flex: 1, child: isColon ? const Text(':') : const SizedBox()),
+            isColon
+                ? const Expanded(flex: 1, child: Text(':'))
+                : const SizedBox(width: 20),
             Expanded(
               flex: 7,
               child: Text(
@@ -46,6 +47,8 @@ class CommonWidgets {
       {required String label,
       required String data,
       Color? dataTextColor,
+      TextAlign? textAlign = TextAlign.start,
+      TextStyle? style = CommonStyles.txStyF14CbFF6,
       bool isSpace = true}) {
     return Column(
       children: [
@@ -55,20 +58,22 @@ class CommonWidgets {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txStyF14CbFF6,
+                  textAlign: textAlign,
+                  style: style,
                 )),
-            const Expanded(
+            Expanded(
               flex: 1,
               child: Text(
                 ':',
-                style: CommonStyles.txStyF14CbFF6,
+                style: style,
               ),
             ),
             Expanded(
               flex: 6,
               child: Text(
                 data,
-                style: CommonStyles.txStyF14CbFF6.copyWith(
+                textAlign: textAlign,
+                style: style?.copyWith(
                   color: dataTextColor,
                 ),
               ),

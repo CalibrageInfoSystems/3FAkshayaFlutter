@@ -5,10 +5,12 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,16 +38,22 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     super.dispose();
   }
 
-  void submitForm() {
-    FocusScope.of(context).unfocus();
-    if (_loanAmountController.text.isEmpty) {
-      CommonStyles.errorDialog(context,
-          errorMessage: tr(LocaleKeys.str_enter_loan_amount));
-    } else if (!_isAgree) {
-      CommonStyles.errorDialog(context,
-          errorMessage: tr(LocaleKeys.terms_agree));
+  void submitForm() async {
+    bool isConnected = await CommonStyles.checkInternetConnectivity();
+    if (isConnected) {
+      FocusScope.of(context).unfocus();
+      if (_loanAmountController.text.isEmpty) {
+        CommonStyles.errorDialog(context,
+            errorMessage: tr(LocaleKeys.str_enter_loan_amount));
+      } else if (!_isAgree) {
+        CommonStyles.errorDialog(context,
+            errorMessage: tr(LocaleKeys.terms_agree));
+      } else {
+        loanRequestSubmit();
+      }
     } else {
-      loanRequestSubmit();
+      return CommonStyles.errorDialog(context,
+          errorMessage: 'Please check your internet connection.');
     }
   }
 
@@ -93,9 +101,6 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       "yearofPlanting": null,
     });
 
-    print('loanRequestSubmit: $apiUrl');
-    print('loanRequestSubmit: $requestBody');
-
     final jsonResponse = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -103,6 +108,10 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       },
       body: requestBody,
     );
+
+    print('loanRequestSubmit: $apiUrl');
+    print('loanRequestSubmit: $requestBody');
+    print('loanRequestSubmit: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
       List<MsgModel> displayList = [
@@ -162,7 +171,9 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   TextFormField(
                     controller: _loanAmountController,
                     style: CommonStyles.text14white,
+                    maxLength: 10,
                     decoration: InputDecoration(
+                      counterText: '',
                       hintText: tr(LocaleKeys.loan_amount),
                       hintStyle: CommonStyles.txStyF14CwFF6,
                       border: outlineInputBorder(),
@@ -249,24 +260,24 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       context,
       Container(
         width: size.width * 0.8,
-        height: size.height * 0.5,
+        height: size.height * 0.65,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                color: CommonStyles.primaryTextColor,
-                padding: const EdgeInsets.all(12),
-                alignment: Alignment.center,
-                child: Text(
-                  tr(LocaleKeys.terms_conditionss),
-                  style: CommonStyles.txStyF14CwFF6,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              color: CommonStyles.primaryTextColor,
+              padding: const EdgeInsets.all(12),
+              alignment: Alignment.center,
+              child: Text(
+                tr(LocaleKeys.terms_conditionss),
+                style: CommonStyles.txStyF14CwFF6,
               ),
-              Container(
+            ),
+            Expanded(
+              child: Container(
                 // height: size.height * 0.5,
                 padding: const EdgeInsets.all(12),
                 color: CommonStyles.whiteColor,
@@ -276,19 +287,19 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                       style: CommonStyles.txSty_14b_f5),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomBtn(
-                        label: 'Got it',
-                        onPressed: () => Navigator.pop(context)),
-                  ],
-                ),
-              )
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomBtn(
+                      label: tr(LocaleKeys.got_it),
+                      onPressed: () => Navigator.pop(context)),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -311,4 +322,32 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       },
     );
   }
+/* 
+    void showSuccessDialog() {
+    CommonStyles.errorDialog(
+      context,
+      errorMessage: 'errorMessage',
+      errorIcon: SvgPicture.asset(
+        Assets.images.progressComplete.path,
+        color: Colors.white,
+      ),
+      bodyBackgroundColor: Colors.white,
+      errorLabel: 'errorLabel',
+      errorHeaderColor: CommonStyles.primaryTextColor,
+      errorMessageColor: Colors.orange,
+      onPressed: () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (Route<dynamic> route) => false,
+        );
+      },
+      errorBodyWidget: SuccessDialog(
+        images: _images,
+        audioFilePath: audioFilePath,
+        comments: commentsController.text,
+        selectedTypeOfIssue: selectedTypeOfIssue,
+      ),
+    );
+  } */
 }

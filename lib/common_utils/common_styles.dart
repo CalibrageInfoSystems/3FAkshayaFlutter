@@ -369,23 +369,23 @@ class CommonStyles {
     color: headercolor,
   );
 
-  static Widget rectangularShapeShimmerEffect() {
+  static Widget rectangularShapeShimmerEffect(
+      {double? height = 140, double? separatorHeight = 10}) {
     return ListView.separated(
-      itemCount: 10,
+      itemCount: 4,
       itemBuilder: (context, index) => Shimmer.fromColors(
         baseColor: Colors.grey.shade300,
         highlightColor: Colors.grey.shade100,
         child: Container(
-          height: 140,
+          height: height,
           width: double.infinity,
-          margin: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Colors.grey.shade300,
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
       ),
-      separatorBuilder: (context, index) => const SizedBox(height: 10),
+      separatorBuilder: (context, index) => SizedBox(height: separatorHeight),
     );
   }
 
@@ -549,11 +549,19 @@ class CommonStyles {
     }
   }
 
-  static String? formatDate2(DateTime? date) {
+  static String? formatDisplayDate(DateTime? date) {
     if (date == null) {
       return null;
     }
     DateFormat dateFormat = DateFormat('dd/MM/yyyy');
+    return dateFormat.format(date);
+  }
+
+  static String? formatApiDate(DateTime? date) {
+    if (date == null) {
+      return null;
+    }
+    DateFormat dateFormat = DateFormat('yyyy-MM-dd');
     return dateFormat.format(date);
   }
 

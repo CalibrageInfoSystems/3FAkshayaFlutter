@@ -129,34 +129,41 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          CommonWidgets.commonRow(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${request.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.plot_code),
-            data: '${request.plotCode}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.plot_size),
-            data: '${request.palmArea}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.village),
-            data: '${request.plotVillage}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.startDate),
-            data: '${CommonStyles.formatDate2(request.startDate)}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.serviceType),
-            data: '${request.serviceTypes}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.status),
-            data: '${request.statusType}',
-          ),
+          if (request.requestCode != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (request.plotCode != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.plot_code),
+              data: '${request.plotCode}',
+            ),
+          if (request.palmArea != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.plot_size),
+              data: '${request.palmArea}',
+            ),
+          if (request.plotVillage != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.village),
+              data: '${request.plotVillage}',
+            ),
+          if (request.startDate != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.startDate),
+              data: '${CommonStyles.formatApiDate(request.startDate)}',
+            ),
+          if (request.serviceTypes != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.serviceType),
+              data: '${request.serviceTypes}',
+            ),
+          if (request.statusType != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.status),
+              data: '${request.statusType}',
+            ),
         ],
       ),
     );

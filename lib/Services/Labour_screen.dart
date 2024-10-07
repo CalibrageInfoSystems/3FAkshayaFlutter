@@ -173,544 +173,559 @@ class _LabourscreenScreenState extends State<Labourscreen> {
               isIconVisible: false,
             ),
             const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.0),
-                color: CommonStyles.dropdownListBgColor,
-                // color: CommonStyles.screenBgColor,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          tr(LocaleKeys.select_labour_type),
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          Icons.star,
-                          size: 8,
-                          color: CommonStyles.formFieldErrorBorderColor,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    //MARK: Multi selecter
-                    GestureDetector(
-                      onTap: () {
-                        // Open dialog when the container is tapped
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                              child: StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter setDialogState) {
-                                  return Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    padding: const EdgeInsets.all(16),
-                                    color: Colors.white,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const SizedBox(width: 13),
-                                            Text(
-                                              tr(LocaleKeys.multistring),
-                                              style: CommonStyles.txStyF16CbFF6
-                                                  .copyWith(
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        ...ServiceType_list.map((service) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setDialogState(() {
-                                                if (selectedServiceIds.contains(
-                                                    service.typeCdId)) {
-                                                  selectedServiceIds
-                                                      .remove(service.typeCdId);
-                                                } else {
-                                                  selectedServiceIds
-                                                      .add(service.typeCdId!);
-                                                }
-                                              });
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Checkbox(
-                                                  value: selectedServiceIds
-                                                      .contains(
-                                                          service.typeCdId),
-                                                  activeColor: CommonStyles
-                                                      .primaryTextColor,
-                                                  onChanged: (value) {
-                                                    setDialogState(() {
-                                                      if (value == true) {
-                                                        selectedServiceIds.add(
-                                                            service.typeCdId!);
-                                                      } else {
-                                                        selectedServiceIds
-                                                            .remove(service
-                                                                .typeCdId);
-                                                      }
-                                                    });
-                                                  },
-                                                ),
-                                                const SizedBox(width: 12),
-                                                Text(
-                                                  '${service.desc} ', // Assuming service has 'name' and 'localName'
-                                                  style: CommonStyles
-                                                      .txStyF16CbFF6
-                                                      .copyWith(
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }),
-                                        Row(
-                                          children: [
-                                            const Spacer(),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                shadowColor: Colors.transparent,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3.0,
-                                                        horizontal: 10.0),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'CANCEL',
-                                                style: TextStyle(
-                                                  color: CommonStyles
-                                                      .primaryTextColor,
-                                                ),
-                                              ),
-                                            ),
-                                            ElevatedButton(
-                                              onPressed: () {
-                                                // Get the selected service names
-                                                List<String?> selectedNames =
-                                                    ServiceType_list.where((service) =>
-                                                            selectedServiceIds
-                                                                .contains(service
-                                                                    .typeCdId!))
-                                                        .map((service) =>
-                                                            service.desc)
-                                                        .toList();
-
-                                                // Update the state to display selected names
-                                                setState(() {
-                                                  selectedServiceNames =
-                                                      selectedNames.join(', ');
-
-                                                  // Check if pruning is selected and set pruningCheck to true
-                                                  pruningCheck =
-                                                      selectedServiceNames.contains(
-                                                          'Pruning (ప్రూనింగ్)');
-
-                                                  // Check if harvesting is selected and set harvestingCheck to true
-                                                  harvestingCheck =
-                                                      selectedServiceNames.contains(
-                                                          'Harvesting (గెలల కోత)');
-                                                  print(
-                                                      '=========>$pruningCheck  =====$harvestingCheck');
-                                                });
-
-                                                Navigator.pop(
-                                                    context); // Close the dialog
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shadowColor: Colors.transparent,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3.0,
-                                                        horizontal: 10.0),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'SUBMIT',
-                                                style: TextStyle(
-                                                  color: CommonStyles
-                                                      .primaryTextColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Container(
-                        height: 48,
-                        padding: const EdgeInsets.only(left: 13),
-                        alignment: Alignment.centerLeft,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: BorderRadius.circular(8.0),
-                          color: Colors.transparent,
-                        ),
-                        // Display the selected options or placeholder text
-                        child: Text(
-                          selectedServiceNames.isNotEmpty
-                              ? selectedServiceNames
-                              : 'Tap to select', // Placeholder when no service selected
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Visibility(
-                      visible: pruningCheck,
-                      /*  visible: _selectedServiceTypes
-                                            .any((service) => service.typeCdId == 19), */
-                      child: Column(
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: CommonStyles.dropdownListBgColor,
+                  // color: CommonStyles.screenBgColor,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
                         children: [
+                          Text(
+                            tr(LocaleKeys.select_labour_type),
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
                           const SizedBox(
-                            height: 4,
+                            width: 5,
                           ),
-                          plotDetailsBox(
-                            label: tr(LocaleKeys.pru_amount),
-                            data: '${prunningCost ?? 0.0}',
-                          ),
+                          const Icon(
+                            Icons.star,
+                            size: 8,
+                            color: CommonStyles.formFieldErrorBorderColor,
+                          )
                         ],
                       ),
-                    ),
-                    Visibility(
-                      visible: harvestingCheck,
-                      /*  visible: _selectedServiceTypes
-                                            .any((service) => service.typeCdId == 20), */
-                      child: plotDetailsBox(
-                        label: tr(LocaleKeys.harv_amount),
-                        data: "${harvestCost ?? 0.0}",
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
+                      //MARK: Multi selecter
+                      GestureDetector(
+                        onTap: () {
+                          // Open dialog when the container is tapped
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                child: StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setDialogState) {
+                                    return Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      padding: const EdgeInsets.all(16),
+                                      color: Colors.white,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const SizedBox(width: 13),
+                                              Text(
+                                                tr(LocaleKeys.multistring),
+                                                style: CommonStyles
+                                                    .txStyF16CbFF6
+                                                    .copyWith(
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          ...ServiceType_list.map((service) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setDialogState(() {
+                                                  if (selectedServiceIds
+                                                      .contains(
+                                                          service.typeCdId)) {
+                                                    selectedServiceIds.remove(
+                                                        service.typeCdId);
+                                                  } else {
+                                                    selectedServiceIds
+                                                        .add(service.typeCdId!);
+                                                  }
+                                                });
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Checkbox(
+                                                    value: selectedServiceIds
+                                                        .contains(
+                                                            service.typeCdId),
+                                                    activeColor: CommonStyles
+                                                        .primaryTextColor,
+                                                    onChanged: (value) {
+                                                      setDialogState(() {
+                                                        if (value == true) {
+                                                          selectedServiceIds
+                                                              .add(service
+                                                                  .typeCdId!);
+                                                        } else {
+                                                          selectedServiceIds
+                                                              .remove(service
+                                                                  .typeCdId);
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Text(
+                                                    '${service.desc} ', // Assuming service has 'name' and 'localName'
+                                                    style: CommonStyles
+                                                        .txStyF16CbFF6
+                                                        .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                          Row(
+                                            children: [
+                                              const Spacer(),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 3.0,
+                                                      horizontal: 10.0),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'CANCEL',
+                                                  style: TextStyle(
+                                                    color: CommonStyles
+                                                        .primaryTextColor,
+                                                  ),
+                                                ),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  // Get the selected service names
+                                                  List<String?> selectedNames =
+                                                      ServiceType_list.where((service) =>
+                                                              selectedServiceIds
+                                                                  .contains(service
+                                                                      .typeCdId!))
+                                                          .map((service) =>
+                                                              service.desc)
+                                                          .toList();
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Checkbox(
-                          value: _isChecked,
-                          onChanged: (value) {
-                            setState(() {
-                              _isChecked = value!;
-                            });
-                          },
-                          checkColor: Colors.grey,
-                          fillColor:
-                              WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.selected)) {
-                              return Colors.white;
-                            }
-                            return Colors
-                                .transparent; // Transparent background when unchecked
-                          }),
-                          side: const BorderSide(
-                            color: Colors.black, // Black border when unchecked
-                            width: 2, // Border width
-                          ),
-                        ),
-                        //SizedBox(width: 8),
-                        Text(
-                          tr(LocaleKeys.have_pole),
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          tr(LocaleKeys.startDate),
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          Icons.star,
-                          size: 8,
-                          color: CommonStyles.formFieldErrorBorderColor,
-                        )
-                      ],
-                    ),
-                    Container(
-                      height: 55,
-                      padding:
-                          const EdgeInsets.only(left: 0, top: 10.0, right: 0),
-                      child: GestureDetector(
-                        onTap: () async {
-                          _selectDate(context);
+                                                  // Update the state to display selected names
+                                                  setState(() {
+                                                    selectedServiceNames =
+                                                        selectedNames
+                                                            .join(', ');
+
+                                                    // Check if pruning is selected and set pruningCheck to true
+                                                    pruningCheck =
+                                                        selectedServiceNames
+                                                            .contains(
+                                                                'Pruning (ప్రూనింగ్)');
+
+                                                    // Check if harvesting is selected and set harvestingCheck to true
+                                                    harvestingCheck =
+                                                        selectedServiceNames
+                                                            .contains(
+                                                                'Harvesting (గెలల కోత)');
+                                                    print(
+                                                        '=========>$pruningCheck  =====$harvestingCheck');
+                                                  });
+
+                                                  Navigator.pop(
+                                                      context); // Close the dialog
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.white,
+                                                  shadowColor:
+                                                      Colors.transparent,
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 3.0,
+                                                      horizontal: 10.0),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                child: const Text(
+                                                  'SUBMIT',
+                                                  style: TextStyle(
+                                                    color: CommonStyles
+                                                        .primaryTextColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
                         },
                         child: Container(
-                          height: 55,
+                          height: 48,
+                          padding: const EdgeInsets.only(left: 13),
+                          alignment: Alignment.centerLeft,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 1.5),
                             borderRadius: BorderRadius.circular(8.0),
                             color: Colors.transparent,
                           ),
-                          child: AbsorbPointer(
-                            child: SizedBox(
-                              height: 55,
-                              child: TextFormField(
-                                controller: _dateController,
-                                style: CommonStyles.txStyF14CwFF6,
-                                decoration: const InputDecoration(
-                                  hintText: 'Preferred Date',
-                                  hintStyle: CommonStyles.txStyF14CwFF6,
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 10.0),
-                                  // Adjust padding as needed
-                                  suffixIcon: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.calendar_today,
-                                      // Replace with your desired icon
-                                      color: Colors.white,
+                          // Display the selected options or placeholder text
+                          child: Text(
+                            selectedServiceNames.isNotEmpty
+                                ? selectedServiceNames
+                                : 'Tap to select', // Placeholder when no service selected
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Visibility(
+                        visible: pruningCheck,
+                        /*  visible: _selectedServiceTypes
+                                              .any((service) => service.typeCdId == 19), */
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            plotDetailsBox(
+                              label: tr(LocaleKeys.pru_amount),
+                              data: '${prunningCost ?? 0.0}',
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: harvestingCheck,
+                        /*  visible: _selectedServiceTypes
+                                              .any((service) => service.typeCdId == 20), */
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.harv_amount),
+                          data: "${harvestCost ?? 0.0}",
+                        ),
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                _isChecked = value!;
+                              });
+                            },
+                            checkColor: Colors.grey,
+                            fillColor: WidgetStateProperty.resolveWith<Color>(
+                                (states) {
+                              if (states.contains(WidgetState.selected)) {
+                                return Colors.white;
+                              }
+                              return Colors
+                                  .transparent; // Transparent background when unchecked
+                            }),
+                            side: const BorderSide(
+                              color:
+                                  Colors.black, // Black border when unchecked
+                              width: 2, // Border width
+                            ),
+                          ),
+                          //SizedBox(width: 8),
+                          Text(
+                            tr(LocaleKeys.have_pole),
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.startDate),
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(
+                            Icons.star,
+                            size: 8,
+                            color: CommonStyles.formFieldErrorBorderColor,
+                          )
+                        ],
+                      ),
+                      Container(
+                        height: 55,
+                        padding:
+                            const EdgeInsets.only(left: 0, top: 10.0, right: 0),
+                        child: GestureDetector(
+                          onTap: () async {
+                            _selectDate(context);
+                          },
+                          child: Container(
+                            height: 55,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.white, width: 1.5),
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: Colors.transparent,
+                            ),
+                            child: AbsorbPointer(
+                              child: SizedBox(
+                                height: 55,
+                                child: TextFormField(
+                                  controller: _dateController,
+                                  style: CommonStyles.txStyF14CwFF6,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Preferred Date',
+                                    hintStyle: CommonStyles.txStyF14CwFF6,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 10.0),
+                                    // Adjust padding as needed
+                                    suffixIcon: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.calendar_today,
+                                        // Replace with your desired icon
+                                        color: Colors.white,
+                                      ),
                                     ),
+                                    border: InputBorder.none,
+                                    isDense: true,
                                   ),
-                                  border: InputBorder.none,
-                                  isDense: true,
+                                  textAlignVertical: TextAlignVertical.center,
                                 ),
-                                textAlignVertical: TextAlignVertical.center,
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          tr(LocaleKeys.labour_duration),
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(
-                          Icons.star,
-                          size: 8,
-                          color: CommonStyles.formFieldErrorBorderColor,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    // _labourRequests.isEmpty
-                    //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
-                    //     :
-                    Container(
-                      height: 45,
-                      padding: const EdgeInsets.only(right: 10),
-                      // padding: const EdgeInsets.symmetric(vertical: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                            color: CommonStyles.whiteColor, width: 1.5),
+                      const SizedBox(
+                        height: 8,
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton2<String>(
-                          // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                          //     ? null // Show hint if 20 is selected
-                          //     : _selectedDesc,
-                          value: _getSelectedValue(),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: Colors.white,
-                            ),
-                          ),
-                          isExpanded: true,
-                          hint: const Text(
-                            'Select',
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.labour_duration),
                             style: CommonStyles.txStyF14CwFF6,
                           ),
-                          items: _getDropdownItems(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _selectedDesc = newValue;
-                              print('_selectedDesc$_selectedDesc');
-                              LabourRequest? selectedRequest =
-                                  _labourRequests.firstWhere(
-                                (request) => request.desc == newValue,
-                              );
-
-                              print(
-                                  'Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
-                              selectduration_id = selectedRequest.typeCdId;
-                            });
-                          },
-
-                          dropdownStyleData: DropdownStyleData(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: CommonStyles.dropdownListBgColor,
-                            ),
-                            offset: const Offset(0, 0),
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: WidgetStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  WidgetStateProperty.all<bool>(true),
-                            ),
+                          const SizedBox(
+                            width: 5,
                           ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                            padding: EdgeInsets.only(left: 20, right: 20),
+                          const Icon(
+                            Icons.star,
+                            size: 8,
+                            color: CommonStyles.formFieldErrorBorderColor,
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      // _labourRequests.isEmpty
+                      //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
+                      //     :
+                      Container(
+                        height: 45,
+                        padding: const EdgeInsets.only(right: 10),
+                        // padding: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: CommonStyles.whiteColor, width: 1.5),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
+                            //     ? null // Show hint if 20 is selected
+                            //     : _selectedDesc,
+                            value: _getSelectedValue(),
+                            iconStyleData: const IconStyleData(
+                              icon: Icon(
+                                Icons.keyboard_arrow_down_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            isExpanded: true,
+                            hint: const Text(
+                              'Select',
+                              style: CommonStyles.txStyF14CwFF6,
+                            ),
+                            items: _getDropdownItems(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedDesc = newValue;
+                                print('_selectedDesc$_selectedDesc');
+                                LabourRequest? selectedRequest =
+                                    _labourRequests.firstWhere(
+                                  (request) => request.desc == newValue,
+                                );
+
+                                print(
+                                    'Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
+                                selectduration_id = selectedRequest.typeCdId;
+                              });
+                            },
+
+                            dropdownStyleData: DropdownStyleData(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                color: CommonStyles.dropdownListBgColor,
+                              ),
+                              offset: const Offset(0, 0),
+                              scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: WidgetStateProperty.all<double>(6),
+                                thumbVisibility:
+                                    WidgetStateProperty.all<bool>(true),
+                              ),
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                              padding: EdgeInsets.only(left: 20, right: 20),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
+                      const SizedBox(
+                        height: 2,
+                      ),
 
-                    if (_selectedDesc != null &&
-                        (_selectedDesc == _labourRequests[1].desc ||
-                            _selectedDesc == _labourRequests[2].desc ||
-                            _selectedDesc == _labourRequests[3].desc))
-                      Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Text(
-                          tr(LocaleKeys.text),
-                          style: const TextStyle(
-                            fontFamily: "hind_semibold",
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF34A350),
+                      if (_selectedDesc != null &&
+                          (_selectedDesc == _labourRequests[1].desc ||
+                              _selectedDesc == _labourRequests[2].desc ||
+                              _selectedDesc == _labourRequests[3].desc))
+                        Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Text(
+                            tr(LocaleKeys.text),
+                            style: const TextStyle(
+                              fontFamily: "hind_semibold",
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF34A350),
+                            ),
                           ),
                         ),
+                      const SizedBox(
+                        height: 8,
                       ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          tr(LocaleKeys.comments),
+                      Row(
+                        children: [
+                          Text(
+                            tr(LocaleKeys.comments),
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Container(
+                        height: 45,
+                        padding: const EdgeInsets.all(0.0),
+                        child: TextFormField(
+                          controller: _commentController,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.only(top: 5, left: 15),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white,
+                                  width: 1.5), // White border
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white,
+                                  width: 1.5), // White border on focus
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            hintText: tr(LocaleKeys.comments),
+                            hintStyle: CommonStyles.txStyF14CwFF6,
+                          ),
                           style: CommonStyles.txStyF14CwFF6,
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Container(
-                      height: 45,
-                      padding: const EdgeInsets.all(0.0),
-                      child: TextFormField(
-                        controller: _commentController,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.only(top: 5, left: 15),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white,
-                                width: 1.5), // White border
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Colors.white,
-                                width: 1.5), // White border on focus
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          hintText: tr(LocaleKeys.comments),
-                          hintStyle: CommonStyles.txStyF14CwFF6,
-                        ),
-                        style: CommonStyles.txStyF14CwFF6,
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Checkbox(
-                          value: _isagreed,
-                          onChanged: (value) {
-                            setState(() {
-                              _isagreed = value!;
-                              showRateChartDialog(context);
-                            });
-                          },
-                          checkColor: Colors.grey,
-                          fillColor:
-                              WidgetStateProperty.resolveWith<Color>((states) {
-                            if (states.contains(WidgetState.selected)) {
-                              return Colors.white;
-                            }
-                            return Colors.transparent;
-                          }),
-                          side: const BorderSide(
-                            color: Colors.black,
-                            width: 2,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _isagreed,
+                            onChanged: (value) {
+                              setState(() {
+                                _isagreed = value!;
+                                showRateChartDialog(context);
+                              });
+                            },
+                            checkColor: Colors.grey,
+                            fillColor: WidgetStateProperty.resolveWith<Color>(
+                                (states) {
+                              if (states.contains(WidgetState.selected)) {
+                                return Colors.white;
+                              }
+                              return Colors.transparent;
+                            }),
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 2,
+                            ),
                           ),
-                        ),
-                        Text(
-                          tr(LocaleKeys.i_have_agree),
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          tr(LocaleKeys.terms_conditions),
-                          style: CommonStyles.txStyF14CpFF6.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: CommonStyles.primaryTextColor2),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    submitBtn(context, tr(LocaleKeys.submit_req)),
-                  ],
+                          Text(
+                            tr(LocaleKeys.i_have_agree),
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            tr(LocaleKeys.terms_conditions),
+                            style: CommonStyles.txStyF14CpFF6.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: CommonStyles.primaryTextColor),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      submitBtn(context, tr(LocaleKeys.submit_req)),
+                    ],
+                  ),
                 ),
               ),
             )
@@ -905,8 +920,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
   Future<void> getspinnerdata(String pc) async {
     final url = Uri.parse(baseUrl + getLabourServicetype + pc);
-    print('$url');
-    print('url$url');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -1481,17 +1494,18 @@ class CropPlotDetails extends StatelessWidget {
           data: '${plotdata.landMark}',
         ),
         plotDetailsBox(
-          label: tr(LocaleKeys.address),
+          label: tr(LocaleKeys.cluster_officer),
           data: '${plotdata.clusterName}',
         ),
         plotDetailsBox(
           label: tr(LocaleKeys.yop),
           data: year,
         ),
-        plotDetailsBox(
-          label: tr(LocaleKeys.intercrops),
-          data: year,
-        ),
+        if (plotdata.interCrops != null)
+          plotDetailsBox(
+            label: tr(LocaleKeys.intercrops),
+            data: '${plotdata.interCrops}',
+          ),
       ],
     );
   }

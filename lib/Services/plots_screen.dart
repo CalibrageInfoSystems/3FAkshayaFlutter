@@ -38,8 +38,8 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
-      // print('apiUrl: $apiUrl');
-      // print('jsonResponse: ${jsonResponse.body}');
+      print('getPlotDetails: $apiUrl');
+      print('getPlotDetails: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         if (response['listResult'] != null) {

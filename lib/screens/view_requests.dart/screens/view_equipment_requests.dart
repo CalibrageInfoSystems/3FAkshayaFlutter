@@ -146,30 +146,36 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          CommonWidgets.commonRow(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${request.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.Godown_name),
-            data: '${request.goDownName}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.req_date),
-            data: '${formatDate(request.reqCreatedDate)}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.status),
-            data: '${request.status}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.total_amt),
-            data: '${request.totalAmount}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.payment_mode),
-            data: '${request.paymentMode}',
-          ),
+          if (request.requestCode != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (request.goDownName != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.Godown_name),
+              data: '${request.goDownName}',
+            ),
+          if (request.reqCreatedDate != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.req_date),
+              data: '${formatDate(request.reqCreatedDate)}',
+            ),
+          if (request.status != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.status),
+              data: '${request.status}',
+            ),
+          if (request.totalAmount != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.total_amt),
+              data: '${request.totalAmount}',
+            ),
+          if (request.paymentMode != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.payment_mode),
+              data: '${request.paymentMode}',
+            ),
           if (request.paymentMode == 'Against FFB')
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.pinn),

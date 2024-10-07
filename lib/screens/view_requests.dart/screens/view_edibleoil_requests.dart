@@ -130,8 +130,11 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
                         MaterialPageRoute(
                           builder: (context) => FertilizerProductDetails(
                             requestCode: request.requestCode ?? 'N/A',
-                            payableAmount: request.transportPayableAmount.toString() ?? '0.0',
-                            subsidyAmount: request.subsidyAmount.toString() ?? '0.0',
+                            payableAmount:
+                                request.transportPayableAmount.toString() ??
+                                    '0.0',
+                            subsidyAmount:
+                                request.subsidyAmount.toString() ?? '0.0',
                           ),
                         ),
                       );
@@ -156,38 +159,46 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          CommonWidgets.commonRow(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${request.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.Godown_name),
-            data: '${request.goDownName}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.req_date),
-            data: '${formatDate(request.reqCreatedDate)}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.status),
-            data: '${request.status}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.amount_payble),
-            data: '${request.transportPayableAmount}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.subcd_amt),
-            data: '${request.subsidyAmount}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.payment_mode),
-            data: '${request.paymentMode}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.imdpayment),
-            data: '${request.isImmediatePayment}',
-          ),
+          if (request.isImmediatePayment != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (request.goDownName != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.Godown_name),
+              data: '${request.goDownName}',
+            ),
+          if (request.reqCreatedDate != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.req_date),
+              data: '${formatDate(request.reqCreatedDate)}',
+            ),
+          if (request.status != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.status),
+              data: '${request.status}',
+            ),
+          if (request.transportPayableAmount != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.amount_payble),
+              data: '${request.transportPayableAmount}',
+            ),
+          if (request.subsidyAmount != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.subcd_amt),
+              data: '${request.subsidyAmount}',
+            ),
+          if (request.paymentMode != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.payment_mode),
+              data: '${request.paymentMode}',
+            ),
+          if (request.isImmediatePayment != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.imdpayment),
+              data: '${request.isImmediatePayment}',
+            ),
           if (request.paymentMode == 'Against FFB')
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.pinn),

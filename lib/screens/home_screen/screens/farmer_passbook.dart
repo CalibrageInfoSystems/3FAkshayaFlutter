@@ -8,7 +8,8 @@ import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/FarmerInfo.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_2.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/farmer_passbook_info_screen.dart';
+import 'package:akshaya_flutter/test.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:http/http.dart' as http;
@@ -16,15 +17,14 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-class FarmerPassbookScreen_1 extends StatefulWidget {
-  const FarmerPassbookScreen_1({super.key});
+class FarmerPassbookScreen extends StatefulWidget {
+  const FarmerPassbookScreen({super.key});
 
   @override
-  _farmerpassbook createState() => _farmerpassbook();
+  State<FarmerPassbookScreen> createState() => _FarmerPassbookScreen();
 }
 
-class _farmerpassbook extends State<FarmerPassbookScreen_1> {
+class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
   String? accountholdername,
       accountnum,
       bankname,
@@ -59,87 +59,116 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: CustomAppBar(
-          title: tr(LocaleKeys.payments),
-        ),
-        body: Center(
-          child: Card(
-            child: Container(
-              width: size.width * 0.94,
-              decoration: const BoxDecoration(
-                  color: Color(0x8D000000),
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Image.asset(
-                    Assets.images.icBankWhite.path,
-                    height: 75,
-                    width: 75,
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        tr(LocaleKeys.bank_details),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          fontFamily: 'hind_semibold',
-                        ),
+      appBar: CustomAppBar(
+        title: tr(LocaleKeys.payments),
+      ),
+      body: Center(
+        child: Card(
+          child: Container(
+            width: size.width * 0.94,
+            decoration: const BoxDecoration(
+                color: Color(0x8D000000),
+                borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Image.asset(
+                  Assets.images.icBankWhite.path,
+                  height: 75,
+                  width: 75,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      tr(LocaleKeys.bank_details),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        fontFamily: 'hind_semibold',
                       ),
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  infoBox(
-                      label: tr(LocaleKeys.bank_holder),
-                      data: accountholdername),
-                  infoBox(label: tr(LocaleKeys.account_no), data: accountnum),
-                  infoBox(label: tr(LocaleKeys.bank_name), data: bankname),
-                  infoBox(label: tr(LocaleKeys.ifsc), data: ifscode),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomBtn(
-                          label: tr(LocaleKeys.next),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => farmer_passbook_2(
-                                        accountHolderName:
-                                            farmerinfolist[0].accountHolderName,
-                                        accountNumber:
-                                            farmerinfolist[0].accountNumber,
-                                        bankName: farmerinfolist[0].bankName,
-                                        branchName:
-                                            farmerinfolist[0].branchName,
-                                        district: farmerinfolist[0].district,
-                                        farmerCode:
-                                            farmerinfolist[0].farmerCode,
-                                        guardianName:
-                                            farmerinfolist[0].guardianName,
-                                        ifscCode: farmerinfolist[0].ifscCode,
-                                        mandal: farmerinfolist[0].mandal,
-                                        state: farmerinfolist[0].state,
-                                        village: farmerinfolist[0].village)));
-                          },
-                        ),
-                      ],
-                    ),
+                ),
+                CommonStyles.horizontalGradientDivider(colors: [
+                  const Color(0xFFFF4500),
+                  const Color(0xFFA678EF),
+                  const Color(0xFFFF4500),
+                ]),
+                infoBox(
+                    label: tr(LocaleKeys.bank_holder), data: accountholdername),
+                infoBox(label: tr(LocaleKeys.account_no), data: accountnum),
+                infoBox(label: tr(LocaleKeys.bank_name), data: bankname),
+                infoBox(label: tr(LocaleKeys.branch_name), data: branchname),
+                infoBox(label: tr(LocaleKeys.ifsc), data: ifscode),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomBtn(
+                        label: tr(LocaleKeys.next),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TestScreen(
+                                accountHolderName:
+                                    farmerinfolist[0].accountHolderName,
+                                accountNumber: farmerinfolist[0].accountNumber,
+                                bankName: farmerinfolist[0].bankName,
+                                branchName: farmerinfolist[0].branchName,
+                                district: farmerinfolist[0].district,
+                                farmerCode: farmerinfolist[0].farmerCode,
+                                guardianName: farmerinfolist[0].guardianName,
+                                ifscCode: farmerinfolist[0].ifscCode,
+                                mandal: farmerinfolist[0].mandal,
+                                state: farmerinfolist[0].state,
+                                village: farmerinfolist[0].village,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      CustomBtn(
+                        label: tr(LocaleKeys.next),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FarmerPassbookInfoScreen(
+                                accountHolderName:
+                                    farmerinfolist[0].accountHolderName,
+                                accountNumber: farmerinfolist[0].accountNumber,
+                                bankName: farmerinfolist[0].bankName,
+                                branchName: farmerinfolist[0].branchName,
+                                district: farmerinfolist[0].district,
+                                farmerCode: farmerinfolist[0].farmerCode,
+                                guardianName: farmerinfolist[0].guardianName,
+                                ifscCode: farmerinfolist[0].ifscCode,
+                                mandal: farmerinfolist[0].mandal,
+                                state: farmerinfolist[0].state,
+                                village: farmerinfolist[0].village,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Row infoBox({required String label, String? data}) {
@@ -151,7 +180,7 @@ class _farmerpassbook extends State<FarmerPassbookScreen_1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 15, 12, 5),
+                padding: const EdgeInsets.fromLTRB(15, 15, 12, 5),
                 child: Text(
                   label,
                   style: CommonStyles.txStyF14CwFF6,

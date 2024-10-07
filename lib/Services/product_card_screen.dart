@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
 import 'package:akshaya_flutter/services/models/Godowndata.dart';
 
 import 'package:akshaya_flutter/Services/models/MsgModel.dart';
@@ -68,6 +66,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   double totalTransCGST = 0.0;
   double totalTrasSGST = 0.0;
   List<RequestProductDetails> productDetailsList = [];
+  late Future<List<dynamic>> futureDropDownList;
   bool _isLoading = false; // Track loading state
 
   // Initial value to indicate no selection
@@ -75,6 +74,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   void initState() {
     super.initState();
     farmerData = getFarmerInfoFromSharedPrefs();
+    futureDropDownList = getDropdownData();
 
     farmerData.then((farmer) {
       farmerCode = '${farmer.code}';
@@ -93,7 +93,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     final apiUrl = '$baseUrl$GetPaymentsTypeByFarmerCode$farmerCode';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-
+    print('card getDropdownData: $apiUrl');
+    print('card getDropdownData: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null) {
@@ -340,7 +341,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       ),
       clipBehavior: Clip.antiAlias,
       child: FutureBuilder(
-        future: getDropdownData(),
+        future: futureDropDownList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final paymentModes = snapshot.data as List<dynamic>;
@@ -569,6 +570,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
     try {
       final response = await http.get(Uri.parse(url));
+      print('card getFertilizerSubsidies: $url');
+      print('card getFertilizerSubsidies: ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -606,238 +609,128 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     }
   }
 
-//   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
-//     setState(() {
-//       _isLoading = true;
-//     });
-// // Show the horizontal dots loading dialog after button click
-//     Future.delayed(Duration.zero, () {
-//       CommonStyles.showHorizontalDotsLoadingDialog(
-//           context); // Show loading dialog
-//     });
-//     // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
-//     const url = '$baseUrl$productsubRequest';
-//     //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
-//     // Print the request object
-//     print('Submitting request:');
-//     print('Request Object: ${jsonEncode(request.toJson())}');
-//
-//     try {
-//       final jsonResponse = await http.post(
-//         Uri.parse(url),
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: jsonEncode(request.toJson()),
-//       );
-//
-//       print('Request JSON: ${jsonEncode(request.toJson())}');
-//
-//       if (jsonResponse.statusCode == 200) {
-//         // Successfully submitted request
-//         final response = jsonDecode(jsonResponse.body);
-//         if (response['result'] != null) {
-//           for (int i = 0; i < widget.products.length; i++) {
-//             String productName = widget.products[i].product.name!;
-//             int quantity = widget.products[i].quantity;
-//             final product = widget.products[i].product;
-//
-//             final productCost = product.actualPriceInclGst! * quantity;
-//             displaytotalProductCostGst += productCost;
-//
-//             final transportCost =
-//                 product.transPortActualPriceInclGst! * quantity;
-//             displayTransportamountWithGst += transportCost;
-//
-//             final productGSTPercentage = product.gstPercentage!;
-//             displayamountWithoutGst +=
-//                 productCost / (1 + (productGSTPercentage / 100));
-//
-//             displaytotalGst =
-//                 displaytotalProductCostGst - displayamountWithoutGst;
-//
-//             final transportGSTPercentage = product.transportGstPercentage!;
-//             displayTransportamountWithoutGst +=
-//                 transportCost / (1 + (transportGSTPercentage / 100));
-//
-//             displaytotaltransportGst = displayTransportamountWithGst -
-//                 displayTransportamountWithoutGst;
-//
-//             selectedList.add('$productName : $quantity');
-//           }
-//
-//           selectedName = selectedList.join(', ');
-//           List<MsgModel> displayList = [
-//             MsgModel(
-//                 key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-//             MsgModel(
-//                 key: tr(LocaleKeys.product_quantity), value: selectedName!),
-//             MsgModel(
-//                 key: tr(LocaleKeys.amount),
-//                 value: displayamountWithoutGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.gst_amount),
-//                 value: displaytotalGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.total_amt),
-//                 value: displaytotalProductCostGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.transamount),
-//                 value: displayTransportamountWithoutGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.transgst),
-//                 value: displaytotaltransportGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.totaltransportcost),
-//                 value: displayTransportamountWithGst.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.subcd_amt),
-//                 value: subsidyAmount.toStringAsFixed(2)),
-//             MsgModel(
-//                 key: tr(LocaleKeys.amount_payble),
-//                 value: payableAmount.toStringAsFixed(2)),
-//           ];
-//
-//           // Show success dialog
-//           showSuccessDialog(
-//               context, displayList, tr(LocaleKeys.success_fertilizer));
-//         } else {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             SnackBar(
-//               content: Text('Result got null: ${response['result']}'),
-//             ),
-//           );
-//           throw Exception('Result got null');
-//         }
-//         // Process the product list
-//       } else {
-//         print('Failed to submit request: ${jsonResponse.statusCode}');
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             content:
-//                 Text('Failed to submit request: ${jsonResponse.statusCode}'),
-//           ),
-//         );
-//         throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
-//       }
-//     } catch (e) {
-//       rethrow;
-//     } finally {
-//       setState(() {
-//         _isLoading = false;
-//         Future.delayed(Duration.zero, () {
-//           CommonStyles.hideHorizontalDotsLoadingDialog(
-//               context); // Show loading dialog
-//         });
-//       });
-//     }
-//   }
   Future<void> submitFertilizerRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
-// Show the horizontal dots loading dialog after button click
-    Future.delayed(Duration.zero, () {
-      CommonStyles.showHorizontalDotsLoadingDialog(
-          context); // Show loading dialog
-    });
-    // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
     const url = '$baseUrl$productsubRequest';
-    //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
-    // Print the request object
-    print('Submitting request:');
-    print('Request Object: ${jsonEncode(request.toJson())}');
-
     try {
-      final response = await http.post(
+      final jsonResponse = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
         },
         body: jsonEncode(request.toJson()),
       );
+      print('card submitFertilizerRequest: $url');
+      print('card submitFertilizerRequest: ${jsonEncode(request.toJson())}');
+      print('card submitFertilizerRequest: ${jsonResponse.body}');
+      setState(() {
+        _isLoading = false;
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        if (response['isSuccess']) {
+          for (int i = 0; i < widget.products.length; i++) {
+            print('333');
+            String productName = widget.products[i].product.name!;
+            int quantity = widget.products[i].quantity;
+            final product = widget.products[i].product;
 
-      print('Request JSON: ${jsonEncode(request.toJson())}');
+            final productCost = product.actualPriceInclGst! * quantity;
+            displaytotalProductCostGst += productCost;
 
-      if (response.statusCode == 200) {
-        // Successfully submitted request
-        print('Request submitted successfully');
-        print('Response Body: ${response.body}');
+            final transportCost =
+                product.transPortActualPriceInclGst! * quantity;
+            displayTransportamountWithGst += transportCost;
 
-        // Process the product list
-        for (int i = 0; i < widget.products.length; i++) {
-          String productName = widget.products[i].product.name!;
-          int quantity = widget.products[i].quantity;
-          final product = widget.products[i].product;
+            final productGSTPercentage = product.gstPercentage!;
+            displayamountWithoutGst +=
+                productCost / (1 + (productGSTPercentage / 100));
 
-          final productCost = product.actualPriceInclGst! * quantity;
-          displaytotalProductCostGst += productCost;
+            displaytotalGst =
+                displaytotalProductCostGst - displayamountWithoutGst;
 
-          final transportCost = product.transPortActualPriceInclGst! * quantity;
-          displayTransportamountWithGst += transportCost;
+            final transportGSTPercentage = product.transportGstPercentage!;
+            displayTransportamountWithoutGst +=
+                transportCost / (1 + (transportGSTPercentage / 100));
 
-          final productGSTPercentage = product.gstPercentage!;
-          displayamountWithoutGst +=
-              productCost / (1 + (productGSTPercentage / 100));
+            displaytotaltransportGst = displayTransportamountWithGst -
+                displayTransportamountWithoutGst;
 
-          displaytotalGst =
-              displaytotalProductCostGst - displayamountWithoutGst;
+            selectedList.add('$productName : $quantity');
 
-          final transportGSTPercentage = product.transportGstPercentage!;
-          displayTransportamountWithoutGst +=
-              transportCost / (1 + (transportGSTPercentage / 100));
+            print('444');
+          }
 
-          displaytotaltransportGst =
-              displayTransportamountWithGst - displayTransportamountWithoutGst;
+          selectedName = selectedList.join(', ');
+          List<MsgModel> displayList = [
+            MsgModel(
+                key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+            MsgModel(
+                key: tr(LocaleKeys.product_quantity), value: selectedName!),
+            MsgModel(
+                key: tr(LocaleKeys.amount),
+                value: displayamountWithoutGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.gst_amount),
+                value: displaytotalGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.total_amt),
+                value: displaytotalProductCostGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.transamount),
+                value: displayTransportamountWithoutGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.transgst),
+                value: displaytotaltransportGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.totaltransportcost),
+                value: displayTransportamountWithGst.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.subcd_amt),
+                value: subsidyAmount.toStringAsFixed(2)),
+            MsgModel(
+                key: tr(LocaleKeys.amount_payble),
+                value: payableAmount.toStringAsFixed(2)),
+          ];
 
-          selectedList.add('$productName : $quantity');
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_fertilizer));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Result got null: ${response['result']}'),
+            ),
+          );
+          throw Exception('Result got null');
         }
-
-        selectedName = selectedList.join(', ');
-        List<MsgModel> displayList = [
-          MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-          MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
-          MsgModel(
-              key: tr(LocaleKeys.amount),
-              value: displayamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.gst_amount),
-              value: displaytotalGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.total_amt),
-              value: displaytotalProductCostGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.transamount),
-              value: displayTransportamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.transgst),
-              value: displaytotaltransportGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.totaltransportcost),
-              value: displayTransportamountWithGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.subcd_amt),
-              value: subsidyAmount.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.amount_payble),
-              value: payableAmount.toStringAsFixed(2)),
-        ];
-
-        // Show success dialog
-        showSuccessDialog(
-            context, displayList, tr(LocaleKeys.success_fertilizer));
       } else {
-        print('Failed to submit request: ${response.statusCode}');
-        print('Error Response: ${response.body}');
+        print('Failed to submit request: ${jsonResponse.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+          ),
+        );
+        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
       }
     } catch (e) {
-      print('Error occurred: $e');
-    } finally {
-      setState(() {
-        _isLoading = false; // Hide loading
-      });
+      rethrow;
     }
+    /*  finally {
+      setState(() {
+        _isLoading = false;
+        Future.delayed(Duration.zero, () {
+          CommonStyles.hideHorizontalDotsLoadingDialog(
+              context); // Show loading dialog
+        });
+      });
+    } */
   }
+
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
@@ -848,13 +741,39 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   }
 
 // Function to show the dialog
-  void showSuccessDialog(
+/*   void showSuccessDialog(
       BuildContext context, List<MsgModel> msg, String title) {
     showDialog(
-      context: context,
-      barrierDismissible: false,
+      context: context, barrierDismissible: false,
       builder: (BuildContext context) {
         return SuccessDialog(msg: msg, title: title);
+      },
+    );
+  } */
+  Future<void> showSuccessDialog(
+      BuildContext context, List<MsgModel> displayList, String successMessage) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Ensure the dialog is modal
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(successMessage),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: displayList
+                  .map((msg) => Text('${msg.key}: ${msg.value}'))
+                  .toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
     );
   }

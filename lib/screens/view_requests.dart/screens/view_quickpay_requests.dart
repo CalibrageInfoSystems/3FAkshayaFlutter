@@ -138,22 +138,26 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          CommonWidgets.commonRow(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${request.requestCode}',
-              dataTextColor: CommonStyles.appBarColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.req_date),
-            data: '${formatDate(request.reqCreatedDate)}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.status),
-            data: '${request.status}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.total_amt),
-            data: '${request.totalAmount}',
-          ),
+          if (request.requestCode != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.appBarColor),
+          if (request.reqCreatedDate != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.req_date),
+              data: '${formatDate(request.reqCreatedDate)}',
+            ),
+          if (request.status != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.status),
+              data: '${request.status}',
+            ),
+          if (request.totalAmount != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.total_amt),
+              data: '${request.totalAmount}',
+            ),
         ],
       ),
     );

@@ -183,30 +183,36 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          CommonWidgets.commonRow(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${request.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.plot_code),
-            data: '${request.plotCode}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.plot_size),
-            data: '${request.palmArea}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.village),
-            data: '${request.plotVillage}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.req_date),
-            data: '${CommonStyles.formatDate(request.reqCreatedDate)}',
-          ),
-          CommonWidgets.commonRow(
-            label: tr(LocaleKeys.status),
-            data: '${request.statusType}',
-          ),
+          if (request.requestCode != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (request.plotCode != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.plot_code),
+              data: '${request.plotCode}',
+            ),
+          if (request.palmArea != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.plot_size),
+              data: '${request.palmArea}',
+            ),
+          if (request.plotVillage != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.village),
+              data: '${request.plotVillage}',
+            ),
+          if (request.reqCreatedDate != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.req_date),
+              data: '${CommonStyles.formatDate(request.reqCreatedDate)}',
+            ),
+          if (request.statusType != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.status),
+              data: '${request.statusType}',
+            ),
         ],
       ),
     );
