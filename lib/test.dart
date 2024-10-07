@@ -75,7 +75,9 @@ class _TestScreenState extends State<TestScreen> {
   @override
   void initState() {
     super.initState();
+    checkStoragePermission();
     futureData = getInitialData();
+
   }
 
   PassbookData getInitialData() {
@@ -618,6 +620,32 @@ class _TestScreenState extends State<TestScreen> {
         break;
     }
   }
+
+  Future<void> checkStoragePermission() async {
+    print('ledger: checkStoragePermission');
+    bool permissionStatus;
+    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+
+    if (deviceInfo.version.sdkInt > 32) {
+      permissionStatus = await Permission.storage.request().isGranted;
+    } else {
+      permissionStatus = await Permission.storage.request().isGranted;
+    }
+    print('Storage permission is granted $permissionStatus');
+    if (await Permission.storage.request().isGranted) {
+      print('Storage permission is granted');
+    } else {
+      Map<Permission, PermissionStatus> status = await [
+        Permission.storage,
+      ].request();
+
+      if (status[Permission.storage] == PermissionStatus.granted) {
+        print('Storage permission is granted');
+      } else {
+        print('Storage permission is denied');
+      }
+    }
+  }
 }
 
 class FarmerPassbookTabView extends StatefulWidget {
@@ -860,8 +888,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       "paymentResponce": paymentResponce
     };
 
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
 
     try {
       final jsonResponse = await http.post(
@@ -906,22 +933,30 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     int sdkInt = androidInfo.version.sdkInt;
-    if (await Permission.storage.request().isGranted) {
+ //   if (await Permission.storage.request().isGranted) {
+
       List<int> excelBytes = base64Decode(base64);
-      Directory directoryPath;
-      if (sdkInt <= 28) {
-        directoryPath =
-            Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
-      } else {
-        directoryPath = (await getExternalStorageDirectory())!;
-      }
+      Directory directoryPath = Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
       if (!directoryPath.existsSync()) {
         directoryPath.createSync(recursive: true);
       }
-
+      String filePath = directoryPath.path;
       String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      String filePath = '$directoryPath/ledger_$timestamp.xlsx';
-      final File file = File(filePath);
+      String fileName = "ledger_$timestamp.xlsx";
+
+      final File file = File('$filePath/$fileName');
+
+      // Force delete the file if it exists
+      try {
+        if (await file.exists()) {
+          await file.delete();
+        }
+      } catch (e) {
+        print('Error deleting existing file: $e');
+      }
+
+      // Create and write to the file
+      await file.create(recursive: true);
 
       await file.writeAsBytes(excelBytes);
 
@@ -936,25 +971,26 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           content: Text('File downloaded to $filePath'),
         ),
       );
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        });
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Permission Denied'),
-          action: SnackBarAction(
-            label: 'Allow',
-            onPressed: () async {
-              await Permission.storage.request();
-            },
-          ),
-        ),
-      );
-    }
+  //  }
+    // else {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     setState(() {
+    //       CommonStyles.hideHorizontalDotsLoadingDialog(context);
+    //     });
+    //   });
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: const Text('Permission Denied'),
+    //       action: SnackBarAction(
+    //         label: 'Allow',
+    //         onPressed: () async {
+    //           await Permission.storage.request();
+    //         },
+    //       ),
+    //     ),
+    //   );
+   // }
   }
 
   String sanitizeBase64(String base64String) {
