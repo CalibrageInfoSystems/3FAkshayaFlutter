@@ -3423,6 +3423,8 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
   //     print('Error: $e');
   //   }
   // }
+
+  //MARK: exportPayments
   Future<void> exportPayments(
       List<PaymentResponse> paymentResponse, BuildContext context) async {
     // API URL
@@ -3470,6 +3472,10 @@ class farmer_passbookscreenstate extends State<farmer_passbook> {
         },
         body: jsonBody,
       );
+
+      print('qqq: $url');
+      print('qqq: ${json.encode(requestBody)}');
+      print('qqq: ${response.body}');
 
       // Check if the request was successful
       if (response.statusCode == 200) {

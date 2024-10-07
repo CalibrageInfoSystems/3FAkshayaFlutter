@@ -1,8 +1,9 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
-import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
@@ -10,10 +11,14 @@ import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/passbook_transport_model.dart';
 import 'package:akshaya_flutter/models/passbook_vendor_model.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -426,8 +431,18 @@ class _TestScreenState extends State<TestScreen> {
       child: TabBarView(
         children: [
           FarmerPassbookTabView(
-            future: futureData.passbookVendorModel,
-          ),
+              future: futureData.passbookVendorModel,
+              accountHolderName: widget.accountHolderName,
+              accountNumber: widget.accountNumber,
+              bankName: widget.bankName,
+              branchName: widget.branchName,
+              district: widget.district,
+              farmerCode: widget.farmerCode,
+              guardianName: widget.guardianName,
+              ifscCode: widget.ifscCode,
+              mandal: widget.mandal,
+              state: widget.state,
+              village: widget.village),
           FarmerTransportTabView(
             future: futureData.passbookTransportModel,
           ),
@@ -605,9 +620,346 @@ class _TestScreenState extends State<TestScreen> {
   }
 }
 
-class FarmerPassbookTabView extends StatelessWidget {
-  const FarmerPassbookTabView({super.key, required this.future});
+class FarmerPassbookTabView extends StatefulWidget {
+  const FarmerPassbookTabView(
+      {super.key,
+      required this.future,
+      required this.accountHolderName,
+      required this.accountNumber,
+      required this.bankName,
+      required this.branchName,
+      required this.district,
+      required this.farmerCode,
+      required this.guardianName,
+      required this.ifscCode,
+      required this.mandal,
+      required this.state,
+      required this.village});
   final Future<PassbookVendorModel> future;
+  final String accountHolderName;
+  final String accountNumber;
+  final String bankName;
+  final String branchName;
+  final String district;
+  final String farmerCode;
+  final String guardianName;
+  final String ifscCode;
+  final String mandal;
+  final String state;
+  final String village;
+
+  @override
+  State<FarmerPassbookTabView> createState() => _FarmerPassbookTabViewState();
+}
+
+class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
+/*   void openDirectory() async {
+    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
+    Directory dir = Directory(folderPath);
+    if (!(await dir.exists())) {
+      await dir.create();
+    }
+    OpenFilex.open(folderPath);
+  }
+
+  Future<void> exportPaymentsAndDownloadFile() async {
+    // API URL
+    String url =
+        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
+    final data = await widget.future;
+
+    List<Map<String, dynamic>> paymentResponce =
+        data.result!.paymentResponce!.map((item) => item.toJson()).toList();
+    Result? result = data.result;
+
+    Map<String, dynamic> requestBody = {
+      "bankDetails": {
+        "accountHolderName": widget.accountHolderName,
+        "accountNumber": widget.accountNumber,
+        "bankName": widget.bankName,
+        "branchName": widget.branchName,
+        "district": widget.district,
+        "farmerCode": widget.farmerCode,
+        "guardianName": widget.guardianName,
+        "ifscCode": widget.ifscCode,
+        "mandal": widget.mandal,
+        "state": widget.state,
+        "village": widget.village,
+      },
+      "totalQuanitity": result!.totalQuanitity,
+      "totalGRAmount": result.totalGrAmount,
+      "totalAdjusted": result.totalAdjusted,
+      "totalAmount": result.totalAmount,
+      "totalBalance": result.totalBalance,
+      "paymentResponce": paymentResponce
+    };
+
+    String jsonBody = json.encode(requestBody);
+
+    try {
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonBody,
+      );
+
+      print('qqq: $url');
+      print('qqq: ${json.encode(requestBody)}');
+      print('qqq: ${response.body}');
+
+      // Check if the request was successful
+      if (response.statusCode == 200) {
+        // Handle the response data here
+        print('Response body: ${response.body}');
+        String base64string = response.body;
+        convertBase64ToExcel(base64string, context);
+
+        if (mounted) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              CommonStyles.hideHorizontalDotsLoadingDialog(context);
+            });
+          });
+        }
+      } else {
+        if (mounted) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              CommonStyles.hideHorizontalDotsLoadingDialog(context);
+            });
+          });
+        }
+        // Handle the error
+        print('Failed to export payments. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            CommonStyles.hideHorizontalDotsLoadingDialog(context);
+          });
+        });
+      }
+      // Handle any exceptions that occur during the request
+      print('Error: $e');
+    }
+  }
+
+  Future<void> convertBase64ToExcel(
+      String base64String, BuildContext context) async {
+    String base64String0 = sanitizeBase64(base64String);
+    print('_base64String$base64String0');
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+    if (await Permission.storage.request().isGranted) {
+      List<int> excelBytes = base64Decode(base64String0);
+
+      Directory directoryPath;
+
+      // Apply different logic based on the Android version
+      if (sdkInt <= 28) {
+        // Android 9 (Pie) and below
+        directoryPath =
+            Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
+      } else {
+        // Android 10 (Q) and above
+        directoryPath = (await getExternalStorageDirectory())!;
+      }
+
+      if (!directoryPath.existsSync()) {
+        directoryPath.createSync(recursive: true);
+      }
+
+      String filePath = directoryPath.path;
+      String fileName = "ledger.xlsx";
+      final File file = File('$filePath/$fileName');
+
+      await file.writeAsBytes(excelBytes);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File Downloaded Successfully')),
+      );
+    }
+  }
+
+  String sanitizeBase64(String base64String) {
+    return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
+  }
+ */
+
+/*   void openDirectory() async {
+    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
+    Directory dir = Directory(folderPath);
+
+    if (!(await dir.exists())) {
+      await dir.create();
+    } else {
+      print("File not downloaded yet!");
+    }
+    OpenFilex.open(folderPath);
+  } */
+
+  void openDirectory() async {
+    // Request storage permission
+    var status = await Permission.storage.request();
+    if (!status.isGranted) {
+      print('Storage permission not granted');
+      return;
+    }
+
+    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
+    Directory dir = Directory(folderPath);
+
+    // Check if directory exists, if not, create it
+    if (!(await dir.exists())) {
+      await dir.create(recursive: true);
+      print('Directory created at $folderPath');
+    }
+
+    // Open the directory (either newly created or already existing)
+    OpenFilex.open(folderPath);
+  }
+
+  //MARK: requestBody
+  void exportPaymentsAndDownloadFile() async {
+    setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    });
+    final data = await widget.future;
+
+    List<Map<String, dynamic>> paymentResponce =
+        data.result!.paymentResponce!.map((item) => item.toJson()).toList();
+    Result? result = data.result;
+
+    Map<String, dynamic> requestBody = {
+      "bankDetails": {
+        "accountHolderName": widget.accountHolderName,
+        "accountNumber": widget.accountNumber,
+        "bankName": widget.bankName,
+        "branchName": widget.branchName,
+        "district": widget.district,
+        "farmerCode": widget.farmerCode,
+        "guardianName": widget.guardianName,
+        "ifscCode": widget.ifscCode,
+        "mandal": widget.mandal,
+        "state": widget.state,
+        "village": widget.village,
+      },
+      "totalQuanitity": result!.totalQuanitity,
+      "totalGRAmount": result.totalGrAmount,
+      "totalAdjusted": result.totalAdjusted,
+      "totalAmount": result.totalAmount,
+      "totalBalance": result.totalBalance,
+      "paymentResponce": paymentResponce
+    };
+
+    const apiUrl =
+        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+
+    try {
+      final jsonResponse = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      print('www: $apiUrl');
+      print('www: ${jsonEncode(requestBody)}');
+      print('www: ${jsonResponse.body}');
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        convertBase64ToExcelAndSaveIntoSpecificDirectory(response);
+      } else {
+        throw Exception('Failed to fetch data');
+      }
+    } catch (e) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
+      });
+      rethrow;
+    }
+  }
+
+  Future<void> convertBase64ToExcelAndSaveIntoSpecificDirectory(
+      String base64String) async {
+    if (base64String.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
+      });
+      return;
+    }
+    String base64 = sanitizeBase64(base64String);
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+    if (await Permission.storage.request().isGranted) {
+      List<int> excelBytes = base64Decode(base64);
+      Directory directoryPath;
+      if (sdkInt <= 28) {
+        directoryPath =
+            Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
+      } else {
+        directoryPath = (await getExternalStorageDirectory())!;
+      }
+      if (!directoryPath.existsSync()) {
+        directoryPath.createSync(recursive: true);
+      }
+
+      String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      String filePath = '$directoryPath/ledger_$timestamp.xlsx';
+      final File file = File(filePath);
+
+      await file.writeAsBytes(excelBytes);
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('File downloaded to $filePath'),
+        ),
+      );
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Permission Denied'),
+          action: SnackBarAction(
+            label: 'Allow',
+            onPressed: () async {
+              await Permission.storage.request();
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  String sanitizeBase64(String base64String) {
+    return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -617,7 +969,7 @@ class FarmerPassbookTabView extends StatelessWidget {
         children: [
           Expanded(
             child: FutureBuilder(
-              future: future,
+              future: widget.future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CommonStyles.rectangularShapeShimmerEffect();
@@ -672,6 +1024,7 @@ class FarmerPassbookTabView extends StatelessWidget {
             ),
           ),
           note(),
+          const SizedBox(height: 5),
         ],
       ),
     );
@@ -908,7 +1261,7 @@ class FarmerPassbookTabView extends StatelessWidget {
           label: tr(LocaleKeys.download),
           padding: const EdgeInsets.all(0),
           height: 60,
-          onPressed: () {},
+          onPressed: openDirectory,
         )),
         const SizedBox(width: 10),
         Expanded(
@@ -916,7 +1269,9 @@ class FarmerPassbookTabView extends StatelessWidget {
           padding: const EdgeInsets.all(0),
           label: tr(LocaleKeys.click_downlad),
           height: 60,
-          onPressed: () {},
+          onPressed: () {
+            exportPaymentsAndDownloadFile();
+          },
         )),
       ],
     );
@@ -1002,6 +1357,7 @@ class FarmerTransportTabView extends StatelessWidget {
           transportationRateBtns(),
           const SizedBox(height: 10),
           note(),
+          const SizedBox(height: 5),
         ],
       ),
     );
