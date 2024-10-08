@@ -658,6 +658,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return SuccessDialog(msg: msg, title: summary);
       },

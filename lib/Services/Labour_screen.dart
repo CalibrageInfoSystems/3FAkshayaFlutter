@@ -35,6 +35,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   List<ServiceType> ServiceType_list = [];
   List<ResponseModel> ResponseModel_list = [];
   final List<ServiceType> _selectedServiceTypes = [];
+  List<DropdownMenuItem<String>> dropDownValues = [];
   late List<dynamic> appointmentsData;
   bool _isChecked = false;
   bool _isagreed = false;
@@ -49,14 +50,15 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   double? pruningWithIntercropCost;
   double? harvestingWithIntercropCost;
   late Future<FarmerModel> farmerData;
+  String? selectedDropDownValue;
   late String farmerCode,
       farmerName,
       Statecode,
       StateName,
       servicename,
       service_id;
-  late int Cluster_id;
-  late int selectduration_id;
+  int? Cluster_id;
+  int? selectduration_id;
 
   bool harvestingCheck = false;
   bool pruningCheck = false;
@@ -353,8 +355,21 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                         selectedServiceNames
                                                             .contains(
                                                                 'Harvesting (గెలల కోత)');
-                                                    print(
-                                                        '=========>$pruningCheck  =====$harvestingCheck');
+                                                    if (pruningCheck &&
+                                                        harvestingCheck) {
+                                                      selectedDropDownValue =
+                                                          null;
+                                                      selectduration_id = null;
+                                                    } else if (pruningCheck) {
+                                                      selectedDropDownValue =
+                                                          '1 Day';
+                                                      selectduration_id = 38;
+                                                    }
+
+                                                    dropDownValues =
+                                                        setDropDownValues(
+                                                            pruningCheck,
+                                                            harvestingCheck);
                                                   });
 
                                                   Navigator.pop(
@@ -555,13 +570,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       const SizedBox(
                         height: 4,
                       ),
-                      // _labourRequests.isEmpty
-                      //     ? CircularProgressIndicator() // Show loading indicator while data is being fetched
-                      //     :
+
+                      //MARK: DropdownButton2
                       Container(
                         height: 45,
                         padding: const EdgeInsets.only(right: 10),
-                        // padding: const EdgeInsets.symmetric(vertical: 15),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
@@ -569,10 +582,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2<String>(
-                            // value: (_selectedServiceTypes.any((service) => service.typeCdId == 20) && !_selectedServiceTypes.any((service) => service.typeCdId == 19))
-                            //     ? null // Show hint if 20 is selected
-                            //     : _selectedDesc,
-                            value: _getSelectedValue(),
+                            value: selectedDropDownValue,
                             iconStyleData: const IconStyleData(
                               icon: Icon(
                                 Icons.keyboard_arrow_down_rounded,
@@ -584,22 +594,19 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                               'Select',
                               style: CommonStyles.txStyF14CwFF6,
                             ),
-                            items: _getDropdownItems(),
+                            items: dropDownValues,
                             onChanged: (String? newValue) {
                               setState(() {
-                                _selectedDesc = newValue;
-                                print('_selectedDesc$_selectedDesc');
+                                selectedDropDownValue = newValue;
                                 LabourRequest? selectedRequest =
                                     _labourRequests.firstWhere(
                                   (request) => request.desc == newValue,
                                 );
-
-                                print(
-                                    'Selected typeCdId: ${selectedRequest.typeCdId}'); // Print the typeCdId
                                 selectduration_id = selectedRequest.typeCdId;
+                                print(
+                                    'DropDown Values: $selectedDropDownValue | $selectduration_id');
                               });
                             },
-
                             dropdownStyleData: DropdownStyleData(
                               decoration: const BoxDecoration(
                                 // borderRadius: BorderRadius.circular(14),
@@ -627,19 +634,19 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         height: 2,
                       ),
 
-                      if (_selectedDesc != null &&
+                      /*  if (_selectedDesc != null &&
                           (_selectedDesc == _labourRequests[1].desc ||
                               _selectedDesc == _labourRequests[2].desc ||
-                              _selectedDesc == _labourRequests[3].desc))
+                              _selectedDesc == _labourRequests[3].desc)) */
+                      if (selectedDropDownValue == '3 Months' ||
+                          selectedDropDownValue == '6 Months' ||
+                          selectedDropDownValue == '1 Year')
                         Padding(
                           padding: const EdgeInsets.all(0),
                           child: Text(
                             tr(LocaleKeys.text),
-                            style: const TextStyle(
-                              fontFamily: "hind_semibold",
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xFF34A350),
-                            ),
+                            style: CommonStyles.txStyF14CpFF6.copyWith(
+                                color: const Color.fromARGB(255, 3, 201, 105)),
                           ),
                         ),
                       const SizedBox(
@@ -749,7 +756,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-  List<DropdownMenuItem<String>> _getDropdownItems() {
+//MARK: _getDropdownItems
+/*   List<DropdownMenuItem<String>> _getDropdownItems() {
+    print(
+        'List<LabourRequest> _labourRequests: ${_labourRequests.map((req) => req.desc).join(', ')}');
     if (_selectedServiceTypes.any((service) => service.typeCdId == 19) &&
         !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
       return [_labourRequests[0]]
@@ -773,7 +783,28 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           .toList();
     }
   }
+ */
+  Widget submitBtn(
+    BuildContext context,
+    String language,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomBtn(
+            label: language,
+            onPressed: () async {
+              // bool validationSuccess = await isvalidations();
+              /* if (validationSuccess) {
+                  submitLabourRequest();
+                } */
+              submitLabourRequest();
+            }),
+      ],
+    );
+  }
 
+/* 
   Widget submitBtn(
     BuildContext context,
     String language,
@@ -800,10 +831,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         ),
         child: ElevatedButton(
           onPressed: () async {
-            bool validationSuccess = await isvalidations();
-            if (validationSuccess) {
-              labourrequestsendbtn();
-            }
+            // bool validationSuccess = await isvalidations();
+            /* if (validationSuccess) {
+              submitLabourRequest();
+            } */
+            submitLabourRequest();
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
@@ -824,7 +856,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       ),
     );
   }
-
+ */
+//MARK: isvalidations
   Future<bool> isvalidations() async {
     bool isValid = true;
 
@@ -988,13 +1021,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-  Future<void> labourrequestsendbtn() async {
+  Future<void> submitLabourRequest() async {
     final url = Uri.parse(baseUrl + addlabourequest);
-    print('url==>555: $url');
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
-    DateTime cuurentdate = DateTime.now();
+    DateTime currentDate = DateTime.now();
 
     DateFormat inputFormat = DateFormat('dd/MM/yyyy');
     DateFormat outputFormat = DateFormat('yyyy-MM-dd');
@@ -1003,33 +1035,34 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     String formattedDate = outputFormat.format(parsedDate);
 
     String comments = _commentController.text.toString();
-
     final request = {
-      "package": _selectedDesc.toString(),
-      "clusterId": Cluster_id,
-      "comments": comments,
-      "createdDate": "$cuurentdate",
-      "durationId": selectduration_id,
       "farmerCode": farmerCode,
       "farmerName": farmerName,
-      "harvestingAmount": harvestCost,
-      "harvestingWithIntercropAmount": harvestingWithIntercropCost,
-      "isFarmerRequest": true,
-      "ownPole": _isChecked,
-      "palmArea": widget.plotdata.palmArea,
       "plotCode": "${widget.plotdata.plotcode}",
       "plotVillage": "${widget.plotdata.villageName}",
+      "palmArea": widget.plotdata.palmArea,
+      "isFarmerRequest": true,
+      "comments": comments,
       "preferredDate": formattedDate,
+      "durationId": selectduration_id,
+      "serviceTypes": jsonEncode(selectedServiceIds.toList()),
+      "createdByUserId": 1,
+      "createdDate": CommonStyles.formatDisplayDate(currentDate),
+      "updatedByUserId": 1,
+      "updatedDate": CommonStyles.formatDisplayDate(currentDate),
+      "amount": 1.1,
+      "harvestingAmount": harvestCost,
       "pruningAmount": prunningCost,
       "pruningWithIntercropAmount": harvestingWithIntercropCost,
-      "serviceTypes": selectedServiceIds,
+      "harvestingWithIntercropAmount": harvestingWithIntercropCost,
+      "yearofPlanting": "${widget.plotdata.dateOfPlanting}",
+      "clusterId": Cluster_id,
+      "ownPole": _isChecked,
       "services": selectedServiceNames,
+      "package": _selectedDesc.toString(),
       "stateCode": Statecode,
       "stateName": StateName,
-      "updatedDate": "$cuurentdate",
-      "yearofPlanting": "${widget.plotdata.dateOfPlanting}"
     };
-    print('addreqestheader: ${json.encode(request)}');
 
     try {
       final response = await http.post(
@@ -1039,6 +1072,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           'Content-Type': 'application/json',
         },
       );
+      print('labourrequestsendbtn: $url');
+      print('labourrequestsendbtn: ${json.encode(request)}');
+      print('labourrequestsendbtn: ${response.body}');
 
       if (response.statusCode == 200) {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
@@ -1306,6 +1342,33 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  //MARK: setDropDownValues
+  List<DropdownMenuItem<String>> setDropDownValues(
+      bool pruningCheck, bool harvestingCheck) {
+    if (pruningCheck && harvestingCheck) {
+      return _labourRequests
+          .map((request) => DropdownMenuItem<String>(
+                value: request.desc,
+                child: Text(
+                  request.desc,
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ))
+          .toList();
+    } else {
+      return _labourRequests
+          .where((request) => request.typeCdId == 38)
+          .map((request) => DropdownMenuItem<String>(
+                value: request.desc,
+                child: Text(
+                  request.desc,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ))
+          .toList();
+    }
   }
 }
 

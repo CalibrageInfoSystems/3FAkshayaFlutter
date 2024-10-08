@@ -136,7 +136,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   children: [
                     Checkbox(
                       value: _isCheckboxChecked,
-                      activeColor: CommonStyles.primaryTextColor,
                       onChanged: (bool? value) {
                         setState(() {
                           _isCheckboxChecked = value ?? false;
@@ -235,7 +234,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                                 updatedDate: DateTime.now().toIso8601String(),
                                 godownId: widget.godown.id!,
                                 paymentModeType: paymentmodeId,
-                                isImmediatePayment: _isCheckboxChecked,
+                                isImmediatePayment: true,
                                 fileName: null,
                                 fileLocation: null,
                                 fileExtension: null,
@@ -655,8 +654,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 product.transPortActualPriceInclGst! * quantity;
             displayTransportamountWithGst += transportCost;
 
-            final productGSTPercentage = product.gstPercentage ?? 0.0;
-            displayamountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+            final productGSTPercentage = product.gstPercentage!;
+            displayamountWithoutGst +=
+                productCost / (1 + (productGSTPercentage / 100));
 
             displaytotalGst =
                 displaytotalProductCostGst - displayamountWithoutGst;
@@ -704,8 +704,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 key: tr(LocaleKeys.amount_payble),
                 value: payableAmount.toStringAsFixed(2)),
           ];
-          showSuccessDialog(context, displayList, tr(LocaleKeys.success_fertilizer));
 
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_fertilizer));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -757,33 +758,40 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       },
     );
   } */
-  // Future<void> showSuccessDialog(
-  //     BuildContext context, List<MsgModel> displayList, String successMessage) {
-  //   return showDialog<void>(
-  //     context: context,
-  //     barrierDismissible: false, // Ensure the dialog is modal
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text(successMessage),
-  //         content: SingleChildScrollView(
-  //           child: ListBody(
-  //             children: displayList
-  //                 .map((msg) => Text('${msg.key}: ${msg.value}'))
-  //                 .toList(),
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: const Text('OK'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> showSuccessDialog(
+      BuildContext context, List<MsgModel> displayList, String successMessage) {
+    /* return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Ensure the dialog is modal
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(successMessage),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: displayList
+                  .map((msg) => Text('${msg.key}: ${msg.value}'))
+                  .toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    ); */
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SuccessDialog(msg: displayList, title: successMessage);
+      },
+    );
+  }
 
   void calculateCosts() {
     // Initialize the variables
@@ -860,15 +868,5 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     final ConnectivityResult connectivityResult =
         await Connectivity().checkConnectivity();
     return connectivityResult != ConnectivityResult.none;
-  }
-
-  void showSuccessDialog(
-      BuildContext context, List<MsgModel> msg, String summary) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
-      },
-    );
   }
 }
