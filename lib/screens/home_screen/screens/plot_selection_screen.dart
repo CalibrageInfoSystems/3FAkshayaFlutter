@@ -7,6 +7,7 @@ import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/test_crop.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/visit_request_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonStyles.listOddColor,
+      backgroundColor: CommonStyles.whiteColor,
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
@@ -104,6 +105,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       default:
         Navigator.of(context).push(
           MaterialPageRoute(
+            // builder: (context) => TestCrop(plotdata: plot),
             builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
           ),
         );
@@ -170,21 +172,21 @@ class CropPlotDetails extends StatelessWidget {
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
     String year = parsedDate.year.toString();
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10).copyWith(
+        left: 10,
+      ),
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: index.isEven ? CommonStyles.listEvenColor : Colors.transparent,
+        color:
+            index.isEven ? CommonStyles.whiteColor : CommonStyles.listEvenColor,
+        //  ? CommonStyles.listEvenColor
+        //     : CommonStyles.listOddColor,
       ),
-      child: Stack(
+      child: Row(
         children: [
-          plotCard(df, year),
-          if (isIconVisible)
-            const Positioned(
-                top: 0,
-                bottom: 0,
-                right: 0,
-                child: Icon(Icons.arrow_forward_ios_rounded))
+          Expanded(child: plotCard(df, year)),
+          if (isIconVisible) const Icon(Icons.arrow_forward_ios_rounded),
         ],
       ),
     );
@@ -212,12 +214,13 @@ class CropPlotDetails extends StatelessWidget {
           data: '${plotdata.landMark}',
         ),
         plotDetailsBox(
-          label: tr(LocaleKeys.address),
+          label: tr(LocaleKeys.cluster_officer),
           data: '${plotdata.clusterName}',
         ),
         plotDetailsBox(
           label: tr(LocaleKeys.yop),
           data: year,
+          isSpace: false,
         ),
       ],
     );
@@ -226,6 +229,7 @@ class CropPlotDetails extends StatelessWidget {
   Widget plotDetailsBox(
       {required String label,
       required String data,
+      bool isSpace = true,
       Color? dataTextColor = CommonStyles.dataTextColor}) {
     return Column(
       children: [
@@ -248,7 +252,7 @@ class CropPlotDetails extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        if (isSpace) const SizedBox(height: 8),
       ],
     );
   }

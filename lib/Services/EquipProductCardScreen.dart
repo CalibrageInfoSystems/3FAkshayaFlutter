@@ -128,7 +128,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               Row(
                 children: [
                   Text(tr(LocaleKeys.payment_mode),
-                      style: CommonStyles.txSty_16black_f5),
+                      style: CommonStyles.txStyF16CbFF6),
                   const SizedBox(width: 5),
                   const Text('*', style: TextStyle(color: Colors.red)),
                 ],
@@ -137,27 +137,30 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               dropdownWidget(),
               const SizedBox(height: 10),
               Text(tr(LocaleKeys.product_details),
-                  style: CommonStyles.txSty_16black_f5),
+                  style: CommonStyles.txStyF16CbFF6),
               const SizedBox(height: 5),
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  itemCount: widget.products.length,
+                  itemBuilder: (context, index) {
+                    return widget.products[index].quantity == 0
+                        ? const SizedBox()
+                        : productBox(widget.products[index]);
+                  },
+                ),
+              ),
               Column(
                 children: [
-                  ListView.builder(
-                    itemCount: widget.products.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return widget.products[index].quantity == 0
-                          ? const SizedBox()
-                          : productBox(widget.products[index]);
-                    },
-                  ),
                   const SizedBox(height: 20),
                   CommonStyles.horizontalGradientDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
+                  const SizedBox(height: 10),
                   noteBox(),
+                  const SizedBox(height: 10),
                   productCostbox(
                       title: tr(LocaleKeys.amount),
                       data: amountWithoutGst.toStringAsFixed(2)),
@@ -170,6 +173,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                   productCostbox(
                       title: tr(LocaleKeys.total_amt),
                       data: totalProductCostGst.toStringAsFixed(2)),
+                  const SizedBox(height: 4),
                   // productCostbox(title: tr(LocaleKeys.transamount), data: TransportamountWithoutGst.toStringAsFixed(2)),
                   // productCostbox(title: tr(LocaleKeys.tcgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
                   // productCostbox(title: tr(LocaleKeys.tsgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
@@ -181,55 +185,61 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
+                  const SizedBox(height: 10),
 
-                  CustomBtn(
-                    label: tr(LocaleKeys.submit),
-                    borderColor: CommonStyles.primaryTextColor,
-                    borderRadius: 12,
-                    onPressed: () async {
-                      // Disable button when loading
-                      if (validations()) {
-                        if (await isOnline()) {
-                          final request = FertilizerRequest(
-                            id: 0,
-                            requestTypeId: 10,
-                            farmerCode: farmerCode,
-                            farmerName: farmerName,
-                            plotCode: null,
-                            requestCreatedDate:
-                                DateTime.now().toIso8601String(),
-                            isFarmerRequest: true,
-                            createdByUserId: null,
-                            createdDate: DateTime.now().toIso8601String(),
-                            updatedByUserId: null,
-                            updatedDate: DateTime.now().toIso8601String(),
-                            godownId: widget.godown.id!,
-                            paymentModeType: paymentmodeId,
-                            isImmediatePayment: true,
-                            fileName: null,
-                            fileLocation: null,
-                            fileExtension: null,
-                            totalCost: totalAmountWithGST,
-                            subcidyAmount: 0.0,
-                            paybleAmount: payableAmount,
-                            transportPayableAmount: null,
-                            comments: null,
-                            cropMaintainceDate: null,
-                            issueTypeId: null,
-                            godownCode: '${widget.godown.code}',
-                            requestProductDetails: productDetailsList,
-                            clusterId: Cluster_id,
-                            stateCode: Statecode,
-                            stateName: StateName,
-                          );
-                          print('CHECK BOX VALUE: $_isCheckboxChecked');
-                          await submitFertilizerRequest(request);
-                        } else {
-                          CommonStyles.showCustomDialog(
-                              context, tr(LocaleKeys.Internet));
-                        }
-                      }
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomBtn(
+                        label: tr(LocaleKeys.submit),
+                        borderColor: CommonStyles.primaryTextColor,
+                        borderRadius: 12,
+                        onPressed: () async {
+                          // Disable button when loading
+                          if (validations()) {
+                            if (await isOnline()) {
+                              final request = FertilizerRequest(
+                                id: 0,
+                                requestTypeId: 10,
+                                farmerCode: farmerCode,
+                                farmerName: farmerName,
+                                plotCode: null,
+                                requestCreatedDate:
+                                    DateTime.now().toIso8601String(),
+                                isFarmerRequest: true,
+                                createdByUserId: null,
+                                createdDate: DateTime.now().toIso8601String(),
+                                updatedByUserId: null,
+                                updatedDate: DateTime.now().toIso8601String(),
+                                godownId: widget.godown.id!,
+                                paymentModeType: paymentmodeId,
+                                isImmediatePayment: true,
+                                fileName: null,
+                                fileLocation: null,
+                                fileExtension: null,
+                                totalCost: totalAmountWithGST,
+                                subcidyAmount: 0.0,
+                                paybleAmount: payableAmount,
+                                transportPayableAmount: null,
+                                comments: null,
+                                cropMaintainceDate: null,
+                                issueTypeId: null,
+                                godownCode: '${widget.godown.code}',
+                                requestProductDetails: productDetailsList,
+                                clusterId: Cluster_id,
+                                stateCode: Statecode,
+                                stateName: StateName,
+                              );
+                              print('CHECK BOX VALUE: $_isCheckboxChecked');
+                              await submitFertilizerRequest(request);
+                            } else {
+                              CommonStyles.showCustomDialog(
+                                  context, tr(LocaleKeys.Internet));
+                            }
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -257,19 +267,19 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txSty_14p_f5,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
           ],
         ),
@@ -305,7 +315,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   Container dropdownWidget() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      // padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -354,7 +364,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                 value: index,
                 child: Text(
                   item['desc'],
-                  style: CommonStyles.txSty_14b_f6,
+                  style: CommonStyles.txStyF14CbFF6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -388,12 +398,15 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               Icons.arrow_drop_down_sharp,
             ),
             iconSize: 24,
-            iconEnabledColor: Color(0xFF11528f),
-            iconDisabledColor: Color(0xFF11528f),
+            iconEnabledColor: CommonStyles.blackColorShade,
+            iconDisabledColor: CommonStyles.blackColorShade,
           ),
           dropdownStyleData: DropdownStyleData(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+            decoration: const BoxDecoration(
+              // borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
               // color: Colors.grey,
 
               color: CommonStyles.screenBgColor,
@@ -407,7 +420,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           ),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
-            padding: EdgeInsets.only(left: 20, right: 20),
+            // padding: EdgeInsets.only(left: 20, right: 20),
           ),
         ),
       ),
@@ -439,17 +452,20 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
+                flex: 8,
                 child:
-                    Text('${product.name}', style: CommonStyles.txSty_14p_f5),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),
@@ -499,14 +515,13 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label1, style: CommonStyles.txStyF12CbFF6),
+                    flex: 4,
+                    child: Text(label1, style: CommonStyles.txStyF14CbFF6),
                   ),
-                  const SizedBox(
-                      width: 3), // Optional spacing between label and data
+                  const SizedBox(width: 3),
                   Expanded(
-                    flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data1, style: CommonStyles.txStyF12CbFF6),
+                    flex: 2,
+                    child: Text(data1, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -517,14 +532,13 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    flex: 4, // Adjust the flex value as needed for the label
-                    child: Text(label2, style: CommonStyles.txStyF12CbFF6),
+                    flex: 4,
+                    child: Text(label2, style: CommonStyles.txStyF14CbFF6),
                   ),
-                  const SizedBox(
-                      width: 3), // Optional spacing between label and data
+                  const SizedBox(width: 3),
                   Expanded(
-                    flex: 2, // Adjust the flex value as needed for the data
-                    child: Text(data2, style: CommonStyles.txStyF12CbFF6),
+                    flex: 2,
+                    child: Text(data2, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),

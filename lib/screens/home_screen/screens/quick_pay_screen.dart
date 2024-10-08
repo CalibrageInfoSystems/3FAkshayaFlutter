@@ -155,9 +155,8 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   Container quickPayBox({required int index, required UnpaidCollection data}) {
     return Container(
       decoration: BoxDecoration(
-        color: index.isEven
-            ? CommonStyles.listEvenColor
-            : CommonStyles.listOddColor,
+        color:
+            index.isEven ? CommonStyles.whiteColor : CommonStyles.listOddColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -169,11 +168,12 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
               datatextColor: CommonStyles.primaryTextColor),
           buildQuickPayRow(
             label: tr(LocaleKeys.net_weight),
-            data: data.quantity.toString(),
+            data: formatNetWeight(data.quantity),
+            // data: data.quantity.toString(),
           ),
           buildQuickPayRow(
             label: tr(LocaleKeys.only_date),
-            data: formateDate(data.docDate),
+            data: CommonStyles.formatDate(data.docDate),
           ),
           buildQuickPayRow(
             label: tr(LocaleKeys.cc),
@@ -182,6 +182,14 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
         ],
       ),
     );
+  }
+
+  String? formatNetWeight(double? quantity) {
+    if (quantity == null) {
+      return quantity.toString();
+    } else {
+      return '${quantity.toStringAsFixed(3)} MT';
+    }
   }
 
   String? formateDate(String? formateDate) {
@@ -206,9 +214,9 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
               style: CommonStyles.txStyF14CbFF6,
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
           Expanded(
-            flex: 7,
+            flex: 8,
             child: Text(
               '$data',
               style: CommonStyles.txStyF14CbFF6.copyWith(

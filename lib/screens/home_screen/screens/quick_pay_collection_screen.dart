@@ -276,7 +276,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Collection Details',
+              Text(tr(LocaleKeys.collectionsdetails),
                   style: CommonStyles.txSty_16p_f5),
               const SizedBox(height: 5),
               collectionDetails(),
@@ -311,28 +311,30 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Quick Pay Details', style: CommonStyles.txSty_16p_f5),
+            Text(tr(LocaleKeys.quickpay_details),
+                style: CommonStyles.txSty_16p_f5),
             const SizedBox(height: 5),
             Column(
               children: [
                 buildQuickPayRow(
-                    label: 'QuickPay Cost (RS)',
+                    label: tr(LocaleKeys.amount_of_FFB),
                     data:
                         '${calculateDynamicSum(collections, 'quickPayCost')}'),
                 buildQuickPayRow(
-                    label: 'Transaction Fee (RS)',
+                    label: tr(LocaleKeys.convenience_charge),
                     data: '-${collections[0].transactionFee}'),
                 buildQuickPayRow(
-                    label: 'QuickPay Fee (RS)',
+                    label: tr(LocaleKeys.quick_pay),
                     data: '-${calculateDynamicSum(collections, 'quickPay')}'),
                 buildQuickPayRow(
-                    label: 'Dues (RS)', data: '-${collections[0].dues}'),
+                    label: tr(LocaleKeys.closingBal),
+                    data: '-${collections[0].dues}'),
                 Container(
                   height: 0.5,
                   color: Colors.grey,
                 ),
                 buildQuickPayRow(
-                    label: 'Total (RS)',
+                    label: tr(LocaleKeys.total_amt_pay),
                     data: '${totalSum(collections)}',
                     // data: calculateDynamicSum(collections, 'total'),
                     color: CommonStyles.primaryTextColor),
@@ -442,7 +444,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
               style: CommonStyles.txStyF16CpFF6,
             );
           } else if (!snapshot.hasData) {
-            return const Text('No data');
+            return const Center(child: Text('No Collection found'));
           }
 
           final collections = snapshot.data as List<CollectionDetails>;
@@ -456,24 +458,28 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
-                  color: index.isEven ? Colors.white : Colors.grey.shade300,
+                  color:
+                      index.isEven ? Colors.white : CommonStyles.listOddColor,
                   // color: Colors.lightGreenAccent,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
                   children: [
                     buildQuickPayRow(
-                        label: 'Collecton Id', data: collection.collectionId),
+                        label: tr(LocaleKeys.collection_Id),
+                        data: collection.collectionId),
                     buildQuickPayRow(
-                        label: 'Quantity (MT)',
-                        data: collection.collectionQuantity.toString()),
+                      label: tr(LocaleKeys.quantity_mt),
+                      data: formatNetWeight(collection.collectionQuantity),
+                    ),
                     buildQuickPayRow(
-                        label: 'Date', data: formateDate(collection.date)),
+                        label: tr(LocaleKeys.date_label),
+                        data: formateDate(collection.date)),
                     buildQuickPayRow(
-                        label: 'QuickPay Rate (RS)',
+                        label: tr(LocaleKeys.ffb_flot),
                         data: collection.quickPayRate.toString()),
                     buildQuickPayRow(
-                        label: 'QuickPay Cost (RS)',
+                        label: tr(LocaleKeys.amount_of_FFB),
                         data: collection.quickPayCost.toString()),
                   ],
                 ),
@@ -483,6 +489,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         },
       ),
     );
+  }
+
+  String? formatNetWeight(double? quantity) {
+    if (quantity == null) {
+      return quantity.toString();
+    } else {
+      return quantity.toStringAsFixed(3);
+    }
   }
 
   String? formateDate(String? formateDate) {
@@ -495,13 +509,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   Widget termsAndConditions() {
     return Column(
       children: [
-        const Text('Terms & Conditions', style: CommonStyles.txSty_16p_fb),
+        Text(tr(LocaleKeys.terms_conditionsss),
+            style: CommonStyles.txSty_16p_fb),
         const SizedBox(height: 5),
         AnimatedReadMoreText(
           tr(LocaleKeys.loan_message),
           maxLines: 3,
           readMoreText: 'Read More',
-          readLessText: 'Read Less',
+          readLessText: '  ',
           textStyle: CommonStyles.txSty_14b_f5,
           buttonTextStyle: CommonStyles.txSty_14p_f5,
         ),
@@ -523,18 +538,24 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                   });
                 },
               ),
-              const Text("I agree to the terms & conditions"),
+              Text(
+                tr(LocaleKeys.terms_conditionss),
+                style: CommonStyles.txStyF14CpFF6,
+              ),
             ],
           ),
         ),
         const SizedBox(height: 5),
-        CustomBtn(
-          label: 'Confirm Request',
-          onPressed: () {
-            processRequest();
-            //test();
-          },
-          // onPressed: processRequest,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomBtn(
+              label: 'Confirm Request',
+              onPressed: () {
+                processRequest();
+              },
+            ),
+          ],
         ),
       ],
     );

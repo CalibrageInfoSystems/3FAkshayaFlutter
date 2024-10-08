@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:akshaya_flutter/services/plots_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
@@ -67,6 +68,17 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         throw Exception('Failed to get learning data');
       }
+    } on SocketException catch (se) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            tr(LocaleKeys.Internet),
+          ),
+        ),
+      );
+      throw Exception(
+        tr(LocaleKeys.Internet),
+      );
     } catch (error) {
       rethrow;
     }
@@ -168,10 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: CommonStyles.txStyF12CbFF6,
           );
         } else if (snapshot.hasError) {
-          return Text(
-            'Error: ${snapshot.error}',
-            style: CommonStyles.txStyF16CpFF6,
-          );
+          return const ShimmerWidn();
         }
         return const ShimmerWidn();
       },
@@ -237,10 +246,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text(
-            'Error: ${snapshot.error}',
-            style: CommonStyles.txStyF16CpFF6,
-          );
+          /* return Center(
+                          child: Text(
+                              snapshot.error
+                                  .toString()
+                                  .replaceFirst('Exception: ', ''),
+                              style: CommonStyles.txStyF16CpFF6),
+                        ); */
+          return const ShimmerWidn();
         }
         return const ShimmerWidn(); // Placeholder when loading
       },
@@ -271,9 +284,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const ShimmerWidn();
                       } else if (snapshot.hasError) {
-                        return Text(
+                        /*  return Text(
                           'Error: ${snapshot.error}',
                           style: CommonStyles.txStyF16CpFF6,
+                        ); */
+                        return Center(
+                          child: Text(
+                              snapshot.error
+                                  .toString()
+                                  .replaceFirst('Exception: ', ''),
+                              style: CommonStyles.txStyF16CpFF6),
                         );
                       } else {
                         final serviceTypeIdList = snapshot.data as List<int>;
@@ -329,14 +349,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FutureBuilder(
-                    future: getLearningsData(),
+                    future: learningsData,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const ShimmerWidn();
+                        return const ShimmerWidn(
+                          height: 70,
+                        );
                       } else if (snapshot.hasError) {
-                        return Text(
-                          'Error: ${snapshot.error}',
-                          style: CommonStyles.txStyF16CpFF6,
+                        /* return Center(
+                          child: Text(
+                              snapshot.error
+                                  .toString()
+                                  .replaceFirst('Exception: ', ''),
+                              style: CommonStyles.txStyF16CpFF6),
+                        ); */
+                        return const ShimmerWidn(
+                          height: 70,
                         );
                       } else {
                         final learningsList = snapshot.data as List<String?>;
@@ -747,8 +775,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ShimmerWidn extends StatelessWidget {
-  const ShimmerWidn({super.key});
-
+  const ShimmerWidn({super.key, this.height = 70});
+  final double? height;
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -756,7 +784,7 @@ class ShimmerWidn extends StatelessWidget {
       highlightColor: Colors.grey[100]!,
       child: Container(
         width: double.infinity,
-        height: 25.0,
+        height: height,
         color: Colors.white,
       ),
     );

@@ -413,8 +413,11 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             iconDisabledColor: Color(0xFF11528f),
           ),
           dropdownStyleData: DropdownStyleData(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+            decoration: const BoxDecoration(
+              // borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
               color: CommonStyles.screenBgColor,
             ),
             offset: const Offset(0, 0),

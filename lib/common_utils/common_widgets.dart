@@ -49,27 +49,28 @@ class CommonWidgets {
       Color? dataTextColor,
       TextAlign? textAlign = TextAlign.start,
       TextStyle? style = CommonStyles.txStyF14CbFF6,
+      List<int> flex = const [5, 1, 6],
       bool isSpace = true}) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-                flex: 5,
+                flex: flex[0],
                 child: Text(
                   label,
                   textAlign: textAlign,
                   style: style,
                 )),
             Expanded(
-              flex: 1,
+              flex: flex[1],
               child: Text(
                 ':',
                 style: style,
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: flex[2],
               child: Text(
                 data,
                 textAlign: textAlign,

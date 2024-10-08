@@ -6,21 +6,25 @@ class CustomBtn extends StatelessWidget {
   final String label;
   final double borderRadius;
   final Color borderColor;
+  final Color? btnColor;
   final TextStyle? btnTextStyle;
   final double? height;
   final EdgeInsetsGeometry? padding;
   final void Function()? onPressed;
+  final Widget? btnChild;
   const CustomBtn({
     super.key,
     required this.label,
     this.borderRadius = 12,
     this.onPressed,
     this.btnTextStyle,
-    this.borderColor = CommonStyles.primaryTextColor2,
+    this.borderColor = CommonStyles.btnBorderColor,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 20,
     ),
     this.height = 40.0,
+    this.btnColor,
+    this.btnChild,
   });
 
   @override
@@ -32,6 +36,7 @@ class CustomBtn extends StatelessWidget {
         alignment: Alignment.center,
         padding: padding,
         decoration: BoxDecoration(
+          color: btnColor,
           borderRadius: BorderRadius.circular(borderRadius),
           gradient: const LinearGradient(
             begin: Alignment.topCenter,
@@ -47,16 +52,17 @@ class CustomBtn extends StatelessWidget {
             width: 2.0,
           ),
         ),
-        child: Text(
-          label,
-          style: btnTextStyle ??
-              const TextStyle(
-                fontSize: 14,
-                fontFamily: FontFamily.hind,
-                fontWeight: FontWeight.w600,
-                color: CommonStyles.primaryTextColor,
-              ),
-        ),
+        child: btnChild ??
+            Text(
+              label,
+              style: btnTextStyle ??
+                  const TextStyle(
+                    fontSize: 14,
+                    fontFamily: FontFamily.hind,
+                    fontWeight: FontWeight.w600,
+                    color: CommonStyles.primaryTextColor,
+                  ),
+            ),
       ),
     );
   }

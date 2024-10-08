@@ -333,7 +333,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   Container dropdownWidget() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      // padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -421,8 +421,11 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             iconDisabledColor: Color(0xFF11528f),
           ),
           dropdownStyleData: DropdownStyleData(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+            decoration: const BoxDecoration(
+              // borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
               // color: Colors.grey,
               color: CommonStyles.screenBgColor,
             ),

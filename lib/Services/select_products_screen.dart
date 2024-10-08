@@ -129,34 +129,11 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     return Scaffold(
       backgroundColor: CommonStyles.screenBgColor2,
       appBar: appBar(context),
-      body: FutureBuilder(
-        future: productsData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return shimmerLoading();
-          }
-          if (snapshot.hasError) {
-            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6);
-          } else {
-            final products = snapshot.data as List<ProductItem>;
-            if (products.isNotEmpty) {
-              return Column(
-                children: [
-                  headerSection(),
-                  Expanded(child: filterAndProductSection(products)),
-                ],
-              );
-            } else {
-              return const Center(
-                child: Text(
-                  'No products found',
-                  style: CommonStyles.txStyF16CpFF6,
-                ),
-              );
-            }
-          }
-        },
+      body: Column(
+        children: [
+          headerSection(),
+          Expanded(child: filterAndProductSection()),
+        ],
       ),
     );
   }
@@ -202,7 +179,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
     );
   }
 
-  Widget filterAndProductSection(List<ProductItem> products) {
+  Widget filterAndProductSection() {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
       child: Column(
@@ -217,7 +194,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
           const SizedBox(height: 10),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            // padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(10),
@@ -242,30 +219,57 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          Expanded(
-              child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-                mainAxisExtent: 250,
-                childAspectRatio: 8 / 2),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              final quantity = productQuantities[product.id] ?? 0;
-              return ProductCard(
-                product: product,
-                quantity: quantity,
-                onQuantityChanged: (newQuantity) {
-                  setState(() {
-                    productQuantities[product.id!] = newQuantity;
-                    updateBadgeCount();
-                  });
-                },
-              );
+          FutureBuilder(
+            future: productsData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return shimmerLoading();
+              }
+              if (snapshot.hasError) {
+                return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                    style: CommonStyles.txStyF16CpFF6);
+              } else {
+                final products = snapshot.data as List<ProductItem>;
+                if (products.isNotEmpty) {
+                  return Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 5.0,
+                              mainAxisSpacing: 5.0,
+                              mainAxisExtent: 250,
+                              childAspectRatio: 8 / 2),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        final quantity = productQuantities[product.id] ?? 0;
+                        return ProductCard(
+                          product: product,
+                          quantity: quantity,
+                          onQuantityChanged: (newQuantity) {
+                            setState(() {
+                              productQuantities[product.id!] = newQuantity;
+                              updateBadgeCount();
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const Expanded(
+                    child: Center(
+                      child: Text(
+                        'No products found',
+                        style: CommonStyles.txStyF16CpFF6,
+                      ),
+                    ),
+                  );
+                }
+              }
             },
-          )),
+          ),
         ],
       ),
     );
@@ -301,6 +305,11 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   Widget filterDropDown(List<CategoryItem> categories) {
     return DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
+        buttonStyleData: const ButtonStyleData(
+          // height: 45,
+          width: double.infinity,
+          padding: EdgeInsets.only(left: 14, right: 14),
+        ),
         iconStyleData: const IconStyleData(
           icon: Icon(
             Icons.arrow_drop_down_sharp,
@@ -351,6 +360,9 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         dropdownStyleData: DropdownStyleData(
           decoration: const BoxDecoration(
             color: CommonStyles.screenBgColor,
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(12),
+                bottomLeft: Radius.circular(12)),
           ),
           offset: const Offset(0, 0),
           scrollbarTheme: ScrollbarThemeData(
@@ -361,7 +373,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         ),
         menuItemStyleData: const MenuItemStyleData(
           height: 40,
-          padding: EdgeInsets.only(left: 20, right: 20),
+          // padding: EdgeInsets.only(left: 20, right: 20),
         ),
       ),
     );
@@ -540,7 +552,17 @@ class _ProductCardState extends State<ProductCard> {
                 height: 100,
                 imageUrl: '${widget.product.imageUrl}',
                 placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
+                    // const CircularProgressIndicator(),
+                    Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ))),
                 errorWidget: (context, url, error) => Image.asset(
                   Assets.images.icLogo.path,
                   fit: BoxFit.cover,
@@ -724,9 +746,11 @@ class _ProductCardState extends State<ProductCard> {
                 data2: '${product.gstPercentage}',
               ),
               CommonStyles.horizontalGradientDivider(),
+              // jjoio '${widget.product.size} ${widget.product.uomType}',
               infoRow(
                   label1: tr(LocaleKeys.product_size),
-                  data1: product.size?.toString(),
+                  data1: '${product.size} ${product.uomType}',
+                  // data1: product.size?.toString(),
                   label2: 'label2',
                   data2: '${product.description}',
                   isSingle: true),

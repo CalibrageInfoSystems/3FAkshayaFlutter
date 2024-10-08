@@ -30,6 +30,7 @@ class VisitRequest extends StatefulWidget {
 
 class _VisitRequestState extends State<VisitRequest> {
   String? selectedTypeOfIssue;
+  final ImagePicker picker = ImagePicker();
   final List<Uint8List> _images = [];
   bool isImageList = false;
 
@@ -320,10 +321,9 @@ class _VisitRequestState extends State<VisitRequest> {
     });
   }
 
-  Future<void> mobileImagePicker(BuildContext context) async {
-    final ImagePicker picker = ImagePicker();
+/*   Future<void> mobileImagePicker(BuildContext context) async {
     try {
-      final List<XFile> pickedFiles = await picker.pickMultiImage();
+      final List<XFile> pickedFiles = await picker.pickMultiImage(limit: 3);
 
       final List<Uint8List> newImages = await Future.wait(
           pickedFiles.map((file) async => await file.readAsBytes()));
@@ -346,6 +346,38 @@ class _VisitRequestState extends State<VisitRequest> {
           );
         }
       });
+    } catch (e) {
+      print('Error picking images: $e');
+    }
+  } */
+
+  Future<void> mobileImagePicker(BuildContext context) async {
+    try {
+      final List<XFile> pickedFiles = await picker.pickMultiImage();
+
+      if (pickedFiles.isNotEmpty) {
+        final List<Uint8List> newImages = await Future.wait(
+            pickedFiles.map((file) async => await file.readAsBytes()));
+
+        setState(() {
+          if (_images.length + newImages.length <= 3) {
+            _images.addAll(newImages);
+          } else {
+            final int remainingSpace = 3 - _images.length;
+            _images.addAll(newImages.sublist(0, remainingSpace));
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'You can only select up to 3 images.',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
+      }
     } catch (e) {
       print('Error picking images: $e');
     }
@@ -608,7 +640,8 @@ class _VisitRequestState extends State<VisitRequest> {
                         const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
-                            mobileImagePicker(context);
+                            // mobileImagePicker(context);
+                            showImagePickerDialog(context);
                           },
                           child: Image.asset(
                             Assets.images.icAdd.path,
@@ -735,6 +768,84 @@ class _VisitRequestState extends State<VisitRequest> {
       ),
     );
   }
+
+  void showImagePickerDialog(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    CommonStyles.customDialog(
+        context,
+        Container(
+          width: size.width * 0.9,
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*  Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ), */
+              const Text(
+                'Select Action',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Select photo from gallery'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  mobileImagePicker(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Capture photo using camera'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  capturePhoto(context);
+                },
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Future<void> capturePhoto(BuildContext context) async {
+    try {
+      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+      if (image != null) {
+        final Uint8List newImage = await image.readAsBytes();
+
+        setState(() {
+          if (_images.length < 3) {
+            _images.add(newImage);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'You can only select up to 3 images.',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
+      }
+    } catch (e) {
+      print('Error capturing photo: $e');
+    }
+  }
 }
 
 class CropPlotDetails extends StatelessWidget {
@@ -808,7 +919,7 @@ class CropPlotDetails extends StatelessWidget {
           data: '${plotdata.landMark}',
         ),
         plotDetailsBox(
-          label: tr(LocaleKeys.address),
+          label: tr(LocaleKeys.cluster_officer),
           data: '${plotdata.clusterName}',
         ),
         plotDetailsBox(

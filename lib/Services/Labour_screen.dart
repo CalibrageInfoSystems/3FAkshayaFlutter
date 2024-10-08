@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     farmerData = getFarmerInfoFromSharedPrefs();
 
     farmerData.then((farmer) {
-      print('farmerData==${farmer.code}');
       farmerCode = '${farmer.code}';
       farmerName =
           '${farmer.firstName} ${farmer.middleName ?? ''} ${farmer.lastName}';
@@ -82,6 +82,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       Statecode = '${farmer.stateCode}';
       StateName = '${farmer.stateName}';
     });
+
+    fetchlabourservicecost();
   }
 
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
@@ -415,28 +417,25 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         height: 8,
                       ),
                       Visibility(
+                        visible: harvestingCheck,
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.harv_amount),
+                          data: "${harvestCost ?? 0.0}",
+                        ),
+                      ),
+                      Visibility(
                         visible: pruningCheck,
-                        /*  visible: _selectedServiceTypes
-                                              .any((service) => service.typeCdId == 19), */
                         child: Column(
                           children: [
                             const SizedBox(
                               height: 4,
                             ),
+                            //MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
                               data: '${prunningCost ?? 0.0}',
                             ),
                           ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: harvestingCheck,
-                        /*  visible: _selectedServiceTypes
-                                              .any((service) => service.typeCdId == 20), */
-                        child: plotDetailsBox(
-                          label: tr(LocaleKeys.harv_amount),
-                          data: "${harvestCost ?? 0.0}",
                         ),
                       ),
 
@@ -521,7 +520,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                       padding: EdgeInsets.all(8.0),
                                       child: Icon(
                                         Icons.calendar_today,
-                                        // Replace with your desired icon
                                         color: Colors.white,
                                       ),
                                     ),
@@ -603,8 +601,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             },
 
                             dropdownStyleData: DropdownStyleData(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
+                              decoration: const BoxDecoration(
+                                // borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(12),
+                                    bottomLeft: Radius.circular(12)),
                                 color: CommonStyles.dropdownListBgColor,
                               ),
                               offset: const Offset(0, 0),
@@ -688,8 +689,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             value: _isagreed,
                             onChanged: (value) {
                               setState(() {
-                                _isagreed = value!;
-                                showRateChartDialog(context);
+                                _isagreed = !_isagreed;
+                                if (_isagreed) {
+                                  showRateChartDialog(context);
+                                }
                               });
                             },
                             checkColor: Colors.grey,
@@ -947,10 +950,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
   Future<void> fetchlabourservicecost() async {
     final url = Uri.parse(baseUrl + getLabourServiceCost);
-    print('$url');
 
     final request = {"dateOfPlanting": "${widget.plotdata.dateOfPlanting}"};
-    print('object:${json.encode(request)}');
 
     try {
       final response = await http.post(
@@ -960,10 +961,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           'Content-Type': 'application/json',
         },
       );
-
+      print('one: $url');
+      print('one: ${json.encode(request)}');
+      print('one: ${response.body}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        print('response==$responseData');
 
         if (responseData['result'] != null) {
           var result = responseData['result'];
@@ -1119,6 +1121,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             3: FlexColumnWidth(2),
                             4: FlexColumnWidth(2),
                           },
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
                           children: [
                             TableRow(
                               //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
@@ -1150,7 +1154,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                 4: FlexColumnWidth(2),
                               },
                               children: [
-                                // Dynamically generated rows for each year based on API data
                                 ...generateTableRows(listResult),
                               ],
                             ),
@@ -1159,21 +1162,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ],
                     ),
 
-                    //SizedBox(height: 10),
-
-                    // Terms and conditions text
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                          5, 5, 5, 5), // Add some padding for better spacing
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       child: Text(
                         tr(LocaleKeys.inter_coco),
-                        style: CommonStyles
-                            .txSty_14p_f5, // Your defined text style
+                        style: CommonStyles.txStyF12CpFF6,
                       ),
                     ),
                     const SizedBox(height: 10),
 
-                    // Button to dismiss the popup
+/* 
                     Align(
                       alignment: Alignment.center,
                       child: Container(
@@ -1224,6 +1222,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         // ),
                       ),
                     ),
+                     */
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomBtn(
+                            label: tr(LocaleKeys.got_it),
+                            borderRadius: 22,
+                            onPressed: () => Navigator.of(context).pop()),
+                      ],
+                    ),
                     const SizedBox(height: 10),
                   ],
                 ),
@@ -1268,7 +1276,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         title,
-        style: CommonStyles.text14orange,
+        style: CommonStyles.txStyF14CpFF6,
         textAlign: TextAlign.center,
       ),
     );

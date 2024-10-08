@@ -8,14 +8,15 @@ import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
+import 'package:akshaya_flutter/screens/main_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../Services/models/MsgModel.dart';
-import '../../../common_utils/SuccessDialog.dart';
 
 class LoanRequestScreen extends StatefulWidget {
   final int clusterId;
@@ -170,7 +171,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _loanAmountController,
-                    style: CommonStyles.text14white,
+                    style: CommonStyles.txStyF14CwFF6,
                     maxLength: 10,
                     decoration: InputDecoration(
                       counterText: '',
@@ -181,6 +182,9 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                       focusedBorder: outlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -191,7 +195,9 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                   TextFormField(
                     controller: _reasonController,
                     style: CommonStyles.text14white,
+                    maxLength: 250,
                     decoration: InputDecoration(
+                      counterText: '',
                       hintText: tr(LocaleKeys.reason_loan),
                       hintStyle: CommonStyles.txStyF14CwFF6,
                       border: outlineInputBorder(),
@@ -223,7 +229,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                               text: ' ${tr(LocaleKeys.terms_conditionsss)}',
                               style: CommonStyles.txStyF14CpFF6.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: CommonStyles.primaryTextColor2),
+                                  color: CommonStyles.btnBorderColor),
                             ),
                           ],
                         ),
@@ -273,14 +279,15 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
               alignment: Alignment.center,
               child: Text(
                 tr(LocaleKeys.terms_conditionss),
-                style: CommonStyles.txStyF14CwFF6,
+                style: CommonStyles.txStyF16CwFF6,
               ),
             ),
             Expanded(
               child: Container(
                 // height: size.height * 0.5,
-                padding: const EdgeInsets.all(12),
-                color: CommonStyles.whiteColor,
+                padding: const EdgeInsets.symmetric(horizontal: 12)
+                    .copyWith(top: 12),
+                color: Colors.transparent,
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Text(tr(LocaleKeys.loan_terms),
@@ -295,6 +302,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                 children: [
                   CustomBtn(
                       label: tr(LocaleKeys.got_it),
+                      borderRadius: 20,
                       onPressed: () => Navigator.pop(context)),
                 ],
               ),
@@ -312,42 +320,70 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     );
   }
 
-// Function to show the dialog
   void showSuccessDialog(
-      BuildContext context, List<MsgModel> msg, String summary) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
-      },
-    );
+      BuildContext context, List<MsgModel> msg, String title) {
+    CommonStyles.errorDialog(context,
+        errorMessage: 'errorMessage',
+        barrierDismissible: false,
+        errorIcon: SvgPicture.asset(
+          Assets.images.progressComplete.path,
+          color: Colors.white,
+        ),
+        bodyBackgroundColor: Colors.white,
+        errorLabel: 'errorLabel',
+        borderColor: Colors.transparent,
+        errorHeaderColor: CommonStyles.primaryTextColor,
+        errorMessageColor: Colors.orange, onPressed: () {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+        (Route<dynamic> route) => false,
+      );
+    },
+        errorBodyWidget: Container(
+          child: Column(
+            children: [
+              Text(
+                title,
+                style: CommonStyles.txStyF16CpFF6.copyWith(
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              ...msg.map((msg) {
+                return msg.value.isNotEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                msg.key,
+                                style: CommonStyles.txStyF14CrFF6.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                msg.value,
+                                style: CommonStyles.txStyF14CrFF6.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: CommonStyles.dataTextColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox();
+              }),
+            ],
+          ),
+        ));
   }
-/* 
-    void showSuccessDialog() {
-    CommonStyles.errorDialog(
-      context,
-      errorMessage: 'errorMessage',
-      errorIcon: SvgPicture.asset(
-        Assets.images.progressComplete.path,
-        color: Colors.white,
-      ),
-      bodyBackgroundColor: Colors.white,
-      errorLabel: 'errorLabel',
-      errorHeaderColor: CommonStyles.primaryTextColor,
-      errorMessageColor: Colors.orange,
-      onPressed: () {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-          (Route<dynamic> route) => false,
-        );
-      },
-      errorBodyWidget: SuccessDialog(
-        images: _images,
-        audioFilePath: audioFilePath,
-        comments: commentsController.text,
-        selectedTypeOfIssue: selectedTypeOfIssue,
-      ),
-    );
-  } */
 }

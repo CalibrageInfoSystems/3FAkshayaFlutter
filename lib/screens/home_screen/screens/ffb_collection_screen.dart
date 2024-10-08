@@ -565,8 +565,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             });
           },
           dropdownStyleData: DropdownStyleData(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+            decoration: const BoxDecoration(
+              // borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
               color: CommonStyles.dropdownListBgColor,
               // color: Colors.black87,
             ),

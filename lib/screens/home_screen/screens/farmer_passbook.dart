@@ -37,12 +37,21 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
 
   @override
   void initState() {
+    checkInternetConnection();
     getfarmercode();
     if (farmercode != null) {
       farmerbankdetails(farmercode!);
     }
 
     super.initState();
+  }
+
+  Future<void> checkInternetConnection() async {
+    bool isConnected = await CommonStyles.checkInternetConnectivity();
+    if (!isConnected) {
+      return CommonStyles.errorDialog(context,
+          errorMessage: 'Please check your internet connection.');
+    }
   }
 
   getfarmercode() async {

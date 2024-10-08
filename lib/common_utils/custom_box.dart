@@ -9,25 +9,22 @@ Widget custombox({
 }) {
   return Column(
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Expanded(
-                flex: 5, child: Text(label, style: CommonStyles.txStyF14CwFF6)),
-            const Expanded(
-                flex: 1, child: Text(':', style: CommonStyles.txStyF14CwFF6)),
-            Expanded(
-              flex: 5,
-              child: Text(
-                data,
-                style: CommonStyles.txStyF14CwFF6.copyWith(
-                  color: dataTextColor,
-                ),
+      Row(
+        children: [
+          Expanded(
+              flex: 5, child: Text(label, style: CommonStyles.txStyF14CwFF6)),
+          const Expanded(
+              flex: 1, child: Text(':', style: CommonStyles.txStyF14CwFF6)),
+          Expanded(
+            flex: 5,
+            child: Text(
+              data,
+              style: CommonStyles.txStyF14CwFF6.copyWith(
+                color: dataTextColor,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       const SizedBox(height: 5),
     ],

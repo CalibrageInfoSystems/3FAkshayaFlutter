@@ -21,9 +21,10 @@ class CommonStyles {
   static const listOddColor = Color(0xFFdfdfdf);
   static const listEvenColor = Color(0xFFf5f5f5);
   static const primaryTextColor = Color(0xFFe86100);
-  static const primaryTextColor2 = Color(0xFFf07566);
   static const tabBorderColor = Color(0xFFeb7a00);
   static const impPlacesDataColor = Color(0xFF535353);
+  static const btnBorderColor = Color(0xFFe36105);
+
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -114,6 +115,13 @@ class CommonStyles {
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: whiteColor,
+  );
+
+  static const TextStyle txStyF14CrFF6 = TextStyle(
+    fontSize: 14,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: RedColor,
   );
 
   static const TextStyle txStyF16CrFF6 = TextStyle(
@@ -607,14 +615,16 @@ class CommonStyles {
     Color? errorHeaderColor = const Color(0xffc93436),
     Widget? errorBodyWidget,
     required String errorMessage,
+    bool barrierDismissible = true,
     Color? bodyBackgroundColor = CommonStyles.blackColor,
+    Color? borderColor,
     Color? errorMessageColor = CommonStyles.whiteColor,
     void Function()? onPressed,
   }) {
     final size = MediaQuery.of(context).size;
     showGeneralDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible,
       barrierLabel: '',
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 500),
@@ -624,8 +634,8 @@ class CommonStyles {
               clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
-                  side: const BorderSide(
-                    color: Color(0xffc93436),
+                  side: BorderSide(
+                    color: borderColor ?? const Color(0xffc93436),
                   )),
               child: SizedBox(
                 width: size.width * 0.8,
@@ -659,7 +669,7 @@ class CommonStyles {
                               Text(
                                 errorMessage,
                                 textAlign: TextAlign.center,
-                                style: CommonStyles.txSty_14b_f5
+                                style: CommonStyles.txStyF16CbFF6
                                     .copyWith(color: errorMessageColor),
                               ),
                           const SizedBox(height: 20),

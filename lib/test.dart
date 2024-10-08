@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
@@ -77,7 +78,6 @@ class _TestScreenState extends State<TestScreen> {
     super.initState();
     checkStoragePermission();
     futureData = getInitialData();
-
   }
 
   PassbookData getInitialData() {
@@ -155,7 +155,13 @@ class _TestScreenState extends State<TestScreen> {
           isTimePeriod = false;
         });
       }
-      return passbookVendorModelFromJson(jsonResponse.body);
+
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['result'] != null) {
+        return passbookVendorModelFromJson(jsonResponse.body);
+      } else {
+        return throw Exception(tr(LocaleKeys.no_data));
+      }
     } else {
       if (isCustomDates!) {
         setState(() {
@@ -212,7 +218,7 @@ class _TestScreenState extends State<TestScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: CommonStyles.whiteColor,
+        backgroundColor: CommonStyles.screenBgColor,
         appBar: appBar(),
         body: Column(
           children: [
@@ -542,10 +548,11 @@ class _TestScreenState extends State<TestScreen> {
               });
             },
             dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+              decoration: const BoxDecoration(
                 color: CommonStyles.dropdownListBgColor,
-                // color: Colors.black87,
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(12),
+                    bottomLeft: Radius.circular(12)),
               ),
               offset: const Offset(0, 0),
               scrollbarTheme: ScrollbarThemeData(
@@ -681,161 +688,7 @@ class FarmerPassbookTabView extends StatefulWidget {
 }
 
 class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
-/*   void openDirectory() async {
-    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
-    Directory dir = Directory(folderPath);
-    if (!(await dir.exists())) {
-      await dir.create();
-    }
-    OpenFilex.open(folderPath);
-  }
-
-  Future<void> exportPaymentsAndDownloadFile() async {
-    // API URL
-    String url =
-        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
-    setState(() {
-      CommonStyles.showHorizontalDotsLoadingDialog(context);
-    });
-    final data = await widget.future;
-
-    List<Map<String, dynamic>> paymentResponce =
-        data.result!.paymentResponce!.map((item) => item.toJson()).toList();
-    Result? result = data.result;
-
-    Map<String, dynamic> requestBody = {
-      "bankDetails": {
-        "accountHolderName": widget.accountHolderName,
-        "accountNumber": widget.accountNumber,
-        "bankName": widget.bankName,
-        "branchName": widget.branchName,
-        "district": widget.district,
-        "farmerCode": widget.farmerCode,
-        "guardianName": widget.guardianName,
-        "ifscCode": widget.ifscCode,
-        "mandal": widget.mandal,
-        "state": widget.state,
-        "village": widget.village,
-      },
-      "totalQuanitity": result!.totalQuanitity,
-      "totalGRAmount": result.totalGrAmount,
-      "totalAdjusted": result.totalAdjusted,
-      "totalAmount": result.totalAmount,
-      "totalBalance": result.totalBalance,
-      "paymentResponce": paymentResponce
-    };
-
-    String jsonBody = json.encode(requestBody);
-
-    try {
-      // Make the POST request
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonBody,
-      );
-
-      print('qqq: $url');
-      print('qqq: ${json.encode(requestBody)}');
-      print('qqq: ${response.body}');
-
-      // Check if the request was successful
-      if (response.statusCode == 200) {
-        // Handle the response data here
-        print('Response body: ${response.body}');
-        String base64string = response.body;
-        convertBase64ToExcel(base64string, context);
-
-        if (mounted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              CommonStyles.hideHorizontalDotsLoadingDialog(context);
-            });
-          });
-        }
-      } else {
-        if (mounted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              CommonStyles.hideHorizontalDotsLoadingDialog(context);
-            });
-          });
-        }
-        // Handle the error
-        print('Failed to export payments. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      if (mounted) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          setState(() {
-            CommonStyles.hideHorizontalDotsLoadingDialog(context);
-          });
-        });
-      }
-      // Handle any exceptions that occur during the request
-      print('Error: $e');
-    }
-  }
-
-  Future<void> convertBase64ToExcel(
-      String base64String, BuildContext context) async {
-    String base64String0 = sanitizeBase64(base64String);
-    print('_base64String$base64String0');
-    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    int sdkInt = androidInfo.version.sdkInt;
-    if (await Permission.storage.request().isGranted) {
-      List<int> excelBytes = base64Decode(base64String0);
-
-      Directory directoryPath;
-
-      // Apply different logic based on the Android version
-      if (sdkInt <= 28) {
-        // Android 9 (Pie) and below
-        directoryPath =
-            Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
-      } else {
-        // Android 10 (Q) and above
-        directoryPath = (await getExternalStorageDirectory())!;
-      }
-
-      if (!directoryPath.existsSync()) {
-        directoryPath.createSync(recursive: true);
-      }
-
-      String filePath = directoryPath.path;
-      String fileName = "ledger.xlsx";
-      final File file = File('$filePath/$fileName');
-
-      await file.writeAsBytes(excelBytes);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('File Downloaded Successfully')),
-      );
-    }
-  }
-
-  String sanitizeBase64(String base64String) {
-    return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
-  }
- */
-
-/*   void openDirectory() async {
-    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
-    Directory dir = Directory(folderPath);
-
-    if (!(await dir.exists())) {
-      await dir.create();
-    } else {
-      print("File not downloaded yet!");
-    }
-    OpenFilex.open(folderPath);
-  } */
-
   void openDirectory() async {
-    // Request storage permission
     var status = await Permission.storage.request();
     if (!status.isGranted) {
       print('Storage permission not granted');
@@ -844,14 +697,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
 
     String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
     Directory dir = Directory(folderPath);
-
-    // Check if directory exists, if not, create it
     if (!(await dir.exists())) {
       await dir.create(recursive: true);
       print('Directory created at $folderPath');
     }
-
-    // Open the directory (either newly created or already existing)
     OpenFilex.open(folderPath);
   }
 
@@ -888,7 +737,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       "paymentResponce": paymentResponce
     };
 
-    const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    const apiUrl =
+        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
 
     try {
       final jsonResponse = await http.post(
@@ -919,6 +769,67 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     }
   }
 
+  Future<void> checkAndOpenDirectory() async {
+    PermissionStatus status = await Permission.storage.status;
+
+    if (status.isGranted) {
+      String directoryPath = '/sdcard/Download/3FAkshaya/ledger';
+      Directory directory = Directory(directoryPath);
+
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      await OpenFilex.open(directoryPath);
+    } else if (status.isDenied || status.isLimited) {
+      PermissionStatus requestStatus = await Permission.storage.request();
+
+      if (requestStatus.isGranted) {
+        String directoryPath = '/sdcard/Download/3FAkshaya/ledger';
+        Directory directory = Directory(directoryPath);
+
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+
+        await OpenFilex.open(directoryPath);
+      } else if (requestStatus.isPermanentlyDenied) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Permission Required"),
+              content: const Text(
+                  "Storage permission is required to access files. Please enable it in the app settings."),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await openAppSettings();
+                  },
+                  child: const Text("Open Settings"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel"),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        PermissionStatus requestStatus = await Permission.storage.request();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Storage permission is required to access files"),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> convertBase64ToExcelAndSaveIntoSpecificDirectory(
       String base64String) async {
     if (base64String.isEmpty) {
@@ -933,64 +844,45 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     int sdkInt = androidInfo.version.sdkInt;
- //   if (await Permission.storage.request().isGranted) {
+    //   if (await Permission.storage.request().isGranted) {
 
-      List<int> excelBytes = base64Decode(base64);
-      Directory directoryPath = Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
-      if (!directoryPath.existsSync()) {
-        directoryPath.createSync(recursive: true);
+    List<int> excelBytes = base64Decode(base64);
+    Directory directoryPath = Directory('/sdcard/Download/3FAkshaya/ledger');
+    // Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
+    if (!directoryPath.existsSync()) {
+      directoryPath.createSync(recursive: true);
+    }
+    String filePath = directoryPath.path;
+    String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+    String fileName = "ledger_$timestamp.xlsx";
+
+    final File file = File('$filePath/$fileName');
+
+    // Force delete the file if it exists
+    try {
+      if (await file.exists()) {
+        await file.delete();
       }
-      String filePath = directoryPath.path;
-      String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      String fileName = "ledger_$timestamp.xlsx";
+    } catch (e) {
+      print('Error deleting existing file: $e');
+    }
 
-      final File file = File('$filePath/$fileName');
+    // Create and write to the file
+    await file.create(recursive: true);
 
-      // Force delete the file if it exists
-      try {
-        if (await file.exists()) {
-          await file.delete();
-        }
-      } catch (e) {
-        print('Error deleting existing file: $e');
-      }
+    await file.writeAsBytes(excelBytes);
 
-      // Create and write to the file
-      await file.create(recursive: true);
-
-      await file.writeAsBytes(excelBytes);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('File downloaded to $filePath'),
-        ),
-      );
-  //  }
-    // else {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     setState(() {
-    //       CommonStyles.hideHorizontalDotsLoadingDialog(context);
-    //     });
-    //   });
-    //
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: const Text('Permission Denied'),
-    //       action: SnackBarAction(
-    //         label: 'Allow',
-    //         onPressed: () async {
-    //           await Permission.storage.request();
-    //         },
-    //       ),
-    //     ),
-    //   );
-   // }
+    });
+    print('www: ${file.path}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('File downloaded successfully'),
+      ),
+    );
   }
 
   String sanitizeBase64(String base64String) {
@@ -1000,7 +892,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonStyles.whiteColor,
+      backgroundColor: CommonStyles.screenBgColor,
+      // backgroundColor: CommonStyles.whiteColor,
       body: Column(
         children: [
           Expanded(
@@ -1010,16 +903,22 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CommonStyles.rectangularShapeShimmerEffect();
                 } else if (snapshot.hasError) {
-                  return Text(
-                      snapshot.error.toString().replaceFirst('Exception: ', ''),
-                      style: CommonStyles.txStyF16CpFF6);
+                  return Expanded(
+                    child: Center(
+                      child: Text(
+                          snapshot.error
+                              .toString()
+                              .replaceFirst('Exception: ', ''),
+                          style: CommonStyles.txStyF16CpFF6),
+                    ),
+                  );
                 } else {
                   final passbookVendor = snapshot.data as PassbookVendorModel;
                   if (passbookVendor.result == null &&
                       passbookVendor.result!.paymentResponce == null) {
-                    return const Expanded(
+                    return Expanded(
                       child: Center(
-                        child: Text('List is empty',
+                        child: Text(tr(LocaleKeys.no_data),
                             style: CommonStyles.txStyF16CpFF6),
                       ),
                     );
@@ -1079,7 +978,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           if (result.totalQuanitity != null)
             commonRowWithColon(
                 label: tr(LocaleKeys.ffb_qty),
-                data: '${result.totalQuanitity}',
+                data: result.totalQuanitity!.toStringAsFixed(3),
                 style: CommonStyles.txStyF14CwFF6,
                 isSpace: false),
           if (result.totalQuanitity != null) const SizedBox(height: 5),
@@ -1177,9 +1076,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                         ),
                         const SizedBox(height: 2.0),
                         Text(
-                          '${CommonStyles.formatApiDate(itemData.refDate)}',
-                          style: CommonStyles.txStyF14CbFF6
-                              .copyWith(color: CommonStyles.dataTextColor),
+                          '${CommonStyles.formatDisplayDate(itemData.refDate)}',
+                          style: CommonStyles.txStyF14CbFF6.copyWith(
+                              // color: CommonStyles.dataTextColor,
+                              fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -1247,6 +1147,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                               borderRadius: BorderRadius.circular(10.0),
                               border: Border.all(
                                 color: Colors.grey,
+                                // color: CommonStyles.whiteColor,
                               ),
                             ),
                             child: itemRow(
@@ -1297,7 +1198,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           label: tr(LocaleKeys.download),
           padding: const EdgeInsets.all(0),
           height: 60,
-          onPressed: openDirectory,
+          onPressed: checkAndOpenDirectory,
         )),
         const SizedBox(width: 10),
         Expanded(
@@ -1334,19 +1235,24 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
   }
 }
 
-class FarmerTransportTabView extends StatelessWidget {
+class FarmerTransportTabView extends StatefulWidget {
   const FarmerTransportTabView({super.key, required this.future});
   final Future<PassbookTransportModel> future;
 
   @override
+  State<FarmerTransportTabView> createState() => _FarmerTransportTabViewState();
+}
+
+class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CommonStyles.whiteColor,
+      backgroundColor: CommonStyles.screenBgColor,
       body: Column(
         children: [
           Expanded(
             child: FutureBuilder(
-              future: future,
+              future: widget.future,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CommonStyles.rectangularShapeShimmerEffect();
@@ -1358,7 +1264,8 @@ class FarmerTransportTabView extends StatelessWidget {
                   final response = snapshot.data as PassbookTransportModel;
                   List<TranspotationCharge>? transportionData =
                       response.transpotationCharges;
-                  final trasportRates = response.trasportRates;
+                  List<TrasportRate>? trasportRates = response.trasportRates;
+
                   // return CommonStyles.rectangularShapeShimmerEffect();
                   if (transportionData != null && transportionData.isNotEmpty) {
                     return Column(
@@ -1381,16 +1288,18 @@ class FarmerTransportTabView extends StatelessWidget {
                       ],
                     );
                   } else {
-                    return const Center(
-                      child: Text('List is empty',
-                          style: CommonStyles.txStyF16CpFF6),
+                    return Expanded(
+                      child: Center(
+                        child: Text(tr(LocaleKeys.no_trans_found),
+                            style: CommonStyles.txStyF16CpFF6),
+                      ),
                     );
                   }
                 }
               },
             ),
           ),
-          transportationRateBtns(),
+          transportationRateBtn(widget.future),
           const SizedBox(height: 10),
           note(),
           const SizedBox(height: 5),
@@ -1594,16 +1503,167 @@ class FarmerTransportTabView extends StatelessWidget {
     );
   }
 
-  Row transportationRateBtns() {
+  Row transportationRateBtn(Future<PassbookTransportModel> future) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CustomBtn(
           label: tr(LocaleKeys.transportationrates),
-          // height: 60,
-          onPressed: () {},
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          btnChild: Row(
+            children: [
+              Image.asset(
+                Assets.images.delivery.path,
+                height: 20,
+                width: 20,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                tr(LocaleKeys.transportationrates),
+                style: CommonStyles.txStyF14CpFF6,
+              ),
+            ],
+          ),
+          onPressed: () => trasportRatesDialog(context, future),
         ),
       ],
+    );
+  }
+
+  void trasportRatesDialog(
+      BuildContext context, Future<PassbookTransportModel> future) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Center(
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: CommonStyles.screenBgColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: CommonStyles.primaryTextColor,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(tr(LocaleKeys.transportationrates),
+                      style: CommonStyles.txStyF16CpFF6),
+                  const SizedBox(height: 10),
+                  Container(
+                    height: 0.5,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          CommonStyles.primaryTextColor,
+                          Color.fromARGB(255, 110, 6, 228)
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  FutureBuilder(
+                    future: future,
+                    builder: (context, snapshot) {
+                      final passBook = snapshot.data as PassbookTransportModel;
+                      List<TrasportRate>? trasportRates =
+                          passBook.trasportRates;
+                      if (trasportRates != null) {
+                        return Column(
+                          children: [
+                            CommonWidgets.commonRowWithColon(
+                                textAlign: TextAlign.center,
+                                flex: [5, 1, 5],
+                                label: 'label',
+                                data: '${trasportRates[0].farmerCode}'),
+                            CommonWidgets.commonRowWithColon(
+                                textAlign: TextAlign.center,
+                                flex: [5, 1, 5],
+                                label: 'label',
+                                data: '${trasportRates[0].rate}'),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0xFFCCCCCC),
+                                Color(0xFFFFFFFF),
+                                Color(0xFFCCCCCC),
+                              ],
+                            ),
+                            border: Border.all(
+                              color: const Color(0xFFe86100),
+                              width: 2.0,
+                            ),
+                          ),
+                          child: SizedBox(
+                            height: 30.0,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35.0),
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                              ),
+                              child: const Text(
+                                'OK',
+                                style: CommonStyles.txStyF14CpFF6,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack,
+            ),
+          ),
+          child: child,
+        );
+      },
     );
   }
 

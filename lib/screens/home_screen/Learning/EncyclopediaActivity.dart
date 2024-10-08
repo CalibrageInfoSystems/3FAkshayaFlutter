@@ -697,6 +697,9 @@ class _StandardState extends State<Standard> {
                 dropdownStyleData: DropdownStyleData(
                   decoration: const BoxDecoration(
                     //    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(12),
+                        bottomLeft: Radius.circular(12)),
                     color: CommonStyles.dropdownListBgColor,
                   ),
                   offset: const Offset(0, 0),

@@ -328,8 +328,11 @@ class _FarmerPassbookInfoScreen extends State<FarmerPassbookInfoScreen>
                       // Now, call your API method based on the selected position
                     },
                     dropdownStyleData: DropdownStyleData(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
+                      decoration: const BoxDecoration(
+                        // borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(12),
+                            bottomLeft: Radius.circular(12)),
                         color: Colors.black87,
                       ),
                       offset: const Offset(0, 0),
@@ -1111,7 +1114,6 @@ class _FarmerPassbookInfoScreen extends State<FarmerPassbookInfoScreen>
                                                           Image.asset(
                                                             Assets.images
                                                                 .delivery.path,
-                                                            //  color: CommonStyles.primaryTextColor,
                                                             height: 20,
                                                             width: 20,
                                                           ),
@@ -2023,11 +2025,9 @@ class _FarmerPassbookInfoScreen extends State<FarmerPassbookInfoScreen>
     String url_ = baseUrl + getTranspotationdata;
     // String url_ = baseUrl + getfarmerreimbursement;
     final url = Uri.parse(url_);
-    print('url==>588: $url');
     final String fromFormattedDateApi = formatDateToApi(fromDate);
     final String toFormattedDateApi = formatDateToApi(toDate);
-    print('fromFormattedDateApi: $fromFormattedDateApi');
-    print('toFormattedDateApi: $toFormattedDateApi');
+
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
@@ -2035,9 +2035,7 @@ class _FarmerPassbookInfoScreen extends State<FarmerPassbookInfoScreen>
       "fromDate": toFormattedDateApi,
       "toDate": fromFormattedDateApi,
       "vendorCode": 'APWGCGCK00080012',
-      //"vendorCode": '$farmervendorCode',
     };
-    print('request of the 30 days: $request');
 
     try {
       final response = await http.post(
