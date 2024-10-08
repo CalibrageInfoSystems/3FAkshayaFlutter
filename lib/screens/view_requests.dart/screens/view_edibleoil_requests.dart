@@ -91,7 +91,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
         title: tr(LocaleKeys.fert_req),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
         child: FutureBuilder(
           future: futureRequests,
           builder: (context, snapshot) {
@@ -159,7 +159,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          if (request.isImmediatePayment != null)
+          if (request.requestCode != null)
             CommonWidgets.commonRow(
                 label: tr(LocaleKeys.requestCodeLabel),
                 data: '${request.requestCode}',

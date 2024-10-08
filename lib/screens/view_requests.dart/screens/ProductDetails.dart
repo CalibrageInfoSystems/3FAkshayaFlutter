@@ -261,18 +261,18 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             label2: tr(LocaleKeys.amount),
             data2: formatDouble(product.amount),
           ),
-          productInfo(
-            label1: tr(LocaleKeys.transportprice),
-            data1: '${product.transPortCost}',
-            label2: tr(LocaleKeys.gst),
-            data2: '${product.transPortCgstPercentage}',
-          ),
-          productInfo(
-            label1: tr(LocaleKeys.totaltransportcost),
-            data1: formatDouble(product.transPortTotalAmount),
-            label2: tr(LocaleKeys.total_amt),
-            data2: formatDouble(null),
-          ),
+          // productInfo(
+          //   label1: tr(LocaleKeys.transportprice),
+          //   data1: '${product.transPortCost}',
+          //   label2: tr(LocaleKeys.gst),
+          //   data2: '${product.transPortCgstPercentage}',
+          // ),
+          // productInfo(
+          //   label1: tr(LocaleKeys.totaltransportcost),
+          //   data1: formatDouble(product.transPortTotalAmount),
+          //   label2: tr(LocaleKeys.total_amt),
+          //   data2: formatDouble(null),
+          // ),
         ],
       ),
     );

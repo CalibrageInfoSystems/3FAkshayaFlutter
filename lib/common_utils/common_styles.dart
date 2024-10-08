@@ -83,7 +83,7 @@ class CommonStyles {
   );
 
   static const txStyF14CbFF6 = TextStyle(
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: blackColor,

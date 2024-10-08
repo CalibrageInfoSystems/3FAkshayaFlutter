@@ -653,22 +653,128 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   }
  */
 
+  // Future<void> submitBioLabRequest(FertilizerRequest request) async {
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //
+  //   // Show the horizontal dots loading dialog after button click
+  //   Future.delayed(Duration.zero, () {
+  //     CommonStyles.showHorizontalDotsLoadingDialog(context);
+  //   });
+  //
+  //   const url = '$baseUrl$productsubRequest';
+  //
+  //   print('Submitting request:');
+  //   print('Request Object: ${jsonEncode(request.toJson())}');
+  //
+  //   try {
+  //     final jsonResponse = await http.post(
+  //       Uri.parse(url),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: jsonEncode(request.toJson()),
+  //     );
+  //
+  //     print('Request JSON: ${jsonEncode(request.toJson())}');
+  //
+  //     if (jsonResponse.statusCode == 200) {
+  //       final response = jsonDecode(jsonResponse.body);
+  //
+  //       if (response['isSuccess'] == true) {
+  //         // Process the product list and calculate the required values
+  //         for (int i = 0; i < widget.products.length; i++) {
+  //           String productName = widget.products[i].product.name!;
+  //           int quantity = widget.products[i].quantity;
+  //           final product = widget.products[i].product;
+  //
+  //           final productCost = product.actualPriceInclGst! * quantity;
+  //           displaytotalProductCostGst += productCost;
+  //
+  //           final transportCost =
+  //               product.transPortActualPriceInclGst! * quantity;
+  //           displayTransportamountWithGst += transportCost;
+  //
+  //           final productGSTPercentage = product.gstPercentage!;
+  //           displayamountWithoutGst +=
+  //               productCost / (1 + (productGSTPercentage / 100));
+  //
+  //           displaytotalGst =
+  //               displaytotalProductCostGst - displayamountWithoutGst;
+  //
+  //           final transportGSTPercentage = product.transportGstPercentage!;
+  //           displayTransportamountWithoutGst +=
+  //               transportCost / (1 + (transportGSTPercentage / 100));
+  //
+  //           displaytotaltransportGst = displayTransportamountWithGst -
+  //               displayTransportamountWithoutGst;
+  //
+  //           selectedList.add('$productName : $quantity');
+  //         }
+  //
+  //         selectedName = selectedList.join(', ');
+  //         List<MsgModel> displayList = [
+  //           MsgModel(
+  //               key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
+  //           MsgModel(
+  //               key: tr(LocaleKeys.product_quantity), value: selectedName!),
+  //           MsgModel(
+  //               key: tr(LocaleKeys.amount),
+  //               value: displayamountWithoutGst.toStringAsFixed(2)),
+  //           MsgModel(
+  //               key: tr(LocaleKeys.gst_amount),
+  //               value: displaytotalGst.toStringAsFixed(2)),
+  //           MsgModel(
+  //               key: tr(LocaleKeys.total_amt),
+  //               value: displaytotalProductCostGst.toStringAsFixed(2)),
+  //         ];
+  //
+  //         // Show success dialog
+  //         showSuccessDialog(
+  //             context, displayList, tr(LocaleKeys.success_fertilizer));
+  //       } else {
+  //         // Handle case where `isSuccess` is false
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           SnackBar(
+  //             content: Text('Error: ${response['result'] ?? 'Unknown error'}'),
+  //           ),
+  //         );
+  //         throw Exception('Request failed with response: ${response['result']}');
+  //       }
+  //     } else {
+  //       // Handle non-200 status codes
+  //       print('Failed to submit request: ${jsonResponse.statusCode}');
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content:
+  //           Text('Failed to submit request: ${jsonResponse.statusCode}'),
+  //         ),
+  //       );
+  //       throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     // Handle any exceptions
+  //     print('Error: $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('An error occurred: $e'),
+  //       ),
+  //     );
+  //     rethrow;
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //       CommonStyles.hideHorizontalDotsLoadingDialog(context);
+  //     });
+  //   }
+  // }
   Future<void> submitBioLabRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
-// Show the horizontal dots loading dialog after button click
-    Future.delayed(Duration.zero, () {
-      CommonStyles.showHorizontalDotsLoadingDialog(
-          context); // Show loading dialog
-    });
-    // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
     const url = '$baseUrl$productsubRequest';
-    //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
-    // Print the request object
-    print('Submitting request:');
-    print('Request Object: ${jsonEncode(request.toJson())}');
-
     try {
       final jsonResponse = await http.post(
         Uri.parse(url),
@@ -677,14 +783,18 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         },
         body: jsonEncode(request.toJson()),
       );
-
-      print('Request JSON: ${jsonEncode(request.toJson())}');
-
+      print('card submitFertilizerRequest: $url');
+      print('card submitFertilizerRequest: ${jsonEncode(request.toJson())}');
+      print('card submitFertilizerRequest: ${jsonResponse.body}');
+      setState(() {
+        _isLoading = false;
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
       if (jsonResponse.statusCode == 200) {
-        // Successfully submitted request
         final response = jsonDecode(jsonResponse.body);
-        if (response['result'] != null) {
+        if (response['isSuccess']) {
           for (int i = 0; i < widget.products.length; i++) {
+            print('333');
             String productName = widget.products[i].product.name!;
             int quantity = widget.products[i].quantity;
             final product = widget.products[i].product;
@@ -692,25 +802,27 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             final productCost = product.actualPriceInclGst! * quantity;
             displaytotalProductCostGst += productCost;
 
-            final transportCost =
-                product.transPortActualPriceInclGst! * quantity;
-            displayTransportamountWithGst += transportCost;
-
-            final productGSTPercentage = product.gstPercentage!;
-            displayamountWithoutGst +=
-                productCost / (1 + (productGSTPercentage / 100));
-
-            displaytotalGst =
-                displaytotalProductCostGst - displayamountWithoutGst;
-
-            final transportGSTPercentage = product.transportGstPercentage!;
-            displayTransportamountWithoutGst +=
-                transportCost / (1 + (transportGSTPercentage / 100));
-
-            displaytotaltransportGst = displayTransportamountWithGst -
-                displayTransportamountWithoutGst;
+            // final transportCost =
+            //     product.transPortActualPriceInclGst! * quantity;
+            // displayTransportamountWithGst += transportCost;
+            //
+            // final productGSTPercentage = product.gstPercentage!;
+            // displayamountWithoutGst +=
+            //     productCost / (1 + (productGSTPercentage / 100));
+            //
+            // displaytotalGst =
+            //     displaytotalProductCostGst - displayamountWithoutGst;
+            //
+            // final transportGSTPercentage = product.transportGstPercentage!;
+            // displayTransportamountWithoutGst +=
+            //     transportCost / (1 + (transportGSTPercentage / 100));
+            //
+            // displaytotaltransportGst = displayTransportamountWithGst -
+            //     displayTransportamountWithoutGst;
 
             selectedList.add('$productName : $quantity');
+
+            print('444');
           }
 
           selectedName = selectedList.join(', ');
@@ -728,11 +840,10 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             MsgModel(
                 key: tr(LocaleKeys.total_amt),
                 value: displaytotalProductCostGst.toStringAsFixed(2)),
-          ];
 
-          // Show success dialog
-          showSuccessDialog(
-              context, displayList, tr(LocaleKeys.success_fertilizer));
+          ];
+          showSuccessDialog(context, displayList, tr(LocaleKeys.success_lab));
+
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -741,20 +852,20 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
           );
           throw Exception('Result got null');
         }
-        // Process the product list
       } else {
         print('Failed to submit request: ${jsonResponse.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+            Text('Failed to submit request: ${jsonResponse.statusCode}'),
           ),
         );
         throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
       }
     } catch (e) {
       rethrow;
-    } finally {
+    }
+    /*  finally {
       setState(() {
         _isLoading = false;
         Future.delayed(Duration.zero, () {
@@ -762,9 +873,8 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
               context); // Show loading dialog
         });
       });
-    }
+    } */
   }
-
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);

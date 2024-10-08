@@ -16,7 +16,7 @@ class CommonWidgets {
         Row(
           children: [
             Expanded(
-              flex: 5,
+              flex: 6,
               child: Text(
                 label,
                 style: CommonStyles.txSty_14b_f5.copyWith(
@@ -26,7 +26,7 @@ class CommonWidgets {
             ),
             isColon
                 ? const Expanded(flex: 1, child: Text(':'))
-                : const SizedBox(width: 20),
+                : const SizedBox(width: 15),
             Expanded(
               flex: 7,
               child: Text(

@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'ProductDetails.dart';
+
 class ViewEquipmentRequests extends StatefulWidget {
   const ViewEquipmentRequests({super.key});
 
@@ -89,7 +91,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
         title: tr(LocaleKeys.pole_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
         child: FutureBuilder(
           future: futureRequests,
           builder: (context, snapshot) {
@@ -122,7 +124,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EquipmentProductDetails(
+                              builder: (context) => ProductDetails(
                                     requestCode: requests[index].requestCode,
                                   )));
                     },

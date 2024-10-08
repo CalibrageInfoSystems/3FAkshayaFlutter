@@ -89,7 +89,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
         title: tr(LocaleKeys.fert_req),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
         child: FutureBuilder(
           future: futureRequests,
           builder: (context, snapshot) {
@@ -129,7 +129,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                           builder: (context) => FertilizerProductDetails(
                             requestCode: request.requestCode ?? 'N/A',
                             payableAmount:
-                                request.transportPayableAmount.toString() ??
+                                request.paubleAmount.toString() ??
                                     '0.0',
                             subsidyAmount:
                                 request.subsidyAmount.toString() ?? '0.0',
@@ -177,10 +177,10 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
               label: tr(LocaleKeys.status),
               data: '${request.status}',
             ),
-          if (request.transportPayableAmount != null)
+          if (request.paubleAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.amount_payble),
-              data: '${request.transportPayableAmount}',
+              data: '${request.paubleAmount}',
             ),
           if (request.subsidyAmount != null)
             CommonWidgets.commonRow(
