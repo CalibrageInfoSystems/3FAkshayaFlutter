@@ -14,12 +14,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:animated_read_more_text/animated_read_more_text.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../../common_utils/SuccessDialog.dart';
+import '../../../common_utils/SuccessDialog2.dart';
+import '../../../gen/assets.gen.dart';
 import '../../../services/models/MsgModel.dart';
+import '../../main_screen.dart';
 
 class QuickPayCollectionScreen extends StatefulWidget {
   final List<UnpaidCollection> unpaidCollections;
@@ -892,7 +897,8 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
                     const Size(double.infinity, 50), // Full width button
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                showSuccessquikDialog(context, tr(LocaleKeys.success_fertilizer));
+              //  Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('OK'),
             ),
@@ -901,7 +907,19 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
       ),
     );
   }
+
+  void showSuccessquikDialog(BuildContext context, String summary) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessDialog2(title: summary);
+      },
+    );
+  }
 }
+
+
+
 
 
 /* 

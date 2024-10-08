@@ -26,7 +26,7 @@ class CommonWidgets {
             ),
             isColon
                 ? const Expanded(flex: 1, child: Text(':'))
-                : const SizedBox(width: 15),
+                : const SizedBox(width: 10),
             Expanded(
               flex: 7,
               child: Text(

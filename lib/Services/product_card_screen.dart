@@ -136,6 +136,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   children: [
                     Checkbox(
                       value: _isCheckboxChecked,
+                      activeColor: CommonStyles.primaryTextColor,
                       onChanged: (bool? value) {
                         setState(() {
                           _isCheckboxChecked = value ?? false;
@@ -234,7 +235,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                                 updatedDate: DateTime.now().toIso8601String(),
                                 godownId: widget.godown.id!,
                                 paymentModeType: paymentmodeId,
-                                isImmediatePayment: true,
+                                isImmediatePayment: _isCheckboxChecked,
                                 fileName: null,
                                 fileLocation: null,
                                 fileExtension: null,
@@ -654,9 +655,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 product.transPortActualPriceInclGst! * quantity;
             displayTransportamountWithGst += transportCost;
 
-            final productGSTPercentage = product.gstPercentage!;
-            displayamountWithoutGst +=
-                productCost / (1 + (productGSTPercentage / 100));
+            final productGSTPercentage = product.gstPercentage ?? 0.0;
+            displayamountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
 
             displaytotalGst =
                 displaytotalProductCostGst - displayamountWithoutGst;
