@@ -262,7 +262,7 @@ class _TestScreenState extends State<TestScreen> {
           fontWeight: FontWeight.w400,
         ),
         dividerColor: Colors.transparent,
-        indicatorPadding: const EdgeInsets.only(bottom: 3),
+        // indicatorPadding: const EdgeInsets.only(bottom: 3),
         indicatorColor: CommonStyles.primaryTextColor,
         indicatorWeight: 10.0,
         indicatorSize: TabBarIndicatorSize.tab,
@@ -273,6 +273,11 @@ class _TestScreenState extends State<TestScreen> {
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
           ),
+          border: Border(
+              bottom: BorderSide(
+            color: Colors.redAccent,
+            width: 1.4,
+          )),
           color: CommonStyles.primaryColor,
         ),
         tabs: [
@@ -1420,8 +1425,9 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                         const SizedBox(height: 2.0),
                         Text(
                           '${CommonStyles.formatApiDate(itemData.receiptGeneratedDate)}',
-                          style: CommonStyles.txStyF14CbFF6
-                              .copyWith(color: CommonStyles.dataTextColor),
+                          style: CommonStyles.txStyF14CbFF6.copyWith(
+                              // color: CommonStyles.dataTextColor,
+                              fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center,
                         ),
                       ],

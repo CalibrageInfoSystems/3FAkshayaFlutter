@@ -275,35 +275,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     )),
               ],
             ),
-/*             Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Text(
-                        tr(LocaleKeys.cc),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
-                       Text(
-                        ':  ',
-                          style: CommonStyles.txStyF14CbFF6.copyWith(color: CommonStyles.dataTextColor),
-                      ),
-                      Expanded(
-                          child: Text(
-                        '${data.whsName}',
-                          style: CommonStyles.txStyF14CbFF6.copyWith(color: CommonStyles.dataTextColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      )),
-                    ],
-                  ),
-                ),
-                const Expanded(
-                  child: SizedBox(),
-                ),
-              ],
-            ), */
             const SizedBox(height: 10),
             Row(
               children: [
@@ -315,9 +286,10 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                         tr(LocaleKeys.status),
                         style: CommonStyles.txSty_14b_f5,
                       )),
-                      const Text(
+                      Text(
                         ':  ',
-                        style: CommonStyles.txF14Fw5Cb,
+                        style: CommonStyles.txStyF14CbFF6
+                            .copyWith(color: CommonStyles.dataTextColor),
                       ),
                       Expanded(
                           child: Text(
@@ -674,7 +646,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   initialDate: selectedFromDate);
             },
           )),
-          const SizedBox(width: 10),
+          const SizedBox(width: 20),
           Expanded(
             flex: 1,
             child: CustomBtn(
@@ -774,19 +746,17 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          displaydate == null
-              ? Row(
-                  children: [
-                    Text(dateLabel,
-                        style: CommonStyles.txSty_14black
-                            .copyWith(color: CommonStyles.whiteColor)),
-                    // const SizedBox(width: 5),
-                    // const Text('*', style: TextStyle(color: Colors.red)),
-                  ],
-                )
-              : Text(displaydate,
-                  style: CommonStyles.txSty_14black
-                      .copyWith(color: CommonStyles.whiteColor)),
+          Row(
+            children: [
+              displaydate == null
+                  ? Text(dateLabel,
+                      style: CommonStyles.txSty_14black
+                          .copyWith(color: CommonStyles.whiteColor))
+                  : Text(displaydate,
+                      style: CommonStyles.txSty_14black
+                          .copyWith(color: CommonStyles.whiteColor)),
+            ],
+          ),
           const Divider(color: CommonStyles.whiteColor),
         ],
       ),

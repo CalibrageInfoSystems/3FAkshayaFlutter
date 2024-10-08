@@ -210,12 +210,7 @@ class _MainScreenPageState extends State<MainScreen> {
                       children: [
                         Text(
                           '${'${farmer.firstName!} ' + (farmer.middleName ?? '')} ${farmer.lastName!}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'hind_semibold',
-                            color: Colors.white,
-                          ),
+                          style: CommonStyles.txStyF16CwFF6,
                         ),
                       ],
                     ),
@@ -229,12 +224,7 @@ class _MainScreenPageState extends State<MainScreen> {
                             "${farmer.addressLine1!} - ${farmer.addressLine2!}",
                             textAlign:
                                 TextAlign.center, // Center-align the text
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                              fontFamily: 'hind_semibold',
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: CommonStyles.txStyF14CwFF6,
                           ),
                         ),
                       ],
@@ -351,10 +341,8 @@ class _MainScreenPageState extends State<MainScreen> {
           : null,
       title: Text(
         title,
-        style: const TextStyle(
-            color: Colors.white,
-            fontFamily: FontFamily.hind,
-            fontWeight: FontWeight.w500),
+        style: CommonStyles.txStyF14CwFF6
+            .copyWith(fontWeight: FontWeight.w500, fontSize: 15),
       ),
       onTap: onTap,
     );

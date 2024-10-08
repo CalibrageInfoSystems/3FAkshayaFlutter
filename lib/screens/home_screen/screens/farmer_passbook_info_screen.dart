@@ -610,8 +610,10 @@ class _FarmerPassbookInfoScreen extends State<FarmerPassbookInfoScreen>
                               topRight: Radius.circular(10.0),
                             ),
                             border: Border(
-                              bottom: BorderSide(color: Colors.transparent),
-                            ),
+                                bottom: BorderSide(
+                              color: Colors.redAccent,
+                              width: 1.4,
+                            )),
                           ),
                           tabs: [
                             Tab(

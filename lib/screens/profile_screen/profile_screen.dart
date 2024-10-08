@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           labelStyle: CommonStyles.txStyF14CbFF6.copyWith(
             fontWeight: FontWeight.w400,
           ),
-          indicatorPadding: const EdgeInsets.only(bottom: 3),
+          // indicatorPadding: const EdgeInsets.only(bottom: 3),
           indicatorColor: CommonStyles.primaryTextColor,
           indicatorWeight: 2.0,
           indicatorSize: TabBarIndicatorSize.tab,
@@ -110,6 +110,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
             ),
+            border: Border(
+                bottom: BorderSide(
+              color: Colors.redAccent,
+              width: 1.4,
+            )),
             color: CommonStyles.primaryColor,
           ),
           tabs: [

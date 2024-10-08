@@ -489,10 +489,7 @@ class CropPlotDetails extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color:
-            index.isEven ? CommonStyles.whiteColor : CommonStyles.listEvenColor,
-        //  ? CommonStyles.listEvenColor
-        //     : CommonStyles.listOddColor,
+        color: Colors.transparent,
       ),
       child: Row(
         children: [

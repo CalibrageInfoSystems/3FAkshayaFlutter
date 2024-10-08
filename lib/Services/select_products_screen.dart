@@ -532,9 +532,24 @@ class _ProductCardState extends State<ProductCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '₹${widget.product.priceInclGst}',
-                style: CommonStyles.txStyF14CbFF6,
+              Row(
+                children: [
+                  Text(
+                    '₹${widget.product.priceInclGst}',
+                    style: CommonStyles.txStyF14CbFF6,
+                  ),
+                  const SizedBox(width: 15),
+                  if (widget.product.priceInclGst !=
+                      widget.product.actualPriceInclGst)
+                    Text(
+                      '₹${widget.product.actualPriceInclGst}',
+                      style: CommonStyles.txStyF14CbFF6.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: CommonStyles.RedColor,
+                        color: CommonStyles.formFieldErrorBorderColor,
+                      ),
+                    ),
+                ],
               ),
               widget.product.size != null && widget.product.uomType != null
                   ? Text(

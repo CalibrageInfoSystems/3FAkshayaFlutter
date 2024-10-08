@@ -160,6 +160,11 @@ class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     ),
+                    border: Border(
+                        bottom: BorderSide(
+                      color: Colors.redAccent,
+                      width: 1.4,
+                    )),
                     color: CommonStyles.primaryColor,
                   ),
                   tabs: widget.index == 1

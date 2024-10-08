@@ -202,60 +202,65 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   productCostbox(
                       title: tr(LocaleKeys.amount_payble),
                       data: payableAmount.toStringAsFixed(2)),
+                  CommonStyles.horizontalGradientDivider(colors: [
+                    const Color(0xFFFF4500),
+                    const Color(0xFFA678EF),
+                    const Color(0xFFFF4500),
+                  ]),
                   const SizedBox(height: 10),
-
-                  /* CommonStyles.horizontalGradientDivider(colors: [
-                        const Color(0xFFFF4500),
-                        const Color(0xFFA678EF),
-                        const Color(0xFFFF4500),
-                      ]), */
-                  CustomBtn(
-                    label: tr(LocaleKeys.submit),
-                    borderColor: CommonStyles.primaryTextColor,
-                    borderRadius: 12,
-                    onPressed: () async {
-                      // Disable button when loading
-                      if (validations()) {
-                        if (await isOnline()) {
-                          final request = FertilizerRequest(
-                            id: 0,
-                            requestTypeId: 12,
-                            farmerCode: farmerCode,
-                            farmerName: farmerName,
-                            plotCode: null,
-                            requestCreatedDate:
-                                DateTime.now().toIso8601String(),
-                            isFarmerRequest: true,
-                            createdByUserId: null,
-                            createdDate: DateTime.now().toIso8601String(),
-                            updatedByUserId: null,
-                            updatedDate: DateTime.now().toIso8601String(),
-                            godownId: widget.godown.id!,
-                            paymentModeType: paymentmodeId,
-                            isImmediatePayment: true,
-                            fileName: null,
-                            fileLocation: null,
-                            fileExtension: null,
-                            totalCost: totalAmountWithGST,
-                            subcidyAmount: subsidyAmount,
-                            paybleAmount: payableAmount,
-                            transportPayableAmount: totalTransportCostwithgst,
-                            comments: null,
-                            cropMaintainceDate: null,
-                            issueTypeId: null,
-                            godownCode: '${widget.godown.code}',
-                            requestProductDetails: productDetailsList,
-                            clusterId: Cluster_id,
-                            stateCode: Statecode,
-                            stateName: StateName,
-                          );
-                          await submitFertilizerRequest(request);
-                        } else {
-                          CommonStyles.showCustomDialog(
-                              context, tr(LocaleKeys.Internet));
-                        }
-                      }
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomBtn(
+                        label: tr(LocaleKeys.submit),
+                        borderColor: CommonStyles.primaryTextColor,
+                        borderRadius: 12,
+                        onPressed: () async {
+                          // Disable button when loading
+                          if (validations()) {
+                            if (await isOnline()) {
+                              final request = FertilizerRequest(
+                                id: 0,
+                                requestTypeId: 12,
+                                farmerCode: farmerCode,
+                                farmerName: farmerName,
+                                plotCode: null,
+                                requestCreatedDate:
+                                    DateTime.now().toIso8601String(),
+                                isFarmerRequest: true,
+                                createdByUserId: null,
+                                createdDate: DateTime.now().toIso8601String(),
+                                updatedByUserId: null,
+                                updatedDate: DateTime.now().toIso8601String(),
+                                godownId: widget.godown.id!,
+                                paymentModeType: paymentmodeId,
+                                isImmediatePayment: true,
+                                fileName: null,
+                                fileLocation: null,
+                                fileExtension: null,
+                                totalCost: totalAmountWithGST,
+                                subcidyAmount: subsidyAmount,
+                                paybleAmount: payableAmount,
+                                transportPayableAmount:
+                                    totalTransportCostwithgst,
+                                comments: null,
+                                cropMaintainceDate: null,
+                                issueTypeId: null,
+                                godownCode: '${widget.godown.code}',
+                                requestProductDetails: productDetailsList,
+                                clusterId: Cluster_id,
+                                stateCode: Statecode,
+                                stateName: StateName,
+                              );
+                              await submitFertilizerRequest(request);
+                            } else {
+                              CommonStyles.showCustomDialog(
+                                  context, tr(LocaleKeys.Internet));
+                            }
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

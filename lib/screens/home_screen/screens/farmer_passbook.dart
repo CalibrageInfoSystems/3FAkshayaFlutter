@@ -118,8 +118,8 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomBtn(
                         label: tr(LocaleKeys.next),
@@ -145,7 +145,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                           );
                         },
                       ),
-                      CustomBtn(
+                      /*  CustomBtn(
                         label: tr(LocaleKeys.next),
                         onPressed: () {
                           Navigator.push(
@@ -168,7 +168,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                             ),
                           );
                         },
-                      ),
+                      ), */
                     ],
                   ),
                 ),

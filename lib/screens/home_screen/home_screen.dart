@@ -406,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //MARK: Menu Section
   Container menuSection(Size size, double remainingHeight) {
     return Container(
-      height: remainingHeight * 0.155,
+      height: remainingHeight * 0.15, // 1.4
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -477,10 +477,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 35,
                 fit: BoxFit.cover,
               ),
+              const SizedBox(height: 5),
               Container(
                 width: 120,
                 height: 35,
-                alignment: Alignment.center,
+                // color: Colors.grey,
+                alignment: Alignment.topCenter,
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
