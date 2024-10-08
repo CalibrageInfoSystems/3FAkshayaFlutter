@@ -1,3 +1,4 @@
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -162,149 +163,127 @@ class SuccessDialog extends StatelessWidget {
       shape: const RoundedRectangleBorder(
           //  borderRadius: BorderRadius.circular(20.0),
           ),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // Header with "X" icon and "Error" text
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              color: CommonStyles.primaryTextColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    Assets.images.progressComplete.path,
-                    width: 30,
-                    height: 30,
-                    fit: BoxFit.contain,
-                    color: Colors.white,
-                  ),
-                ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Top Container with icon
+              Container(
+                padding: const EdgeInsets.all(10.0),
+                color: CommonStyles.primaryTextColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.images.progressComplete.path,
+                      width: 30,
+                      height: 30,
+                      fit: BoxFit.contain,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
 
-            // Message Text
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Text(
-                        title,
-                        style:
-                            CommonStyles.txStyF16CpFF6.copyWith(fontSize: 18),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 20.0),
+              // Content Container
+              Flexible(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title,
+                            style: CommonStyles.txStyF16CpFF6
+                                .copyWith(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 20.0),
 
-                      // Scrollable ListView
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics:
-                            const ClampingScrollPhysics(), // Enables scrolling
-                        itemCount: msg.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  msg[index].key,
-                                  style: CommonStyles.txStyF16CrFF6.copyWith(
-                                    fontWeight: FontWeight.w500,
+                          // Scrollable ListView
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: msg.length,
+                            itemBuilder: (context, index) {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      msg[index].key,
+                                      style:
+                                          CommonStyles.txStyF16CrFF6.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: index != 1
-                                      ? Text(
-                                          msg[index].value,
-                                          style: CommonStyles.txStyF16CbFF6
-                                              .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: CommonStyles.dataTextColor,
-                                          ),
-                                        )
-                                      : Text(
-                                          formattedProducts(msg[index].value),
-                                          style: CommonStyles.txStyF16CbFF6
-                                              .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: CommonStyles.dataTextColor,
-                                          ),
-                                        ),
-                                ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: index != 1
+                                          ? Text(
+                                              msg[index].value,
+                                              style: CommonStyles.txStyF16CbFF6
+                                                  .copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color:
+                                                    CommonStyles.dataTextColor,
+                                              ),
+                                            )
+                                          : Text(
+                                              formattedProducts(
+                                                  msg[index].value),
+                                              style: CommonStyles.txStyF16CbFF6
+                                                  .copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color:
+                                                    CommonStyles.dataTextColor,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 10.0),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomBtn(
+                                label: 'Ok',
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const MainScreen(),
+                                    ),
+                                  );
+                                },
                               ),
                             ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10.0),
-
-                      // OK Button
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Color(0xFFCCCCCC), // Start color (light gray)
-                                Color(0xFFFFFFFF), // Center color (white)
-                                Color(0xFFCCCCCC), // End color (light gray)
-                              ],
-                            ),
-                            border: Border.all(
-                              color: const Color(
-                                  0xFFe86100), // Orange border color
-                              width: 2.0,
-                            ),
                           ),
-                          child: SizedBox(
-                            height: 30.0, // Set the desired height
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const MainScreen(),
-                                  ),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 35.0),
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'OK',
-                                style: CommonStyles.txSty_16b_fb,
-                              ),
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
       ),
     );
   }

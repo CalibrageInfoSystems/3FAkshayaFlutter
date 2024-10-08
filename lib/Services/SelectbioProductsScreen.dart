@@ -404,8 +404,8 @@ class _ProductCardState extends State<ProductCard> {
                     '₹${widget.product.actualPriceInclGst}',
                     style: CommonStyles.txStyF14CbFF6.copyWith(
                       decoration: TextDecoration.lineThrough,
-                      decorationColor: CommonStyles.primaryTextColor,
-                      color: CommonStyles.dataTextColor,
+                      decorationColor: CommonStyles.RedColor,
+                      color: CommonStyles.formFieldErrorBorderColor,
                     ),
                   ),
                 ],

@@ -340,9 +340,10 @@ class _ProductCardState extends State<ProductCard> {
               Text(
                 '₹${widget.product.actualPriceInclGst != 0 ? widget.product.actualPriceInclGst!.toStringAsFixed(2) : '0.0'}',
                 style: CommonStyles.txStyF14CbFF6.copyWith(
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: Colors.redAccent,
-                    color: Colors.redAccent),
+                  decoration: TextDecoration.lineThrough,
+                  decorationColor: CommonStyles.RedColor,
+                  color: CommonStyles.formFieldErrorBorderColor,
+                ),
               ),
               Text(
                 '${widget.product.size} ${widget.product.uomType}',
