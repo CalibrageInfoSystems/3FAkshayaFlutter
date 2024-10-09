@@ -182,6 +182,7 @@ class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.payment_mode),
               data: '${request.paymentMode}',
+              //  data: request.paymentMode != null ? double.parse(request.paymentMode!).toStringAsFixed(2) : '0.00',
             ),
           if (request.isImmediatePayment != null)
             CommonWidgets.commonRow(

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/common_utils/shimmer.dart';
@@ -78,40 +79,58 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                   style: CommonStyles.txStyF16CpFF6);
             } else {
               final visitRequests = snapshot.data as List<ViewLoanRequest>;
-              return ListView.builder(
-                itemCount: visitRequests.length,
-                itemBuilder: (context, index) {
-                  final request = visitRequests[index];
-
-                  return visitRequest(
-                    index,
-                    request,
-                    viewMoreDetails: () {
-                      CommonStyles.errorDialog(
-                        context,
-                        errorHeaderColor: Colors.transparent,
-                        bodyBackgroundColor: Colors.transparent,
-                        isHeader: false,
-                        errorMessage: '',
-                        errorBodyWidget: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(tr(LocaleKeys.comments),
-                                style: CommonStyles.txSty_16p_fb),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Text('${request.comments}',
-                                    style: CommonStyles.txSty_14b_f5),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              );
+              if (visitRequests.isEmpty) {
+                return Center(
+                  child: Text(
+                    tr(LocaleKeys.no_req_found),
+                    style: CommonStyles.txStyF16CpFF6,
+                  ),
+                );
+              } else {
+                return ListView.separated(
+                  itemCount: visitRequests.length,
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 10);
+                  },
+                  itemBuilder: (context, index) {
+                    final request = visitRequests[index];
+                    return visitRequest(
+                      index,
+                      request,
+                      viewMoreDetails: () {
+                        CommonStyles.errorDialog(
+                          context,
+                          errorHeaderColor: Colors.transparent,
+                          bodyBackgroundColor: Colors.transparent,
+                          isHeader: false,
+                          errorMessage: '',
+                          errorBodyWidget: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              (request.comments == null ||
+                                      request.comments!.isEmpty)
+                                  ? Text(tr(LocaleKeys.nocomments),
+                                      style: CommonStyles.txStyF16CpFF6)
+                                  : Text(tr(LocaleKeys.comments),
+                                      style: CommonStyles.txStyF16CpFF6),
+                              const SizedBox(height: 10),
+                              (request.comments == null ||
+                                      request.comments!.isEmpty)
+                                  ? const SizedBox()
+                                  : Row(
+                                      children: [
+                                        Text('${request.comments}',
+                                            style: CommonStyles.txStyF14CbFF6),
+                                      ],
+                                    ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              }
             }
           },
         ),
@@ -132,52 +151,28 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
     );
   }
 
-  Container visitRequest(int index, ViewLoanRequest loanRequest,
+  Widget visitRequest(int index, ViewLoanRequest request,
       {void Function()? viewMoreDetails}) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: index.isEven ? Colors.transparent : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(10)),
-      margin: const EdgeInsets.only(bottom: 10),
+    return CommonWidgets.viewTemplate(
+      bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
+      onTap: viewMoreDetails,
       child: Column(
         children: [
-          plotDetailBox(
-              label: tr(LocaleKeys.requestCodeLabel),
-              data: '${loanRequest.requestCode}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          plotDetailBox(
+          if (request.requestCode != null)
+            CommonWidgets.commonRow(
+                label: tr(LocaleKeys.requestCodeLabel),
+                data: '${request.requestCode}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (request.reqCreatedDate != null)
+            CommonWidgets.commonRow(
               label: tr(LocaleKeys.req_date),
-              data: '${formatDate(loanRequest.reqCreatedDate)}'),
-          plotDetailBox(
-              label: tr(LocaleKeys.total_amt),
-              data: '${loanRequest.totalCost}'),
-          const SizedBox(height: 5),
-          /* CustomBtn(
-            label: tr(LocaleKeys.complete_details),
-            borderColor: Colors.transparent,
-            borderRadius: 4,
-            onPressed: viewMoreDetails,
-          ), */
-
-          GestureDetector(
-            onTap: viewMoreDetails,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                // borderRadius: BorderRadius.circular(10),
-                color: CommonStyles.listOddColor,
-              ),
-              child: Text(
-                tr(LocaleKeys.complete_details),
-                style: CommonStyles.txStyF16CbFF6.copyWith(
-                    color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
-                /*  style: TextStyle(
-                    fontWeight: FontWeight.w600), */
-              ),
+              data: '${CommonStyles.formatDate(request.reqCreatedDate)}',
             ),
-          ),
+          if (request.totalCost != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.total_amt),
+              data: request.totalCost!.toStringAsFixed(2),
+            ),
         ],
       ),
     );

@@ -88,7 +88,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.fert_req),
+        title: tr(LocaleKeys.ediableproduct_req),
         actionIcon: const SizedBox(),
       ),
       body: Padding(

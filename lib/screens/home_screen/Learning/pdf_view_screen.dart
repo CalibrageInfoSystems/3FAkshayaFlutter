@@ -26,6 +26,12 @@ class _PDFViewScreenState extends State<PDFViewScreen>
   String errorMessage = '';
 
   @override
+  void initState() {
+    super.initState();
+    print('PDFViewScreen: ${widget.path}');
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
@@ -46,27 +52,6 @@ class _PDFViewScreenState extends State<PDFViewScreen>
           },
         ),
       ),
-
-      /* appBar: AppBar(
-        title: const Text("Document"),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () async {
-              final result = await Share.shareXFiles([XFile(widget.path!)],
-                  text: 'Thank you for sharing');
-
-              if (result.status == ShareResultStatus.success) {
-                print('ShareResultStatus.success');
-              } else if (result.status == ShareResultStatus.unavailable) {
-                print('ShareResultStatus.unavailable');
-              } else {
-                print('else..........');
-              }
-            },
-          ),
-        ],
-      ), */
       body: Stack(
         children: <Widget>[
           PDFView(

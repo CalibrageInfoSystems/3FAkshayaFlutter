@@ -116,60 +116,57 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                   style: CommonStyles.txStyF16CpFF6);
             } else {
               final visitRequests = snapshot.data as List<ViewVisitModel>;
-              return ListView.builder(
-                itemCount: visitRequests.length,
-                itemBuilder: (context, index) {
-                  final request = visitRequests[index];
+              if (visitRequests.isEmpty) {
+                return Center(
+                  child: Text(
+                    tr(LocaleKeys.no_req_found),
+                    style: CommonStyles.txStyF16CpFF6,
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: visitRequests.length,
+                  itemBuilder: (context, index) {
+                    final request = visitRequests[index];
 
-                  return visitRequest(
-                    index,
-                    request,
-                    onPressed: () {
-                      getVisitRequestMoreDetails(request.requestCode)
-                          .then((value) {
-                        List<ViewVisitMoreDetailsModel> imageList = value
-                            .where((element) => element.fileTypeId == 36)
-                            .toList();
-                        List<ViewVisitMoreDetailsModel> audioList = value
-                            .where((element) => element.fileTypeId == 37)
-                            .toList();
+                    return visitRequest(
+                      index,
+                      request,
+                      onPressed: () {
+                        getVisitRequestMoreDetails(request.requestCode)
+                            .then((value) {
+                          List<ViewVisitMoreDetailsModel> imageList = value
+                              .where((element) => element.fileTypeId == 36)
+                              .toList();
+                          List<ViewVisitMoreDetailsModel> audioList = value
+                              .where((element) => element.fileTypeId == 37)
+                              .toList();
 
-                        if (value.isNotEmpty) {
-                          CommonStyles.errorDialog(
-                            context,
-                            errorMessage: 'errorMessage',
-                            isHeader: false,
-                            bodyBackgroundColor: Colors.white,
-                            errorMessageColor: Colors.orange,
-                            errorBodyWidget: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (audioList.isNotEmpty)
-                                  MoreDetails(
-                                    imagesList: imageList,
-                                    audioFilePath: audioList[0].fileLocation,
-                                  )
-                              ],
-                            ),
-                          );
-                          /* showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: MoreDetails(
-                                  imagesList: imageList, // Your images list
-                                  audioFilePath:
-                                      'https://webaudioapi.com/samples/audio-tag/chrono.mp3', // Your audio URL
-                                ),
-                              );
-                            },
-                          ); */
-                        }
-                      });
-                    },
-                  );
-                },
-              );
+                          if (value.isNotEmpty) {
+                            CommonStyles.errorDialog(
+                              context,
+                              errorMessage: 'errorMessage',
+                              isHeader: false,
+                              bodyBackgroundColor: Colors.white,
+                              errorMessageColor: Colors.orange,
+                              errorBodyWidget: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (audioList.isNotEmpty)
+                                    MoreDetails(
+                                      imagesList: imageList,
+                                      audioFilePath: audioList[0].fileLocation,
+                                    )
+                                ],
+                              ),
+                            );
+                          }
+                        });
+                      },
+                    );
+                  },
+                );
+              }
             }
           },
         ),

@@ -321,18 +321,16 @@ class _PdfTabViewState extends State<PdfTabView> {
                   final description = mediaData[index].description;
                   return GestureDetector(
                       onTap: () {
-                        createFileOfPdfUrl(fileUrl!
-                                // "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
-                                )
-                            .then((item) => {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PDFViewScreen(path: item.path),
-                                    ),
-                                  )
-                                });
+                        // "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
+                        createFileOfPdfUrl(fileUrl!).then((item) => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PDFViewScreen(path: item.path),
+                                ),
+                              )
+                            });
                       },
                       child: pdfTemplate(fileUrl, title, description));
                 },
@@ -776,6 +774,7 @@ class _StandardState extends State<Standard> {
           ),
           const SizedBox(height: 4),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 width: 100,
@@ -793,6 +792,7 @@ class _StandardState extends State<Standard> {
           ),
           const SizedBox(height: 4),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 width: 100, // Equal space for the label
