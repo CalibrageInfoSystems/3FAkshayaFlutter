@@ -49,6 +49,7 @@ android {
                 shrinkResources false
                 minifyEnabled false
             }
+
         /* getByName("release") {
             // isMinifyEnabled = true
             
