@@ -50,7 +50,7 @@ class _ImportantPlacesScreenState extends State<ImportantPlacesScreen> {
                       horizontal: 2,
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
-                    unselectedLabelColor: CommonStyles.primaryTextColor,
+                    unselectedLabelColor: CommonStyles.tabBorderColor,
                     indicator: const BoxDecoration(
                       color: CommonStyles.tabBorderColor,
                     ),

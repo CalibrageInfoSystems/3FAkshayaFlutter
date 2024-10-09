@@ -87,8 +87,8 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
-        title: tr(LocaleKeys.quick_req),
-      ), // actionIcon: const SizedBox()
+        title: tr(LocaleKeys.quick_req),actionIcon: const SizedBox(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: FutureBuilder(
@@ -143,26 +143,23 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          if (request.requestCode != null)
-            CommonWidgets.commonRow(
-                label: tr(LocaleKeys.requestCodeLabel),
-                data: '${request.requestCode}',
-                dataTextColor: CommonStyles.appBarColor),
+          CommonWidgets.commonRow(
+              label: tr(LocaleKeys.requestCodeLabel),
+              data: request.requestCode,
+              dataTextColor: CommonStyles.appBarColor),
           if (request.reqCreatedDate != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.req_date),
               data: '${formatDate(request.reqCreatedDate)}',
             ),
-          if (request.statusType != null)
-            CommonWidgets.commonRow(
-              label: tr(LocaleKeys.status),
-              data: '${request.statusType}',
-            ),
-          if (request.totalCost != null)
-            CommonWidgets.commonRow(
-              label: tr(LocaleKeys.total_amt),
-              data: '${request.totalCost}',
-            ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.status),
+            data: request.statusType,
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.total_amt),
+            data: '${request.totalCost}',
+          ),
         ],
       ),
     );
@@ -199,17 +196,17 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('QuickPay Document'),
+          title: const Text('QuickPay Document'),
           content: Text('Document URL: $url'),
           actions: [
             TextButton(
-              child: Text('Close'),
+              child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Open Document'),
+              child: const Text('Open Document'),
               onPressed: () {
                 // Implement opening the URL in the browser
                 // You may want to use url_launcher package for this

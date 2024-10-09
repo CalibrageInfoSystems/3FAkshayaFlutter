@@ -23,8 +23,7 @@ class ImportantContactsScreen extends StatelessWidget {
             Image.asset(Assets.images.icImpContacts.path),
             const SizedBox(height: 10),
             Text(tr(LocaleKeys.important_contacts),
-                style: CommonStyles.txStyF14CbFF6
-                    .copyWith(color: CommonStyles.primaryTextColor)),
+                style: CommonStyles.txStyF16CpFF6.copyWith(fontSize: 18)),
             const SizedBox(height: 20),
             contactForm(
                 label: tr(LocaleKeys.officer_name),

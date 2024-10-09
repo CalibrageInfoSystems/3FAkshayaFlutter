@@ -8,17 +8,18 @@ import 'package:akshaya_flutter/models/fertilizer_view_product_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 class FertilizerProductDetails extends StatefulWidget {
   final String requestCode;
   final String payableAmount;
   final String subsidyAmount;
 
   const FertilizerProductDetails({
-    Key? key,
+    super.key,
     required this.requestCode,
     required this.payableAmount,
     required this.subsidyAmount,
-  }) : super(key: key);
+  });
 
   @override
   State<FertilizerProductDetails> createState() =>
@@ -45,10 +46,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
     super.initState();
     futureData = getFetilizerProductDetails();
     // Parse the string to double
-
-
-
   }
+
   Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
     final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
     final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -62,9 +61,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
       if (response['listResult'] != null) {
         List<dynamic> list = response['listResult'];
         List<FetilizerViewProduct> products =
-        list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
-
-
+            list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
 
         // Sum basePrice and totalAmount
         for (var product in products) {
@@ -72,31 +69,35 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           totalAmount += product.totalAmount!;
           totalBaseTransportAmount += product.transportBasePrice!;
           totalTransportAmount += product.transPortAmount!;
-
         }
 
         // Calculate GST and ensure two decimal points
-        double gstAmount = double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
-        totalSGst = gstAmount/2;
-        double transgstAmount = double.parse((totalTransportAmount - totalBaseTransportAmount).toStringAsFixed(2));
-        totalTransportSGST = transgstAmount/2;
+        double gstAmount =
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        totalSGst = gstAmount / 2;
+        double transgstAmount = double.parse(
+            (totalTransportAmount - totalBaseTransportAmount)
+                .toStringAsFixed(2));
+        totalTransportSGST = transgstAmount / 2;
         // Ensure the values have two decimal places
         totalBasePrice = double.parse(totalBasePrice.toStringAsFixed(2));
         totalAmount = double.parse(totalAmount.toStringAsFixed(2));
-        totalBaseTransportAmount = double.parse(totalBaseTransportAmount.toStringAsFixed(2));
-        totalTransportAmount = double.parse(totalTransportAmount.toStringAsFixed(2));
+        totalBaseTransportAmount =
+            double.parse(totalBaseTransportAmount.toStringAsFixed(2));
+        totalTransportAmount =
+            double.parse(totalTransportAmount.toStringAsFixed(2));
         totalTransportGST = double.parse(totalTransportGST.toStringAsFixed(2));
 
         // Bind values to your UI elements
         setState(() {
           // Assuming you store these values in variables
-          this.totalBasePrice = totalBasePrice;
-          this.totalAmount = totalAmount;
-          this.totalSGst = totalSGst;
-          this.totalBaseTransportAmount = totalBaseTransportAmount;
-          this.totalTransportAmount = totalTransportAmount;
-          this.totalTransportGST = totalTransportGST;
-          this.totalTransportSGST =  totalTransportSGST;
+          totalBasePrice = totalBasePrice;
+          totalAmount = totalAmount;
+          totalSGst = totalSGst;
+          totalBaseTransportAmount = totalBaseTransportAmount;
+          totalTransportAmount = totalTransportAmount;
+          totalTransportGST = totalTransportGST;
+          totalTransportSGST = totalTransportSGST;
           paybleamount = double.tryParse(widget.payableAmount) ?? 0.0;
           subsidyAmount = double.tryParse(widget.subsidyAmount) ?? 0.0;
         });
@@ -150,7 +151,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 style: CommonStyles.txStyF14CbFF6,
                 children: [
                   TextSpan(
-                      text: '${widget.requestCode}',
+                      text: widget.requestCode,
                       style: CommonStyles.txStyF14CpFF6)
                 ],
               ),
@@ -190,20 +191,37 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             Column(
               children: [
                 const SizedBox(height: 10),
-                productCostbox(title: tr(LocaleKeys.amount), data: totalBasePrice.toStringAsFixed(2)),  // Total base price
-                productCostbox(title: tr(LocaleKeys.cgst_amount), data: totalSGst.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.sgst_amount), data: totalSGst.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.total_amt), data: totalAmount.toStringAsFixed(2)),  // Total base price
-                productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
                 productCostbox(
-                    title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
+                    title: tr(LocaleKeys.amount),
+                    data:
+                        totalBasePrice.toStringAsFixed(2)), // Total base price
                 productCostbox(
-                    title: tr(LocaleKeys.tsgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
+                    title: tr(LocaleKeys.cgst_amount),
+                    data: totalSGst.toStringAsFixed(2)),
                 productCostbox(
-                    title: tr(LocaleKeys.trnstotal_amt), data: totalTransportAmount.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.subsidy_amt), data:  subsidyAmount.toStringAsFixed(2)),
+                    title: tr(LocaleKeys.sgst_amount),
+                    data: totalSGst.toStringAsFixed(2)),
                 productCostbox(
-                    title: tr(LocaleKeys.amount_payble), data: paybleamount.toStringAsFixed(2)),
+                    title: tr(LocaleKeys.total_amt),
+                    data: totalAmount.toStringAsFixed(2)), // Total base price
+                productCostbox(
+                    title: tr(LocaleKeys.transamount),
+                    data: totalBaseTransportAmount.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.tcgst_amount),
+                    data: totalTransportSGST.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.tsgst_amount),
+                    data: totalTransportSGST.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.trnstotal_amt),
+                    data: totalTransportAmount.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.subsidy_amt),
+                    data: subsidyAmount.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.amount_payble),
+                    data: paybleamount.toStringAsFixed(2)),
                 const SizedBox(height: 20),
               ],
             )
@@ -261,7 +279,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           ),
           productInfo(
             label1: tr(LocaleKeys.transportprice),
-            data1: '${product.transPortCost ?? '0.0' }',
+            data1: '${product.transPortCost ?? '0.0'}',
             label2: tr(LocaleKeys.gst),
             data2: '${product.transPortCgstPercentage ?? '0.0'}',
           ),
@@ -269,7 +287,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label1: tr(LocaleKeys.totaltransportcost),
             data1: formatDouble(product.transPortTotalAmount ?? 0.0),
             label2: tr(LocaleKeys.total_amt),
-            data2: formatDouble(product.totalAmount! + product.transPortTotalAmount!),
+            data2: formatDouble(
+                product.totalAmount! + product.transPortTotalAmount!),
           ),
         ],
       ),
@@ -334,6 +353,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     flex: 4,

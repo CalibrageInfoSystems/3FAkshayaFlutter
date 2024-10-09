@@ -87,6 +87,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.fert_req),
+        actionIcon: const SizedBox(),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
@@ -112,7 +113,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                   style: CommonStyles.txSty_16p_fb,
                 ),
               );
-            }else {
+            } else {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
@@ -129,8 +130,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                           builder: (context) => FertilizerProductDetails(
                             requestCode: request.requestCode ?? 'N/A',
                             payableAmount:
-                                request.paubleAmount.toString() ??
-                                    '0.0',
+                                request.paubleAmount.toString() ?? '0.0',
                             subsidyAmount:
                                 request.subsidyAmount.toString() ?? '0.0',
                           ),

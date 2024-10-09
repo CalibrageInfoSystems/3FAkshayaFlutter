@@ -885,6 +885,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
+    print('getInfoCollectionInfo: $apiUrl');
+    print('getInfoCollectionInfo: ${jsonResponse.body}');
+
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
 
@@ -922,14 +925,12 @@ class InfoDialog extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: Colors.grey[200],
-        // borderRadius: BorderRadius.circular(5.0),
-        // border: Border.all(color: Colors.orange, width: 2),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(info.code!, style: CommonStyles.text18orangeeader),
+          Text(info.code!, style: CommonStyles.txStyF14CpFF6),
           const SizedBox(height: 10),
           buildInfoRow(tr(LocaleKeys.driver_name), info.driverName),
           buildInfoRow(tr(LocaleKeys.vehicle_Number), info.vehicleNumber),
@@ -960,17 +961,20 @@ class InfoDialog extends StatelessWidget {
                 );
               },
               child: Text(tr(LocaleKeys.recept),
-                  style: CommonStyles.text18orangeeader),
+                  style: CommonStyles.txStyF14CpFF6),
             ),
           ),
-          Center(
-            child: CustomBtn(
-              label: tr(LocaleKeys.close),
-              // label: 'Submit',
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CustomBtn(
+                label: tr(LocaleKeys.close),
+                borderRadius: 24,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -981,21 +985,22 @@ class InfoDialog extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 3,
-            child: Text(label, style: CommonStyles.txSty_14SB_fb),
+            child: Text(label, style: CommonStyles.txStyF14CbFF6),
           ),
           const Expanded(
             flex: 1,
             child: Text(
               ':',
-              style: CommonStyles.txSty_14SB_fb,
+              style: CommonStyles.txStyF14CbFF6,
             ),
           ),
           Expanded(
             flex: 3,
-            child: Text('$value', style: CommonStyles.txSty_14SB_fb),
+            child: Text('$value', style: CommonStyles.txStyF14CbFF6),
           ),
         ],
       ),

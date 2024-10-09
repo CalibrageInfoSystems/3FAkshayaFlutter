@@ -88,6 +88,17 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     fetchlabourservicecost();
   }
 
+  String getSelectedServiceIds(Set<int> selectedServiceIds) {
+    if (selectedServiceIds.isEmpty) {
+      // error dialog
+      return '';
+    } else if (selectedServiceIds.length == 1) {
+      return selectedServiceIds.first.toString();
+    } else {
+      return selectedServiceIds.join(',');
+    }
+  }
+
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
@@ -794,11 +805,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         CustomBtn(
             label: language,
             onPressed: () async {
-              // bool validationSuccess = await isvalidations();
-              /* if (validationSuccess) {
-                  submitLabourRequest();
-                } */
-              submitLabourRequest();
+              bool validationSuccess = await validateLabourRequest();
+              if (validationSuccess) {
+                submitLabourRequest();
+              }
             }),
       ],
     );
@@ -910,10 +920,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   }
 
 // Function to show the dialog
+
   void showSuccessDialog(
       BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return SuccessDialog(msg: msg, title: summary);
       },
@@ -981,6 +993,25 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     return;
   }
 
+  Future<bool> validateLabourRequest() async {
+    print('_isagreed $_isagreed');
+    if (selectedServiceNames.isEmpty) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.multistring));
+      return false;
+    } else if (_dateController.text.isEmpty) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.date_selectiomn));
+      return false;
+    } else if (selectedDropDownValue == null) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.valid_pack));
+      return false;
+    } else if (!_isagreed) {
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.terms_agree));
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> fetchlabourservicecost() async {
     final url = Uri.parse(baseUrl + getLabourServiceCost);
 
@@ -994,9 +1025,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           'Content-Type': 'application/json',
         },
       );
-      print('one: $url');
-      print('one: ${json.encode(request)}');
-      print('one: ${response.body}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
@@ -1031,10 +1059,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     DateFormat inputFormat = DateFormat('dd/MM/yyyy');
     DateFormat outputFormat = DateFormat('yyyy-MM-dd');
     String prefdate = _dateController.text.toString();
-    DateTime parsedDate = inputFormat.parse(prefdate); // Parsing the date
+    DateTime parsedDate = inputFormat.parse(prefdate);
     String formattedDate = outputFormat.format(parsedDate);
 
     String comments = _commentController.text.toString();
+
+//MARK: Request Object
     final request = {
       "farmerCode": farmerCode,
       "farmerName": farmerName,
@@ -1045,21 +1075,21 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "comments": comments,
       "preferredDate": formattedDate,
       "durationId": selectduration_id,
-      "serviceTypes": jsonEncode(selectedServiceIds.toList()),
+      "serviceTypes": getSelectedServiceIds(selectedServiceIds),
       "createdByUserId": 1,
-      "createdDate": CommonStyles.formatDisplayDate(currentDate),
+      "createdDate": CommonStyles.formatApiDate(currentDate),
       "updatedByUserId": 1,
-      "updatedDate": CommonStyles.formatDisplayDate(currentDate),
+      "updatedDate": CommonStyles.formatApiDate(currentDate),
       "amount": 1.1,
       "harvestingAmount": harvestCost,
       "pruningAmount": prunningCost,
-      "pruningWithIntercropAmount": harvestingWithIntercropCost,
-      "harvestingWithIntercropAmount": harvestingWithIntercropCost,
+      "pruningWithIntercropAmount": 0.0,
+      "harvestingWithIntercropAmount": 0.0,
       "yearofPlanting": "${widget.plotdata.dateOfPlanting}",
       "clusterId": Cluster_id,
       "ownPole": _isChecked,
       "services": selectedServiceNames,
-      "package": _selectedDesc.toString(),
+      "package": selectedDropDownValue,
       "stateCode": Statecode,
       "stateName": StateName,
     };
@@ -1076,19 +1106,27 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       print('labourrequestsendbtn: ${json.encode(request)}');
       print('labourrequestsendbtn: ${response.body}');
 
+      CommonStyles.hideHorizontalDotsLoadingDialog(context);
       if (response.statusCode == 200) {
-        CommonStyles.hideHorizontalDotsLoadingDialog(context);
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        String prningcost = prunningCost.toString();
-        List<MsgModel> displayList = [
-          MsgModel(key: tr(LocaleKeys.select_labour_type), value: servicename),
-          MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
-          MsgModel(key: tr(LocaleKeys.Package), value: _selectedDesc!),
-          MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
-        ];
+        if (responseData['isSuccess']) {
+          String prningcost = prunningCost.toString();
+          List<MsgModel> displayList = [
+            MsgModel(
+                key: tr(LocaleKeys.select_labour_type),
+                value: selectedServiceNames),
+            MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+            MsgModel(
+                key: tr(LocaleKeys.Package), value: "$selectedDropDownValue"),
+            MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
+          ];
 
-        showSuccessDialog(context, displayList, tr(LocaleKeys.success_labour));
-        print('responseData$responseData');
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_labour));
+          print('responseData$responseData');
+        } else {
+          throw Exception('Request submission failed');
+        }
       } else {
         print(
             'Request was not successful. Status code: ${response.statusCode}');
@@ -1348,6 +1386,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   List<DropdownMenuItem<String>> setDropDownValues(
       bool pruningCheck, bool harvestingCheck) {
     if (pruningCheck && harvestingCheck) {
+      return _labourRequests
+          .map((request) => DropdownMenuItem<String>(
+                value: request.desc,
+                child: Text(
+                  request.desc,
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ))
+          .toList();
+    } else if (harvestingCheck) {
       return _labourRequests
           .map((request) => DropdownMenuItem<String>(
                 value: request.desc,

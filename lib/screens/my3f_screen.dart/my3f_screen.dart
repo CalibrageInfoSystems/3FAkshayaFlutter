@@ -123,6 +123,7 @@ class _My3fScreenState extends State<My3fScreen> {
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: CommonStyles.primaryTextColor,
           unselectedLabelColor: CommonStyles.whiteColor,
+          dividerColor: Colors.transparent,
           indicator: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),

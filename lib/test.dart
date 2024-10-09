@@ -1586,19 +1586,24 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                       List<TrasportRate>? trasportRates =
                           passBook.trasportRates;
                       if (trasportRates != null) {
-                        return Column(
-                          children: [
-                            CommonWidgets.commonRowWithColon(
-                                textAlign: TextAlign.center,
-                                flex: [5, 1, 5],
-                                label: 'label',
-                                data: '${trasportRates[0].farmerCode}'),
-                            CommonWidgets.commonRowWithColon(
-                                textAlign: TextAlign.center,
-                                flex: [5, 1, 5],
-                                label: 'label',
-                                data: '${trasportRates[0].rate}'),
-                          ],
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Column(
+                            children: [
+                              CommonWidgets.commonRowWithColon(
+                                  flex: [5, 1, 6],
+                                  label: tr(LocaleKeys.village),
+                                  data: '${trasportRates[0].village}'),
+                              CommonWidgets.commonRowWithColon(
+                                  flex: [5, 1, 6],
+                                  label: tr(LocaleKeys.mandal),
+                                  data: '${trasportRates[0].mandal}'),
+                              CommonWidgets.commonRowWithColon(
+                                  flex: [5, 1, 6],
+                                  label: tr(LocaleKeys.rate),
+                                  data: '${trasportRates[0].rate}'),
+                            ],
+                          ),
                         );
                       } else {
                         return const SizedBox();

@@ -89,6 +89,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.fert_req),
+        actionIcon: const SizedBox(),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),

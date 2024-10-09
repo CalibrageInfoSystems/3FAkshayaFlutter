@@ -10,28 +10,34 @@ class CommonWidgets {
     Color? labelTextColor,
     Color? dataTextColor = CommonStyles.dataTextColor,
     bool isColon = false,
+    List<int> flex = const [6, 1, 7],
   }) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-              flex: 6,
+              flex: flex[0],
               child: Text(
                 label,
-                style: CommonStyles.txSty_14b_f5.copyWith(
+                style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: labelTextColor,
                 ),
               ),
             ),
             isColon
-                ? const Expanded(flex: 1, child: Text(':'))
+                ? Expanded(
+                    flex: flex[1],
+                    child: const Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ))
                 : const SizedBox(width: 10),
             Expanded(
-              flex: 7,
+              flex: flex[2],
               child: Text(
                 data,
-                style: CommonStyles.txF14Fw5Cb.copyWith(
+                style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: dataTextColor,
                 ),
               ),

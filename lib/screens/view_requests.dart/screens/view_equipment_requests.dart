@@ -89,7 +89,8 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.pole_req),
-      ), // actionIcon: const SizedBox()
+        actionIcon: const SizedBox(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
         child: FutureBuilder(

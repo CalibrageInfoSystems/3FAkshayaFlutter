@@ -26,7 +26,7 @@ class Constants {
     final Uri mapUrl = Uri.parse(
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
 
-    if (latitude != null && longitude != null) {
+    if (latitude != null || longitude != null) {
       if (!await launchUrl(
         mapUrl,
         mode: LaunchMode.externalApplication,

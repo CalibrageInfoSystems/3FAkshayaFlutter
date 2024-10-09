@@ -89,7 +89,8 @@ class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.labproduct_req),
-      ), // actionIcon: const SizedBox()
+        actionIcon: const SizedBox(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: FutureBuilder(
@@ -172,10 +173,10 @@ class _ViewBioLabRequestsState extends State<ViewBioLabRequests> {
               label: tr(LocaleKeys.amount_payble),
               data: '${request.transportPayableAmount}',
             ),
-          if (request.subsidyAmount != null)
+          if (request.totalCost != null)
             CommonWidgets.commonRow(
-              label: tr(LocaleKeys.subcd_amt),
-              data: '${request.subsidyAmount}',
+              label: tr(LocaleKeys.total_amt),
+              data: '${request.totalCost}',
             ),
           if (request.paymentMode != null)
             CommonWidgets.commonRow(

@@ -10,6 +10,7 @@ import '../../../common_utils/custom_appbar.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/fertilizer_view_product_model.dart';
 import 'package:http/http.dart' as http;
+
 // class ProductDetails extends StatefulWidget {
 //   final String requestCode;
 //
@@ -19,13 +20,12 @@ import 'package:http/http.dart' as http;
 //     required this.requestCode,
 //
 //   }) : super(key: key);
-  class ProductDetails extends StatefulWidget {
+class ProductDetails extends StatefulWidget {
   final String? requestCode;
   const ProductDetails({super.key, required this.requestCode});
 
   @override
-  State<ProductDetails> createState() =>
-      _FertilizerProductDetailsState();
+  State<ProductDetails> createState() => _FertilizerProductDetailsState();
 }
 
 class _FertilizerProductDetailsState extends State<ProductDetails> {
@@ -48,10 +48,8 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
     super.initState();
     futureData = getFetilizerProductDetails();
     // Parse the string to double
-
-
-
   }
+
   Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
     final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
     final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -65,9 +63,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
       if (response['listResult'] != null) {
         List<dynamic> list = response['listResult'];
         List<FetilizerViewProduct> products =
-        list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
-
-
+            list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
 
         // Sum basePrice and totalAmount
         for (var product in products) {
@@ -75,32 +71,34 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
           totalAmount += product.totalAmount!;
           totalBaseTransportAmount += product.transportBasePrice!;
           totalTransportAmount += product.transPortAmount!;
-
         }
 
         // Calculate GST and ensure two decimal points
-        double gstAmount = double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
-        totalSGst = gstAmount/2;
-        double transgstAmount = double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
-        totalTransportSGST = transgstAmount/2;
+        double gstAmount =
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        totalSGst = gstAmount / 2;
+        double transgstAmount =
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        totalTransportSGST = transgstAmount / 2;
         // Ensure the values have two decimal places
         totalBasePrice = double.parse(totalBasePrice.toStringAsFixed(2));
         totalAmount = double.parse(totalAmount.toStringAsFixed(2));
-        totalBaseTransportAmount = double.parse(totalBaseTransportAmount.toStringAsFixed(2));
-        totalTransportAmount = double.parse(totalTransportAmount.toStringAsFixed(2));
+        totalBaseTransportAmount =
+            double.parse(totalBaseTransportAmount.toStringAsFixed(2));
+        totalTransportAmount =
+            double.parse(totalTransportAmount.toStringAsFixed(2));
         totalTransportGST = double.parse(totalTransportGST.toStringAsFixed(2));
 
         // Bind values to your UI elements
         setState(() {
           // Assuming you store these values in variables
-          this.totalBasePrice = totalBasePrice;
-          this.totalAmount = totalAmount;
-          this.totalSGst = totalSGst;
-          this.totalBaseTransportAmount = totalBaseTransportAmount;
-          this.totalTransportAmount = totalTransportAmount;
-          this.totalTransportGST = totalTransportGST;
-          this.totalTransportSGST =  totalTransportSGST;
-
+          totalBasePrice = totalBasePrice;
+          totalAmount = totalAmount;
+          totalSGst = totalSGst;
+          totalBaseTransportAmount = totalBaseTransportAmount;
+          totalTransportAmount = totalTransportAmount;
+          totalTransportGST = totalTransportGST;
+          totalTransportSGST = totalTransportSGST;
         });
 
         return products;
@@ -148,7 +146,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
           children: [
             RichText(
               text: TextSpan(
-                text: 'Request Id ',
+                text: 'Request Id :  ',
                 style: CommonStyles.txStyF14CbFF6,
                 children: [
                   TextSpan(
@@ -176,7 +174,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                           style: CommonStyles.txStyF16CpFF6);
                     }
                     final products =
-                    snapshot.data as List<FetilizerViewProduct>;
+                        snapshot.data as List<FetilizerViewProduct>;
 
                     return ListView.builder(
                       itemCount: products.length,
@@ -192,10 +190,19 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             Column(
               children: [
                 const SizedBox(height: 10),
-                productCostbox(title: tr(LocaleKeys.amount), data: totalBasePrice.toStringAsFixed(2)),  // Total base price
-                productCostbox(title: tr(LocaleKeys.cgst_amount), data: totalSGst.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.sgst_amount), data: totalSGst.toStringAsFixed(2)),
-                productCostbox(title: tr(LocaleKeys.total_amt), data: totalAmount.toStringAsFixed(2)),  // Total base price
+                productCostbox(
+                    title: tr(LocaleKeys.amount),
+                    data:
+                        totalBasePrice.toStringAsFixed(2)), // Total base price
+                productCostbox(
+                    title: tr(LocaleKeys.cgst_amount),
+                    data: totalSGst.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.sgst_amount),
+                    data: totalSGst.toStringAsFixed(2)),
+                productCostbox(
+                    title: tr(LocaleKeys.total_amt),
+                    data: totalAmount.toStringAsFixed(2)), // Total base price
                 // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
                 // productCostbox(
                 //     title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
@@ -245,7 +252,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
               const SizedBox(width: 10),
               Expanded(
                 child:
-                Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),

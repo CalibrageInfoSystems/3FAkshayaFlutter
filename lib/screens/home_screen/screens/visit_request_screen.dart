@@ -408,6 +408,7 @@ class _VisitRequestState extends State<VisitRequest> {
     CommonStyles.errorDialog(
       context,
       errorMessage: 'errorMessage',
+      barrierDismissible: false,
       errorIcon: SvgPicture.asset(
         Assets.images.progressComplete.path,
         color: Colors.white,
@@ -1039,7 +1040,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(tr(LocaleKeys.visit_success), style: CommonStyles.txSty_14p_f5),
+        Text(tr(LocaleKeys.visit_success), style: CommonStyles.txStyF16CpFF6),
         const SizedBox(height: 20),
         if (widget.selectedTypeOfIssue != null)
           Row(
@@ -1048,14 +1049,24 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 5,
                 child: Text(tr(LocaleKeys.issue_type),
-                    style: CommonStyles.txStyF16CrFF6),
+                    textAlign: TextAlign.center,
+                    style: CommonStyles.txStyF16CrFF6
+                        .copyWith(fontWeight: FontWeight.w400)),
               ),
-              const Expanded(
-                  flex: 1, child: Text(':', style: CommonStyles.txSty_14b_f5)),
+              Expanded(
+                flex: 1,
+                child: Text(':',
+                    style: CommonStyles.txStyF16CrFF6.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: CommonStyles.dataTextColor)),
+              ),
               Expanded(
                 flex: 7,
                 child: Text('${widget.selectedTypeOfIssue}',
-                    style: CommonStyles.texthintstyle),
+                    textAlign: TextAlign.center,
+                    style: CommonStyles.txStyF16CrFF6.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: CommonStyles.dataTextColor)),
               ),
             ],
           ),
@@ -1071,15 +1082,24 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 5,
                     child: Text(tr(LocaleKeys.comments),
-                        style: CommonStyles.txStyF16CrFF6),
+                        textAlign: TextAlign.center,
+                        style: CommonStyles.txStyF16CrFF6
+                            .copyWith(fontWeight: FontWeight.w400)),
                   ),
-                  const Expanded(
-                      flex: 1,
-                      child: Text(':', style: CommonStyles.txSty_14b_f5)),
+                  Expanded(
+                    flex: 1,
+                    child: Text(':',
+                        style: CommonStyles.txStyF16CrFF6.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: CommonStyles.dataTextColor)),
+                  ),
                   Expanded(
                     flex: 7,
                     child: Text('${widget.comments}',
-                        style: CommonStyles.texthintstyle),
+                        textAlign: TextAlign.center,
+                        style: CommonStyles.txStyF16CrFF6.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: CommonStyles.dataTextColor)),
                   ),
                 ],
               ),
