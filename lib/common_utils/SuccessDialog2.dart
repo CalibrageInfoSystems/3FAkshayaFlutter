@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -11,7 +10,7 @@ class SuccessDialog2 extends StatelessWidget {
 
   final String title;
 
-  SuccessDialog2({super.key,  required this.title});
+  const SuccessDialog2({super.key,  required this.title});
 
 
   @override

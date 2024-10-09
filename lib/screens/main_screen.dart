@@ -6,7 +6,6 @@ import 'package:akshaya_flutter/authentication/login_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
-import 'package:akshaya_flutter/gen/fonts.gen.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';

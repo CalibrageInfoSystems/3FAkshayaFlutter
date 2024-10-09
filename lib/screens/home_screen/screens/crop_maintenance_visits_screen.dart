@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:akshaya_flutter/models/CropData.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';

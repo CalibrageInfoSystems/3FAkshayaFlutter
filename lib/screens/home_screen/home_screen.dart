@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         throw Exception('Failed to get learning data');
       }
-    } on SocketException catch (se) {
+    } on SocketException {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

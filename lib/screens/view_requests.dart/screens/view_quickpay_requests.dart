@@ -6,7 +6,6 @@ import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
-import 'package:akshaya_flutter/models/common_view_request_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,26 +144,23 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
       onTap: onTap,
       child: Column(
         children: [
-          if (request.requestCode != null)
-            CommonWidgets.commonRow(
-                label: tr(LocaleKeys.requestCodeLabel),
-                data: '${request.requestCode}',
-                dataTextColor: CommonStyles.appBarColor),
+          CommonWidgets.commonRow(
+              label: tr(LocaleKeys.requestCodeLabel),
+              data: request.requestCode,
+              dataTextColor: CommonStyles.appBarColor),
           if (request.reqCreatedDate != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.req_date),
               data: '${formatDate(request.reqCreatedDate)}',
             ),
-          if (request.statusType != null)
-            CommonWidgets.commonRow(
-              label: tr(LocaleKeys.status),
-              data: '${request.statusType}',
-            ),
-          if (request.totalCost != null)
-            CommonWidgets.commonRow(
-              label: tr(LocaleKeys.total_amt),
-              data: '${request.totalCost}',
-            ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.status),
+            data: request.statusType,
+          ),
+          CommonWidgets.commonRow(
+            label: tr(LocaleKeys.total_amt),
+            data: '${request.totalCost}',
+          ),
         ],
       ),
     );
