@@ -178,6 +178,7 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
   }
 
   Widget request(int index, ViewVisitModel request, {void Function()? onTap}) {
+    final df = NumberFormat("#,##0.00");
     return CommonWidgets.viewTemplate(
       bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
       onTap: onTap,
@@ -196,7 +197,8 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
           if (request.palmArea != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.plot_size),
-              data: '${request.palmArea}',
+              data:
+                  '${df.format(request.palmArea)} Ha (${df.format(request.palmArea! * 2.5)} Acre)',
             ),
           if (request.plotVillage != null)
             CommonWidgets.commonRow(
@@ -205,9 +207,8 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
             ),
           if (request.reqCreatedDate != null)
             CommonWidgets.commonRow(
-              label: tr(LocaleKeys.req_date),
-              data: '${CommonStyles.formatDate(request.reqCreatedDate)}',
-            ),
+                label: tr(LocaleKeys.req_date),
+                data: '${CommonStyles.formatDate(request.reqCreatedDate)}'),
           if (request.statusType != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.status),
@@ -233,6 +234,7 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
 
   Container visitRequest(int index, ViewVisitModel visitRequest,
       {void Function()? onPressed}) {
+    final df = NumberFormat("#,##0.00");
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -249,14 +251,16 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
               label: tr(LocaleKeys.plot_code),
               data: '${visitRequest.plotCode}'),
           plotDetailBox(
-              label: tr(LocaleKeys.plot_size),
-              data: '${visitRequest.palmArea}'),
+            label: tr(LocaleKeys.plot_size),
+            data:
+                '${df.format(visitRequest.palmArea)} Ha (${df.format(visitRequest.palmArea! * 2.5)} Acre)',
+          ),
           plotDetailBox(
               label: tr(LocaleKeys.village),
               data: '${visitRequest.plotVillage}'),
           plotDetailBox(
               label: tr(LocaleKeys.req_date),
-              data: '${visitRequest.reqCreatedDate}'),
+              data: '${CommonStyles.formatDate(visitRequest.reqCreatedDate)}'),
           plotDetailBox(
               label: tr(LocaleKeys.status), data: '${visitRequest.statusType}'),
           const SizedBox(height: 5),
