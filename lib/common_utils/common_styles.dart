@@ -141,14 +141,14 @@ class CommonStyles {
   /* ...................................... */
 
   static const TextStyle texthintstyle = TextStyle(
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w500,
     color: Colors.grey,
   );
 
   static const TextStyle txF14Fw5Cb = TextStyle(
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w500,
     color: Color.fromARGB(255, 71, 71, 71),
@@ -161,7 +161,7 @@ class CommonStyles {
     color: hintTextColor,
   );
   static const TextStyle txSty_14b_f5 = TextStyle(
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: "hind_semibold",
     fontWeight: FontWeight.w500,
     color: blackColor,

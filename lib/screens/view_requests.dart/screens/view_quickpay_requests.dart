@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../Services/models/QuickpayRequest.dart';
+
 class ViewQuickpayRequests extends StatefulWidget {
   const ViewQuickpayRequests({super.key});
 
@@ -20,7 +22,7 @@ class ViewQuickpayRequests extends StatefulWidget {
 }
 
 class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
-  late Future<List<CommonViewRequestModel>> futureRequests;
+  late Future<List<QuickpayRequest>> futureRequests;
 
   @override
   void initState() {
@@ -37,7 +39,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
     return DateFormat('dd/MM/yyyy').format(parsedDate);
   }
 
-  Future<List<CommonViewRequestModel>> getQuickpayRequests() async {
+  Future<List<QuickpayRequest>> getQuickpayRequests() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
@@ -70,7 +72,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
       if (response['listResult'] != null) {
         List<dynamic> listResult = response['listResult'];
         return listResult
-            .map((item) => CommonViewRequestModel.fromJson(item))
+            .map((item) => QuickpayRequest.fromJson(item))
             .toList();
       } else {
         throw Exception('listResult is empty');
@@ -102,22 +104,25 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
               return const Text('No data');
             }
 
-            final requests = snapshot.data as List<CommonViewRequestModel>;
+            final requests = snapshot.data as List<QuickpayRequest>;
             if (requests.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
-                  'No Requests Found',
+                  tr(LocaleKeys.no_req_found),
                   style: CommonStyles.txSty_16p_fb,
                 ),
               );
-            } else {
+            }
+            else {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   return request(
                     index,
                     requests[index],
-                    onTap: () {},
+                    onTap: () {
+                      fetchQuickPayDocument(requests[index].requestCode);
+                    },
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -131,7 +136,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
     );
   }
 
-  Widget request(int index, CommonViewRequestModel request,
+  Widget request(int index, QuickpayRequest request,
       {void Function()? onTap}) {
     return CommonWidgets.viewTemplate(
       bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
@@ -148,18 +153,74 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
               label: tr(LocaleKeys.req_date),
               data: '${formatDate(request.reqCreatedDate)}',
             ),
-          if (request.status != null)
+          if (request.statusType != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.status),
-              data: '${request.status}',
+              data: '${request.statusType}',
             ),
-          if (request.totalAmount != null)
+          if (request.totalCost != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.total_amt),
-              data: '${request.totalAmount}',
+              data: '${request.totalCost}',
             ),
         ],
       ),
+    );
+  }
+
+  Future<void> fetchQuickPayDocument(String requestId) async {
+    final url = 'http://182.18.157.215/3FAkshaya/API/api/QuickPayRequest/GetQuickpayDocument/$requestId';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> result = json.decode(response.body);
+
+        if (result['isSuccess']) {
+          // Show the pop-up with the URL
+          _showPopup(result['result']);
+        } else {
+          // Handle error message
+          print(result['endUserMessage']);
+        }
+      } else {
+        // Handle error response
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Exception: $e');
+    }
+  }
+
+  void _showPopup(String url) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('QuickPay Document'),
+          content: Text('Document URL: $url'),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Open Document'),
+              onPressed: () {
+                // Implement opening the URL in the browser
+                // You may want to use url_launcher package for this
+                // final uri = Uri.parse(url);
+                // launch(uri.toString());
+                Navigator.of(context).pop(); // Close the dialog after opening
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

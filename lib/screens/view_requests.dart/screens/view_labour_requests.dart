@@ -87,7 +87,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: tr(LocaleKeys.lab_req),
-      ), // actionIcon: const SizedBox()
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
         child: FutureBuilder(
@@ -98,30 +98,42 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}',
                   style: CommonStyles.txStyF16CpFF6);
-            } else if (!snapshot.hasData) {
-              return const Text('No data');
+            } else if (!snapshot.hasData ) {
+              return const Text('No Labour Request Available',
+                  style: TextStyle(fontSize: 16, color: Colors.black));
             }
 
             final requests = snapshot.data as List<ViewLabourModel>;
+            //  final requests = snapshot.data as List<CommonViewRequestModel>;
+            if (requests.isEmpty) {
+              return Center(
+                child: Text(
+                  tr(LocaleKeys.no_req_found),
+                  style: CommonStyles.txSty_16p_fb,
+                ),
+              );
+            }
+            else {
+              return ListView.separated(
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
+                  return request(
+                    index,
+                    requests[index],
+                    onTap: () => showCompleteDetailsOnDialog(requests[index]),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 10);
+                },
+              );
+            }
 
-            return ListView.separated(
-              itemCount: requests.length,
-              itemBuilder: (context, index) {
-                return request(
-                  index,
-                  requests[index],
-                  onTap: () => showCompleteDetailsOnDialog(requests[index]),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(height: 10);
-              },
-            );
-          },
-        ),
+          }),
       ),
     );
   }
+
 
   Widget request(int index, ViewLabourModel request, {void Function()? onTap}) {
     return CommonWidgets.viewTemplate(

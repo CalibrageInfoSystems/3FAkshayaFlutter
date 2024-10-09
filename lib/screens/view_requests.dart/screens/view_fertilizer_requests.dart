@@ -106,13 +106,13 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
 
             final requests = snapshot.data as List<CommonViewRequestModel>;
             if (requests.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
-                  'No Requests Found',
+                  tr(LocaleKeys.no_req_found),
                   style: CommonStyles.txSty_16p_fb,
                 ),
               );
-            } else {
+            }else {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {

@@ -86,18 +86,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<String?>> getLearningsData() async {
     final apiUrl = '$baseUrl$getlearning';
-
+    print('=========learningList,$apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> learningList = response['listResult'];
-
+print('=========learningList,$learningList');
         // Extract language-specific names based on the current locale
         List<LearningModel> result =
-            learningList.map((item) => LearningModel.fromJson(item)).toList();
-        Locale currentLocale =
-            EasyLocalization.of(context)?.locale ?? const Locale('en');
+        learningList.map((item) => LearningModel.fromJson(item)).toList();
+        print('=========learningList,$result');
+        Locale currentLocale = EasyLocalization.of(context)?.locale ?? const Locale('en');
 
         // Map names based on the locale
         return result.map((item) {
@@ -120,12 +120,16 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Listen to locale changes and rebuild the widget tree
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    EasyLocalization.of(context)?.locale;
+ //   EasyLocalization.of(context)?.addListener(() {
+      setState(() {
+        learningsData = getLearningsData();
+      });
+   // });
   }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
