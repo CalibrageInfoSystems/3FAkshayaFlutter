@@ -52,7 +52,7 @@ class CommonStyles {
   static const hintTextColor = Color(0xCBBEBEBE);
   static const headercolor = Color(0xDAF05F4E);
   // <color name="colorOrange">#e86100</color>
-  // styles
+  // styles #FFC93437
   static const RedColor = Color(0xFFC93437);
 
   static const txStyF12CbFF6 = TextStyle(

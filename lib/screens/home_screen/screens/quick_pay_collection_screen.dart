@@ -828,6 +828,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   } */
 }
 
+
+
+
 class PdfViewerPopup extends StatefulWidget {
   final String pdfUrl;
 
@@ -860,50 +863,91 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(2.0),
       ),
-      child: Column(
-        children: <Widget>[
-          // Header
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.red,
-            width: double.infinity,
-            child: const Center(
-              child: Text(
-                'QuickPay Request PDF',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        color: const Color(0x8D000000), // Background color with transparency
+        child: Column(
+          children: <Widget>[
+            // Header
+            Container(
+              padding: const EdgeInsets.all(8),
+              color: CommonStyles.RedColor,
+              width: double.infinity,
+              child: const Center(
+                child: Text(
+                  'QuickPay Request PDF',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
-          ),
-          // WebView displaying PDF
-          Expanded(
-            child: Stack(
-              children: [
-                WebViewWidget(controller: _controller),
-                if (isLoading) const Center(child: CircularProgressIndicator()),
-              ],
-            ),
-          ),
-          // "OK" Button
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize:
-                    const Size(double.infinity, 50), // Full width button
+            // WebView displaying PDF
+            Expanded(
+              child: Stack(
+                children: [
+                  WebViewWidget(controller: _controller),
+                  if (isLoading) const Center(child: CircularProgressIndicator()),
+                ],
               ),
-              onPressed: () {
-                showSuccessquikDialog(context, tr(LocaleKeys.success_fertilizer));
-              //  Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('OK'),
             ),
-          ),
-        ],
+            // "OK" Button
+
+            // Additional OK Button
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                  BorderRadius.circular(20.0), // Rounded corners
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFFCCCCCC), // Start color (light gray)
+                      Color(0xFFFFFFFF), // Center color (white)
+                      Color(0xFFCCCCCC), // End color (light gray)
+                    ],
+                  ),
+                  border: Border.all(
+                    color: const Color(
+                        0xFFe86100), // Orange border color
+                    width: 2.0,
+                  ),
+                ),
+                child:
+                SizedBox(
+                  height: 30.0, // Set the desired height
+                  child: ElevatedButton(
+                    onPressed: () {
+
+                      Navigator.of(context).pop();
+                      showSuccessquikDialog(context, tr(LocaleKeys.qucick_success));
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 35.0),
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'OK',
+                      style: CommonStyles.txSty_16p_f5,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -920,21 +964,3 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
 
 
 
-
-
-/* 
- Signature(
-              height: 200,
-              width: 350,
-              controller: controller!,
-            ),
- */
-
-/* CommonStyles.errorDialog(
-                context,
-                errorIcon: const Icon(Icons.home,
-                    size: 30, color: CommonStyles.whiteColor),
-                bodyBackgroundColor: CommonStyles.primaryColor,
-                errorMessage: tr(LocaleKeys.qucick_success),
-                errorMessageColor: CommonStyles.primaryTextColor,
-              ); */

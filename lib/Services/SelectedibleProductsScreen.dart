@@ -83,6 +83,7 @@ class _SelectEdibleProductsScreenState
   Future<List<ProductItem>> getProducts() async {
     try {
       final apiUrl = '$baseUrl$Getproductdata/12/${widget.godown.code}';
+      print('apiUrl======$apiUrl');
 
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {

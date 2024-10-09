@@ -498,7 +498,8 @@ class _MainScreenPageState extends State<MainScreen> {
                               width: 2.0,
                             ),
                           ),
-                          child: SizedBox(
+                          child:
+                          SizedBox(
                             height: 30.0, // Set the desired height
                             child: ElevatedButton(
                               onPressed: () {

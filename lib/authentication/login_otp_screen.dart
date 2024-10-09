@@ -34,6 +34,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('====>${widget.mobile}');
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -49,107 +50,84 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                 color: const Color(0x8D000000),
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 30),
-                    Text(
-                      'Enter the 6 Digits Code Sent your Registered Mobile Number(s) ******${fetchlast4Digits(widget.mobile)}',
-                      style: CommonStyles.txSty_16w_fb,
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 30),
+                // Split the mobile numbers and format the display
+                Text(
+                  'Enter the 6 Digits Code Sent to your Registered Mobile Number(s) ${_formatMobileNumbers(widget.mobile)}',
+                  style: CommonStyles.txSty_16w_fb,
+                ),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PinCodeTextField(
+                    appContext: context,
+                    textStyle: CommonStyles.txSty_16w_fb,
+                    length: 6,
+                    obscureText: false,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.underline,
+                      borderRadius: BorderRadius.circular(10),
+                      fieldWidth: 45,
+                      activeColor: CommonStyles.primaryTextColor,
+                      selectedColor: CommonStyles.primaryTextColor,
+                      selectedFillColor: Colors.transparent,
+                      activeFillColor: Colors.transparent,
+                      inactiveFillColor: Colors.transparent,
+                      inactiveColor: Colors.white,
                     ),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: PinCodeTextField(
-                        appContext: context,
-                        textStyle: CommonStyles.txSty_16w_fb,
-                        length: 6,
-                        obscureText: false,
-                        animationType: AnimationType.fade,
-                        pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.underline,
-                          borderRadius: BorderRadius.circular(10),
-                          fieldWidth: 45,
-                          activeColor: CommonStyles.primaryTextColor,
-                          selectedColor: CommonStyles.primaryTextColor,
-                          selectedFillColor: Colors.transparent,
-                          activeFillColor: Colors.transparent,
-                          inactiveFillColor: Colors.transparent,
-                          inactiveColor: Colors.white,
+                    animationDuration: const Duration(milliseconds: 300),
+                    enableActiveFill: true,
+                    keyboardType: TextInputType.number,
+                    onCompleted: (v) {
+                      print(v);
+                      setState(() {
+                        enteredOTP = v;
+                      });
+                      print("Completed");
+                    },
+                    beforeTextPaste: (text) {
+                      print("Allowing to paste $text");
+                      return true;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                submitBtn(context, 'Submit'),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        resendOTP(); // Call your resendOTP method here
+                      },
+                      child: Text(
+                        "RESEND OTP",
+                        style: CommonStyles.text14white.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline, // Optional: Add underline to indicate it's clickable
                         ),
-                        animationDuration: const Duration(milliseconds: 300),
-                        // backgroundColor: Colors
-                        //     .blue.shade50, // Set background color
-                        enableActiveFill: true,
-                        // controller: _otpController,
-                        // inputFormatters: [
-                        //   FilteringTextInputFormatter.digitsOnly
-                        // ],
-                        keyboardType: TextInputType.number,
-                        // validator: validateotp,
-                        onCompleted: (v) {
-                          print(v);
-                          setState(() {
-                            enteredOTP = v;
-                          });
-                          print("Completed");
-                        },
-                        // onChanged: (value) {
-                        //   print(value);
-                        //   // setState(() {
-                        //   //   currentText = value;
-                        //   // });
-                        // },
-                        // onSubmitted: (value){
-                        //   print("enteredotp$value");
-                        //   // setState(() {
-                        //   //   enteredOTP =value;
-                        //   // });
-                        //
-                        // },
-                        beforeTextPaste: (text) {
-                          print("Allowing to paste $text");
-                          return true;
-                        },
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    submitBtn(context, 'Submit'),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // Text(
-                        //   "Didn't receive code? ",
-                        //   style: CommonStyles.text14white.copyWith(
-                        //     color: const Color.fromARGB(255, 240, 237, 237),
-                        //   ),
-                        // ),
-                        GestureDetector(
-                          onTap: () {
-                            resendOTP(); // Call your resendOTP method here
-                          },
-                          child: Text(
-                            "RESEND OTP",
-                            style: CommonStyles.text14white.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration
-                                  .underline, // Optional: Add underline to indicate it's clickable
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
-                ),
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+          ),
+        )
+
+
+
+    ],
         ),
       ),
     );
@@ -379,5 +357,22 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         isLoading = false;
       });
     }
+  }
+
+// Function to format mobile numbers
+  String _formatMobileNumbers(String mobileNumbers) {
+    // Split the mobile numbers by comma
+    List<String> numbersList = mobileNumbers.split(',');
+
+    // Format each number to show last 4 digits
+    String formattedNumbers = numbersList.map((number) {
+      // Check if the number has at least 4 digits
+      if (number.length >= 4) {
+        return '****${number.substring(number.length - 4)}'; // Show last 4 digits with asterisks
+      }
+      return number; // Return as is if less than 4 digits
+    }).join(', '); // Join with a comma
+
+    return formattedNumbers;
   }
 }
