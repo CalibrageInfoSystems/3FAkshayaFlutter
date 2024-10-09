@@ -400,14 +400,16 @@ class _ProductCardState extends State<ProductCard> {
                     style: CommonStyles.txStyF14CbFF6,
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    '₹${widget.product.actualPriceInclGst}',
-                    style: CommonStyles.txStyF14CbFF6.copyWith(
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: CommonStyles.RedColor,
-                      color: CommonStyles.formFieldErrorBorderColor,
+                  if (widget.product.actualPriceInclGst !=
+                      widget.product.priceInclGst)
+                    Text(
+                      '₹${widget.product.actualPriceInclGst}',
+                      style: CommonStyles.txStyF14CbFF6.copyWith(
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: CommonStyles.RedColor,
+                        color: CommonStyles.formFieldErrorBorderColor,
+                      ),
                     ),
-                  ),
                 ],
               ),
               widget.product.size != null && widget.product.uomType != null

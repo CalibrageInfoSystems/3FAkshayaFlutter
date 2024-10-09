@@ -27,10 +27,10 @@ class ViewLabourModel {
   final String? leader;
   final int? pin;
   final String? jobDoneDate;
-  final String? createdByUserId;
+  final int? createdByUserId;
   final String? createdBy;
   final DateTime? createdDate;
-  final String? updatedByUserId;
+  final int? updatedByUserId;
   final String? updatedBy;
   final DateTime? updatedDate;
   final double? totalNetWeight;

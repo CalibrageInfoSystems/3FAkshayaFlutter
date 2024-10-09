@@ -134,6 +134,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
   }
 
   Widget request(int index, ViewLabourModel request, {void Function()? onTap}) {
+    final df = NumberFormat("#,##0.00");
     return CommonWidgets.viewTemplate(
       bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
       onTap: onTap,
@@ -152,7 +153,8 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
           if (request.palmArea != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.plot_size),
-              data: '${request.palmArea}',
+              data:
+                  '${df.format(request.palmArea)} Ha (${df.format(request.palmArea! * 2.5)} Acre)',
             ),
           if (request.plotVillage != null)
             CommonWidgets.commonRow(
@@ -162,7 +164,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
           if (request.startDate != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.startDate),
-              data: '${CommonStyles.formatApiDate(request.startDate)}',
+              data: '${CommonStyles.formatDisplayDate(request.startDate)}',
             ),
           if (request.serviceTypes != null)
             CommonWidgets.commonRow(
@@ -228,47 +230,60 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
             children: [
               Text('${request.requestCode}', style: CommonStyles.txStyF16CpFF6),
               const SizedBox(height: 10),
-              commonRow(
-                label: tr(LocaleKeys.plot_code),
-                data: '${request.plotCode}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.plot_size),
-                data: '${request.palmArea}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.village),
-                data: '${request.plotVillage}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.labour_leader),
-                data: '${request.leader}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.startDate),
-                data: '${request.startDate}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.serviceType),
-                data: '${request.serviceTypes}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.job_done),
-                data: '${request.updatedDate}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.Package),
-                data: '${request.assignedDate}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.status),
-                data: '${request.statusType}',
-              ),
-              commonRow(
-                label: tr(LocaleKeys.assign_date),
-                data: '${request.createdDate}',
-              ),
-              Text(tr(LocaleKeys.total_amt), style: CommonStyles.txStyF16CpFF6),
+              if (request.plotCode != null)
+                commonRow(
+                  label: tr(LocaleKeys.plot_code),
+                  data: '${request.plotCode}',
+                ),
+              if (request.palmArea != null)
+                commonRow(
+                  label: tr(LocaleKeys.plot_size),
+                  data: '${request.palmArea}',
+                ),
+              if (request.plotVillage != null)
+                commonRow(
+                  label: tr(LocaleKeys.village),
+                  data: '${request.plotVillage}',
+                ),
+              if (request.plotVillage != null)
+                commonRow(
+                  label: tr(LocaleKeys.labour_leader),
+                  data: '${request.leader}',
+                ),
+              if (request.startDate != null)
+                commonRow(
+                  label: tr(LocaleKeys.startDate),
+                  data: '${CommonStyles.formatDisplayDate(request.startDate)}',
+                ),
+              if (request.serviceTypes != null)
+                commonRow(
+                  label: tr(LocaleKeys.serviceType),
+                  data: '${request.serviceTypes}',
+                ),
+              if (request.updatedDate != null)
+                commonRow(
+                  label: tr(LocaleKeys.job_done),
+                  data:
+                      '${CommonStyles.formatDisplayDate(request.updatedDate)}',
+                ),
+              if (request.assignedDate != null)
+                commonRow(
+                  label: tr(LocaleKeys.Package),
+                  data: '${CommonStyles.formatDate(request.assignedDate)}',
+                ),
+              if (request.statusType != null)
+                commonRow(
+                  label: tr(LocaleKeys.status),
+                  data: '${request.statusType}',
+                ),
+              if (request.createdDate != null)
+                commonRow(
+                  label: tr(LocaleKeys.assign_date),
+                  data:
+                      '${CommonStyles.formatDisplayDate(request.createdDate)}',
+                ),
+              Text(tr(LocaleKeys.payment_details),
+                  style: CommonStyles.txStyF16CpFF6),
               const SizedBox(height: 5),
               Container(
                 height: 1.0,
@@ -284,10 +299,11 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                 ),
               ),
               const SizedBox(height: 5),
-              commonRow(
-                label: tr(LocaleKeys.total_amt),
-                data: '${request.totalCost}',
-              ),
+              if (request.totalCost != null)
+                commonRow(
+                  label: tr(LocaleKeys.total_amt),
+                  data: request.totalCost!.toStringAsFixed(2),
+                ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
