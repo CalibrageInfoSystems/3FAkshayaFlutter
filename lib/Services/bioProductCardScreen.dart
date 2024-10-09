@@ -612,7 +612,8 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             label1: tr(LocaleKeys.quantity),
             data1: '$quantity',
             label2: tr(LocaleKeys.amount),
-            data2: productQuantity.toStringAsFixed(2),
+            data2: (product.priceInclGst! * quantity).toStringAsFixed(2),
+            // data2: productQuantity.toStringAsFixed(2),
           ),
           // productInfo(
           //   label1:  tr(LocaleKeys.transportprice),
@@ -918,11 +919,11 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         final quantity = productWithQuantity.quantity;
 
         // Null checks before accessing values
-        if (product.actualPriceInclGst != null &&
+        if (product.priceInclGst != null &&
             product.transPortActualPriceInclGst != null &&
             product.gstPercentage != null &&
             product.transportGstPercentage != null) {
-          final productCost = product.actualPriceInclGst! * quantity;
+          final productCost = product.priceInclGst! * quantity;
           totalProductCostGst += productCost;
 
           final transportCost = product.transPortActualPriceInclGst! * quantity;

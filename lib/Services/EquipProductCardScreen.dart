@@ -119,132 +119,119 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       appBar: CustomAppBar(
         title: tr(LocaleKeys.product_req),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(tr(LocaleKeys.payment_mode),
-                      style: CommonStyles.txStyF16CbFF6),
-                  const SizedBox(width: 5),
-                  const Text('*', style: TextStyle(color: Colors.red)),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text(tr(LocaleKeys.payment_mode),
+                    style: CommonStyles.txStyF16CbFF6),
+                const SizedBox(width: 5),
+                const Text('*', style: TextStyle(color: Colors.red)),
+              ],
+            ),
+            const SizedBox(height: 5),
+            dropdownWidget(),
+            const SizedBox(height: 10),
+            Text(tr(LocaleKeys.product_details),
+                style: CommonStyles.txStyF16CbFF6),
+            const SizedBox(height: 5),
+            Expanded(
+              child: ListView.builder(
+                itemCount: widget.products.length,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return widget.products[index].quantity == 0
+                      ? const SizedBox()
+                      : productBox(widget.products[index]);
+                },
               ),
-              const SizedBox(height: 5),
-              dropdownWidget(),
-              const SizedBox(height: 10),
-              Text(tr(LocaleKeys.product_details),
-                  style: CommonStyles.txStyF16CbFF6),
-              const SizedBox(height: 5),
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: widget.products.length,
-                  itemBuilder: (context, index) {
-                    return widget.products[index].quantity == 0
-                        ? const SizedBox()
-                        : productBox(widget.products[index]);
+            ),
+            const SizedBox(height: 10),
+            noteBox(),
+            const SizedBox(height: 10),
+            productCostbox(
+                title: tr(LocaleKeys.amount),
+                data: amountWithoutGst.toStringAsFixed(2)),
+            productCostbox(
+                title: tr(LocaleKeys.cgst_amount),
+                data: totalCGST.toStringAsFixed(2)),
+            productCostbox(
+                title: tr(LocaleKeys.sgst_amount),
+                data: totalSGST.toStringAsFixed(2)),
+            productCostbox(
+                title: tr(LocaleKeys.total_amt),
+                data: totalProductCostGst.toStringAsFixed(2)),
+            const SizedBox(height: 4),
+            // productCostbox(title: tr(LocaleKeys.transamount), data: TransportamountWithoutGst.toStringAsFixed(2)),
+            // productCostbox(title: tr(LocaleKeys.tcgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
+            // productCostbox(title: tr(LocaleKeys.tsgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
+            // productCostbox(title: tr(LocaleKeys.trnstotal_amt), data: totalTransportCostwithgst.toStringAsFixed(2)),
+            // productCostbox(title: tr(LocaleKeys.subsidy_amt), data: subsidyAmount.toStringAsFixed(2)),
+            // productCostbox(title: tr(LocaleKeys.amount_payble), data: payableAmount.toStringAsFixed(2)),
+            CommonStyles.horizontalGradientDivider(colors: [
+              const Color(0xFFFF4500),
+              const Color(0xFFA678EF),
+              const Color(0xFFFF4500),
+            ]),
+            const SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomBtn(
+                  label: tr(LocaleKeys.submit),
+                  borderColor: CommonStyles.primaryTextColor,
+                  borderRadius: 12,
+                  onPressed: () async {
+                    // Disable button when loading
+                    if (validations()) {
+                      if (await isOnline()) {
+                        final request = FertilizerRequest(
+                          id: 0,
+                          requestTypeId: 10,
+                          farmerCode: farmerCode,
+                          farmerName: farmerName,
+                          plotCode: null,
+                          requestCreatedDate: DateTime.now().toIso8601String(),
+                          isFarmerRequest: true,
+                          createdByUserId: null,
+                          createdDate: DateTime.now().toIso8601String(),
+                          updatedByUserId: null,
+                          updatedDate: DateTime.now().toIso8601String(),
+                          godownId: widget.godown.id!,
+                          paymentModeType: paymentmodeId,
+                          isImmediatePayment: true,
+                          fileName: null,
+                          fileLocation: null,
+                          fileExtension: null,
+                          totalCost: totalAmountWithGST,
+                          subcidyAmount: 0.0,
+                          paybleAmount: payableAmount,
+                          transportPayableAmount: null,
+                          comments: null,
+                          cropMaintainceDate: null,
+                          issueTypeId: null,
+                          godownCode: '${widget.godown.code}',
+                          requestProductDetails: productDetailsList,
+                          clusterId: Cluster_id,
+                          stateCode: Statecode,
+                          stateName: StateName,
+                        );
+                        print('CHECK BOX VALUE: $_isCheckboxChecked');
+                        await submitFertilizerRequest(request);
+                      } else {
+                        CommonStyles.showCustomDialog(
+                            context, tr(LocaleKeys.Internet));
+                      }
+                    }
                   },
                 ),
-              ),
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  CommonStyles.horizontalGradientDivider(colors: [
-                    const Color(0xFFFF4500),
-                    const Color(0xFFA678EF),
-                    const Color(0xFFFF4500),
-                  ]),
-                  const SizedBox(height: 10),
-                  noteBox(),
-                  const SizedBox(height: 10),
-                  productCostbox(
-                      title: tr(LocaleKeys.amount),
-                      data: amountWithoutGst.toStringAsFixed(2)),
-                  productCostbox(
-                      title: tr(LocaleKeys.cgst_amount),
-                      data: totalCGST.toStringAsFixed(2)),
-                  productCostbox(
-                      title: tr(LocaleKeys.sgst_amount),
-                      data: totalSGST.toStringAsFixed(2)),
-                  productCostbox(
-                      title: tr(LocaleKeys.total_amt),
-                      data: totalProductCostGst.toStringAsFixed(2)),
-                  const SizedBox(height: 4),
-                  // productCostbox(title: tr(LocaleKeys.transamount), data: TransportamountWithoutGst.toStringAsFixed(2)),
-                  // productCostbox(title: tr(LocaleKeys.tcgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
-                  // productCostbox(title: tr(LocaleKeys.tsgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
-                  // productCostbox(title: tr(LocaleKeys.trnstotal_amt), data: totalTransportCostwithgst.toStringAsFixed(2)),
-                  // productCostbox(title: tr(LocaleKeys.subsidy_amt), data: subsidyAmount.toStringAsFixed(2)),
-                  // productCostbox(title: tr(LocaleKeys.amount_payble), data: payableAmount.toStringAsFixed(2)),
-                  CommonStyles.horizontalGradientDivider(colors: [
-                    const Color(0xFFFF4500),
-                    const Color(0xFFA678EF),
-                    const Color(0xFFFF4500),
-                  ]),
-                  const SizedBox(height: 10),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomBtn(
-                        label: tr(LocaleKeys.submit),
-                        borderColor: CommonStyles.primaryTextColor,
-                        borderRadius: 12,
-                        onPressed: () async {
-                          // Disable button when loading
-                          if (validations()) {
-                            if (await isOnline()) {
-                              final request = FertilizerRequest(
-                                id: 0,
-                                requestTypeId: 10,
-                                farmerCode: farmerCode,
-                                farmerName: farmerName,
-                                plotCode: null,
-                                requestCreatedDate:
-                                    DateTime.now().toIso8601String(),
-                                isFarmerRequest: true,
-                                createdByUserId: null,
-                                createdDate: DateTime.now().toIso8601String(),
-                                updatedByUserId: null,
-                                updatedDate: DateTime.now().toIso8601String(),
-                                godownId: widget.godown.id!,
-                                paymentModeType: paymentmodeId,
-                                isImmediatePayment: true,
-                                fileName: null,
-                                fileLocation: null,
-                                fileExtension: null,
-                                totalCost: totalAmountWithGST,
-                                subcidyAmount: 0.0,
-                                paybleAmount: payableAmount,
-                                transportPayableAmount: null,
-                                comments: null,
-                                cropMaintainceDate: null,
-                                issueTypeId: null,
-                                godownCode: '${widget.godown.code}',
-                                requestProductDetails: productDetailsList,
-                                clusterId: Cluster_id,
-                                stateCode: Statecode,
-                                stateName: StateName,
-                              );
-                              print('CHECK BOX VALUE: $_isCheckboxChecked');
-                              await submitFertilizerRequest(request);
-                            } else {
-                              CommonStyles.showCustomDialog(
-                                  context, tr(LocaleKeys.Internet));
-                            }
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

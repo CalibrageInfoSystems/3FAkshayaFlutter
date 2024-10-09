@@ -606,14 +606,15 @@ class _ProductCardState extends State<ProductCard> {
               CommonStyles.horizontalGradientDivider(),
               infoRow(
                 label1: tr(LocaleKeys.price),
-                data1: '${product.actualPriceInclGst}',
+                data1: '${product.priceInclGst}',
                 label2: tr(LocaleKeys.gst),
                 data2: '${product.gstPercentage}',
               ),
               CommonStyles.horizontalGradientDivider(),
               infoRow(
                   label1: tr(LocaleKeys.product_size),
-                  data1: product.size?.toString(),
+                  // data1: product.size?.toString(),
+                  data1: '${product.size} ${product.uomType}',
                   label2: 'label2',
                   data2: '${product.description}',
                   isSingle: true),
