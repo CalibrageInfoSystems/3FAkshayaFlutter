@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -51,6 +52,17 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
         throw Exception(
             'Request failed with status: ${jsonResponse.statusCode}');
       }
+    } on SocketException {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            tr(LocaleKeys.Internet),
+          ),
+        ),
+      );
+      throw Exception(
+        tr(LocaleKeys.Internet),
+      );
     } catch (e) {
       rethrow;
     }
@@ -68,9 +80,12 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
               future: plotsData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text(
-                    '${tr(LocaleKeys.error)}: ${snapshot.error}',
-                    style: CommonStyles.txStyF16CpFF6,
+                  return Center(
+                    child: Text(
+                        snapshot.error
+                            .toString()
+                            .replaceFirst('Exception: ', ''),
+                        style: CommonStyles.txStyF16CpFF6),
                   );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;

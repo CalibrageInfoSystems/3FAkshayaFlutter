@@ -58,20 +58,35 @@ class _VisitRequestState extends State<VisitRequest> {
   Future<List<TypeIssue>> getTypeOfIssues() async {
     const apiUrl = '$baseUrl$typeOfIssues/10';
 
-    final jsonResponse = await http.get(Uri.parse(apiUrl));
-    // print('xxx: ${jsonResponse.body}');
-    if (jsonResponse.statusCode == 200) {
-      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
-      if (response['listResult'] != null) {
-        List<dynamic> list = response['listResult'];
-        List<TypeIssue> typeIssues =
-            list.map((item) => TypeIssue.fromJson(item)).toList();
-        return typeIssues;
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      if (jsonResponse.statusCode == 200) {
+        Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+        if (response['listResult'] != null) {
+          List<dynamic> list = response['listResult'];
+          List<TypeIssue> typeIssues =
+              list.map((item) => TypeIssue.fromJson(item)).toList();
+          return typeIssues;
+        } else {
+          throw Exception('list result is null');
+        }
       } else {
-        throw Exception('list result is null');
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}');
       }
-    } else {
-      throw Exception('Request failed with status: ${jsonResponse.statusCode}');
+    } on SocketException {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            tr(LocaleKeys.Internet),
+          ),
+        ),
+      );
+      throw Exception(
+        tr(LocaleKeys.Internet),
+      );
+    } catch (e) {
+      rethrow;
     }
   }
 

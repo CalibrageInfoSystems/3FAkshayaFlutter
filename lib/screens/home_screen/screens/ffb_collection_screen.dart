@@ -877,11 +877,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         ],
       ),
     );
-  }
+  } 
 
   Future<void> getInfoCollectionInfo(String code) async {
     final apiUrl =
-        'http://103.241.144.240:9096/api/Collection/CollectionInfoById/$code';
+        '$baseUrl$code';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 

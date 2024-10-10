@@ -8,12 +8,14 @@ import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/main.dart';
 import 'package:akshaya_flutter/models/passbook_transport_model.dart';
 import 'package:akshaya_flutter/models/passbook_vendor_model.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
@@ -111,6 +113,31 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
       passbookTransportModel:
           getTransportData(fromDate: fromDate, toDate: toDate),
+    );
+  }
+
+  PassbookData getLastFinancialYearData() {
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
+    DateTime now = DateTime.now();
+
+    DateTime fromDate;
+
+    if (now.month >= 4) {
+      fromDate = DateTime(now.year - 1, 4, 1);
+    } else {
+      // If current date is before April 1st, we are still in the current financial year
+      // Last financial year would be from April 1st two years ago to March 31st of last year
+      fromDate = DateTime(now.year - 2, 4, 1); // April 1st of two years ago
+    }
+
+    String formattedFromDate = formatter.format(fromDate);
+    String formattedToDate = formatter.format(DateTime.now());
+
+    return PassbookData(
+      passbookVendorModel:
+          getVendorData(fromDate: formattedFromDate, toDate: formattedToDate),
+      passbookTransportModel: getTransportData(
+          fromDate: formattedFromDate, toDate: formattedToDate),
     );
   }
 
@@ -624,7 +651,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         break;
       case 2:
         setState(() {
-          futureData = getLastOneYearData();
+          // futureData = getLastOneYearData();
+          futureData = getLastFinancialYearData();
         });
         break;
     }
@@ -916,11 +944,12 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                   );
                 } else {
                   final passbookVendor = snapshot.data as PassbookVendorModel;
-                  if (passbookVendor.result == null &&
-                      passbookVendor.result!.paymentResponce == null) {
+                  if (passbookVendor.result != null &&
+                          passbookVendor.result!.paymentResponce == null ||
+                      passbookVendor.result!.paymentResponce!.isEmpty) {
                     return Expanded(
                       child: Center(
-                        child: Text(tr(LocaleKeys.no_data),
+                        child: Text(tr(LocaleKeys.no_payments_found),
                             style: CommonStyles.txStyF16CpFF6),
                       ),
                     );
@@ -1105,7 +1134,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                          if (itemData.amount != null && itemData.amount! > 0)
+                          if (itemData.amount !=
+                              null) // && itemData.amount! > 0
                             itemRow(
                                 label: tr(LocaleKeys.amount),
                                 data: '${itemData.amount?.toStringAsFixed(2)}'),
@@ -1191,6 +1221,28 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     );
   }
 
+  //MARK: Notification Method
+  Future<void> _showNotification(
+      {required int id, required String message, String? path}) async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+      'akshay_channel',
+      'akshay_channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'akshay_ticker',
+    );
+    var platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      'Hello',
+      message,
+      platformChannelSpecifics,
+      payload: path,
+    );
+  }
+
   Row downloadBtns() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1209,8 +1261,12 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           label: tr(LocaleKeys.click_downlad),
           height: 60,
           onPressed: () {
-            exportPaymentsAndDownloadFile();
+            _showNotification(
+                id: 1,
+                message: 'message',
+                path: '/sdcard/Download/3FAkshaya/ledger');
           },
+          // onPressed: exportPaymentsAndDownloadFile,
         )),
       ],
     );

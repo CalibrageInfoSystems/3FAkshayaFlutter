@@ -213,18 +213,23 @@ class _MainScreenPageState extends State<MainScreen> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '${farmer.mobileNumber!}',
+                          style: CommonStyles.txStyF14CwFF6,
+                        ),
+                      ],
+                    ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Text(
-                            "${farmer.addressLine1!} - ${farmer.addressLine2!}",
-                            textAlign:
-                                TextAlign.center, // Center-align the text
-                            style: CommonStyles.txStyF14CwFF6,
-                          ),
+                        Text(
+                          "${farmer.addressLine1!} - ${farmer.addressLine2!}",
+                          textAlign: TextAlign.center, // Center-align the text
+                          style: CommonStyles.txStyF14CwFF6,
                         ),
                       ],
                     ),
@@ -497,8 +502,7 @@ class _MainScreenPageState extends State<MainScreen> {
                               width: 2.0,
                             ),
                           ),
-                          child:
-                          SizedBox(
+                          child: SizedBox(
                             height: 30.0, // Set the desired height
                             child: ElevatedButton(
                               onPressed: () {
@@ -552,6 +556,7 @@ class _MainScreenPageState extends State<MainScreen> {
       ),
     );
   }
+
   void openLanguageDialog(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -623,11 +628,12 @@ class _MainScreenPageState extends State<MainScreen> {
   }
 
   void changeLocaleLanguage(BuildContext context, Locale locale) {
-    context.setLocale(locale);  // Change the locale
+    context.setLocale(locale); // Change the locale
     Navigator.of(context).pop(); // Close the popup
     // Close side menu only if open
     if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop(); // Close side menu or other dialog if applicable
+      Navigator.of(context)
+          .pop(); // Close side menu or other dialog if applicable
     }
   }
 
