@@ -907,12 +907,16 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
       });
     });
-    print('www: ${file.path}');
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('File downloaded successfully'),
       ),
     );
+    _showNotification(
+        id: 1,
+        title: file.path,
+        message: 'File Downloaded Successfully',
+        path: '/sdcard/Download/3FAkshaya/ledger');
   }
 
   String sanitizeBase64(String base64String) {
@@ -1223,7 +1227,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
 
   //MARK: Notification Method
   Future<void> _showNotification(
-      {required int id, required String message, String? path}) async {
+      {required int id,
+      required String title,
+      required String message,
+      String? path}) async {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'akshay_channel',
       'akshay_channel_name',
@@ -1236,7 +1243,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
 
     await flutterLocalNotificationsPlugin.show(
       id,
-      'Hello',
+      title,
       message,
       platformChannelSpecifics,
       payload: path,
@@ -1260,13 +1267,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           padding: const EdgeInsets.all(0),
           label: tr(LocaleKeys.click_downlad),
           height: 60,
-          onPressed: () {
-            _showNotification(
-                id: 1,
-                message: 'message',
-                path: '/sdcard/Download/3FAkshaya/ledger');
-          },
-          // onPressed: exportPaymentsAndDownloadFile,
+          onPressed: exportPaymentsAndDownloadFile,
         )),
       ],
     );
