@@ -131,7 +131,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
                           builder: (context) => FertilizerProductDetails(
                             requestCode: request.requestCode ?? 'N/A',
                             payableAmount:
-                                request.transportPayableAmount.toString() ??
+                                request.paubleAmount.toString() ??
                                     '0.0',
                             subsidyAmount:
                                 request.subsidyAmount.toString() ?? '0.0',
@@ -179,10 +179,10 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
               label: tr(LocaleKeys.status),
               data: '${request.status}',
             ),
-          if (request.transportPayableAmount != null)
+          if (request.paubleAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.amount_payble),
-              data: '${request.transportPayableAmount}',
+              data: '${request.paubleAmount}',
             ),
           if (request.subsidyAmount != null)
             CommonWidgets.commonRow(

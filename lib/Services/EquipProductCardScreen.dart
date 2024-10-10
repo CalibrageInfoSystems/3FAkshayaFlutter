@@ -203,13 +203,13 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                           updatedDate: DateTime.now().toIso8601String(),
                           godownId: widget.godown.id!,
                           paymentModeType: paymentmodeId,
-                          isImmediatePayment: true,
+                         isImmediatePayment: null,
                           fileName: null,
                           fileLocation: null,
                           fileExtension: null,
                           totalCost: totalAmountWithGST,
                           subcidyAmount: 0.0,
-                          paybleAmount: payableAmount,
+                          paybleAmount: totalAmountWithGST,
                           transportPayableAmount: null,
                           comments: null,
                           cropMaintainceDate: null,
@@ -220,7 +220,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                           stateCode: Statecode,
                           stateName: StateName,
                         );
-                        print('CHECK BOX VALUE: $_isCheckboxChecked');
+                      //  print('CHECK BOX VALUE: $_isCheckboxChecked');
                         await submitFertilizerRequest(request);
                       } else {
                         CommonStyles.showCustomDialog(
@@ -688,7 +688,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           // Safely handle product.size by casting or parsing to double?
           final size = product.size != null
               ? double.tryParse(product.size.toString())
-              : null;
+              : 0.0;
 
           productDetailsList.add(
             RequestPoleDetails(

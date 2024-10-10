@@ -136,21 +136,21 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             ),
             const SizedBox(height: 5),
             dropdownWidget(),
-            if (paymentmodeId == 26)
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isCheckboxChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _isCheckboxChecked = value ?? false;
-                      });
-                    },
-                  ),
-                  Text(tr(LocaleKeys.imdpayment),
-                      style: CommonStyles.txStyF16CbFF6),
-                ],
-              ),
+            // if (paymentmodeId == 26)
+            //   Row(
+            //     children: [
+            //       Checkbox(
+            //         value: _isCheckboxChecked,
+            //         onChanged: (bool? value) {
+            //           setState(() {
+            //             _isCheckboxChecked = value ?? false;
+            //           });
+            //         },
+            //       ),
+            //       Text(tr(LocaleKeys.imdpayment),
+            //           style: CommonStyles.txStyF16CbFF6),
+            //     ],
+            //   ),
             const SizedBox(height: 10),
 
             Text(tr(LocaleKeys.product_details),
@@ -214,13 +214,13 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
                       updatedDate: DateTime.now().toIso8601String(),
                       godownId: widget.godown.id!,
                       paymentModeType: paymentmodeId,
-                      isImmediatePayment: true,
+                      isImmediatePayment: null,
                       fileName: null,
                       fileLocation: null,
                       fileExtension: null,
                       totalCost: totalAmountWithGST,
                       subcidyAmount: 0.0,
-                      paybleAmount: payableAmount,
+                      paybleAmount: totalAmountWithGST,
                       transportPayableAmount: null,
                       comments: null,
                       cropMaintainceDate: null,
@@ -779,25 +779,25 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
     }
   }
  */
-
   Future<void> submitBioLabRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
     });
-// Show the horizontal dots loading dialog after button click
+
+    // Show loading dialog
     Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(
           context); // Show loading dialog
     });
-    // const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
+
     const url = '$baseUrl$productsubRequest';
-    //  final response = await http.get(Uri.parse('$baseUrl$GetActivegodowns$stateCode'));
-    // Print the request object
+
+    // Log the request object
     print('Submitting request:');
     print('Request Object: ${jsonEncode(request.toJson())}');
 
     try {
-      final jsonResponse = await http.post(
+      final response = await http.post(
         Uri.parse(url),
         headers: {
           'Content-Type': 'application/json',
@@ -805,47 +805,54 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         body: jsonEncode(request.toJson()),
       );
 
+      // Log the request JSON
       print('Request JSON: ${jsonEncode(request.toJson())}');
-
-      if (jsonResponse.statusCode == 200) {
-        // Successfully submitted request
-        final response = jsonDecode(jsonResponse.body);
-        if (response['result'] != null) {
+      print('Request statusCode: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        print('Request jsonResponse: $jsonResponse');
+        if (jsonResponse['isSuccess'] == true) {
+          // Process product list and calculations
+          print('Request===: ${jsonResponse['isSuccess']}');
+          print('products length===: ${widget.products.length}');
           for (int i = 0; i < widget.products.length; i++) {
             String productName = widget.products[i].product.name!;
             int quantity = widget.products[i].quantity;
             final product = widget.products[i].product;
-
+            print('products ===: ${product}');
+            // Calculate product costs
             final productCost = product.actualPriceInclGst! * quantity;
             displaytotalProductCostGst += productCost;
 
-            final transportCost =
-                product.transPortActualPriceInclGst! * quantity;
+            final transportCost = product.transPortActualPriceInclGst! * quantity;
             displayTransportamountWithGst += transportCost;
 
+            // Calculate GST for products
             final productGSTPercentage = product.gstPercentage!;
             displayamountWithoutGst +=
                 productCost / (1 + (productGSTPercentage / 100));
-
             displaytotalGst =
                 displaytotalProductCostGst - displayamountWithoutGst;
 
+            // Calculate GST for transport
             final transportGSTPercentage = product.transportGstPercentage!;
             displayTransportamountWithoutGst +=
                 transportCost / (1 + (transportGSTPercentage / 100));
+            displaytotaltransportGst =
+                displayTransportamountWithGst - displayTransportamountWithoutGst;
 
-            displaytotaltransportGst = displayTransportamountWithGst -
-                displayTransportamountWithoutGst;
-
+            // Add to selected list
             selectedList.add('$productName : $quantity');
           }
 
+          // Join selected products into a string
           selectedName = selectedList.join(', ');
+
+          // Prepare display list for success dialog
           List<MsgModel> displayList = [
             MsgModel(
                 key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-            MsgModel(
-                key: tr(LocaleKeys.product_quantity), value: selectedName!),
+            MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
             MsgModel(
                 key: tr(LocaleKeys.amount),
                 value: displayamountWithoutGst.toStringAsFixed(2)),
@@ -859,38 +866,44 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
 
           // Show success dialog
           showSuccessDialog(
-              context, displayList, tr(LocaleKeys.success_fertilizer));
+              context, displayList, tr(LocaleKeys.success_lab));
         } else {
+          // Handle failure when isSuccess is false
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Result got null: ${response['result']}'),
+              content: Text('Error: ${jsonResponse['message']}'),
             ),
           );
-          throw Exception('Result got null');
+          throw Exception('Error: ${jsonResponse['message']}');
         }
-        // Process the product list
       } else {
-        print('Failed to submit request: ${jsonResponse.statusCode}');
+        // Handle non-200 status codes
+        print('Failed to submit request: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+            content: Text('Failed to submit request: ${response.statusCode}'),
           ),
         );
-        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+        throw Exception('Failed to submit request: ${response.statusCode}');
       }
     } catch (e) {
-      rethrow;
+      // Handle network or other errors
+      print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+      rethrow; // Optionally rethrow the exception if you want it propagated
     } finally {
       setState(() {
         _isLoading = false;
-        Future.delayed(Duration.zero, () {
-          CommonStyles.hideHorizontalDotsLoadingDialog(
-              context); // Show loading dialog
-        });
       });
+      // Hide loading dialog
+   //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
     }
   }
+
 
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -936,14 +949,14 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
           totalCGST = totalGST / 2;
           totalSGST = totalGST / 2;
 
-          final transportGSTPercentage = product.transportGstPercentage!;
-          TransportamountWithoutGst +=
-              transportCost / (1 + (transportGSTPercentage / 100));
-
-          totalTransportGST =
-              totalTransportCostwithgst - TransportamountWithoutGst;
-          totalTransCGST = totalTransportGST / 2;
-          totalTrasSGST = totalTransportGST / 2;
+          // final transportGSTPercentage = product.transportGstPercentage!;
+          // TransportamountWithoutGst +=
+          //     transportCost / (1 + (transportGSTPercentage / 100));
+          //
+          // totalTransportGST =
+          //     totalTransportCostwithgst - TransportamountWithoutGst;
+          // totalTransCGST = totalTransportGST / 2;
+          // totalTrasSGST = totalTransportGST / 2;
 
           // Safely handle product.size by casting or parsing to double?
           final size = product.size != null
@@ -954,7 +967,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             RequestPoleDetails(
               productId: product.id!,
               quantity: quantity,
-              bagCost: product.actualPriceInclGst!,
+              bagCost: product.priceInclGst!,
               size: size,
               // Use size as double?
               gstPersentage: product.gstPercentage!,
@@ -966,7 +979,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
     }
 
     // Calculate total amount with GST
-    totalAmountWithGST = totalProductCostGst + totalTransportCostwithgst;
+    totalAmountWithGST = totalProductCostGst ;
 
     // Call getFertilizerSubsidies only once when the calculation is done
   }

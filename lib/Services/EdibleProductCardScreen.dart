@@ -138,21 +138,21 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
               dropdownWidget(),
 
               // Conditionally display the checkbox
-              if (paymentmodeId == 26)
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _isCheckboxChecked,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _isCheckboxChecked = value ?? false;
-                        });
-                      },
-                    ),
-                    Text(tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txSty_16black_f5),
-                  ],
-                ),
+              // if (paymentmodeId == 26)
+              //   Row(
+              //     children: [
+              //       Checkbox(
+              //         value: _isCheckboxChecked,
+              //         onChanged: (bool? value) {
+              //           setState(() {
+              //             _isCheckboxChecked = value ?? false;
+              //           });
+              //         },
+              //       ),
+              //       Text(tr(LocaleKeys.imdpayment),
+              //           style: CommonStyles.txSty_16black_f5),
+              //     ],
+              //   ),
               const SizedBox(height: 10),
 
               Text(tr(LocaleKeys.product_details),
@@ -235,7 +235,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                             updatedDate: DateTime.now().toIso8601String(),
                             godownId: widget.godown.id!,
                             paymentModeType: paymentmodeId,
-                            isImmediatePayment: true,
+                            isImmediatePayment: null,
                             fileName: null,
                             fileLocation: null,
                             fileExtension: null,
@@ -397,14 +397,12 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
               _selectedPaymentType = value!;
               if (_selectedPaymentType != -1) {
                 paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
-                final paymentmodeName =
-                    paymentModes[_selectedPaymentType]['desc'];
+                final paymentmodeName = paymentModes[_selectedPaymentType]['desc'];
 
                 print('setState paymentmodeId: $paymentmodeId');
 
                 // Adjust the condition for showing the checkbox based on the payment mode ID
-                _isCheckboxChecked =
-                    false; // Reset the checkbox when changing payment mode
+                _isCheckboxChecked = false; // Reset the checkbox when changing payment mode
               }
             });
           },
@@ -449,7 +447,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
   Widget productBox(ProductWithQuantity productinfo) {
     final product = productinfo.product;
     final quantity = productinfo.quantity;
-    final productQuantity = product.actualPriceInclGst! * quantity;
+    final productQuantity = product.priceInclGst! * quantity;
     final totalTrasport = product.transPortActualPriceInclGst! * quantity;
     final totalAmount = productQuantity + totalTrasport;
     return Container(
@@ -488,7 +486,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
           productInfo(
             label1: tr(LocaleKeys.each_product),
             //  label1: 'Item Cost(Rs)',
-            data1: '${product.actualPriceInclGst?.toStringAsFixed(2)}',
+            data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
             data2: '${product.gstPercentage?.toStringAsFixed(2)}',
           ),
@@ -587,18 +585,21 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
 
             if (subsidyAmount > 0) {
               if (totalProductCostGst < subsidyAmount) {
-                payableAmount = totalTransportCostwithgst;
+                payableAmount = 0.0;
+              //  payableAmount = totalTransportCostwithgst;
                 subsidyAmount = totalProductCostGst;
               } else if (subsidyAmount < totalProductCostGst) {
-                payableAmount = totalProductCostGst -
-                    subsidyAmount +
-                    totalTransportCostwithgst;
+                // payableAmount = totalProductCostGst - subsidyAmount +
+                //     totalTransportCostwithgst;
+                payableAmount = totalProductCostGst - subsidyAmount;
               } else {
-                payableAmount = totalProductCostGst + totalTransportCostwithgst;
+               payableAmount = totalProductCostGst + totalTransportCostwithgst;
+               // payableAmount = totalProductCostGst ;
               }
             } else {
               subsidyAmount = 0.0;
-              payableAmount = totalProductCostGst + totalTransportCostwithgst;
+            payableAmount = totalProductCostGst + totalTransportCostwithgst;
+             // payableAmount = totalProductCostGst ;
             }
 
             print("Subsidy Amount: $subsidyAmount");
@@ -651,7 +652,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
           int quantity = widget.products[i].quantity;
           final product = widget.products[i].product;
 
-          final productCost = product.actualPriceInclGst! * quantity;
+          final productCost = product.priceInclGst! * quantity;
           displaytotalProductCostGst += productCost;
 
           final transportCost = product.transPortActualPriceInclGst! * quantity;
@@ -745,7 +746,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
         final product = productWithQuantity.product;
         final quantity = productWithQuantity.quantity;
 
-        final productCost = product.actualPriceInclGst! * quantity;
+        final productCost = product.priceInclGst! * quantity;
         totalProductCostGst += productCost;
 
         final transportCost = product.transPortActualPriceInclGst! * quantity;
@@ -770,11 +771,11 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
           RequestProductDetails(
             productId: product.id!,
             quantity: quantity,
-            bagCost: product.actualPriceInclGst!,
+            bagCost: product.priceInclGst!,
             size: product.size!,
             gstPersentage: product.gstPercentage!,
             productCode: product.code!,
-            transGstPercentage: product.size!,
+            transGstPercentage: product.transportGstPercentage!,
             transportCost: product.transPortActualPriceInclGst!,
           ),
         );

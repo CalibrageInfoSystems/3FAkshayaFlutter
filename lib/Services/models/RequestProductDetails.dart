@@ -57,7 +57,7 @@ class FertilizerRequest {
   final String updatedDate;
   final int godownId;
   final int paymentModeType;
-  final bool isImmediatePayment;
+  final bool? isImmediatePayment;
   final String? fileName; // Nullable
   final String? fileLocation; // Nullable
   final String? fileExtension; // Nullable

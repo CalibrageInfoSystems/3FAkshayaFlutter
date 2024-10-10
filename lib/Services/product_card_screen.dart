@@ -591,18 +591,20 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 
             if (subsidyAmount > 0) {
               if (totalProductCostGst < subsidyAmount) {
-                payableAmount = totalTransportCostwithgst;
+                payableAmount = 0.0;
+               // payableAmount = totalTransportCostwithgst;
                 subsidyAmount = totalProductCostGst;
               } else if (subsidyAmount < totalProductCostGst) {
-                payableAmount = totalProductCostGst -
-                    subsidyAmount +
-                    totalTransportCostwithgst;
+                payableAmount = totalProductCostGst - subsidyAmount;
+              //  payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
               } else {
-                payableAmount = totalProductCostGst + totalTransportCostwithgst;
+                payableAmount = totalProductCostGst;
+                // payableAmount = totalProductCostGst + totalTransportCostwithgst;
               }
             } else {
               subsidyAmount = 0.0;
-              payableAmount = totalProductCostGst + totalTransportCostwithgst;
+              payableAmount = totalProductCostGst ;
+             // payableAmount = totalProductCostGst + totalTransportCostwithgst;
             }
 
             print("Subsidy Amount: $subsidyAmount");
@@ -841,7 +843,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             size: product.size ?? 0,
             gstPersentage: product.gstPercentage ?? 0,
             productCode: product.code!,
-            transGstPercentage: product.size ?? 0,
+            transGstPercentage: product.transportGstPercentage ?? 0,
             transportCost: product.transPortActualPriceInclGst ?? 0,
           ),
         );

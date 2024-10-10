@@ -168,10 +168,10 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
               label: tr(LocaleKeys.status),
               data: '${request.status}',
             ),
-          if (request.totalAmount != null)
+          if (request.paubleAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.total_amt),
-              data: '${request.totalAmount}',
+              data: '${request.paubleAmount}',
             ),
           if (request.paymentMode != null)
             CommonWidgets.commonRow(

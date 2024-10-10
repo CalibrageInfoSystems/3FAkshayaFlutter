@@ -67,8 +67,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
         for (var product in products) {
           totalBasePrice += product.basePrice!;
           totalAmount += product.totalAmount!;
-          totalBaseTransportAmount += product.transportBasePrice!;
-          totalTransportAmount += product.transPortAmount!;
+          totalBaseTransportAmount += product.transPortAmount!;
+          totalTransportAmount += product.transPortTotalAmount!;
         }
 
         // Calculate GST and ensure two decimal points
@@ -281,7 +281,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label1: tr(LocaleKeys.transportprice),
             data1: '${product.transPortCost ?? '0.0'}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.transPortCgstPercentage ?? '0.0'}',
+            data2: '${product.transPortGstPercentage ?? '0.0'}',
           ),
           productInfo(
             label1: tr(LocaleKeys.totaltransportcost),
