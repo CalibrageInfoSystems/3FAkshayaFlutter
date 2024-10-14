@@ -938,10 +938,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       if (response['result'] != null) {
         CommonStyles.customDialog(context,
             InfoDialog(info: CollectionInfo.fromJson(response['result'])));
+      } else {
+        CommonStyles.customDialog(context, const InfoDialog(info: null));
       }
-      /*  else {
-        _showErrorDialog('message');
-      } */
     }
   }
 
@@ -960,7 +959,7 @@ class CollectionResponse {
 }
 
 class InfoDialog extends StatelessWidget {
-  final CollectionInfo info;
+  final CollectionInfo? info;
   const InfoDialog({super.key, required this.info});
 
   @override
@@ -973,58 +972,115 @@ class InfoDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[200],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(info.code!, style: CommonStyles.txStyF14CpFF6),
-          const SizedBox(height: 10),
-          buildInfoRow(tr(LocaleKeys.driver_name), info.driverName),
-          buildInfoRow(tr(LocaleKeys.vehicle_Number), info.vehicleNumber),
-          buildInfoRow(tr(LocaleKeys.collectionCenter), info.collectionCenter),
-          buildInfoRow(tr(LocaleKeys.grossWeight), info.grossWeight.toString()),
-          buildInfoRow(tr(LocaleKeys.tareWeight), info.tareWeight.toString()),
-          buildInfoRow(tr(LocaleKeys.net_weight), info.netWeight.toString()),
-          buildInfoRow(tr(LocaleKeys.only_date),
-              CommonStyles.formatDate(info.receiptGeneratedDate)),
-          buildInfoRow(tr(LocaleKeys.operatorName), info.operatorName),
-          if (info.comments!.isNotEmpty)
-            buildInfoRow(tr(LocaleKeys.comments), info.comments),
-          const SizedBox(height: 10),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                CommonStyles.customDialognew(
-                  context,
-                  CachedNetworkImage(
-                    imageUrl: info.receiptImg!,
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Image.asset(
-                      Assets.images.icLogo.path,
-                      fit: BoxFit.cover,
-                    ),
+      child: info != null
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(info!.code!, style: CommonStyles.txStyF14CpFF6),
+                const SizedBox(height: 10),
+                buildInfoRow(tr(LocaleKeys.driver_name), info!.driverName),
+                buildInfoRow(
+                    tr(LocaleKeys.vehicle_Number), info!.vehicleNumber),
+                buildInfoRow(
+                    tr(LocaleKeys.collectionCenter), info!.collectionCenter),
+                buildInfoRow(
+                    tr(LocaleKeys.grossWeight), info!.grossWeight.toString()),
+                buildInfoRow(
+                    tr(LocaleKeys.tareWeight), info!.tareWeight.toString()),
+                buildInfoRow(
+                    tr(LocaleKeys.net_weight), info!.netWeight.toString()),
+                buildInfoRow(tr(LocaleKeys.only_date),
+                    CommonStyles.formatDate(info!.receiptGeneratedDate)),
+                buildInfoRow(tr(LocaleKeys.operatorName), info!.operatorName),
+                if (info!.comments!.isNotEmpty)
+                  buildInfoRow(tr(LocaleKeys.comments), info!.comments),
+                const SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      CommonStyles.customDialognew(
+                        context,
+                        CachedNetworkImage(
+                          imageUrl: info!.receiptImg!,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            Assets.images.icLogo.path,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(tr(LocaleKeys.recept),
+                        style: CommonStyles.txStyF14CpFF6),
                   ),
-                );
-              },
-              child: Text(tr(LocaleKeys.recept),
-                  style: CommonStyles.txStyF14CpFF6),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                      label: tr(LocaleKeys.close),
+                      borderRadius: 24,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.comments),
+                    style: CommonStyles.txStyF14CpFF6),
+                const SizedBox(height: 10),
+                buildInfoRow(tr(LocaleKeys.driver_name), ''),
+                buildInfoRow(tr(LocaleKeys.vehicle_Number), ''),
+                buildInfoRow(tr(LocaleKeys.collectionCenter), ''),
+                buildInfoRow(tr(LocaleKeys.grossWeight), ''),
+                buildInfoRow(tr(LocaleKeys.tareWeight), ''),
+                buildInfoRow(tr(LocaleKeys.net_weight), ''),
+                buildInfoRow(tr(LocaleKeys.only_date), ''),
+                buildInfoRow(tr(LocaleKeys.operatorName), ''),
+                buildInfoRow(tr(LocaleKeys.comments), ''),
+                /*  const SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      CommonStyles.customDialognew(
+                        context,
+                        CachedNetworkImage(
+                          imageUrl: info!.receiptImg!,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            Assets.images.icLogo.path,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(tr(LocaleKeys.recept),
+                        style: CommonStyles.txStyF14CpFF6),
+                  ),
+                ), */
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                      label: tr(LocaleKeys.close),
+                      borderRadius: 24,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomBtn(
-                label: tr(LocaleKeys.close),
-                borderRadius: 24,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 

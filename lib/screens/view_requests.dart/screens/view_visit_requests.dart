@@ -80,8 +80,8 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
     final apiUrl = '$baseUrl$getVisitRequestCompleteDetails$requestId';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
-    print('bbb: $apiUrl');
-    print('bbb: ${jsonResponse.body}');
+    print('getVisitRequestMoreDetails: $apiUrl');
+    print('getVisitRequestMoreDetails: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
@@ -135,9 +135,12 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                       onPressed: () {
                         getVisitRequestMoreDetails(request.requestCode)
                             .then((value) {
+                          // Images
                           List<ViewVisitMoreDetailsModel> imageList = value
                               .where((element) => element.fileTypeId == 36)
                               .toList();
+
+                          // Audo
                           List<ViewVisitMoreDetailsModel> audioList = value
                               .where((element) => element.fileTypeId == 37)
                               .toList();
@@ -152,11 +155,10 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                               errorBodyWidget: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (audioList.isNotEmpty)
-                                    MoreDetails(
-                                      imagesList: imageList,
-                                      audioFilePath: audioList[0].fileLocation,
-                                    )
+                                  MoreDetails(
+                                    imagesList: imageList,
+                                    audioFilePath: audioList,
+                                  )
                                 ],
                               ),
                             );
@@ -315,12 +317,12 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
 
 class MoreDetails extends StatefulWidget {
   final List<ViewVisitMoreDetailsModel> imagesList;
-  final String? audioFilePath;
+  final List<ViewVisitMoreDetailsModel> audioFilePath;
 
   const MoreDetails({
     super.key,
     required this.imagesList,
-    this.audioFilePath,
+    required this.audioFilePath,
   });
 
   @override
@@ -339,13 +341,13 @@ class _MoreDetailsState extends State<MoreDetails> {
   @override
   void initState() {
     super.initState();
-    if (widget.audioFilePath != null) {
+    if (widget.audioFilePath.isNotEmpty) {
       _initAudio();
     }
   }
 
   Future<void> _initAudio() async {
-    await audioPlayer.setSourceUrl(widget.audioFilePath!);
+    await audioPlayer.setSourceUrl(widget.audioFilePath[0].fileLocation!);
 
 /*     audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
@@ -385,7 +387,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     if (isPlaying) {
       await audioPlayer.pause();
     } else {
-      await audioPlayer.play(UrlSource(widget.audioFilePath!));
+      await audioPlayer.play(UrlSource(widget.audioFilePath[0].fileLocation!));
     }
     if (mounted) {
       setState(() {
@@ -428,6 +430,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                   ),
                   child: CachedNetworkImage(
                     imageUrl: image.fileLocation!,
+                    width: 100,
+                    height: 100,
                     placeholder: (context, url) => Shimmer.fromColors(
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
@@ -449,7 +453,7 @@ class _MoreDetailsState extends State<MoreDetails> {
               }).toList(),
             ),
           const SizedBox(height: 10),
-          if (widget.audioFilePath != null)
+          if (widget.audioFilePath.isNotEmpty)
             Row(
               children: [
                 IconButton(
