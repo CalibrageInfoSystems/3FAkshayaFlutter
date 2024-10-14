@@ -263,8 +263,8 @@ class _NurseriesContentCardState extends State<NurseriesContentCard> {
     } else {
       print('No latitude or longitude found');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No latitude or longitude found'),
+        SnackBar(
+          content: Text(tr(LocaleKeys.location_notfount)),
         ),
       );
     }

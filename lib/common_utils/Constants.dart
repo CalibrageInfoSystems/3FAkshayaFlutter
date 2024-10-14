@@ -38,11 +38,10 @@ class Constants {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No latitude or longitude found'),
+        SnackBar(
+          content: Text(tr(LocaleKeys.location_notfount)),
         ),
       );
-      print('Location not found'); // tr(LocaleKeys.App_version)
     }
   }
 }

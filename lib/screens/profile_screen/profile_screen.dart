@@ -223,35 +223,22 @@ class FarmerProfile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          color: CommonStyles
-                              .whiteColor, // Set the background color for the QR code
-                          padding: const EdgeInsets.all(
-                              4.0), // Optional padding for the QR code
+                          color: CommonStyles.whiteColor,
+                          padding: const EdgeInsets.all(4.0),
                           child: QrImageView(
                             data: '${farmerData.code}',
                             version: QrVersions.auto,
-                            size: 90, // QR code size
+                            size: 90,
                           ),
                         ),
-                        //     const SizedBox(height: 10), // Space between QR code and the text
                         const Text(
-                          'QR Code', // Text below the QR code
+                          'QR Code',
                           style: CommonStyles.txStyF14CbFF6,
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                // Expanded(
-                //     child: Center(
-                //   child: QrImageView(
-                //     data: '${farmerData.code}',
-                //     version: QrVersions.auto,
-                //     size: 90,
-                //     // size: 200.0,
-                //   ),
-                // )),
               ],
             ),
           ),
@@ -273,6 +260,11 @@ class FarmerProfile extends StatelessWidget {
               label: tr(LocaleKeys.mobile),
               data: '${farmerData.contactNumber}',
               dataTextColor: Colors.green),
+          CommonWidgets.commonRowWithColon(
+            label: 'Alternate Mobile Number',
+            // label: tr(LocaleKeys.alter_mobile),
+            data: '${farmerData.mobileNumber}',
+          ),
           const SizedBox(height: 20),
           Text(tr(LocaleKeys.res_address),
               style: CommonStyles.txStyF14CbFF6

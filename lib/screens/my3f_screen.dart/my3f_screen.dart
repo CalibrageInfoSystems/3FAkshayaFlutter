@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/api_config.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/common_utils/shimmer.dart';
 import 'package:akshaya_flutter/models/important_contacts_model.dart';
 import 'package:akshaya_flutter/models/important_places_model.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,8 +35,9 @@ class _My3fScreenState extends State<My3fScreen> {
   }
 
   Future<Map<String, Object>> getImportantContactsAndPlaces() async {
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Farmer/Get3FInfo/APWGBDAB00010005/AP';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
+    final apiUrl = '$baseUrl$get3FInfo$userId/AP';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 

@@ -55,6 +55,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   double displayTransportamountWithoutGst = 0.0;
   double displayTransportamountWithGst = 0.0;
   double displaytotaltransportGst = 0.0;
+  late Future<List<dynamic>> paymentModes;
 
   double totalProductCostGst = 0.0;
   double totalCGST = 0.0;
@@ -75,12 +76,8 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   void initState() {
     super.initState();
     farmerData = getFarmerInfoFromSharedPrefs();
-    print('Selected Godown name: ${widget.godown.name}');
-    print('Selected Godown ID: ${widget.godown.id}');
-    print('Selected Godown code: ${widget.godown.code}');
 
     farmerData.then((farmer) {
-      print('farmerData==${farmer.code}');
       farmerCode = '${farmer.code}';
       farmerName =
           '${farmer.firstName} ${farmer.middleName ?? ''} ${farmer.lastName}';
@@ -89,6 +86,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
       StateName = '${farmer.stateName}';
     });
     calculateCosts();
+    paymentModes = getDropdownData();
   }
 
   Future<List<dynamic>> getDropdownData() async {
@@ -136,21 +134,6 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             ),
             const SizedBox(height: 5),
             dropdownWidget(),
-            // if (paymentmodeId == 26)
-            //   Row(
-            //     children: [
-            //       Checkbox(
-            //         value: _isCheckboxChecked,
-            //         onChanged: (bool? value) {
-            //           setState(() {
-            //             _isCheckboxChecked = value ?? false;
-            //           });
-            //         },
-            //       ),
-            //       Text(tr(LocaleKeys.imdpayment),
-            //           style: CommonStyles.txStyF16CbFF6),
-            //     ],
-            //   ),
             const SizedBox(height: 10),
 
             Text(tr(LocaleKeys.product_details),
@@ -200,38 +183,45 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
                   borderColor: CommonStyles.primaryTextColor,
                   borderRadius: 12,
                   onPressed: () async {
-                    final request = FertilizerRequest(
-                      id: 0,
-                      requestTypeId: 107,
-                      farmerCode: farmerCode,
-                      farmerName: farmerName,
-                      plotCode: null,
-                      requestCreatedDate: DateTime.now().toIso8601String(),
-                      isFarmerRequest: true,
-                      createdByUserId: null,
-                      createdDate: DateTime.now().toIso8601String(),
-                      updatedByUserId: null,
-                      updatedDate: DateTime.now().toIso8601String(),
-                      godownId: widget.godown.id!,
-                      paymentModeType: paymentmodeId,
-                      isImmediatePayment: null,
-                      fileName: null,
-                      fileLocation: null,
-                      fileExtension: null,
-                      totalCost: totalAmountWithGST,
-                      subcidyAmount: 0.0,
-                      paybleAmount: totalAmountWithGST,
-                      transportPayableAmount: null,
-                      comments: null,
-                      cropMaintainceDate: null,
-                      issueTypeId: null,
-                      godownCode: '${widget.godown.code}',
-                      requestProductDetails: productDetailsList,
-                      clusterId: Cluster_id,
-                      stateCode: Statecode,
-                      stateName: StateName,
-                    );
-                    submitBioLabRequest(request);
+                    if (validations()) {
+                      if (await isOnline()) {
+                        final request = FertilizerRequest(
+                          id: 0,
+                          requestTypeId: 107,
+                          farmerCode: farmerCode,
+                          farmerName: farmerName,
+                          plotCode: null,
+                          requestCreatedDate: DateTime.now().toIso8601String(),
+                          isFarmerRequest: true,
+                          createdByUserId: null,
+                          createdDate: DateTime.now().toIso8601String(),
+                          updatedByUserId: null,
+                          updatedDate: DateTime.now().toIso8601String(),
+                          godownId: widget.godown.id!,
+                          paymentModeType: paymentmodeId,
+                          isImmediatePayment: null,
+                          fileName: null,
+                          fileLocation: null,
+                          fileExtension: null,
+                          totalCost: totalAmountWithGST,
+                          subcidyAmount: 0.0,
+                          paybleAmount: totalAmountWithGST,
+                          transportPayableAmount: null,
+                          comments: null,
+                          cropMaintainceDate: null,
+                          issueTypeId: null,
+                          godownCode: '${widget.godown.code}',
+                          requestProductDetails: productDetailsList,
+                          clusterId: Cluster_id,
+                          stateCode: Statecode,
+                          stateName: StateName,
+                        );
+                        submitBioLabRequest(request);
+                      } else {
+                        CommonStyles.showCustomDialog(
+                            context, tr(LocaleKeys.Internet));
+                      }
+                    }
                   },
                 ),
               ],
@@ -242,151 +232,6 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
     );
   }
 
-/* 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: tr(LocaleKeys.product_req),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(tr(LocaleKeys.payment_mode),
-                    style: CommonStyles.txStyF16CbFF6),
-                const SizedBox(width: 5),
-                const Text('*',
-                    style: TextStyle(
-                        color: CommonStyles.formFieldErrorBorderColor)),
-              ],
-            ),
-            const SizedBox(height: 5),
-            dropdownWidget(),
-            if (paymentmodeId == 26)
-              Row(
-                children: [
-                  Checkbox(
-                    value: _isCheckboxChecked,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _isCheckboxChecked = value ?? false;
-                      });
-                    },
-                  ),
-                  Text(tr(LocaleKeys.imdpayment),
-                      style: CommonStyles.txStyF16CbFF6),
-                ],
-              ),
-            const SizedBox(height: 10),
-            Text(tr(LocaleKeys.product_details),
-                style: CommonStyles.txStyF16CbFF6),
-            const SizedBox(height: 5),
-            Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: ListView.builder(
-                    itemCount: widget.products.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return widget.products[index].quantity == 0
-                          ? const SizedBox()
-                          : productBox(widget.products[index]);
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // calculation content,
-                Column(
-                  children: [
-                    noteBox(),
-                    const SizedBox(height: 10),
-                    productCostbox(
-                        title: tr(LocaleKeys.amount),
-                        data: amountWithoutGst.toStringAsFixed(2)),
-                    productCostbox(
-                        title: tr(LocaleKeys.cgst_amount),
-                        data: totalCGST.toStringAsFixed(2)),
-                    productCostbox(
-                        title: tr(LocaleKeys.sgst_amount),
-                        data: totalSGST.toStringAsFixed(2)),
-                    productCostbox(
-                        title: tr(LocaleKeys.total_amt),
-                        data: totalProductCostGst.toStringAsFixed(2)),
-                    /* productCostbox(title: tr(LocaleKeys.transamount), data: TransportamountWithoutGst.toStringAsFixed(2)),
-                    productCostbox(title: tr(LocaleKeys.tcgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
-                    productCostbox(title: tr(LocaleKeys.tsgst_amount), data: totalTrasSGST.toStringAsFixed(2)),
-                    productCostbox(title: tr(LocaleKeys.trnstotal_amt), data: totalTransportCostwithgst.toStringAsFixed(2)),
-                    productCostbox(title: tr(LocaleKeys.subsidy_amt), data: subsidyAmount.toStringAsFixed(2)),
-                    productCostbox(title: tr(LocaleKeys.amount_payble), data: payableAmount.toStringAsFixed(2)), */
-                    CommonStyles.horizontalGradientDivider(colors: [
-                      const Color(0xFFFF4500),
-                      const Color(0xFFA678EF),
-                      const Color(0xFFFF4500),
-                    ]),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomBtn(
-                          label: tr(LocaleKeys.submit),
-                          borderColor: CommonStyles.primaryTextColor,
-                          borderRadius: 12,
-                          onPressed: () async {
-                            // Disable button when loading
-
-                            final request = FertilizerRequest(
-                              id: 0,
-                              requestTypeId: 107,
-                              farmerCode: farmerCode,
-                              farmerName: farmerName,
-                              plotCode: null,
-                              requestCreatedDate:
-                                  DateTime.now().toIso8601String(),
-                              isFarmerRequest: true,
-                              createdByUserId: null,
-                              createdDate: DateTime.now().toIso8601String(),
-                              updatedByUserId: null,
-                              updatedDate: DateTime.now().toIso8601String(),
-                              godownId: widget.godown.id!,
-                              paymentModeType: paymentmodeId,
-                              isImmediatePayment: true,
-                              fileName: null,
-                              fileLocation: null,
-                              fileExtension: null,
-                              totalCost: totalAmountWithGST,
-                              subcidyAmount: 0.0,
-                              paybleAmount: payableAmount,
-                              transportPayableAmount: null,
-                              comments: null,
-                              cropMaintainceDate: null,
-                              issueTypeId: null,
-                              godownCode: '${widget.godown.code}',
-                              requestProductDetails: productDetailsList,
-                              clusterId: Cluster_id,
-                              stateCode: Statecode,
-                              stateName: StateName,
-                            );
-                            submitBioLabRequest(request);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
- */
   Widget productCostbox({
     required String title,
     required String data,
@@ -460,7 +305,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
       ),
       clipBehavior: Clip.antiAlias,
       child: FutureBuilder(
-        future: getDropdownData(),
+        future: paymentModes,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final paymentModes = snapshot.data as List<dynamic>;
@@ -489,7 +334,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
               value: -1,
               child: Text(
                 'Select',
-                style: CommonStyles.txSty_14b_f6,
+                style: CommonStyles.txStyF14CbFF6,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -501,7 +346,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
                 value: index,
                 child: Text(
                   item['desc'],
-                  style: CommonStyles.txSty_14b_f6,
+                  style: CommonStyles.txStyF14CbFF6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -683,102 +528,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
       ],
     );
   }
-/* 
-  Future<void> submitBioLabRequest(FertilizerRequest request) async {
-    setState(() {
-      _isLoading = true;
-    });
-// Show the horizontal dots loading dialog after button click
-    Future.delayed(Duration.zero, () {
-      CommonStyles.showHorizontalDotsLoadingDialog(
-          context); // Show loading dialog
-    });
-    //  const url = 'http://182.18.157.215/3FAkshaya/API/api/FertilizerRequest';
-    const url = '$baseUrl$productsubRequest';
-    // Print the request object
-    print('Submitting request:');
-    print('Request Object: ${jsonEncode(request.toJson())}');
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(request.toJson()),
-      );
-
-      print('Request JSON: ${jsonEncode(request.toJson())}');
-
-      if (response.statusCode == 200) {
-        // Successfully submitted request
-        print('Request submitted successfully');
-        print('Response Body: ${response.body}');
-
-        // Process the product list
-        for (int i = 0; i < widget.products.length; i++) {
-          String productName = widget.products[i].product.name!;
-          int quantity = widget.products[i].quantity;
-          final product = widget.products[i].product;
-
-          final productCost = product.actualPriceInclGst! * quantity;
-          displaytotalProductCostGst += productCost;
-
-          final transportCost = product.transPortActualPriceInclGst! * quantity;
-          displayTransportamountWithGst += transportCost;
-
-          final productGSTPercentage = product.gstPercentage!;
-          displayamountWithoutGst +=
-              productCost / (1 + (productGSTPercentage / 100));
-
-          displaytotalGst =
-              displaytotalProductCostGst - displayamountWithoutGst;
-
-          final transportGSTPercentage = product.transportGstPercentage!;
-          displayTransportamountWithoutGst +=
-              transportCost / (1 + (transportGSTPercentage / 100));
-
-          displaytotaltransportGst =
-              displayTransportamountWithGst - displayTransportamountWithoutGst;
-
-          selectedList.add('$productName : $quantity');
-        }
-
-        selectedName = selectedList.join(', ');
-        List<MsgModel> displayList = [
-          MsgModel(key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-          MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
-          MsgModel(
-              key: tr(LocaleKeys.amount),
-              value: displayamountWithoutGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.gst_amount),
-              value: displaytotalGst.toStringAsFixed(2)),
-          MsgModel(
-              key: tr(LocaleKeys.total_amt),
-              value: displaytotalProductCostGst.toStringAsFixed(2)),
-          // MsgModel(key: tr(LocaleKeys.transamount), value: displayTransportamountWithoutGst.toStringAsFixed(2)),
-          // MsgModel(key: tr(LocaleKeys.transgst), value: displaytotaltransportGst.toStringAsFixed(2)),
-          // MsgModel(key: tr(LocaleKeys.totaltransportcost), value: displayTransportamountWithGst.toStringAsFixed(2)),
-          // MsgModel(key: tr(LocaleKeys.subcd_amt), value: subsidyAmount.toStringAsFixed(2)),
-          // MsgModel(key: tr(LocaleKeys.amount_payble), value: payableAmount.toStringAsFixed(2)),
-        ];
-
-        // Show success dialog
-        showSuccessDialog(context, displayList, tr(LocaleKeys.success_lab));
-      } else {
-        print('Failed to submit request: ${response.statusCode}');
-        print('Error Response: ${response.body}');
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-    } finally {
-      setState(() {
-        _isLoading = false; // Hide loading
-      });
-    }
-  }
- */
   Future<void> submitBioLabRequest(FertilizerRequest request) async {
     setState(() {
       _isLoading = true;
@@ -792,10 +542,6 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
 
     const url = '$baseUrl$productsubRequest';
 
-    // Log the request object
-    print('Submitting request:');
-    print('Request Object: ${jsonEncode(request.toJson())}');
-
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -805,26 +551,21 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         body: jsonEncode(request.toJson()),
       );
 
-      // Log the request JSON
-      print('Request JSON: ${jsonEncode(request.toJson())}');
-      print('Request statusCode: ${response.statusCode}');
+      print('submitBioLabRequest: $url');
+      print('submitBioLabRequest: ${jsonEncode(request.toJson())}');
+      print('submitBioLabRequest: ${response.statusCode}');
       if (response.statusCode == 200) {
         final jsonResponse = jsonDecode(response.body);
-        print('Request jsonResponse: $jsonResponse');
         if (jsonResponse['isSuccess'] == true) {
-          // Process product list and calculations
-          print('Request===: ${jsonResponse['isSuccess']}');
-          print('products length===: ${widget.products.length}');
           for (int i = 0; i < widget.products.length; i++) {
             String productName = widget.products[i].product.name!;
             int quantity = widget.products[i].quantity;
             final product = widget.products[i].product;
-            print('products ===: ${product}');
-            // Calculate product costs
-            final productCost = product.actualPriceInclGst! * quantity;
+            final productCost = product.priceInclGst! * quantity;
             displaytotalProductCostGst += productCost;
 
-            final transportCost = product.transPortActualPriceInclGst! * quantity;
+            final transportCost =
+                product.transPortActualPriceInclGst! * quantity;
             displayTransportamountWithGst += transportCost;
 
             // Calculate GST for products
@@ -838,8 +579,8 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             final transportGSTPercentage = product.transportGstPercentage!;
             displayTransportamountWithoutGst +=
                 transportCost / (1 + (transportGSTPercentage / 100));
-            displaytotaltransportGst =
-                displayTransportamountWithGst - displayTransportamountWithoutGst;
+            displaytotaltransportGst = displayTransportamountWithGst -
+                displayTransportamountWithoutGst;
 
             // Add to selected list
             selectedList.add('$productName : $quantity');
@@ -852,23 +593,21 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
           List<MsgModel> displayList = [
             MsgModel(
                 key: tr(LocaleKeys.Godown_name), value: widget.godown.name!),
-            MsgModel(key: tr(LocaleKeys.product_quantity), value: selectedName!),
+            MsgModel(
+                key: tr(LocaleKeys.product_quantity), value: selectedName!),
             MsgModel(
                 key: tr(LocaleKeys.amount),
-                value: displayamountWithoutGst.toStringAsFixed(2)),
+                value: amountWithoutGst.toStringAsFixed(2)),
             MsgModel(
                 key: tr(LocaleKeys.gst_amount),
                 value: displaytotalGst.toStringAsFixed(2)),
             MsgModel(
                 key: tr(LocaleKeys.total_amt),
-                value: displaytotalProductCostGst.toStringAsFixed(2)),
+                value: totalProductCostGst.toStringAsFixed(2)),
           ];
-
-          // Show success dialog
-          showSuccessDialog(
-              context, displayList, tr(LocaleKeys.success_lab));
+//MARK: Success Dialog
+          showSuccessDialog(context, displayList, tr(LocaleKeys.success_lab));
         } else {
-          // Handle failure when isSuccess is false
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error: ${jsonResponse['message']}'),
@@ -900,10 +639,9 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         _isLoading = false;
       });
       // Hide loading dialog
-   //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
     }
   }
-
 
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -919,6 +657,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
       BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
+      // barrierDismissible: false,
       builder: (BuildContext context) {
         return SuccessDialog(msg: msg, title: summary);
       },
@@ -979,13 +718,12 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
     }
 
     // Calculate total amount with GST
-    totalAmountWithGST = totalProductCostGst ;
+    totalAmountWithGST = totalProductCostGst;
 
     // Call getFertilizerSubsidies only once when the calculation is done
   }
 
   bool validations() {
-    print('----- analysis ----->> imdpayment  : $_selectedPaymentType');
     if (_selectedPaymentType == -1) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.paym_validation));
       return false;

@@ -73,6 +73,7 @@ class CommonWidgets {
               child: Text(
                 ':',
                 style: style,
+                textAlign: TextAlign.center,
               ),
             ),
             Expanded(
