@@ -756,19 +756,20 @@ class _ProductCardState extends State<ProductCard> {
               CommonStyles.horizontalGradientDivider(),
               infoRow(
                 label1: tr(LocaleKeys.price),
-                data1: '${product.actualPriceInclGst}',
+                data1: '${product.priceInclGst}',
+                discountPrice: product.actualPriceInclGst,
                 label2: tr(LocaleKeys.gst),
                 data2: '${product.gstPercentage}',
+                isSingle: product.gstPercentage != null ? false : true,
               ),
               CommonStyles.horizontalGradientDivider(),
-              // jjoio '${widget.product.size} ${widget.product.uomType}',
-              infoRow(
-                  label1: tr(LocaleKeys.product_size),
-                  data1: '${product.size} ${product.uomType}',
-                  // data1: product.size?.toString(),
-                  label2: 'label2',
-                  data2: '${product.description}',
-                  isSingle: true),
+              if (product.size != null)
+                infoRow2(
+                    label1: tr(LocaleKeys.product_size),
+                    data1: '${product.size} ${product.uomType}',
+                    label2: 'label2',
+                    data2: '${product.description}',
+                    isSingle: true),
             ],
           ),
         ),
@@ -800,10 +801,11 @@ class _ProductCardState extends State<ProductCard> {
       ]),
     );
   }
-
+/* 
   Widget infoRow({
     required String label1,
     required String? data1,
+    String? discountPrice,
     required String label2,
     required String? data2,
     bool isSingle = false,
@@ -819,10 +821,221 @@ class _ProductCardState extends State<ProductCard> {
                 children: [
                   Expanded(
                     flex: 5,
+                    child: discountPrice == null
+                        ? Text(
+                            label1,
+                            style: CommonStyles.txStyF14CbFF6,
+                          )
+                        : Column(
+                            children: [
+                              Text(
+                                label1,
+                                style: CommonStyles.txStyF14CbFF6,
+                              ),
+                              Text(
+                                discountPrice,
+                                style: CommonStyles.txStyF14CbFF6.copyWith(
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: CommonStyles.RedColor,
+                                  color: CommonStyles.formFieldErrorBorderColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      data1,
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                ],
+              )),
+              const SizedBox(width: 10),
+              isSingle
+                  ? const Expanded(
+                      child: SizedBox(),
+                    )
+                  : Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              label2,
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 1,
+                            child: Text(
+                              ':',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              '$data2',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+      ],
+    );
+  }
+ */
+
+  Widget infoRow({
+    required String label1,
+    required String? data1,
+    double? discountPrice,
+    required String label2,
+    required String? data2,
+    bool isSingle = false,
+  }) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        if (data1 != null)
+          Row(
+            children: [
+              Expanded(
+                  child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 5,
                     child: Text(
                       label1,
                       style: CommonStyles.txStyF14CbFF6,
                     ),
+                  ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  Expanded(
+                      flex: 5,
+                      child: (discountPrice == null ||
+                              data1 == discountPrice.toString())
+                          ? Text(
+                              data1,
+                              style: CommonStyles.txStyF14CbFF6,
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data1,
+                                  style: CommonStyles.txStyF14CbFF6,
+                                ),
+                                Text(
+                                  '$discountPrice',
+                                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CommonStyles.RedColor,
+                                    color:
+                                        CommonStyles.formFieldErrorBorderColor,
+                                  ),
+                                ),
+                              ],
+                            )),
+                ],
+              )),
+              const SizedBox(width: 10),
+              isSingle
+                  ? const Expanded(
+                      child: SizedBox(),
+                    )
+                  : Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              label2,
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 1,
+                            child: Text(
+                              ':',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              '$data2',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget infoRow2({
+    required String label1,
+    required String? data1,
+    String? discountPrice,
+    required String label2,
+    required String? data2,
+    bool isSingle = false,
+  }) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        if (data1 != null)
+          Row(
+            children: [
+              Expanded(
+                  child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: discountPrice == null
+                        ? Text(
+                            label1,
+                            style: CommonStyles.txStyF14CbFF6,
+                          )
+                        : Column(
+                            children: [
+                              Text(
+                                label1,
+                                style: CommonStyles.txStyF14CbFF6,
+                              ),
+                              Text(
+                                discountPrice,
+                                style: CommonStyles.txStyF14CbFF6.copyWith(
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: CommonStyles.RedColor,
+                                  color: CommonStyles.formFieldErrorBorderColor,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
                   const Expanded(
                     flex: 1,

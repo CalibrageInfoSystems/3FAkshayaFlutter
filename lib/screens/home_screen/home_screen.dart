@@ -92,12 +92,13 @@ class _HomeScreenState extends State<HomeScreen> {
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> learningList = response['listResult'];
-print('=========learningList,$learningList');
+        print('=========learningList,$learningList');
         // Extract language-specific names based on the current locale
         List<LearningModel> result =
-        learningList.map((item) => LearningModel.fromJson(item)).toList();
+            learningList.map((item) => LearningModel.fromJson(item)).toList();
         print('=========learningList,$result');
-        Locale currentLocale = EasyLocalization.of(context)?.locale ?? const Locale('en');
+        Locale currentLocale =
+            EasyLocalization.of(context)?.locale ?? const Locale('en');
 
         // Map names based on the locale
         return result.map((item) {
@@ -124,12 +125,13 @@ print('=========learningList,$learningList');
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
- //   EasyLocalization.of(context)?.addListener(() {
-      setState(() {
-        learningsData = getLearningsData();
-      });
-   // });
+    //   EasyLocalization.of(context)?.addListener(() {
+    setState(() {
+      learningsData = getLearningsData();
+    });
+    // });
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -713,7 +715,7 @@ print('=========learningList,$learningList');
       case 10: // Pole Request
         return tr(LocaleKeys.pole);
       case 11: // Labour Request
-        return tr(LocaleKeys.select_labour_type);
+        return tr(LocaleKeys.labour_lable);
       case 12: // Fertilizer Request
         return tr(LocaleKeys.fertilizer);
       case 13: // QuickPay Request

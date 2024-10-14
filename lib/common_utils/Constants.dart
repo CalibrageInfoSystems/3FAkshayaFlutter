@@ -1,3 +1,6 @@
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Constants {
@@ -21,7 +24,7 @@ class Constants {
     }
   } */
 
-  static Future<void> launchMap(
+  static Future<void> launchMap(BuildContext context,
       {required double? latitude, required double? longitude}) async {
     final Uri mapUrl = Uri.parse(
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
@@ -34,7 +37,12 @@ class Constants {
         throw Exception('Could not launch $mapUrl');
       }
     } else {
-      print('No latitude or longitude found');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No latitude or longitude found'),
+        ),
+      );
+      print('Location not found'); // tr(LocaleKeys.App_version)
     }
   }
 }

@@ -214,6 +214,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
   }
 
   void showCompleteDetailsOnDialog(ViewLabourModel request) {
+    final df = NumberFormat("#,##0.00");
     CommonStyles.customDialog(
         context,
         Container(
@@ -238,18 +239,19 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               if (request.palmArea != null)
                 commonRow(
                   label: tr(LocaleKeys.plot_size),
-                  data: '${request.palmArea}',
+                  data:
+                      '${df.format(request.palmArea)} Ha (${df.format(request.palmArea! * 2.5)} Acre)',
                 ),
               if (request.plotVillage != null)
                 commonRow(
                   label: tr(LocaleKeys.village),
                   data: '${request.plotVillage}',
                 ),
-              if (request.plotVillage != null)
+              /* if (request.leader != null)
                 commonRow(
                   label: tr(LocaleKeys.labour_leader),
                   data: '${request.leader}',
-                ),
+                ), */
               if (request.startDate != null)
                 commonRow(
                   label: tr(LocaleKeys.startDate),
@@ -260,28 +262,29 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   label: tr(LocaleKeys.serviceType),
                   data: '${request.serviceTypes}',
                 ),
-              if (request.updatedDate != null)
+              /* if (request.updatedDate != null)
                 commonRow(
                   label: tr(LocaleKeys.job_done),
                   data:
                       '${CommonStyles.formatDisplayDate(request.updatedDate)}',
-                ),
-              if (request.assignedDate != null)
+                ), */
+              if (request.duration != null)
                 commonRow(
                   label: tr(LocaleKeys.Package),
-                  data: '${CommonStyles.formatDate(request.assignedDate)}',
+                  // data: '${CommonStyles.formatDate(request.assignedDate)}',
+                  data: '${request.duration}',
                 ),
               if (request.statusType != null)
                 commonRow(
                   label: tr(LocaleKeys.status),
                   data: '${request.statusType}',
                 ),
-              if (request.createdDate != null)
+              /*  if (request.createdDate != null)
                 commonRow(
                   label: tr(LocaleKeys.assign_date),
                   data:
                       '${CommonStyles.formatDisplayDate(request.createdDate)}',
-                ),
+                ), */
               Text(tr(LocaleKeys.payment_details),
                   style: CommonStyles.txStyF16CpFF6),
               const SizedBox(height: 5),

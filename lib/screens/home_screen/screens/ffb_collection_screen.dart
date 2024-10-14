@@ -181,11 +181,13 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${data.uColnid}',
-                  style: CommonStyles.txStyF14CpFF6,
+                Expanded(
+                  child: Text(
+                    '${data.uColnid}',
+                    style: CommonStyles.txStyF14CpFF6,
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -641,7 +643,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               final DateTime currentDate = DateTime.now();
               final DateTime firstDate = DateTime(currentDate.year - 100);
               launchToDatePicker(context,
-                  firstDate: selectedFromDate ?? firstDate,
+                  firstDate: firstDate,
+                  // firstDate: selectedFromDate ?? firstDate,
                   lastDate: currentDate,
                   initialDate: selectedFromDate);
             },
@@ -877,20 +880,20 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         ],
       ),
     );
-  } 
+  }
 
+//MARK: Info Button
   Future<void> getInfoCollectionInfo(String code) async {
-    final apiUrl =
-        '$baseUrl$code';
+    final apiUrl = '$baseUrl$code';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
-    print('getInfoCollectionInfo: $apiUrl');
-    print('getInfoCollectionInfo: ${jsonResponse.body}');
-
+    print('getInfoCollectionInfo $apiUrl');
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
 
+      print('getInfoCollectionInfo: $apiUrl');
+      print('getInfoCollectionInfo: ${jsonResponse.body}');
       if (response['result'] != null) {
         CommonStyles.customDialog(context,
             InfoDialog(info: CollectionInfo.fromJson(response['result'])));

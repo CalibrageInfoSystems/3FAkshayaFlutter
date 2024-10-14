@@ -112,12 +112,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: DateTime.now(),
-      // Default date
-      firstDate: DateTime.now(),
-      // Disable past dates
-      lastDate: DateTime(2101),
-      // Maximum selectable date
+      initialDate: DateTime.now().add(const Duration(days: 4)),
+      firstDate: DateTime.now().add(const Duration(days: 4)),
+      // lastDate: DateTime(2101),
+      lastDate: DateTime(DateTime.now().year + 100),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -446,7 +444,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         visible: harvestingCheck,
                         child: plotDetailsBox(
                           label: tr(LocaleKeys.harv_amount),
-                          data: "${harvestCost ?? 0.0}",
+                          data: "${harvestingWithIntercropCost ?? 0.0}",
                         ),
                       ),
                       Visibility(
@@ -459,7 +457,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             //MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
-                              data: '${prunningCost ?? 0.0}',
+                              data: '${pruningWithIntercropCost ?? 0.0}',
                             ),
                           ],
                         ),
@@ -1025,6 +1023,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           'Content-Type': 'application/json',
         },
       );
+      print('fetchlabourservicecost: $url');
+      print('fetchlabourservicecost: ${json.encode(request)}');
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 

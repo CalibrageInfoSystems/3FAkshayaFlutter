@@ -30,8 +30,9 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   List<PlotIrrigation> plotIrrigationlist = [];
   String updated = '';
   String treesAppearance = '';
-  int plamscount = 0;
-  double frequencyofharvest = 0.0;
+  String plamscount = '';
+  double? frequencyofharvest;
+  // String frequencyofharvest = '';
   String? formattedDate;
   @override
   void initState() {
@@ -165,11 +166,11 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                     ),
                     custombox(
                       label: tr(LocaleKeys.plamsCount),
-                      data: '$plamscount',
+                      data: plamscount,
                     ),
                     custombox(
                       label: tr(LocaleKeys.Frequency_harvest),
-                      data: '$frequencyofharvest',
+                      data: frequencyofharvest?.toString() ?? '',
                     ),
                     custombox(
                       label: tr(LocaleKeys.last_date),
@@ -188,236 +189,241 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.black54,
+              if (PestDatalist.isNotEmpty)
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.black54,
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.pest),
+                          style: CommonStyles.txStyF14CwFF6,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      child: Text(
-                        tr(LocaleKeys.pest),
-                        style: CommonStyles.txStyF14CwFF6,
-                        textAlign: TextAlign.center,
+                      if (PestDatalist.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap:
+                              true, // This is crucial to ensure the ListView doesn't require a fixed height
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                          itemCount: PestDatalist.length,
+                          itemBuilder: (context, index) {
+                            final pestData = PestDatalist[index];
+                            return Container(
+                              padding: const EdgeInsets.all(4),
+                              child: Column(
+                                children: [
+                                  plotDetailsBox(
+                                    label: tr(LocaleKeys.Pest),
+                                    data: pestData.pest,
+                                  ),
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.pestChemicals),
+                                      data: '${pestData.pestChemicals}'),
+                                  if (pestData.recommendedChemical != null &&
+                                      pestData.recommendedChemical!.isNotEmpty)
+                                    plotDetailsBox(
+                                        label:
+                                            tr(LocaleKeys.RecommendedChemical),
+                                        data:
+                                            '${pestData.recommendedChemical}'),
+                                  if (pestData.dosage != 0.0)
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.dosage_only),
+                                        data: '${pestData.dosage}kg'),
+                                  if (pestData.comments != null &&
+                                      pestData.comments!.isNotEmpty)
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.comments),
+                                        data: '${pestData.comments}'),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        const SizedBox
+                            .shrink(), // Or another placeholder widget
+                      const SizedBox(height: 5),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.black54,
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.deases),
+                          style: CommonStyles.txF14Fw5Cb
+                              .copyWith(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    ),
-                    if (PestDatalist.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap:
-                            true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                        itemCount: PestDatalist.length,
-                        itemBuilder: (context, index) {
-                          final pestData = PestDatalist[index];
-                          return Container(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              children: [
-                                plotDetailsBox(
-                                  label: tr(LocaleKeys.Pest),
-                                  data: pestData.pest,
-                                ),
-                                plotDetailsBox(
-                                    label: tr(LocaleKeys.pestChemicals),
-                                    data: '${pestData.pestChemicals}'),
-                                if (pestData.recommendedChemical != null &&
-                                    pestData.recommendedChemical!.isNotEmpty)
+                      if (DiseaseDatalist.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap:
+                              true, // This is crucial to ensure the ListView doesn't require a fixed height
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                          itemCount: DiseaseDatalist.length,
+                          itemBuilder: (context, index) {
+                            final pestData = DiseaseDatalist[index];
+                            return Container(
+                              padding: const EdgeInsets.all(4),
+                              child: Column(
+                                children: [
                                   plotDetailsBox(
-                                      label: tr(LocaleKeys.RecommendedChemical),
-                                      data: '${pestData.recommendedChemical}'),
-                                if (pestData.dosage != 0.0)
+                                    label: tr(LocaleKeys.disease),
+                                    data: pestData.disease,
+                                  ),
                                   plotDetailsBox(
-                                      label: tr(LocaleKeys.dosage_only),
-                                      data: '${pestData.dosage}kg'),
-                                if (pestData.comments != null &&
-                                    pestData.comments!.isNotEmpty)
-                                  plotDetailsBox(
-                                      label: tr(LocaleKeys.comments),
-                                      data: '${pestData.comments}'),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(), // Or another placeholder widget
-                    const SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.black54,
-                      ),
-                      child: Text(
-                        tr(LocaleKeys.deases),
-                        style: CommonStyles.txF14Fw5Cb
-                            .copyWith(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (DiseaseDatalist.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap:
-                            true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                        itemCount: DiseaseDatalist.length,
-                        itemBuilder: (context, index) {
-                          final pestData = DiseaseDatalist[index];
-                          return Container(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              children: [
-                                plotDetailsBox(
-                                  label: tr(LocaleKeys.disease),
-                                  data: pestData.disease,
-                                ),
-                                plotDetailsBox(
-                                    label: tr(LocaleKeys.pestChemicals),
-                                    data: '${pestData.chemical}'),
-                                if (pestData.dosage != 0.0)
-                                  plotDetailsBox(
-                                      label: tr(LocaleKeys.dosage_only),
-                                      data: '${pestData.dosage}kg'),
-                                if (pestData.recommendedChemical != null &&
-                                    pestData.recommendedChemical != 'null')
-                                  plotDetailsBox(
-                                      label: tr(LocaleKeys.UOMName),
-                                      data: '${pestData.recommendedChemical}'),
-                                if (pestData.comments != null &&
-                                    pestData.comments!.isNotEmpty)
-                                  plotDetailsBox(
-                                      label: tr(LocaleKeys.comments),
-                                      data: '${pestData.comments}'),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(),
+                                      label: tr(LocaleKeys.pestChemicals),
+                                      data: '${pestData.chemical}'),
+                                  if (pestData.dosage != 0.0)
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.dosage_only),
+                                        data: '${pestData.dosage}kg'),
+                                  if (pestData.recommendedChemical != null &&
+                                      pestData.recommendedChemical != 'null')
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.UOMName),
+                                        data:
+                                            '${pestData.recommendedChemical}'),
+                                  if (pestData.comments != null &&
+                                      pestData.comments!.isNotEmpty)
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.comments),
+                                        data: '${pestData.comments}'),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        const SizedBox.shrink(),
 
-                    const SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.black54,
+                      const SizedBox(height: 5),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.black54,
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.nut_repo),
+                          style: CommonStyles.txF14Fw5Cb
+                              .copyWith(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      child: Text(
-                        tr(LocaleKeys.nut_repo),
-                        style: CommonStyles.txF14Fw5Cb
-                            .copyWith(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (NutrientDatalist.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap:
-                            true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                        itemCount: NutrientDatalist.length,
-                        itemBuilder: (context, index) {
-                          final pestData = NutrientDatalist[index];
+                      if (NutrientDatalist.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap:
+                              true, // This is crucial to ensure the ListView doesn't require a fixed height
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                          itemCount: NutrientDatalist.length,
+                          itemBuilder: (context, index) {
+                            final pestData = NutrientDatalist[index];
 
-                          String formattedDate = DateFormat('dd-MM-yyyy')
-                              .format(pestData.registeredDate);
+                            String formattedDate = DateFormat('dd-MM-yyyy')
+                                .format(pestData.registeredDate);
 
-                          return Container(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              children: [
-                                plotDetailsBox(
-                                    label:
-                                        tr(LocaleKeys.NutrientDeficiencyName),
-                                    data: pestData.nutrient),
-                                //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
-                                if (pestData.recommendedFertilizer != null &&
-                                    pestData.recommendedFertilizer != 'null')
+                            return Container(
+                              padding: const EdgeInsets.all(4),
+                              child: Column(
+                                children: [
                                   plotDetailsBox(
                                       label:
-                                          tr(LocaleKeys.recommended_ertilizer),
-                                      data:
-                                          '${pestData.recommendedFertilizer}'),
-                                if (pestData.dosage != 0.0)
+                                          tr(LocaleKeys.NutrientDeficiencyName),
+                                      data: pestData.nutrient),
+                                  //  plotDetailsBox(label: tr(LocaleKeys.Nameofchemicalapplied), data: '${pestData.chemical}'),
+                                  if (pestData.recommendedFertilizer != null &&
+                                      pestData.recommendedFertilizer != 'null')
+                                    plotDetailsBox(
+                                        label: tr(
+                                            LocaleKeys.recommended_ertilizer),
+                                        data:
+                                            '${pestData.recommendedFertilizer}'),
+                                  if (pestData.dosage != 0.0)
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.dosage_only),
+                                        data: '${pestData.dosage}kg'),
                                   plotDetailsBox(
-                                      label: tr(LocaleKeys.dosage_only),
-                                      data: '${pestData.dosage}kg'),
-                                plotDetailsBox(
-                                    label: tr(LocaleKeys.registeredDate),
-                                    data: formattedDate),
-                                if (pestData.comments != null &&
-                                    pestData.comments != 'null')
+                                      label: tr(LocaleKeys.registeredDate),
+                                      data: formattedDate),
+                                  if (pestData.comments != null &&
+                                      pestData.comments != 'null')
+                                    plotDetailsBox(
+                                        label: tr(LocaleKeys.comments),
+                                        data: '${pestData.comments}'),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        const SizedBox.shrink(),
+
+                      const SizedBox(height: 5),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: Colors.black54,
+                        ),
+                        child: Text(
+                          tr(LocaleKeys.irrigation),
+                          style: CommonStyles.txF14Fw5Cb
+                              .copyWith(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      if (plotIrrigationlist.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap:
+                              true, // This is crucial to ensure the ListView doesn't require a fixed height
+                          physics:
+                              const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
+                          itemCount: plotIrrigationlist.length,
+                          itemBuilder: (context, index) {
+                            final pestData = plotIrrigationlist[index];
+
+                            String formattedDate = DateFormat('dd-MM-yyyy')
+                                .format(pestData.updatedbyDate);
+
+                            return Container(
+                              padding: const EdgeInsets.all(4),
+                              child: Column(
+                                children: [
                                   plotDetailsBox(
-                                      label: tr(LocaleKeys.comments),
-                                      data: '${pestData.comments}'),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(),
-
-                    const SizedBox(height: 5),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: Colors.black54,
-                      ),
-                      child: Text(
-                        tr(LocaleKeys.irrigation),
-                        style: CommonStyles.txF14Fw5Cb
-                            .copyWith(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    if (plotIrrigationlist.isNotEmpty)
-                      ListView.builder(
-                        shrinkWrap:
-                            true, // This is crucial to ensure the ListView doesn't require a fixed height
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                        itemCount: plotIrrigationlist.length,
-                        itemBuilder: (context, index) {
-                          final pestData = plotIrrigationlist[index];
-
-                          String formattedDate = DateFormat('dd-MM-yyyy')
-                              .format(pestData.updatedbyDate);
-
-                          return Container(
-                            padding: const EdgeInsets.all(4),
-                            child: Column(
-                              children: [
-                                plotDetailsBox(
-                                    label: tr(LocaleKeys.irrigation_name),
-                                    data: pestData.irrigaationType,
-                                    dataTextColor: const Color(0xFFF1614E)),
-                                plotDetailsBox(
-                                    label: tr(LocaleKeys.updated_by),
-                                    data: formattedDate),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    else
-                      const SizedBox.shrink(),
-                  ],
+                                      label: tr(LocaleKeys.irrigation_name),
+                                      data: pestData.irrigaationType,
+                                      dataTextColor: const Color(0xFFF1614E)),
+                                  plotDetailsBox(
+                                      label: tr(LocaleKeys.updated_by),
+                                      data: formattedDate),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        const SizedBox.shrink(),
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),

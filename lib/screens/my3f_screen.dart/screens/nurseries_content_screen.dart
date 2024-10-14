@@ -189,7 +189,7 @@ class _NurseriesContentCardState extends State<NurseriesContentCard> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Constants.launchMap(
+                      Constants.launchMap(context,
                           latitude: widget.nursery.latitude,
                           longitude: widget.nursery.longitude);
                     },

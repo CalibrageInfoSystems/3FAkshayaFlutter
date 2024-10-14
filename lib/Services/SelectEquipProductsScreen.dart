@@ -467,6 +467,7 @@ class _ProductCardState extends State<ProductCard> {
     CommonStyles.customDialog(context, infoDialogContent(widget.product));
   }
 
+//MARK: Info Dialog
   Widget infoDialogContent(ProductItem product) {
     final size = MediaQuery.of(context).size;
     return Container(
@@ -491,8 +492,8 @@ class _ProductCardState extends State<ProductCard> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Name',
+                      Text(
+                        tr(LocaleKeys.name),
                         style: CommonStyles.txStyF14CbFF6,
                       ),
                       const Text(
@@ -526,75 +527,11 @@ class _ProductCardState extends State<ProductCard> {
                       size: 20,
                       color: CommonStyles.primaryTextColor,
                     ),
-                    // IconButton(
-                    //   icon: const Icon(
-                    //     Icons.close,
-                    //     color: CommonStyles.primaryTextColor,
-                    //   ),
-                    //   onPressed: () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    // ),
                   ),
                 ),
-                /*  Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    padding: const EdgeInsets.all(0),
-                    icon: const Icon(
-            Icons.close,
-            color: CommonStyles.primaryTextColor,
-            size: 24,
-                    ),
-                    onPressed: () {
-            Navigator.of(context).pop();
-                    },
-                  ),
-                ), */
               ],
             ),
           ),
-
-/* 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Text(
-                    'Name',
-                    style: CommonStyles.txStyF14CbFF6,
-                  ),
-                  const Text(
-                    '     : ',
-                    style: CommonStyles.txStyF14CbFF6,
-                  ),
-                  Text(
-                    '${product.name}',
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.visible,
-                    maxLines: 2,
-                    style: CommonStyles.txStyF14CpFF6,
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  padding: const EdgeInsets.all(0),
-                  icon: const Icon(
-                    Icons.close,
-                    color: CommonStyles.primaryTextColor,
-                    size: 24,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-            ],
-          ),
-     */
           const SizedBox(height: 10),
           Center(
             child: GestureDetector(
@@ -611,8 +548,8 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Description:',
+          Text(
+            tr(LocaleKeys.description),
             style: CommonStyles.txStyF14CbFF6,
           ),
           Text(
@@ -620,20 +557,37 @@ class _ProductCardState extends State<ProductCard> {
             style: CommonStyles.txStyF14CbFF6,
           ),
           CommonStyles.horizontalGradientDivider(),
-          infoRow(
-            label1: 'Price (Rs)',
-            data1: '${product.actualPriceInclGst}',
-            label2: 'GST (%)',
+/*           infoRow(
+            label1: tr(LocaleKeys.price),
+            data1: '${product.priceInclGst}',
+            label2: tr(LocaleKeys.gst_amount),
             data2: '${product.gstPercentage}',
+            isSingle: product.gstPercentage != null ? false : true,
           ),
-          const SizedBox(height: 10),
           CommonStyles.horizontalGradientDivider(),
+          if (product.size != null)
+            infoRow(
+                label1: tr(LocaleKeys.product_size),
+                data1: '${product.size} ${product.uomType}',
+                label2: 'label2',
+                data2: '${product.description}',
+                isSingle: true), */
           infoRow(
-              label1: 'Size',
-              data1: '${product.size} ${product.uomType}',
-              label2: 'label2',
-              data2: '${product.description}',
-              isSingle: true),
+            label1: tr(LocaleKeys.price),
+            data1: '${product.priceInclGst}',
+            discountPrice: product.actualPriceInclGst,
+            label2: tr(LocaleKeys.gst),
+            data2: '${product.gstPercentage}',
+            isSingle: product.gstPercentage != null ? false : true,
+          ),
+          CommonStyles.horizontalGradientDivider(),
+          if (product.size != null)
+            infoRow2(
+                label1: tr(LocaleKeys.product_size),
+                data1: '${product.size} ${product.uomType}',
+                label2: 'label2',
+                data2: '${product.description}',
+                isSingle: true),
         ],
       ),
     );
@@ -642,6 +596,7 @@ class _ProductCardState extends State<ProductCard> {
   Widget infoRow({
     required String label1,
     required String? data1,
+    double? discountPrice,
     required String label2,
     required String? data2,
     bool isSingle = false,
@@ -649,73 +604,184 @@ class _ProductCardState extends State<ProductCard> {
     return Column(
       children: [
         const SizedBox(height: 10),
-        Row(
-          children: [
-            data1 != null
-                ? Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: Text(
+        if (data1 != null)
+          Row(
+            children: [
+              Expanded(
+                  child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      label1,
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  Expanded(
+                      flex: 5,
+                      child: (discountPrice == null ||
+                              data1 == discountPrice.toString())
+                          ? Text(
+                              data1,
+                              style: CommonStyles.txStyF14CbFF6,
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data1,
+                                  style: CommonStyles.txStyF14CbFF6,
+                                ),
+                                Text(
+                                  '$discountPrice',
+                                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CommonStyles.RedColor,
+                                    color:
+                                        CommonStyles.formFieldErrorBorderColor,
+                                  ),
+                                ),
+                              ],
+                            )),
+                ],
+              )),
+              const SizedBox(width: 10),
+              isSingle
+                  ? const Expanded(
+                      child: SizedBox(),
+                    )
+                  : Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              label2,
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 1,
+                            child: Text(
+                              ':',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              '$data2',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget infoRow2({
+    required String label1,
+    required String? data1,
+    String? discountPrice,
+    required String label2,
+    required String? data2,
+    bool isSingle = false,
+  }) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        if (data1 != null)
+          Row(
+            children: [
+              Expanded(
+                  child: Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: discountPrice == null
+                        ? Text(
                             label1,
                             style: CommonStyles.txStyF14CbFF6,
-                          ),
-                        ),
-                        const Expanded(
-                          flex: 1,
-                          child: Text(
-                            ':',
-                            style: CommonStyles.txStyF14CbFF6,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 5,
-                          child: Text(
-                            data1,
-                            style: CommonStyles.txStyF14CbFF6,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : const SizedBox(),
-            const SizedBox(width: 10),
-            isSingle
-                ? const Expanded(
-                    child: SizedBox(),
-                  )
-                : Expanded(
-                    child: data2 != null
-                        ? Row(
+                          )
+                        : Column(
                             children: [
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                  label2,
-                                  style: CommonStyles.txStyF14CbFF6,
-                                ),
+                              Text(
+                                label1,
+                                style: CommonStyles.txStyF14CbFF6,
                               ),
-                              const Expanded(
-                                flex: 1,
-                                child: Text(
-                                  ':',
-                                  style: CommonStyles.txStyF14CbFF6,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 5,
-                                child: Text(
-                                  data2,
-                                  style: CommonStyles.txStyF14CbFF6,
+                              Text(
+                                discountPrice,
+                                style: CommonStyles.txStyF14CbFF6.copyWith(
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: CommonStyles.RedColor,
+                                  color: CommonStyles.formFieldErrorBorderColor,
                                 ),
                               ),
                             ],
-                          )
-                        : const SizedBox(),
+                          ),
                   ),
-          ],
-        ),
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      ':',
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      data1,
+                      style: CommonStyles.txStyF14CbFF6,
+                    ),
+                  ),
+                ],
+              )),
+              const SizedBox(width: 10),
+              isSingle
+                  ? const Expanded(
+                      child: SizedBox(),
+                    )
+                  : Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              label2,
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          const Expanded(
+                            flex: 1,
+                            child: Text(
+                              ':',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Text(
+                              '$data2',
+                              style: CommonStyles.txStyF14CbFF6,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
       ],
     );
   }

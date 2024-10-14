@@ -117,27 +117,22 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   PassbookData getLastFinancialYearData() {
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
     DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('yyyy-MM-dd');
 
-    DateTime fromDate;
+    DateTime financialYearStart = DateTime(now.year, 4, 1);
 
-    if (now.month >= 4) {
-      fromDate = DateTime(now.year - 1, 4, 1);
-    } else {
-      // If current date is before April 1st, we are still in the current financial year
-      // Last financial year would be from April 1st two years ago to March 31st of last year
-      fromDate = DateTime(now.year - 2, 4, 1); // April 1st of two years ago
+    if (now.isBefore(financialYearStart)) {
+      financialYearStart = DateTime(now.year - 1, 4, 1);
     }
 
-    String formattedFromDate = formatter.format(fromDate);
-    String formattedToDate = formatter.format(DateTime.now());
+    String fromDate = formatter.format(financialYearStart);
+    String toDate = formatter.format(now);
 
     return PassbookData(
-      passbookVendorModel:
-          getVendorData(fromDate: formattedFromDate, toDate: formattedToDate),
-      passbookTransportModel: getTransportData(
-          fromDate: formattedFromDate, toDate: formattedToDate),
+      passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
+      passbookTransportModel:
+          getTransportData(fromDate: fromDate, toDate: toDate),
     );
   }
 
@@ -1138,8 +1133,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                          if (itemData.amount !=
-                              null) // && itemData.amount! > 0
+                          if (itemData.amount != null &&
+                              itemData.amount! != 0) // && itemData.amount! > 0
                             itemRow(
                                 label: tr(LocaleKeys.amount),
                                 data: '${itemData.amount?.toStringAsFixed(2)}'),

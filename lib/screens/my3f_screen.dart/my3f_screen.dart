@@ -36,6 +36,9 @@ class _My3fScreenState extends State<My3fScreen> {
         'http://182.18.157.215/3FAkshaya/API/api/Farmer/Get3FInfo/APWGBDAB00010005/AP';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
+
+    print('api check: $apiUrl');
+    print('api check: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       final importantContacts = response['result']['importantContacts'];

@@ -68,7 +68,7 @@ class GoDownsCard extends StatelessWidget {
                       label: tr(LocaleKeys.address), data: '${godown.address}'),
                   GestureDetector(
                     onTap: () {
-                      Constants.launchMap(
+                      Constants.launchMap(context,
                           latitude: godown.latitude,
                           longitude: godown.longitude);
                     },

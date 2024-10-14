@@ -61,7 +61,7 @@ class CollectionCenterCard extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Constants.launchMap(
+                      Constants.launchMap(context,
                           latitude: data.latitude, longitude: data.longitude);
                     },
                     child: Row(
