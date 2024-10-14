@@ -766,6 +766,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
+/* 
   Future<void> launchFromDatePicker(BuildContext context,
       {required DateTime firstDate,
       required DateTime lastDate,
@@ -814,6 +815,46 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       });
     }
     // return DateFormat('dd-MM-yyyy').format(selectedToDate!);
+  }
+ */
+  Future<void> launchFromDatePicker(BuildContext context,
+      {required DateTime firstDate,
+      required DateTime lastDate,
+      DateTime? initialDate}) async {
+    final DateTime? pickedDay = await showDatePicker(
+      context: context,
+      initialDate: initialDate ?? DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      initialDatePickerMode: DatePickerMode.day,
+    );
+    if (pickedDay != null) {
+      setState(() {
+        selectedFromDate = pickedDay;
+        displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
+      });
+    }
+  }
+
+  Future<void> launchToDatePicker(BuildContext context,
+      {required DateTime firstDate,
+      required DateTime lastDate,
+      DateTime? initialDate}) async {
+    final DateTime? pickedDay = await showDatePicker(
+      context: context,
+      initialDate: initialDate ?? DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      initialDatePickerMode: DatePickerMode.day,
+    );
+    if (pickedDay != null) {
+      setState(() {
+        selectedToDate = pickedDay;
+        displayToDate = DateFormat('dd/MM/yyyy').format(selectedToDate!);
+      });
+    }
   }
 
   void validateAndSubmit(DateTime? selectedFromDate, DateTime? selectedToDate) {
@@ -884,20 +925,23 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
 
 //MARK: Info Button
   Future<void> getInfoCollectionInfo(String code) async {
-    final apiUrl = '$baseUrl$code';
+    // http://182.18.157.215/3FAkshaya/API/api/Collection/CollectionInfoById/COL2024TAB214CCNBPP01075-174
+    final apiUrl = '$baseUrl$collectionInfoById$code';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
-    print('getInfoCollectionInfo $apiUrl');
+    print('getInfoCollectionInfo: $apiUrl');
+    print('getInfoCollectionInfo: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final response = jsonDecode(jsonResponse.body);
 
-      print('getInfoCollectionInfo: $apiUrl');
-      print('getInfoCollectionInfo: ${jsonResponse.body}');
       if (response['result'] != null) {
         CommonStyles.customDialog(context,
             InfoDialog(info: CollectionInfo.fromJson(response['result'])));
       }
+      /*  else {
+        _showErrorDialog('message');
+      } */
     }
   }
 

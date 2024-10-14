@@ -22,8 +22,10 @@ var getvendordata = 'Payment/GetVendorLedger';
 var getTranspotationdata = 'Payment/GetTranspotationChargesByFarmerCode';
 var getfarmerreimbursement = 'Payment/GetTranspotationChargesByFarmerCode';
 var encyclopedia = 'Encyclopedia/GetEncyclopediaDetails/'; // 1/AP/true
-var getCropMaintenanceHistoryDetailsByPlotCode = 'GetCropMaintenanceHistoryDetailsByPlotCode';
-var GetCategoriesByParentCategory = "Categories/GetCategoriesByParentCategory/1";
+var getCropMaintenanceHistoryDetailsByPlotCode =
+    'GetCropMaintenanceHistoryDetailsByPlotCode';
+var GetCategoriesByParentCategory =
+    "Categories/GetCategoriesByParentCategory/1";
 var GetPaymentsTypeByFarmerCode = "Farmer/GetPaymentsTypeByFarmerCode/";
 const getUnPaidCollections = 'Farmer/GetUnPayedCollectionsByFarmerCode/';
 const raiseCollectionRequest = 'RequestHeader/CanRaiseRequest/';
@@ -37,16 +39,19 @@ const typeOfIssues = 'TypeCdDmt/';
 const visitRequest = 'RequestHeader/AddVisitRequest';
 const getVisitRequestDetails = 'RequestHeader/GetVisitRequestDetails';
 const getLoanRequestDetails = 'RequestHeader/GetLoanRequestDetails';
-const getVisitRequestCompleteDetails = 'RequestHeader/GetVisitRequestRepository/';
+const getVisitRequestCompleteDetails =
+    'RequestHeader/GetVisitRequestRepository/';
 const getFertilizerDetails = 'GetFertilizerDetails';
 const getFertilizerProductDetails = 'GetProductDetailsByRequestCode/';
 const getEquipmentProductDetails = 'FertilizerRequest/GetPoleRequestDetails';
-const getEdibleOilsProductDetails = 'FertilizerRequest/GetEdibleOilsRequestDetails';
+const getEdibleOilsProductDetails =
+    'FertilizerRequest/GetEdibleOilsRequestDetails';
 const getQuickpayProductDetails = 'QuickPayRequest/GetQuickpayRequestDetails';
 const getLoanProductDetails = 'RequestHeader/GetLoanRequestDetails';
 const getVisitProductDetails = 'RequestHeader/GetVisitRequestDetails';
 const getLabProductDetails = 'FertilizerRequest/GetChemicalRequestDetails';
 const getLabourProductDetails = 'GetLabourRequestDetails';
+const collectionInfoById = 'Collection/CollectionInfoById/';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
