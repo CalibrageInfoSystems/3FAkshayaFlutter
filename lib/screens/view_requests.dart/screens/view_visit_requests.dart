@@ -330,7 +330,7 @@ class MoreDetails extends StatefulWidget {
 }
 
 class _MoreDetailsState extends State<MoreDetails> {
-  AudioPlayer audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool isPlaying = false;
   double currentPosition = 0;
   double totalDuration = 0;
@@ -344,20 +344,13 @@ class _MoreDetailsState extends State<MoreDetails> {
     if (widget.audioFilePath.isNotEmpty) {
       _initAudio();
     }
+    print(
+        'camp: ${widget.imagesList.length} | ${widget.audioFilePath.length} ');
   }
-
+/* 
   Future<void> _initAudio() async {
-    await audioPlayer.setSourceUrl(widget.audioFilePath[0].fileLocation!);
-
-/*     audioPlayer.onPlayerStateChanged.listen((state) {
-      if (mounted) {
-        setState(() {
-          isPlaying = state == PlayerState.playing;
-        });
-      }
-    }); */
-
-    _durationSubscription = audioPlayer.onDurationChanged.listen((duration) {
+    await _audioPlayer.setSourceUrl(widget.audioFilePath[0].fileLocation!);
+    _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
       if (mounted) {
         setState(() {
           totalDuration = duration.inSeconds.toDouble();
@@ -365,7 +358,7 @@ class _MoreDetailsState extends State<MoreDetails> {
       }
     });
 
-    _positionSubscription = audioPlayer.onPositionChanged.listen((position) {
+    _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
       if (mounted) {
         setState(() {
           currentPosition = position.inSeconds.toDouble();
@@ -373,7 +366,7 @@ class _MoreDetailsState extends State<MoreDetails> {
       }
     });
 
-    _completeSubscription = audioPlayer.onPlayerComplete.listen((event) {
+    _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
       if (mounted) {
         setState(() {
           isPlaying = false;
@@ -382,17 +375,68 @@ class _MoreDetailsState extends State<MoreDetails> {
       }
     });
   }
+ */
 
-  Future<void> playOrPause() async {
+  Future<void> _initAudio() async {
+    try {
+      await _audioPlayer
+          .setSource(UrlSource(widget.audioFilePath[0].fileLocation!));
+      _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
+        if (mounted) {
+          setState(() {
+            totalDuration = duration.inSeconds.toDouble();
+          });
+        }
+      });
+
+      _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
+        if (mounted) {
+          setState(() {
+            currentPosition = position.inSeconds.toDouble();
+          });
+        }
+      });
+
+      _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
+        if (mounted) {
+          setState(() {
+            isPlaying = false;
+            currentPosition = 0;
+          });
+        }
+      });
+    } catch (e) {
+      print('Error initializing audio: $e');
+    }
+  }
+
+  /* Future<void> playOrPause() async {
     if (isPlaying) {
-      await audioPlayer.pause();
+      await _audioPlayer.pause();
     } else {
-      await audioPlayer.play(UrlSource(widget.audioFilePath[0].fileLocation!));
+      await _audioPlayer.play(UrlSource(widget.audioFilePath[0].fileLocation!));
     }
     if (mounted) {
       setState(() {
         isPlaying = !isPlaying;
       });
+    }
+  } */
+  Future<void> playOrPause() async {
+    try {
+      if (isPlaying) {
+        await _audioPlayer.pause();
+      } else {
+        await _audioPlayer
+            .play(UrlSource(widget.audioFilePath[0].fileLocation!));
+      }
+      if (mounted) {
+        setState(() {
+          isPlaying = !isPlaying;
+        });
+      }
+    } catch (e) {
+      print('Error playing audio: $e');
     }
   }
 
@@ -401,7 +445,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     _durationSubscription?.cancel();
     _positionSubscription?.cancel();
     _completeSubscription?.cancel();
-    audioPlayer.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -475,7 +519,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                         setState(() {
                           currentPosition = value;
                         });
-                        audioPlayer.seek(Duration(seconds: value.toInt()));
+                        _audioPlayer.seek(Duration(seconds: value.toInt()));
                       },
                     ),
                   ),
