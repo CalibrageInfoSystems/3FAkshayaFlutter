@@ -243,28 +243,33 @@ class FarmerProfile extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          CommonWidgets.commonRowWithColon(
-              label: tr(LocaleKeys.farmar_code),
-              data: '${farmerData.code}',
-              dataTextColor: CommonStyles.primaryTextColor),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.farmer_name),
-            data:
-                '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.fa_hu_name),
-            data: '${farmerData.guardianName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-              label: tr(LocaleKeys.mobile),
-              data: '${farmerData.contactNumber}',
-              dataTextColor: Colors.green),
-          CommonWidgets.commonRowWithColon(
-            label: 'Alternate Mobile Number',
-            // label: tr(LocaleKeys.alter_mobile),
-            data: '${farmerData.mobileNumber}',
-          ),
+          if (farmerData.code != null)
+            CommonWidgets.commonRowWithColon(
+                label: tr(LocaleKeys.farmar_code),
+                data: '${farmerData.code}',
+                dataTextColor: CommonStyles.primaryTextColor),
+          if (farmerData.firstName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.farmer_name),
+              data:
+                  '${farmerData.firstName} ${farmerData.middleName ?? ''} ${farmerData.lastName}',
+            ),
+          if (farmerData.guardianName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.fa_hu_name),
+              data: '${farmerData.guardianName}',
+            ),
+          if (farmerData.contactNumber != null)
+            CommonWidgets.commonRowWithColon(
+                label: tr(LocaleKeys.mobile),
+                data: '${farmerData.contactNumber}',
+                dataTextColor: Colors.green),
+          if (farmerData.mobileNumber != null)
+            CommonWidgets.commonRowWithColon(
+              // label: 'Alternate Mobile Number',
+              label: tr(LocaleKeys.alter_mobile),
+              data: '${farmerData.mobileNumber}',
+            ),
           const SizedBox(height: 20),
           Text(tr(LocaleKeys.res_address),
               style: CommonStyles.txStyF14CbFF6
@@ -273,31 +278,37 @@ class FarmerProfile extends StatelessWidget {
             color: CommonStyles.primaryTextColor,
             thickness: 0.3,
           ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.address),
-            data: '${farmerData.address}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.village),
-            data: '${farmerData.villageName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.mandal),
-            data: '${farmerData.mandalName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.dist),
-            data: '${farmerData.districtName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.state),
-            data: '${farmerData.stateName}',
-          ),
-          CommonWidgets.commonRowWithColon(
-            label: tr(LocaleKeys.pin),
-            data: '${farmerData.pinCode}',
-            isSpace: false,
-          ),
+          if (farmerData.address != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.address),
+              data: '${farmerData.address}',
+            ),
+          if (farmerData.villageName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.village),
+              data: '${farmerData.villageName}',
+            ),
+          if (farmerData.mandalName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.mandal),
+              data: '${farmerData.mandalName}',
+            ),
+          if (farmerData.districtName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.dist),
+              data: '${farmerData.districtName}',
+            ),
+          if (farmerData.stateName != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.state),
+              data: '${farmerData.stateName}',
+            ),
+          if (farmerData.pinCode != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.pin),
+              data: '${farmerData.pinCode}',
+              isSpace: false,
+            ),
           const Divider(
             color: CommonStyles.primaryTextColor,
             thickness: 0.3,
