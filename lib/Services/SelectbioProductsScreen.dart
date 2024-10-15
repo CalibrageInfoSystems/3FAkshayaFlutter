@@ -629,7 +629,7 @@ class _ProductCardState extends State<ProductCard> {
                 isSingle: product.gstPercentage != null ? false : true,
               ),
               CommonStyles.horizontalGradientDivider(),
-              if (product.size != null)
+              if (product.size != null && widget.product.uomType != null)
                 infoRow2(
                     label1: tr(LocaleKeys.product_size),
                     data1: '${product.size} ${product.uomType}',

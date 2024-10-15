@@ -165,6 +165,30 @@ class _VisitRequestState extends State<VisitRequest> {
     return base64Audio;
   }
 
+  Future<String?> _convertToBase64(String? filePath) async {
+    if (filePath != null) {
+      File audioFile = File(filePath);
+      List<int> audioBytes = await audioFile.readAsBytes();
+      String base64EncodeString = base64Encode(audioBytes);
+
+      return base64EncodeString;
+    }
+    return null;
+  }
+
+  Future<String?> audioFileToBase64(String filePath) async {
+    try {
+      File audioFile = File(filePath);
+      List<int> audioBytes = await audioFile.readAsBytes();
+      print('audioFileToBase64: $filePath');
+      String base64Audio = base64Encode(audioBytes);
+      return base64Audio;
+    } catch (e) {
+      print("Error encoding audio file: $e");
+      return null;
+    }
+  }
+
   Future<void> submitVisitRequest({
     required PlotDetailsModel plot,
     String? reason,
@@ -210,11 +234,13 @@ class _VisitRequestState extends State<VisitRequest> {
               "isActive": true
             };
           }),
+        //MARK: convertToBase64
         if (audioFilePath != null)
           {
             "createdDate": currentDate,
             "fileExtension": ".mp3",
-            "fileName": await convertAudioToBase64(audioFilePath!),
+            "fileName": await audioFileToBase64(audioFilePath!),
+            // "fileName": await convertAudioToBase64(audioFilePath!),
             "fileTypeId": 37,
             "id": 1,
             "isActive": true
@@ -253,6 +279,7 @@ class _VisitRequestState extends State<VisitRequest> {
     super.dispose();
   }
 
+//MARK: startRecording
   Future<void> _startRecording() async {
     final bool isPermissionGranted = await _recorder.hasPermission();
     if (!isPermissionGranted) {
@@ -261,6 +288,7 @@ class _VisitRequestState extends State<VisitRequest> {
 
     final directory = await getApplicationDocumentsDirectory();
     String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+    // String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
     audioFilePath = '${directory.path}/$fileName';
 
     const config = RecordConfig(
@@ -277,6 +305,34 @@ class _VisitRequestState extends State<VisitRequest> {
     });
 
     _startTimer();
+  }
+
+  Future<void> startRecording() async {
+    final record = AudioRecorder();
+
+    if (await record.hasPermission()) {
+      final directory = await getApplicationDocumentsDirectory();
+      audioFilePath =
+          '${directory.path}${DateTime.now().millisecondsSinceEpoch}/my_audio.aac';
+      // String filePath = 'recording_${DateTime.now().millisecondsSinceEpoch}.aac';
+
+      const config = RecordConfig(
+        encoder: AudioEncoder.aacLc,
+        sampleRate: 44100,
+        bitRate: 128000,
+      );
+      await record.start(
+        config,
+        path: audioFilePath!,
+      );
+      setState(() {
+        _isRecording = true;
+        isAudioRecorded = false;
+        _recordedSeconds = 0;
+      });
+
+      _startTimer();
+    }
   }
 
   void _startTimer() {
@@ -671,7 +727,6 @@ class _VisitRequestState extends State<VisitRequest> {
               ),
 
               const SizedBox(height: 10),
-              //MARK: Audio
               RichText(
                 text: TextSpan(
                   text: tr(LocaleKeys.record),
@@ -743,6 +798,7 @@ class _VisitRequestState extends State<VisitRequest> {
                     ),
                   ],
                 ),
+              //MARK: Audio Recording
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -757,8 +813,6 @@ class _VisitRequestState extends State<VisitRequest> {
                   ),
                 ],
               ),
-
-              // const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -796,15 +850,6 @@ class _VisitRequestState extends State<VisitRequest> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /*  Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ), */
               const Text(
                 'Select Action',
                 style: TextStyle(

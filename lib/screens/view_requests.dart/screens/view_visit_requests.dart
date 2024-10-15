@@ -269,15 +269,12 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
               padding: const EdgeInsets.symmetric(vertical: 10),
               alignment: Alignment.center,
               decoration: const BoxDecoration(
-                // borderRadius: BorderRadius.circular(10),
                 color: CommonStyles.listOddColor,
               ),
               child: Text(
-                'Click Here to See Complete Details',
+                tr(LocaleKeys.complete_details),
                 style: CommonStyles.txStyF16CbFF6.copyWith(
                     color: CommonStyles.viewMoreBtnTextColor, fontSize: 18),
-                /*  style: TextStyle(
-                    fontWeight: FontWeight.w600), */
               ),
             ),
           ),
@@ -379,8 +376,9 @@ class _MoreDetailsState extends State<MoreDetails> {
 
   Future<void> _initAudio() async {
     try {
-      await _audioPlayer
-          .setSource(UrlSource(widget.audioFilePath[0].fileLocation!));
+      await _audioPlayer.setSource(UrlSource(
+          'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'));
+      // .setSource(UrlSource(widget.audioFilePath[0].fileLocation!));
       _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
         if (mounted) {
           setState(() {
@@ -427,8 +425,9 @@ class _MoreDetailsState extends State<MoreDetails> {
       if (isPlaying) {
         await _audioPlayer.pause();
       } else {
-        await _audioPlayer
-            .play(UrlSource(widget.audioFilePath[0].fileLocation!));
+        await _audioPlayer.play(UrlSource(
+            'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'));
+        // .play(UrlSource(widget.audioFilePath[0].fileLocation!));
       }
       if (mounted) {
         setState(() {

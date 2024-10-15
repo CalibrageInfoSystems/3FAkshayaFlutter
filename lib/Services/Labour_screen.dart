@@ -109,11 +109,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now().add(const Duration(days: 3));
     DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 4)),
-      firstDate: DateTime.now().add(const Duration(days: 4)),
+      initialDate: initialDate,
+      firstDate: initialDate,
       // lastDate: DateTime(2101),
       lastDate: DateTime(DateTime.now().year + 100),
       builder: (context, child) {
@@ -444,7 +445,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         visible: harvestingCheck,
                         child: plotDetailsBox(
                           label: tr(LocaleKeys.harv_amount),
-                          data: "${harvestingWithIntercropCost ?? 0.0}",
+                          data: "${harvestCost ?? 0.0}",
                         ),
                       ),
                       Visibility(
@@ -457,7 +458,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             //MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
-                              data: '${pruningWithIntercropCost ?? 0.0}',
+                              data: '${prunningCost ?? 0.0}',
                             ),
                           ],
                         ),

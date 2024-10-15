@@ -213,15 +213,16 @@ class _MainScreenPageState extends State<MainScreen> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${farmer.mobileNumber!}',
-                          style: CommonStyles.txStyF14CwFF6,
-                        ),
-                      ],
-                    ),
+                    if (farmer.mobileNumber != null)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${farmer.mobileNumber}',
+                            style: CommonStyles.txStyF14CwFF6,
+                          ),
+                        ],
+                      ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

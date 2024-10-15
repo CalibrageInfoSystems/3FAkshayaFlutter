@@ -524,17 +524,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               print('ffb selectedDropDownValue: $selectedDropDownValue');
               getCollectionAccordingToDropDownSelection(
                   dropdownItems.indexOf(selectedDropDownValue!));
-
               if (dropdownItems.indexOf(selectedDropDownValue!) == 2) {
-                setState(() {
-                  isTimePeriod = true;
-                });
+                isTimePeriod = true;
               } else {
-                setState(() {
-                  isTimePeriod = false;
-                  displayFromDate = null;
-                  displayToDate = null;
-                });
+                isTimePeriod = false;
+                displayFromDate = null;
+                displayToDate = null;
               }
             });
           },
@@ -766,57 +761,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
-/* 
-  Future<void> launchFromDatePicker(BuildContext context,
-      {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
-    // final DateTime lastDate = DateTime.now();
-    // final DateTime firstDate = DateTime(lastDate.year - 100);
-    final DateTime? pickedDay = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDatePickerMode: DatePickerMode.day,
-    );
-    if (pickedDay != null) {
-      // Check if pickedDay is not in the future
-      setState(() {
-        selectedFromDate = pickedDay;
-        displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
-      });
-    }
-    // return DateFormat('dd-MM-yyyy').format(selectedFromDate!);
-  }
-
-  Future<void> launchToDatePicker(BuildContext context,
-      {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
-    // final DateTime lastDate = DateTime.now();
-    // final DateTime firstDate = DateTime(lastDate.year - 100);
-    final DateTime? pickedDay = await showDatePicker(
-      context: context,
-      // initialDate: DateTime.now(),
-      initialDate: initialDate ?? DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDatePickerMode: DatePickerMode.day,
-    );
-
-    if (pickedDay != null) {
-      // Check if pickedDay is not in the future
-      setState(() {
-        selectedToDate = pickedDay;
-        displayToDate = DateFormat('dd/MM/yyyy').format(selectedToDate!);
-      });
-    }
-    // return DateFormat('dd-MM-yyyy').format(selectedToDate!);
-  }
- */
   Future<void> launchFromDatePicker(BuildContext context,
       {required DateTime firstDate,
       required DateTime lastDate,
@@ -1046,27 +990,34 @@ class InfoDialog extends StatelessWidget {
                 buildInfoRow(tr(LocaleKeys.only_date), ''),
                 buildInfoRow(tr(LocaleKeys.operatorName), ''),
                 buildInfoRow(tr(LocaleKeys.comments), ''),
-                /*  const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Center(
                   child: TextButton(
                     onPressed: () {
                       CommonStyles.customDialognew(
                         context,
-                        CachedNetworkImage(
-                          imageUrl: info!.receiptImg!,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Image.asset(
-                            Assets.images.icLogo.path,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        Container(
+                            color: CommonStyles.whiteColor,
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: const Center(
+                              child: Text('No receipt found'),
+                            )),
+                        // CachedNetworkImage(
+                        //   imageUrl: info!.receiptImg!,
+                        //   placeholder: (context, url) =>
+                        //       const CircularProgressIndicator(),
+                        //   errorWidget: (context, url, error) => Image.asset(
+                        //     Assets.images.icLogo.path,
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
                       );
                     },
                     child: Text(tr(LocaleKeys.recept),
                         style: CommonStyles.txStyF14CpFF6),
                   ),
-                ), */
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
