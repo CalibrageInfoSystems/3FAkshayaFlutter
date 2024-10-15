@@ -313,21 +313,21 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   Container noteBox() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xfffefacb),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Note',
+            tr(LocaleKeys.noteWithOutColon),
             style: CommonStyles.txStyF14CpFF6,
           ),
           Text(
-            'If the products has not been picked with in 5 days of requested date, Your order will be cancelled.',
+            tr(LocaleKeys.note),
             style: CommonStyles.txStyF14CbFF6,
           ),
         ],
@@ -592,19 +592,19 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             if (subsidyAmount > 0) {
               if (totalProductCostGst < subsidyAmount) {
                 payableAmount = 0.0;
-               // payableAmount = totalTransportCostwithgst;
+                // payableAmount = totalTransportCostwithgst;
                 subsidyAmount = totalProductCostGst;
               } else if (subsidyAmount < totalProductCostGst) {
                 payableAmount = totalProductCostGst - subsidyAmount;
-              //  payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
+                //  payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
               } else {
                 payableAmount = totalProductCostGst;
                 // payableAmount = totalProductCostGst + totalTransportCostwithgst;
               }
             } else {
               subsidyAmount = 0.0;
-              payableAmount = totalProductCostGst ;
-             // payableAmount = totalProductCostGst + totalTransportCostwithgst;
+              payableAmount = totalProductCostGst;
+              // payableAmount = totalProductCostGst + totalTransportCostwithgst;
             }
 
             print("Subsidy Amount: $subsidyAmount");

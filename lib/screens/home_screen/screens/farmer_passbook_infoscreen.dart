@@ -15,6 +15,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
+// import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -80,21 +82,50 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   PassbookData getInitialData() {
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    String fromDate =
-        formatter.format(DateTime.now().subtract(const Duration(days: 30)));
-    String toDate = formatter.format(DateTime.now());
+    String fromDate = getFirstDayOfPreviousMonth();
+    String toDate = getToDate();
     return PassbookData(
         passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
         passbookTransportModel:
             getTransportData(fromDate: fromDate, toDate: toDate));
   }
 
-  PassbookData getLastThreeMonthsData() {
+  String getToDate() {
     DateFormat formatter = DateFormat('yyyy-MM-dd');
+    String toDate =
+        formatter.format(DateTime.now().add(const Duration(days: 60)));
+    return toDate;
+  }
+
+  String getFirstDayOfPreviousMonth() {
+    DateTime now = DateTime.now();
+    DateTime previousMonth = DateTime(now.year, now.month - 1, 1);
+
+    if (now.month == 1) {
+      previousMonth = DateTime(now.year - 1, 12, 1);
+    }
+
+    return '${previousMonth.year}-${previousMonth.month.toString().padLeft(2, '0')}-${previousMonth.day}';
+  }
+
+  String getFirstDayOfThreeMonthsAgo() {
+    DateTime now = DateTime.now();
+    DateTime threeMonthsAgo = DateTime(now.year, now.month - 3, 1);
+
+    if (now.month <= 3) {
+      threeMonthsAgo = DateTime(now.year - 1, now.month + 9, 1);
+    }
+    return '${threeMonthsAgo.year}-${threeMonthsAgo.month.toString().padLeft(2, '0')}-${threeMonthsAgo.day}';
+  }
+
+  PassbookData getLastThreeMonthsData() {
+    /* DateFormat formatter = DateFormat('yyyy-MM-dd');
     String fromDate =
         formatter.format(DateTime.now().subtract(const Duration(days: 90)));
-    String toDate = formatter.format(DateTime.now());
+    String toDate = formatter.format(DateTime.now()); */
+
+    String fromDate = getFirstDayOfThreeMonthsAgo();
+    String toDate = getToDate();
 
     return PassbookData(
       passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
@@ -164,9 +195,9 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       'Content-Type': 'application/json',
     });
 
-    print('passbook: $apiUrl');
-    print('passbook: ${jsonEncode(requestBody)}');
-    print('passbook: ${jsonResponse.body}');
+    print('passbook 1: $apiUrl');
+    print('passbook 1: ${jsonEncode(requestBody)}');
+    print('passbook 1: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       if (isCustomDates!) {
@@ -259,7 +290,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
               child: Column(
                 children: [
                   dropdownSelector(),
-                  isTimePeriod ? datePickerSection() : const SizedBox(),
+                  if (isTimePeriod) datePickerSection(),
                   tabBar(),
                 ],
               ),
@@ -357,6 +388,74 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                 dateLabel: tr(LocaleKeys.from_date),
                 displaydate: displayFromDate,
                 onTap: () {
+                  final currentDate = DateTime.now();
+                  final firstDate = DateTime(currentDate.year - 100);
+                  launchFromDatePicker(context,
+                      firstYear: firstDate.year,
+                      lastYear: currentDate.year,
+                      initialSelectedMonth: currentDate.month,
+                      initialSelectedYear: currentDate.year);
+                },
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+                child: datePickerBox(
+              dateLabel: tr(LocaleKeys.to_date),
+              // dateLabel: 'To Date',
+              displaydate: displayToDate,
+              onTap: () {
+                final DateTime currentDate = DateTime.now();
+                final DateTime firstDate = DateTime(currentDate.year - 100);
+                launchToDatePicker(context,
+                    firstYear: firstDate.year,
+                    lastYear: currentDate.year,
+                    initialSelectedMonth: currentDate.month,
+                    initialSelectedYear: currentDate.year);
+              },
+            )),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 1,
+              child: CustomBtn(
+                  label: tr(LocaleKeys.submit),
+                  onPressed: () {
+                    if (selectedFromDate == null || selectedToDate == null) {
+                      return CommonStyles.errorDialog(context,
+                          errorMessage: tr(LocaleKeys.enter_Date));
+                    } else if (selectedToDate!.isBefore(selectedFromDate!)) {
+                      return CommonStyles.errorDialog(context,
+                          errorMessage: tr(LocaleKeys.datevalidation));
+                    } else {
+                      validateAndSubmit(
+                          CommonStyles.formatApiDate(selectedFromDate),
+                          CommonStyles.formatApiDate(selectedToDate));
+                    }
+                  }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+/* 
+  Widget datePickerSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: CommonStyles.whiteColor),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: datePickerBox(
+                dateLabel: tr(LocaleKeys.from_date),
+                displaydate: displayFromDate,
+                onTap: () {
                   final DateTime currentDate = DateTime.now();
                   final DateTime firstDate = DateTime(currentDate.year - 100);
                   launchFromDatePicker(
@@ -406,55 +505,51 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       ),
     );
   }
-
-  Future<void> launchFromDatePicker(BuildContext context,
-      {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
-    // final DateTime lastDate = DateTime.now();
-    // final DateTime firstDate = DateTime(lastDate.year - 100);
-    final DateTime? pickedDay = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDatePickerMode: DatePickerMode.day,
-    );
-    if (pickedDay != null) {
-      // Check if pickedDay is not in the future
+ */
+  Future<void> launchFromDatePicker(
+    BuildContext context, {
+    required int? firstYear,
+    required int? lastYear,
+    int? initialSelectedMonth,
+    int? initialSelectedYear,
+  }) async {
+    showMonthPicker(context,
+        firstYear: firstYear,
+        lastYear: lastYear,
+        initialSelectedMonth: initialSelectedMonth,
+        highlightColor: CommonStyles.appBarColor,
+        textColor: CommonStyles.whiteColor,
+        initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
+      print('$year-$month-01');
       setState(() {
-        selectedFromDate = pickedDay;
-        displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
+        displayFromDate = '1/$month/$year';
+        selectedFromDate = CommonStyles.parseDateString(displayFromDate);
+        // apiFromDate = '$year-$month-1';
       });
-    }
-    // return DateFormat('dd-MM-yyyy').format(selectedFromDate!);
+    });
   }
 
-  Future<void> launchToDatePicker(BuildContext context,
-      {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
-    // final DateTime lastDate = DateTime.now();
-    // final DateTime firstDate = DateTime(lastDate.year - 100);
-    final DateTime? pickedDay = await showDatePicker(
-      context: context,
-      // initialDate: DateTime.now(),
-      initialDate: initialDate ?? DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDatePickerMode: DatePickerMode.day,
-    );
-
-    if (pickedDay != null) {
-      // Check if pickedDay is not in the future
+  Future<void> launchToDatePicker(
+    BuildContext context, {
+    required int? firstYear,
+    required int? lastYear,
+    int? initialSelectedMonth,
+    int? initialSelectedYear,
+  }) async {
+    showMonthPicker(context,
+        firstYear: firstYear,
+        lastYear: lastYear,
+        highlightColor: CommonStyles.appBarColor,
+        textColor: CommonStyles.whiteColor,
+        initialSelectedMonth: initialSelectedMonth,
+        initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
+      print('$year-$month-01');
       setState(() {
-        selectedToDate = pickedDay;
-        displayToDate = DateFormat('dd/MM/yyyy').format(selectedToDate!);
+        displayToDate = '31/$month/$year';
+        selectedToDate = CommonStyles.parseDateString(displayToDate);
+        // apiFromDate = '$year-$month-1';
       });
-    }
-    // return DateFormat('dd-MM-yyyy').format(selectedToDate!);
+    });
   }
 
   Widget tabView() {
@@ -550,7 +645,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
             onChanged: (String? value) {
               setState(() {
                 selectedDropDownValue = value;
-                print('passbook selectedDropDownValue: $selectedDropDownValue');
+                print('selectedDropDownValue: $selectedDropDownValue');
                 /*   getCollectionAccordingToDropDownSelection(
                     dropdownItems.indexOf(selectedDropDownValue!)); */
 
@@ -568,7 +663,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                 filterVendorAndTransportDataBasedOnDates(
                     dropdownItems.indexOf(selectedDropDownValue!));
                 print(
-                    'passbook DropDownValue: ${dropdownItems.indexOf(selectedDropDownValue!)} | $selectedDropDownValue');
+                    'DropDownValue: ${dropdownItems.indexOf(selectedDropDownValue!)} | $selectedDropDownValue');
               });
             },
             dropdownStyleData: DropdownStyleData(

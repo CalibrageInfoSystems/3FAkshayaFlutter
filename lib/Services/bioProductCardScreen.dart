@@ -278,15 +278,15 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Note',
+            tr(LocaleKeys.noteWithOutColon),
             style: CommonStyles.txStyF14CpFF6,
           ),
           Text(
-            'If the products has not been picked with in 5 days of requested date, Your order will be cancelled.',
+            tr(LocaleKeys.note),
             style: CommonStyles.txStyF14CbFF6,
           ),
         ],
@@ -297,7 +297,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   Container dropdownWidget() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      // padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(10),
@@ -370,11 +370,11 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
               }
             });
           },
-          buttonStyleData: const ButtonStyleData(
-            height: 45,
-            width: double.infinity,
-            padding: EdgeInsets.only(left: 14, right: 14),
-          ),
+          // buttonStyleData: const ButtonStyleData(
+          //   height: 45,
+          //   width: double.infinity,
+          //   padding: EdgeInsets.only(left: 14, right: 14),
+          // ),
           iconStyleData: const IconStyleData(
             icon: Icon(
               Icons.arrow_drop_down_sharp,
@@ -400,7 +400,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
           ),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
-            padding: EdgeInsets.only(left: 20, right: 20),
+            // padding: EdgeInsets.only(left: 20, right: 20),
           ),
         ),
       ),

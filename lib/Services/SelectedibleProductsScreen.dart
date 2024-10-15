@@ -238,7 +238,8 @@ class _SelectEdibleProductsScreenState
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
-              if (fetchCardProducts().isNotEmpty) {
+              // if (fetchCardProducts().isNotEmpty) {
+              if (calculateTotalAmount() != 0) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -249,11 +250,13 @@ class _SelectEdibleProductsScreenState
                   ),
                 );
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
+                /* ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please add at least one product.'),
                   ),
-                );
+                ); */
+                CommonStyles.showCustomDialog(
+                    context, tr(LocaleKeys.select_product_toast));
               }
             },
           ),

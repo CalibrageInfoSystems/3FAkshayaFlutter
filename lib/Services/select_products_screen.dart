@@ -373,7 +373,6 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         ),
         menuItemStyleData: const MenuItemStyleData(
           height: 40,
-          // padding: EdgeInsets.only(left: 20, right: 20),
         ),
       ),
     );
@@ -426,8 +425,6 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
             onPressed: () {
               // if (fetchCardProducts().isNotEmpty) {
               if (calculateTotalAmount() != 0) {
-                print(
-                    'xxx: calculateTotalAmount().length: ${calculateTotalAmount()}');
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -438,11 +435,13 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   ),
                 );
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
+                /* ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please add at least one product.'),
                   ),
-                );
+                ); */
+                CommonStyles.showCustomDialog(
+                    context, tr(LocaleKeys.select_product_toast));
               }
             },
           ),

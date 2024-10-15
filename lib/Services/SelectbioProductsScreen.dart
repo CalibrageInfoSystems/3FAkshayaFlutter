@@ -299,11 +299,13 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
                   ),
                 );
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
+                /*  ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Please add at least one product.'),
                   ),
-                );
+                ); */
+                CommonStyles.showCustomDialog(
+                    context, tr(LocaleKeys.select_product_toast));
               }
             },
           ),

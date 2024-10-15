@@ -14,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+// import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FarmerPassbookScreen extends StatefulWidget {
@@ -145,27 +146,11 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                         },
                       ),
                       /*  CustomBtn(
-                        label: tr(LocaleKeys.next),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FarmerPassbookInfoScreen(
-                                accountHolderName:
-                                    farmerinfolist[0].accountHolderName,
-                                accountNumber: farmerinfolist[0].accountNumber,
-                                bankName: farmerinfolist[0].bankName,
-                                branchName: farmerinfolist[0].branchName,
-                                district: farmerinfolist[0].district,
-                                farmerCode: farmerinfolist[0].farmerCode,
-                                guardianName: farmerinfolist[0].guardianName,
-                                ifscCode: farmerinfolist[0].ifscCode,
-                                mandal: farmerinfolist[0].mandal,
-                                state: farmerinfolist[0].state,
-                                village: farmerinfolist[0].village,
-                              ),
-                            ),
-                          );
+                        label: tr(LocaleKeys.App_version),
+                        onPressed: () async {
+                          showMonthPicker(context, onSelected: (month, year) {
+                            print('Selected month: $month, year: $year');
+                          });
                         },
                       ), */
                     ],
@@ -178,6 +163,30 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
       ),
     );
   }
+/* 
+  DateTime? _selected;
+  Future<void> monthPicker({
+    required BuildContext context,
+  }) async {
+    final selected = await showMonthYearPicker(
+      context: context,
+      initialDate: _selected ?? DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime(2030),
+    );
+    // final selected = await showDatePicker(
+    //   context: context,
+    //   initialDate: _selected ?? DateTime.now(),
+    //   firstDate: DateTime(2019),
+    //   lastDate: DateTime(2022),
+    //   locale: localeObj,
+    // );
+    if (selected != null) {
+      setState(() {
+        _selected = selected;
+      });
+    }
+  } */
 
   Row infoBox({required String label, String? data}) {
     return Row(

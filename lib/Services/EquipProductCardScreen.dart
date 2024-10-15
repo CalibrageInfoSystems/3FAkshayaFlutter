@@ -203,7 +203,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                           updatedDate: DateTime.now().toIso8601String(),
                           godownId: widget.godown.id!,
                           paymentModeType: paymentmodeId,
-                         isImmediatePayment: null,
+                          isImmediatePayment: null,
                           fileName: null,
                           fileLocation: null,
                           fileExtension: null,
@@ -220,7 +220,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                           stateCode: Statecode,
                           stateName: StateName,
                         );
-                      //  print('CHECK BOX VALUE: $_isCheckboxChecked');
+                        //  print('CHECK BOX VALUE: $_isCheckboxChecked');
                         await submitFertilizerRequest(request);
                       } else {
                         CommonStyles.showCustomDialog(
@@ -277,22 +277,22 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   Container noteBox() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xfffefacb),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Note',
-            style: CommonStyles.text18orangeeader,
+            tr(LocaleKeys.noteWithOutColon),
+            style: CommonStyles.txStyF14CpFF6,
           ),
           Text(
-            'If the products has not been picked with in 5 days of requested date, Your order will be cancelled.',
-            style: CommonStyles.txSty_14b_f5,
+            tr(LocaleKeys.note),
+            style: CommonStyles.txStyF14CbFF6,
           ),
         ],
       ),

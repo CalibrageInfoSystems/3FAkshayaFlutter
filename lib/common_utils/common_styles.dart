@@ -457,10 +457,13 @@ class CommonStyles {
   }
 
   static void showCustomDialog(BuildContext context, String msg) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
+      barrierLabel: '',
+      barrierDismissible: true,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
         return Dialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0.0),
@@ -478,13 +481,12 @@ class CommonStyles {
                 Container(
                   padding: const EdgeInsets.all(10.0),
                   color: RedColor,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.close, color: Colors.white),
-                      Text('  Error', style: txSty_20w_fb),
-                      SizedBox(
-                          width: 24.0), // Spacer to align text in the center
+                      const Icon(Icons.close, color: Colors.white),
+                      const SizedBox(width: 12.0),
+                      Text(tr(LocaleKeys.error), style: txStyF20CwFF6),
                     ],
                   ),
                 ),
@@ -531,9 +533,9 @@ class CommonStyles {
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
-                        child: const Text(
-                          'OK',
-                          style: txSty_16b_fb,
+                        child: Text(
+                          tr(LocaleKeys.ok),
+                          style: txStyF16CbFF6,
                         ),
                       ),
                     ),
@@ -544,7 +546,32 @@ class CommonStyles {
           ),
         );
       },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack, // Customize the animation curve here
+            ),
+          ),
+          child: child,
+        );
+      },
     );
+  }
+
+  static DateTime? parseDateString(String? dateString) {
+    print('Parsing date: $dateString');
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+    try {
+      DateFormat dateFormat = DateFormat('d/M/yyyy');
+      return dateFormat.parse(dateString);
+    } catch (e) {
+      print("Error parsing date: $e");
+      return null;
+    }
   }
 
   static String? formatDate(String? date) {
