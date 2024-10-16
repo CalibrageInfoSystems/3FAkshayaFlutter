@@ -5,6 +5,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/important_places_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NurseriesContentScreen extends StatelessWidget {
@@ -246,27 +247,5 @@ class _NurseriesContentCardState extends State<NurseriesContentCard> {
         ),
       ],
     );
-  }
-
-  Future<void> launchMap(
-      {required double? latitude, required double? longitude}) async {
-    final Uri mapUrl = Uri.parse(
-        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
-
-    if (latitude != null || longitude != null) {
-      if (!await launchUrl(
-        mapUrl,
-        mode: LaunchMode.externalApplication,
-      )) {
-        throw Exception('Could not launch $mapUrl');
-      }
-    } else {
-      print('No latitude or longitude found');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr(LocaleKeys.location_notfount)),
-        ),
-      );
-    }
   }
 }

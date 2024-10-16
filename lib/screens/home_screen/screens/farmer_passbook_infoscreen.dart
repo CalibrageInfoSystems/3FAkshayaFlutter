@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 // import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
@@ -158,7 +159,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     }
 
     String fromDate = formatter.format(financialYearStart);
-    String toDate = formatter.format(now);
+    String toDate = getToDate();
 
     return PassbookData(
       passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
@@ -197,7 +198,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
 
     print('passbook 1: $apiUrl');
     print('passbook 1: ${jsonEncode(requestBody)}');
-    print('passbook 1: ${jsonResponse.body}');
+    // print('passbook 1: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       if (isCustomDates!) {
@@ -243,7 +244,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
 
     print('passbook 2: $apiUrl');
     print('passbook 2: ${jsonEncode(requestBody)}');
-    print('passbook 2: ${jsonResponse.body}');
+    // print('passbook 2: ${jsonResponse.body}');
 
     if (jsonResponse.statusCode == 200) {
       if (isCustomDates!) {
@@ -372,6 +373,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     );
   }
 
+//MARK: datePickerSection
   Widget datePickerSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
@@ -427,6 +429,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                       return CommonStyles.errorDialog(context,
                           errorMessage: tr(LocaleKeys.datevalidation));
                     } else {
+                      //MARK: Submit Btn
                       validateAndSubmit(
                           CommonStyles.formatApiDate(selectedFromDate),
                           CommonStyles.formatApiDate(selectedToDate));
@@ -520,15 +523,43 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         highlightColor: CommonStyles.appBarColor,
         textColor: CommonStyles.whiteColor,
         initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
-      print('$year-$month-01');
+      /*  setState(() {
+        final selectedDate = '1/$month/$year';
+        final formatDateTime = CommonStyles.parseDateString(selectedDate);
+        // if (formatDateTime!.isBefore(DateTime.now())) {
+        if (DateTime.now().isBefore(formatDateTime!)) {
+          return showToastMsg(tr(LocaleKeys.unableselect));
+        }
+        displayFromDate = selectedDate;
+        selectedFromDate = formatDateTime;
+      }); */
       setState(() {
-        displayFromDate = '1/$month/$year';
-        selectedFromDate = CommonStyles.parseDateString(displayFromDate);
-        // apiFromDate = '$year-$month-1';
+        final selectedDate = '1/$month/$year';
+        final formatDateTime = CommonStyles.parseDateString(selectedDate);
+
+        if (formatDateTime != null) {
+          if (formatDateTime.isBefore(DateTime.now()) ||
+              formatDateTime.isAtSameMomentAs(DateTime.now())) {
+            displayFromDate = selectedDate;
+            selectedFromDate = formatDateTime;
+          } else {
+            showToastMsg(tr(LocaleKeys.unableselect));
+          }
+        }
       });
     });
   }
 
+  void showToastMsg(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+    );
+  }
+
+/* 
   Future<void> launchToDatePicker(
     BuildContext context, {
     required int? firstYear,
@@ -543,13 +574,71 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         textColor: CommonStyles.whiteColor,
         initialSelectedMonth: initialSelectedMonth,
         initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
-      print('$year-$month-01');
       setState(() {
         displayToDate = '31/$month/$year';
         selectedToDate = CommonStyles.parseDateString(displayToDate);
+        print('custom Todate: $displayToDate');
+        print(
+            'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
         // apiFromDate = '$year-$month-1';
       });
     });
+  }
+ */
+  Future<void> launchToDatePicker(
+    BuildContext context, {
+    required int? firstYear,
+    required int? lastYear,
+    int? initialSelectedMonth,
+    int? initialSelectedYear,
+  }) async {
+    showMonthPicker(
+      context,
+      firstYear: firstYear,
+      lastYear: lastYear,
+      highlightColor: CommonStyles.appBarColor,
+      textColor: CommonStyles.whiteColor,
+      initialSelectedMonth: initialSelectedMonth,
+      initialSelectedYear: initialSelectedYear,
+      onSelected: (month, year) {
+        /* setState(() {
+          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
+
+          displayToDate =
+              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
+
+          selectedToDate = CommonStyles.parseDateString(displayToDate);
+
+          print(
+              'custom Todate: $displayToDate'); // Will print the last day of the selected month
+          print(
+              'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
+        }); */
+        setState(() {
+          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
+          final selectedDate =
+              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
+          final formatDateTime = CommonStyles.parseDateString(selectedDate);
+
+          if (formatDateTime != null) {
+            if (formatDateTime.isBefore(DateTime.now()) ||
+                formatDateTime.isAtSameMomentAs(DateTime.now())) {
+              displayToDate = selectedDate;
+              selectedToDate = formatDateTime;
+            } else {
+              showToastMsg(tr(LocaleKeys.unableselect));
+            }
+          }
+        });
+      },
+    );
+  }
+
+  DateTime _getLastDayOfMonth(int year, int month) {
+    if (month == 12) {
+      return DateTime(year + 1, 1, 0);
+    }
+    return DateTime(year, month + 1, 0);
   }
 
   Widget tabView() {
@@ -585,105 +674,102 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   Widget dropdownSelector() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
-      child: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.only(right: 15),
-
-        // padding: const EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CommonStyles.whiteColor),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2<String>(
-            iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.white,
-              ),
+    return Container(
+      alignment: Alignment.center,
+      // padding: const EdgeInsets.only(right: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
+      // padding: const EdgeInsets.symmetric(vertical: 15),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: CommonStyles.whiteColor),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          iconStyleData: const IconStyleData(
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.white,
             ),
-            isExpanded: true,
-            hint: const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Select Item',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
+          ),
+          isExpanded: true,
+          hint: const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Select Item',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            items: dropdownItems
-                .map((String item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Center(
-                        child: Text(
-                          item,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
+          ),
+          items: dropdownItems
+              .map((String item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Center(
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ))
-                .toList(),
-            value: selectedDropDownValue,
-            onChanged: (String? value) {
-              setState(() {
-                selectedDropDownValue = value;
-                print('selectedDropDownValue: $selectedDropDownValue');
-                /*   getCollectionAccordingToDropDownSelection(
-                    dropdownItems.indexOf(selectedDropDownValue!)); */
+                    ),
+                  ))
+              .toList(),
+          value: selectedDropDownValue,
+          onChanged: (String? value) {
+            setState(() {
+              selectedDropDownValue = value;
+              print('selectedDropDownValue: $selectedDropDownValue');
+              /*   getCollectionAccordingToDropDownSelection(
+                  dropdownItems.indexOf(selectedDropDownValue!)); */
 
-                if (dropdownItems.indexOf(selectedDropDownValue!) == 3) {
-                  setState(() {
-                    isTimePeriod = true;
-                  });
-                } else {
-                  setState(() {
-                    isTimePeriod = false;
-                    displayFromDate = null;
-                    displayToDate = null;
-                  });
-                }
-                filterVendorAndTransportDataBasedOnDates(
-                    dropdownItems.indexOf(selectedDropDownValue!));
-                print(
-                    'DropDownValue: ${dropdownItems.indexOf(selectedDropDownValue!)} | $selectedDropDownValue');
-              });
-            },
-            dropdownStyleData: DropdownStyleData(
-              decoration: const BoxDecoration(
-                color: CommonStyles.dropdownListBgColor,
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12)),
-              ),
-              offset: const Offset(0, 0),
-              scrollbarTheme: ScrollbarThemeData(
-                radius: const Radius.circular(40),
-                thickness: WidgetStateProperty.all<double>(6),
-                thumbVisibility: WidgetStateProperty.all<bool>(true),
-              ),
+              if (dropdownItems.indexOf(selectedDropDownValue!) == 3) {
+                setState(() {
+                  isTimePeriod = true;
+                });
+              } else {
+                setState(() {
+                  isTimePeriod = false;
+                  displayFromDate = null;
+                  displayToDate = null;
+                });
+              }
+              filterVendorAndTransportDataBasedOnDates(
+                  dropdownItems.indexOf(selectedDropDownValue!));
+              print(
+                  'DropDownValue: ${dropdownItems.indexOf(selectedDropDownValue!)} | $selectedDropDownValue');
+            });
+          },
+          dropdownStyleData: DropdownStyleData(
+            decoration: const BoxDecoration(
+              color: CommonStyles.dropdownListBgColor,
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
             ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 40,
-              padding: EdgeInsets.only(left: 20, right: 20),
+            offset: const Offset(0, 0),
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(40),
+              thickness: WidgetStateProperty.all<double>(6),
+              thumbVisibility: WidgetStateProperty.all<bool>(true),
             ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40,
+            padding: EdgeInsets.only(left: 20, right: 20),
           ),
         ),
       ),

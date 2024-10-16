@@ -1,6 +1,7 @@
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Constants {
@@ -37,10 +38,11 @@ class Constants {
         throw Exception('Could not launch $mapUrl');
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr(LocaleKeys.location_notfount)),
-        ),
+      Fluttertoast.showToast(
+        msg: tr(LocaleKeys.location_notfount),
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
       );
     }
   }

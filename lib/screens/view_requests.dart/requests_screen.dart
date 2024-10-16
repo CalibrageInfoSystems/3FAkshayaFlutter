@@ -125,8 +125,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
         ),
         title: Text(
           getServiceName(serviceTypeId),
-          style: CommonStyles.txSty_14b_f5.copyWith(
-              color: CommonStyles.blackColor, fontWeight: FontWeight.w600),
+          style: CommonStyles.txStyF16CbFF6,
         ),
         onTap: () {
           switch (serviceTypeId) {
@@ -228,7 +227,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
       case 10: // Pole Request
         return tr(LocaleKeys.pole);
       case 11: // Labour Request
-        return tr(LocaleKeys.select_labour_type);
+        return tr(LocaleKeys.lab_req);
       case 12: // Fertilizer Request
         return tr(LocaleKeys.fertilizer);
       case 13: // QuickPay Request
