@@ -46,6 +46,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   bool isharvestingamount = false;
   bool ispurningamount = false;
   double? harvestCost;
+  double? servicePercentage;
   double? prunningCost;
   double? pruningWithIntercropCost;
   double? harvestingWithIntercropCost;
@@ -446,6 +447,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         child: plotDetailsBox(
                           label: tr(LocaleKeys.harv_amount),
                           data: "${harvestCost ?? 0.0}",
+                          // data: "${harvestCost ?? 0.0}",
                         ),
                       ),
                       Visibility(
@@ -459,6 +461,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
                               data: '${prunningCost ?? 0.0}',
+                              // data: '${prunningCost ?? 0.0}',
                             ),
                           ],
                         ),
@@ -1051,10 +1054,20 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         if (responseData['result'] != null) {
           var result = responseData['result'];
 
-          // Extract harvestCost and prunningCost
+          //MARK: Here
           setState(() {
-            harvestCost = result['harvestCost'];
-            prunningCost = result['prunningCost'];
+            final harvestCostValue = result['harvestCost'];
+            servicePercentage =
+                (result['servicePercentage'] * harvestCostValue) / 100;
+
+            harvestCost =
+                (servicePercentage! + harvestCostValue).roundToDouble();
+
+            final prunningCostValue = result['prunningCost'];
+            servicePercentage =
+                (result['servicePercentage'] * prunningCostValue) / 100;
+            prunningCost =
+                (servicePercentage! + prunningCostValue).roundToDouble();
             pruningWithIntercropCost = result['pruningWithIntercropCost'];
             harvestingWithIntercropCost = result['harvestingWithIntercropCost'];
           });

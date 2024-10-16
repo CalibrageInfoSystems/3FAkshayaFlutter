@@ -95,7 +95,7 @@ class _VisitRequestState extends State<VisitRequest> {
     if (selectedTypeOfIssueId == null) {
       CommonStyles.errorDialog(
         context,
-        errorMessage: 'Please select type of issue',
+        errorMessage: tr(LocaleKeys.valid_issue_type),
       );
     } else if (selectedTypeOfIssueId == 35 && commentsController.text.isEmpty) {
       CommonStyles.errorDialog(
@@ -115,7 +115,7 @@ class _VisitRequestState extends State<VisitRequest> {
         isImageList = false;
       });
 
-       submitVisitRequest(
+      submitVisitRequest(
         plot: widget.plot,
         reason: selectedTypeOfIssue,
         comments:

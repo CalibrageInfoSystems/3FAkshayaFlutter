@@ -74,7 +74,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   }) async {
     // Define the date formatter for the API request
     DateFormat formatter = DateFormat('yyyy-MM-dd');
-    toDate ??= formatter.format(DateTime.now()); // Use today's date if toDate is null
+    toDate ??=
+        formatter.format(DateTime.now()); // Use today's date if toDate is null
 
     // Get the farmer code from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,10 +110,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       // Check if the response contains results
       if (response['result'] != null) {
         List<dynamic> collectionDataList = response['result']['collectioData'];
-        Map<String, dynamic> collectionCountMap = response['result']['collectionCount'][0];
+        Map<String, dynamic> collectionCountMap =
+            response['result']['collectionCount'][0];
 
         // Create instances of CollectionCount and CollectionData
-        CollectionCount collectionCount = CollectionCount.fromJson(collectionCountMap);
+        CollectionCount collectionCount =
+            CollectionCount.fromJson(collectionCountMap);
         List<CollectionData> collectionData = collectionDataList
             .map((item) => CollectionData.fromJson(item))
             .toList();
@@ -144,7 +147,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         });
       }
 
-      throw Exception('Request failed with status: ${jsonResponse.statusCode}.');
+      throw Exception(
+          'Request failed with status: ${jsonResponse.statusCode}.');
     }
   }
 
@@ -377,9 +381,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   },
                 );
               } else {
-                return  Center(
+                return Center(
                   child: Text(
-                   tr(LocaleKeys.no_collections_found),
+                    tr(LocaleKeys.no_collections_found),
                     style: CommonStyles.txSty_16p_fb,
                   ),
                 );
@@ -673,10 +677,13 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       initialDate: selectedFromDate);
                 },
               )),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
           Expanded(
             flex: 4,
             child: CustomBtn(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                ),
                 label: tr(LocaleKeys.submit),
                 onPressed: () {
                   validateAndSubmit(selectedFromDate, selectedToDate);
@@ -842,9 +849,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       return _showErrorDialog(tr(LocaleKeys.datevalidation));
     }
     apiCollectionData = getCollectionData(
-      fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
-      toDate: DateFormat('yyyy-MM-dd').format(selectedToDate),isCustomDates: false
-    );
+        fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
+        toDate: DateFormat('yyyy-MM-dd').format(selectedToDate),
+        isCustomDates: false);
   }
 
   Widget errorDialogContent({required String errorMessage}) {

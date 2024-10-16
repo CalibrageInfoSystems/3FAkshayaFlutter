@@ -15,6 +15,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,11 +36,27 @@ class _MainScreenPageState extends State<MainScreen> {
 
   late Future<FarmerModel> farmerDetails;
 
+  String _appVersion = '';
+
   @override
   void initState() {
     super.initState();
     farmerDetails = getFarmerInfoFromSharedPrefs();
-    print('_selectedIndex==$_selectedIndex');
+    _getAppVersion();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    EasyLocalization.of(context)?.locale;
+  }
+
+  Future<void> _getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    setState(() {
+      _appVersion = '${packageInfo.version} (${packageInfo.buildNumber})';
+    });
   }
 
   @override
@@ -296,10 +313,12 @@ class _MainScreenPageState extends State<MainScreen> {
                         ],
                       ),
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('App Version 1.0.1',
+                        Text(tr(LocaleKeys.App_version),
+                            style: CommonStyles.txStyF14CwFF6),
+                        Text(' $_appVersion ',
                             style: CommonStyles.txStyF14CwFF6),
                       ],
                     ),
