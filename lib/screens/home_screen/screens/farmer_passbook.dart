@@ -163,30 +163,6 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
       ),
     );
   }
-/* 
-  DateTime? _selected;
-  Future<void> monthPicker({
-    required BuildContext context,
-  }) async {
-    final selected = await showMonthYearPicker(
-      context: context,
-      initialDate: _selected ?? DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime(2030),
-    );
-    // final selected = await showDatePicker(
-    //   context: context,
-    //   initialDate: _selected ?? DateTime.now(),
-    //   firstDate: DateTime(2019),
-    //   lastDate: DateTime(2022),
-    //   locale: localeObj,
-    // );
-    if (selected != null) {
-      setState(() {
-        _selected = selected;
-      });
-    }
-  } */
 
   Row infoBox({required String label, String? data}) {
     return Row(

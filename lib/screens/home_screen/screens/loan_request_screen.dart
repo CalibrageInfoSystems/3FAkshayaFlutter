@@ -54,7 +54,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       }
     } else {
       return CommonStyles.errorDialog(context,
-          errorMessage: 'Please check your internet connection.');
+          errorMessage: tr(LocaleKeys.Internet));
     }
   }
 
@@ -205,33 +205,44 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                       focusedBorder: outlineInputBorder(),
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
-                      Checkbox(
-                        value: _isAgree,
-                        activeColor: CommonStyles.primaryTextColor,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isAgree = value!;
-                            if (_isAgree) {
-                              showTermsAndConditionsPopup();
-                            }
-                          });
-                        },
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: Checkbox(
+                          value: _isAgree,
+                          activeColor: CommonStyles.primaryTextColor,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isAgree = value!;
+                              if (_isAgree) {
+                                showTermsAndConditionsPopup();
+                              }
+                            });
+                          },
+                        ),
                       ),
-                      RichText(
-                        text: TextSpan(
-                          text: tr(LocaleKeys.i_have_agree),
-                          style: CommonStyles.txStyF14CwFF6,
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: ' ${tr(LocaleKeys.terms_conditionsss)}',
-                              style: CommonStyles.txStyF14CpFF6.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: CommonStyles.btnBorderColor),
-                            ),
-                          ],
+                      const SizedBox(width: 5),
+                      Flexible(
+                        child: RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: tr(LocaleKeys.i_have_agree),
+                                style: CommonStyles.txStyF14CwFF6,
+                              ),
+                              TextSpan(
+                                text: ' ${tr(LocaleKeys.terms_conditionsss)}',
+                                style: CommonStyles.txStyF14CpFF6.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: CommonStyles.primaryTextColor),
+                              ),
+                            ],
+                          ),
+                          softWrap: true,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
                     ],
@@ -241,7 +252,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomBtn(
-                        label: 'Submit Request',
+                        label: tr(LocaleKeys.submit_req),
                         onPressed: submitForm,
                         height: 50,
                         borderRadius: 16,

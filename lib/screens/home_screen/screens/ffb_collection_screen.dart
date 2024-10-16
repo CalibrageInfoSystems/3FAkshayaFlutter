@@ -614,6 +614,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       child: Row(
         children: [
           Expanded(
+            flex: 3,
             child: datePickerBox(
               dateLabel: tr(LocaleKeys.from_date),
               displaydate: displayFromDate,
@@ -630,23 +631,24 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           ),
           const SizedBox(width: 10),
           Expanded(
+              flex: 3,
               child: datePickerBox(
-            dateLabel: tr(LocaleKeys.to_date),
-            // dateLabel: 'To Date',
-            displaydate: displayToDate,
-            onTap: () {
-              final DateTime currentDate = DateTime.now();
-              final DateTime firstDate = DateTime(currentDate.year - 100);
-              launchToDatePicker(context,
-                  firstDate: firstDate,
-                  // firstDate: selectedFromDate ?? firstDate,
-                  lastDate: currentDate,
-                  initialDate: selectedFromDate);
-            },
-          )),
+                dateLabel: tr(LocaleKeys.to_date),
+                // dateLabel: 'To Date',
+                displaydate: displayToDate,
+                onTap: () {
+                  final DateTime currentDate = DateTime.now();
+                  final DateTime firstDate = DateTime(currentDate.year - 100);
+                  launchToDatePicker(context,
+                      firstDate: firstDate,
+                      // firstDate: selectedFromDate ?? firstDate,
+                      lastDate: currentDate,
+                      initialDate: selectedFromDate);
+                },
+              )),
           const SizedBox(width: 20),
           Expanded(
-            flex: 1,
+            flex: 4,
             child: CustomBtn(
                 label: tr(LocaleKeys.submit),
                 onPressed: () {

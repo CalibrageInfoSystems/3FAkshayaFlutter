@@ -699,50 +699,69 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           style: CommonStyles.txStyF14CwFF6,
                         ),
                       ),
+                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Checkbox(
-                            value: _isagreed,
-                            onChanged: (value) {
-                              setState(() {
-                                _isagreed = !_isagreed;
-                                if (_isagreed) {
-                                  showRateChartDialog(context);
+                          SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: Checkbox(
+                              value: _isagreed,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isagreed = !_isagreed;
+                                  if (_isagreed) {
+                                    showRateChartDialog(context);
+                                  }
+                                });
+                              },
+                              checkColor: Colors.grey,
+                              fillColor: WidgetStateProperty.resolveWith<Color>(
+                                  (states) {
+                                if (states.contains(WidgetState.selected)) {
+                                  return Colors.white;
                                 }
-                              });
-                            },
-                            checkColor: Colors.grey,
-                            fillColor: WidgetStateProperty.resolveWith<Color>(
-                                (states) {
-                              if (states.contains(WidgetState.selected)) {
-                                return Colors.white;
-                              }
-                              return Colors.transparent;
-                            }),
-                            side: const BorderSide(
-                              color: Colors.black,
-                              width: 2,
+                                return Colors.transparent;
+                              }),
+                              side: const BorderSide(
+                                color: Colors.black,
+                                width: 2,
+                              ),
                             ),
                           ),
-                          Text(
-                            tr(LocaleKeys.i_have_agree),
-                            style: CommonStyles.txStyF14CwFF6,
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Text(
+                          /*  Text(
                             tr(LocaleKeys.terms_conditions),
                             style: CommonStyles.txStyF14CpFF6.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: CommonStyles.primaryTextColor),
+                          ), */
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: RichText(
+                              text: TextSpan(
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: tr(LocaleKeys.i_have_agree),
+                                    style: CommonStyles.txStyF14CwFF6,
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '  ${tr(LocaleKeys.terms_conditions)}',
+                                    style: CommonStyles.txStyF14CpFF6.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: CommonStyles.primaryTextColor),
+                                  ),
+                                ],
+                              ),
+                              softWrap: true,
+                              overflow: TextOverflow.visible,
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 8,
-                      ),
+                      const SizedBox(height: 10),
                       submitBtn(context, tr(LocaleKeys.submit_req)),
                     ],
                   ),
