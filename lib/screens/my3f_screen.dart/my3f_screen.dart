@@ -34,6 +34,12 @@ class _My3fScreenState extends State<My3fScreen> {
     importantData = getImportantContactsAndPlaces();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    EasyLocalization.of(context)?.locale;
+  }
+
   Future<Map<String, Object>> getImportantContactsAndPlaces() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
@@ -145,7 +151,14 @@ class _My3fScreenState extends State<My3fScreen> {
           ),
           tabs: [
             Tab(
-              text: tr(LocaleKeys.basic_info),
+              child: Text(
+                tr(LocaleKeys.basic_info),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.visible,
+                style: const TextStyle(
+                  height: 1.2,
+                ),
+              ),
             ),
             Tab(
               child: Text(
