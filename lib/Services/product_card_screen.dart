@@ -400,8 +400,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               _selectedPaymentType = value!;
               if (_selectedPaymentType != -1) {
                 paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
-                final paymentmodeName =
-                    paymentModes[_selectedPaymentType]['desc'];
+                final paymentmodeName = paymentModes[_selectedPaymentType]['desc'];
 
                 print('setState paymentmodeId: $paymentmodeId');
 
@@ -598,13 +597,13 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 payableAmount = totalProductCostGst - subsidyAmount;
                 //  payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
               } else {
-                payableAmount = totalProductCostGst;
-                // payableAmount = totalProductCostGst + totalTransportCostwithgst;
+             //   payableAmount = totalProductCostGst;
+                payableAmount = totalProductCostGst + totalTransportCostwithgst;
               }
             } else {
               subsidyAmount = 0.0;
-              payableAmount = totalProductCostGst;
-              // payableAmount = totalProductCostGst + totalTransportCostwithgst;
+          //    payableAmount = totalProductCostGst;
+              payableAmount = totalProductCostGst + totalTransportCostwithgst;
             }
 
             print("Subsidy Amount: $subsidyAmount");

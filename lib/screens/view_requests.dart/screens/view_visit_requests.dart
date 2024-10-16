@@ -339,12 +339,14 @@ class _MoreDetailsState extends State<MoreDetails> {
   void initState() {
     super.initState();
     if (widget.audioFilePath.isNotEmpty) {
+      print(
+          'Audio path: ${widget.audioFilePath[0].fileLocation} ');
       _initAudio();
     }
     print(
         'camp: ${widget.imagesList.length} | ${widget.audioFilePath.length} ');
   }
-/* 
+/*
   Future<void> _initAudio() async {
     await _audioPlayer.setSourceUrl(widget.audioFilePath[0].fileLocation!);
     _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
@@ -376,9 +378,16 @@ class _MoreDetailsState extends State<MoreDetails> {
 
   Future<void> _initAudio() async {
     try {
-      await _audioPlayer.setSource(UrlSource(
-          'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'));
-      // .setSource(UrlSource(widget.audioFilePath[0].fileLocation!));
+      // Ensure the file path is sanitized by replacing backslashes with forward slashes
+      String sanitizedUrl = widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
+
+      // Log the sanitized URL for debugging purposes
+      print('Sanitized audio URL: $sanitizedUrl');
+
+      // Set the audio source with the sanitized URL
+      await _audioPlayer.setSource(UrlSource(sanitizedUrl));
+
+      // Listen to duration changes
       _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
         if (mounted) {
           setState(() {
@@ -387,6 +396,7 @@ class _MoreDetailsState extends State<MoreDetails> {
         }
       });
 
+      // Listen to position changes
       _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
         if (mounted) {
           setState(() {
@@ -395,6 +405,7 @@ class _MoreDetailsState extends State<MoreDetails> {
         }
       });
 
+      // Listen for when the audio completes
       _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
         if (mounted) {
           setState(() {
@@ -408,26 +419,16 @@ class _MoreDetailsState extends State<MoreDetails> {
     }
   }
 
-  /* Future<void> playOrPause() async {
-    if (isPlaying) {
-      await _audioPlayer.pause();
-    } else {
-      await _audioPlayer.play(UrlSource(widget.audioFilePath[0].fileLocation!));
-    }
-    if (mounted) {
-      setState(() {
-        isPlaying = !isPlaying;
-      });
-    }
-  } */
+
   Future<void> playOrPause() async {
     try {
       if (isPlaying) {
         await _audioPlayer.pause();
       } else {
-        await _audioPlayer.play(UrlSource(
-            'https://commondatastorage.googleapis.com/codeskulptor-assets/Evillaugh.ogg'));
-        // .play(UrlSource(widget.audioFilePath[0].fileLocation!));
+        // Replace backslashes with forward slashes
+        String sanitizedUrl = widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/');
+
+        await _audioPlayer.play(UrlSource(sanitizedUrl));
       }
       if (mounted) {
         setState(() {
@@ -438,6 +439,7 @@ class _MoreDetailsState extends State<MoreDetails> {
       print('Error playing audio: $e');
     }
   }
+
 
   @override
   void dispose() {

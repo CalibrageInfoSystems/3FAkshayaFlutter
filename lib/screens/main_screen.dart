@@ -213,12 +213,12 @@ class _MainScreenPageState extends State<MainScreen> {
                         ),
                       ],
                     ),
-                    if (farmer.mobileNumber != null)
+                    if (farmer.contactNumber != null)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '${farmer.mobileNumber}',
+                            '${farmer.contactNumber}',
                             style: CommonStyles.txStyF14CwFF6,
                           ),
                         ],

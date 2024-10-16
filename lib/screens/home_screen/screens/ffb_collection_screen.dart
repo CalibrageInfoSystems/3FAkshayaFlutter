@@ -67,57 +67,84 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     return getCollectionData(fromDate: fromDate);
   }
 
-  Future<CollectionResponse> getCollectionData(
-      {required String fromDate, String? toDate}) async {
-    // const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Collection';
+  Future<CollectionResponse> getCollectionData({
+    required String fromDate,
+    String? toDate,
+    bool isCustomDates = true, // Default to true if not provided
+  }) async {
+    // Define the date formatter for the API request
     DateFormat formatter = DateFormat('yyyy-MM-dd');
-    toDate ??= formatter.format(DateTime.now());
+    toDate ??= formatter.format(DateTime.now()); // Use today's date if toDate is null
 
+    // Get the farmer code from SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl = baseUrl + getcollection;
+
+    // Prepare the request body
     final requestBody = {
       "farmerCode": farmerCode,
-      "fromDate": fromDate, // "2022-07-29",
-      "toDate": toDate
+      "fromDate": fromDate,
+      "toDate": toDate,
     };
-    final jsonResponse = await http
-        .post(Uri.parse(apiUrl), body: json.encode(requestBody), headers: {
-      'Content-Type': 'application/json',
-    });
 
+    // Send the HTTP POST request
+    final jsonResponse = await http.post(
+      Uri.parse(apiUrl),
+      body: json.encode(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    // Debugging output
     print('ffb getCollectionData: $apiUrl');
     print('ffb getCollectionData: ${json.encode(requestBody)}');
     print('ffb getCollectionData: ${jsonResponse.body}');
 
+    // Check for a successful response
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = json.decode(jsonResponse.body);
+
+      // Check if the response contains results
       if (response['result'] != null) {
         List<dynamic> collectionDataList = response['result']['collectioData'];
-        Map<String, dynamic> collectionCountMap =
-            response['result']['collectionCount'][0];
+        Map<String, dynamic> collectionCountMap = response['result']['collectionCount'][0];
 
-        CollectionCount collectionCount =
-            CollectionCount.fromJson(collectionCountMap);
+        // Create instances of CollectionCount and CollectionData
+        CollectionCount collectionCount = CollectionCount.fromJson(collectionCountMap);
         List<CollectionData> collectionData = collectionDataList
             .map((item) => CollectionData.fromJson(item))
             .toList();
+
+        // Update the state variable based on the isCustomDates flag
+        if (isCustomDates) {
+          setState(() {
+            isTimePeriod = false; // Ensure the state is updated correctly
+          });
+        }
+
+        return CollectionResponse(collectionCount, collectionData);
+      }
+
+      // If no results, update the state variable as well
+      if (isCustomDates) {
         setState(() {
           isTimePeriod = false;
         });
-        return CollectionResponse(collectionCount, collectionData);
       }
-      setState(() {
-        isTimePeriod = false;
-      });
-      // throw Exception('No data found.');
+
+      // Return a response with null values
       return CollectionResponse(null, null);
     } else {
-      setState(() {
-        isTimePeriod = false;
-      });
-      throw Exception(
-          'Request failed with status: ${jsonResponse.statusCode}.');
+      // Handle non-200 responses
+      if (isCustomDates) {
+        setState(() {
+          isTimePeriod = false;
+        });
+      }
+
+      throw Exception('Request failed with status: ${jsonResponse.statusCode}.');
     }
   }
 
@@ -350,9 +377,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   },
                 );
               } else {
-                return const Center(
+                return  Center(
                   child: Text(
-                    'No Collections Available',
+                   tr(LocaleKeys.no_collections_found),
                     style: CommonStyles.txSty_16p_fb,
                   ),
                 );
@@ -816,7 +843,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     }
     apiCollectionData = getCollectionData(
       fromDate: DateFormat('yyyy-MM-dd').format(selectedFromDate),
-      toDate: DateFormat('yyyy-MM-dd').format(selectedToDate),
+      toDate: DateFormat('yyyy-MM-dd').format(selectedToDate),isCustomDates: false
     );
   }
 

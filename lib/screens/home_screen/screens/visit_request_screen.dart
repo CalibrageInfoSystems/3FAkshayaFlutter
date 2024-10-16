@@ -115,7 +115,7 @@ class _VisitRequestState extends State<VisitRequest> {
         isImageList = false;
       });
 
-      submitVisitRequest(
+       submitVisitRequest(
         plot: widget.plot,
         reason: selectedTypeOfIssue,
         comments:
