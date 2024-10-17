@@ -538,13 +538,13 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                 child: TextFormField(
                                   controller: _dateController,
                                   style: CommonStyles.txStyF14CwFF6,
-                                  decoration: const InputDecoration(
-                                    hintText: 'Preferred Date',
+                                  decoration: InputDecoration(
+                                    hintText: tr(LocaleKeys.slecteddate),
                                     hintStyle: CommonStyles.txStyF14CwFF6,
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 16.0, vertical: 10.0),
                                     // Adjust padding as needed
-                                    suffixIcon: Padding(
+                                    suffixIcon: const Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Icon(
                                         Icons.calendar_today,
@@ -1203,10 +1203,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       alignment: Alignment.center, // Center the title
                       padding: const EdgeInsets.all(
                           8), // Optional padding for better spacing
-                      child: const Text(
-                        'Rate Chart - Terms & Conditions',
-                        style: TextStyle(
-                          fontSize: 18,
+                      child: Text(
+                        tr(LocaleKeys.terms_conditions),
+                        style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white, // Text color
                         ),
@@ -1234,13 +1234,17 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             TableRow(
                               //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
                               children: [
-                                tableHeader('Age'),
-                                tableHeader('Pruning Amount/Tree (Rs)'),
+                                tableHeader(tr(LocaleKeys.measurement)),
+                                tableHeader(tr(LocaleKeys.pru_amount)),
+                                tableHeader(tr(LocaleKeys.harv_amount)),
+                                tableHeader(tr(LocaleKeys.intercrop_prunning)),
+                                tableHeader(tr(LocaleKeys.harv_intercrop)),
+                                /* tableHeader('Pruning Amount/Tree (Rs)'),
                                 tableHeader('Harvesting Amount/Ton (Rs)'),
                                 tableHeader(
                                     'Pruning with Cocoa Intercrop/Tree (Rs)'),
                                 tableHeader(
-                                    'Harvesting with Cocoa Intercrop/Ton (Rs)'),
+                                    'Harvesting with Cocoa Intercrop/Ton (Rs)'), */
                               ],
                             ),
                           ],

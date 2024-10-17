@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
@@ -280,7 +282,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                     CommonStyles.appBarColor,
                     Color.fromARGB(255, 238, 145, 74),
                     CommonStyles.gradientColor2,
-                    /*  CommonStyles.appBarColor,
+                    /*  CommonStyles.appBarColor, 
                     CommonStyles.gradientColor1,
                     CommonStyles.gradientColor2, */
                   ],
@@ -509,6 +511,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     );
   }
  */
+
   Future<void> launchFromDatePicker(
     BuildContext context, {
     required int? firstYear,
@@ -523,16 +526,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         highlightColor: CommonStyles.appBarColor,
         textColor: CommonStyles.whiteColor,
         initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
-      /*  setState(() {
-        final selectedDate = '1/$month/$year';
-        final formatDateTime = CommonStyles.parseDateString(selectedDate);
-        // if (formatDateTime!.isBefore(DateTime.now())) {
-        if (DateTime.now().isBefore(formatDateTime!)) {
-          return showToastMsg(tr(LocaleKeys.unableselect));
-        }
-        displayFromDate = selectedDate;
-        selectedFromDate = formatDateTime;
-      }); */
       setState(() {
         final selectedDate = '1/$month/$year';
         final formatDateTime = CommonStyles.parseDateString(selectedDate);
@@ -676,9 +669,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   Widget dropdownSelector() {
     return Container(
       alignment: Alignment.center,
-      // padding: const EdgeInsets.only(right: 15),
       margin: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
-      // padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: CommonStyles.whiteColor),
@@ -732,25 +723,16 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
           onChanged: (String? value) {
             setState(() {
               selectedDropDownValue = value;
-              print('selectedDropDownValue: $selectedDropDownValue');
-              /*   getCollectionAccordingToDropDownSelection(
-                  dropdownItems.indexOf(selectedDropDownValue!)); */
 
               if (dropdownItems.indexOf(selectedDropDownValue!) == 3) {
-                setState(() {
-                  isTimePeriod = true;
-                });
+                isTimePeriod = true;
               } else {
-                setState(() {
-                  isTimePeriod = false;
-                  displayFromDate = null;
-                  displayToDate = null;
-                });
+                isTimePeriod = false;
+                displayFromDate = null;
+                displayToDate = null;
               }
               filterVendorAndTransportDataBasedOnDates(
                   dropdownItems.indexOf(selectedDropDownValue!));
-              print(
-                  'DropDownValue: ${dropdownItems.indexOf(selectedDropDownValue!)} | $selectedDropDownValue');
             });
           },
           dropdownStyleData: DropdownStyleData(
@@ -827,7 +809,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         break;
       case 2:
         setState(() {
-          // futureData = getLastOneYearData();
           futureData = getLastFinancialYearData();
         });
         break;
@@ -835,7 +816,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   Future<void> checkStoragePermission() async {
-    print('ledger: checkStoragePermission');
     bool permissionStatus;
     final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
@@ -844,9 +824,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     } else {
       permissionStatus = await Permission.storage.request().isGranted;
     }
-    print('Storage permission is granted $permissionStatus');
     if (await Permission.storage.request().isGranted) {
-      print('Storage permission is granted');
     } else {
       Map<Permission, PermissionStatus> status = await [
         Permission.storage,

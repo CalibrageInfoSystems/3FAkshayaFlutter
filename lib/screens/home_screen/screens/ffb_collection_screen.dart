@@ -31,12 +31,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     tr(LocaleKeys.selected),
   ];
 
-/*   final List<String> dropdownItems = [
-    'Last 30 days',
-    'Current Financial Year',
-    'Select Time Period',
-  ]; */
-
   Map<String, String> dropdownValues = {
     'Last 30 days': tr(LocaleKeys.thirty_days),
     'Current Financial Year': tr(LocaleKeys.currentfinicial),
@@ -56,14 +50,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   void initState() {
     super.initState();
     apiCollectionData = getInitialData();
-    // apiCollectionData = Future.value();
   }
 
   Future<CollectionResponse> getInitialData() async {
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     String fromDate =
         formatter.format(DateTime.now().subtract(const Duration(days: 30)));
-    // String toDate = formatter.format(DateTime.now());
     return getCollectionData(fromDate: fromDate);
   }
 

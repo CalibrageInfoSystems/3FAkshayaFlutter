@@ -160,9 +160,9 @@ class _SelectEdibleProductsScreenState
               ],
             );
           } else {
-            return const Center(
+            return Center(
               child: Text(
-                'No products found',
+                tr(LocaleKeys.no_products),
                 style: CommonStyles.txStyF16CpFF6,
               ),
             );

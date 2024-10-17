@@ -722,12 +722,12 @@ class _StandardState extends State<Standard> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
           child: RichText(
-            text: const TextSpan(
-              text: 'Note: ',
+            text: TextSpan(
+              text: tr(LocaleKeys.notee),
               style: CommonStyles.text18orangeeader,
               children: [
                 TextSpan(
-                  text: 'Quantity in gm/plant/year',
+                  text: tr(LocaleKeys.standard_note),
                   style: CommonStyles.txStyF14CwFF6,
                 ),
               ],
@@ -760,9 +760,10 @@ class _StandardState extends State<Standard> {
         children: [
           Row(
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 100, // Equal space for the label
-                child: Text('Fertilizer', style: CommonStyles.txStyF14CbFF6),
+                child: Text(tr(LocaleKeys.fertilizer),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               Expanded(
                 child: Text(
@@ -776,10 +777,10 @@ class _StandardState extends State<Standard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 100,
                 child: Text(
-                  'Quantity',
+                  tr(LocaleKeys.quantity),
                   style: CommonStyles.txStyF14CbFF6,
                 ),
               ),
@@ -794,9 +795,10 @@ class _StandardState extends State<Standard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              SizedBox(
                 width: 100, // Equal space for the label
-                child: Text('Remarks', style: CommonStyles.txStyF14CbFF6),
+                child: Text(tr(LocaleKeys.remarks),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               Expanded(
                 child: Text(fertilizer.remarks,

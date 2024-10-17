@@ -42,7 +42,6 @@ class _VisitRequestState extends State<VisitRequest> {
   String? audioFilePath;
   double _currentPosition = 0;
   double _totalDuration = 0;
-  final double _totalDuration2 = 0;
   int _recordedSeconds = 0;
   Timer? _timer;
   int? selectedTypeOfIssueId;
@@ -163,17 +162,6 @@ class _VisitRequestState extends State<VisitRequest> {
     String base64Audio = base64Encode(audioBytes);
 
     return base64Audio;
-  }
-
-  Future<String?> _convertToBase64(String? filePath) async {
-    if (filePath != null) {
-      File audioFile = File(filePath);
-      List<int> audioBytes = await audioFile.readAsBytes();
-      String base64EncodeString = base64Encode(audioBytes);
-
-      return base64EncodeString;
-    }
-    return null;
   }
 
   Future<String?> audioFileToBase64(String filePath) async {

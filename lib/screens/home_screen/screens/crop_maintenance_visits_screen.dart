@@ -5,12 +5,10 @@ import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_box.dart';
-import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CropMaintenanceVisitsScreen extends StatefulWidget {
   final PlotDetailsModel plotdata;
@@ -18,15 +16,16 @@ class CropMaintenanceVisitsScreen extends StatefulWidget {
   const CropMaintenanceVisitsScreen({super.key, required this.plotdata});
 
   @override
-  _CropMaintenanceVisitsScreen createState() => _CropMaintenanceVisitsScreen();
+  State<CropMaintenanceVisitsScreen> createState() =>
+      _CropMaintenanceVisitsScreen();
 }
 
 class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   List<HealthPlantationData> healthplantationlist = [];
-  List<NutrientData> NutrientDatalist = [];
-  List<UprootmentData> UprootmentDatalist = [];
-  List<PestData> PestDatalist = [];
-  List<DiseaseData> DiseaseDatalist = [];
+  List<NutrientData> nutrientDatalist = [];
+  List<UprootmentData> uprootmentDatalist = [];
+  List<PestData> pestDatalist = [];
+  List<DiseaseData> diseaseDatalist = [];
   List<PlotIrrigation> plotIrrigationlist = [];
   String updated = '';
   String treesAppearance = '';
@@ -41,11 +40,6 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   }
 
   Future<void> fetchcropmaintencelist() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
-
-    String plotcode = widget.plotdata.plotcode!;
-
     final apiUrl =
         '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
 
@@ -78,12 +72,12 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
               treesAppearance = treessapprearance;
               plamscount = plamscount;
               frequencyofharvest = frequency;
-              PestDatalist =
+              pestDatalist =
                   pestdatalist.map((item) => PestData.fromJson(item)).toList();
-              DiseaseDatalist = diseasedatalist
+              diseaseDatalist = diseasedatalist
                   .map((item) => DiseaseData.fromJson(item))
                   .toList();
-              NutrientDatalist = nutrientdatalist
+              nutrientDatalist = nutrientdatalist
                   .map((item) => NutrientData.fromJson(item))
                   .toList();
               plotIrrigationlist = plotIrrigationdatalist
@@ -189,7 +183,7 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              if (PestDatalist.isNotEmpty)
+              if (pestDatalist.isNotEmpty)
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Column(
@@ -209,15 +203,15 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      if (PestDatalist.isNotEmpty)
+                      if (pestDatalist.isNotEmpty)
                         ListView.builder(
                           shrinkWrap:
                               true, // This is crucial to ensure the ListView doesn't require a fixed height
                           physics:
                               const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                          itemCount: PestDatalist.length,
+                          itemCount: pestDatalist.length,
                           itemBuilder: (context, index) {
-                            final pestData = PestDatalist[index];
+                            final pestData = pestDatalist[index];
                             return Container(
                               padding: const EdgeInsets.all(4),
                               child: Column(
@@ -268,15 +262,15 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      if (DiseaseDatalist.isNotEmpty)
+                      if (diseaseDatalist.isNotEmpty)
                         ListView.builder(
                           shrinkWrap:
                               true, // This is crucial to ensure the ListView doesn't require a fixed height
                           physics:
                               const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                          itemCount: DiseaseDatalist.length,
+                          itemCount: diseaseDatalist.length,
                           itemBuilder: (context, index) {
-                            final pestData = DiseaseDatalist[index];
+                            final pestData = diseaseDatalist[index];
                             return Container(
                               padding: const EdgeInsets.all(4),
                               child: Column(
@@ -326,15 +320,15 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      if (NutrientDatalist.isNotEmpty)
+                      if (nutrientDatalist.isNotEmpty)
                         ListView.builder(
                           shrinkWrap:
                               true, // This is crucial to ensure the ListView doesn't require a fixed height
                           physics:
                               const NeverScrollableScrollPhysics(), // Prevents the ListView from scrolling independently
-                          itemCount: NutrientDatalist.length,
+                          itemCount: nutrientDatalist.length,
                           itemBuilder: (context, index) {
-                            final pestData = NutrientDatalist[index];
+                            final pestData = nutrientDatalist[index];
 
                             String formattedDate = DateFormat('dd-MM-yyyy')
                                 .format(pestData.registeredDate);

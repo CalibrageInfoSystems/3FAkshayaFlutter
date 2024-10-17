@@ -33,7 +33,6 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
       farmercode;
   List<FarmerInfo> farmerinfolist = [];
   bool isLoading = true;
-  late Future<FarmerInfo> _future;
 
   @override
   void initState() {

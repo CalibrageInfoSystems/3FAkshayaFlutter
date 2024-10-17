@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:akshaya_flutter/screens/home_screen/screens/test_ffb.dart';
 import 'package:akshaya_flutter/services/plots_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -436,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   tr(LocaleKeys.collection), onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const FfbCollectionScreen(),
+                    builder: (context) => const TestFfbCollectionScreen(),
                   ),
                 );
               }),
