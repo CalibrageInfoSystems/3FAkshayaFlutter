@@ -417,7 +417,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   Widget productBox(ProductWithQuantity productinfo) {
     final product = productinfo.product;
     final quantity = productinfo.quantity;
-    final productQuantity = product.actualPriceInclGst! * quantity;
+    final productQuantity = product.priceInclGst! * quantity;
     final totalTrasport = product.transPortActualPriceInclGst! * quantity;
     final totalAmount = productQuantity + totalTrasport;
     return Container(
@@ -459,7 +459,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           productInfo(
             label1: tr(LocaleKeys.each_product),
             //  label1: 'Item Cost(Rs)',
-            data1: '${product.actualPriceInclGst?.toStringAsFixed(2)}',
+            data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
             data2: '${product.gstPercentage?.toStringAsFixed(2)}',
           ),
@@ -573,7 +573,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
           int quantity = widget.products[i].quantity;
           final product = widget.products[i].product;
 
-          final productCost = product.actualPriceInclGst! * quantity;
+          final productCost = product.priceInclGst! * quantity;
           displaytotalProductCostGst += productCost;
 
           final transportCost = product.transPortActualPriceInclGst! * quantity;
@@ -659,11 +659,11 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
         final quantity = productWithQuantity.quantity;
 
         // Null checks before accessing values
-        if (product.actualPriceInclGst != null &&
+        if (product.priceInclGst != null &&
             product.transPortActualPriceInclGst != null &&
             product.gstPercentage != null &&
             product.transportGstPercentage != null) {
-          final productCost = product.actualPriceInclGst! * quantity;
+          final productCost = product.priceInclGst! * quantity;
           totalProductCostGst += productCost;
 
           final transportCost = product.transPortActualPriceInclGst! * quantity;
@@ -694,7 +694,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             RequestPoleDetails(
               productId: product.id!,
               quantity: quantity,
-              bagCost: product.actualPriceInclGst!,
+              bagCost: product.priceInclGst!,
               size: size, // Use size as double?
               gstPersentage: product.gstPercentage!,
               productCode: product.code!,

@@ -24,11 +24,13 @@ import '../models/farmer_model.dart';
 class ProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
   final Godowndata godown;
+  final double totalAmount;  // Add this to accept the amount
 
   const ProductCardScreen({
     super.key,
     required this.products,
     required this.godown,
+    required this.totalAmount,  // Pass this from previous screen
   });
 
   @override
@@ -84,6 +86,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       Statecode = '${farmer.stateCode}';
       StateName = '${farmer.stateName}';
     });
+   // print('===totalAmount ${widget.totalAmount}');
     calculateCosts();
   }
 
@@ -452,7 +455,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   Widget productBox(ProductWithQuantity productinfo) {
     final product = productinfo.product;
     final quantity = productinfo.quantity;
-    final productQuantity = product.actualPriceInclGst! * quantity;
+    final productQuantity = product.priceInclGst! * quantity;
     final totalTrasport = product.transPortActualPriceInclGst! * quantity;
     final totalAmount = productQuantity + totalTrasport;
     return Container(
@@ -491,9 +494,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           productInfo(
             label1: tr(LocaleKeys.each_product),
             //  label1: 'Item Cost(Rs)',
-            data1: '${product.actualPriceInclGst?.toStringAsFixed(2)}',
+            data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.gstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.gstPercentage?.toStringAsFixed(2) ?? '0.0'}',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),
@@ -648,7 +651,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             int quantity = widget.products[i].quantity;
             final product = widget.products[i].product;
 
-            final productCost = product.actualPriceInclGst! * quantity;
+            final productCost = product.priceInclGst! * quantity;
             displaytotalProductCostGst += productCost;
 
             final transportCost =
@@ -809,20 +812,22 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     // totalTrasSGST = 0.0;
 
     for (var productWithQuantity in widget.products) {
+      print('===totalAmount ${widget.totalAmount}');
       if (productWithQuantity.quantity > 0) {
         final product = productWithQuantity.product;
         final quantity = productWithQuantity.quantity;
-
-        final productCost = product.actualPriceInclGst! * quantity;
+     //   priceInclGst
+        final productCost = product.priceInclGst! * quantity;
         totalProductCostGst += productCost;
 
+        print('===totalProductCostGst ${totalProductCostGst}');
         final transportCost = product.transPortActualPriceInclGst! * quantity;
         totalTransportCostwithgst += transportCost;
 
         final productGSTPercentage = product.gstPercentage ?? 0;
         amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
-
-        totalGST = totalProductCostGst - amountWithoutGst;
+      double  totalProductCostGstnew = widget.totalAmount;
+        totalGST = totalProductCostGstnew - amountWithoutGst;
         totalCGST = totalGST / 2;
         totalSGST = totalGST / 2;
 
@@ -838,7 +843,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           RequestProductDetails(
             productId: product.id!,
             quantity: quantity,
-            bagCost: product.actualPriceInclGst ?? 0,
+            bagCost: product.priceInclGst ?? 0,
             size: product.size ?? 0,
             gstPersentage: product.gstPercentage ?? 0,
             productCode: product.code!,

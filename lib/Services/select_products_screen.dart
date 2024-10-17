@@ -431,6 +431,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                     builder: (context) => ProductCardScreen(
                       products: fetchCardProducts(),
                       godown: widget.godown,
+                      totalAmount: calculateTotalAmount(),  // Send the calculated amount
                     ),
                   ),
                 );
