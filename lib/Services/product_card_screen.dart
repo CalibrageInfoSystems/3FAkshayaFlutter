@@ -241,7 +241,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                                 fileName: null,
                                 fileLocation: null,
                                 fileExtension: null,
-                                totalCost: totalAmountWithGST,
+                                totalCost: totalProductCostGst,
                                 subcidyAmount: subsidyAmount,
                                 paybleAmount: payableAmount,
                                 transportPayableAmount:

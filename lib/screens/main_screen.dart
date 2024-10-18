@@ -58,11 +58,6 @@ class _MainScreenPageState extends State<MainScreen> {
       _appVersion = '${packageInfo.version} (${packageInfo.buildNumber})';
     });
   }
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    EasyLocalization.of(context)?.locale;
-  }
 
   @override
   Widget build(BuildContext context) {

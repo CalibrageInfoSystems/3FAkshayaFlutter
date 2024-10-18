@@ -203,7 +203,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
                           fileName: null,
                           fileLocation: null,
                           fileExtension: null,
-                          totalCost: totalAmountWithGST,
+                          totalCost: totalProductCostGst,
                           subcidyAmount: 0.0,
                           paybleAmount: totalAmountWithGST,
                           transportPayableAmount: null,

@@ -239,7 +239,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                             fileName: null,
                             fileLocation: null,
                             fileExtension: null,
-                            totalCost: totalAmountWithGST,
+                            totalCost: totalProductCostGst,
                             subcidyAmount: subsidyAmount,
                             paybleAmount: payableAmount,
                             transportPayableAmount: totalTransportCostwithgst,
