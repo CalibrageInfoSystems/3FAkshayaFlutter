@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/screens/home_screen/Learning/Model/media_info_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/Learning/pdf_view_screen.dart';
@@ -13,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../common_utils/common_styles.dart';
 import '../../../localization/locale_keys.dart';
@@ -34,7 +36,9 @@ class EncyclopediaActivity extends StatefulWidget {
 
 class _EncyclopediaActivityState extends State<EncyclopediaActivity> {
   Future<List<MediaInfo>> getMediaData() async {
-    final apiUrl = '$baseUrl$encyclopedia${widget.index}/AP/true';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$encyclopedia${widget.index}/$statecode/true';
     // 'http://182.18.157.215/3FAkshaya/API/api/Encyclopedia/GetEncyclopediaDetails/1/AP/true';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -337,9 +341,11 @@ class _PdfTabViewState extends State<PdfTabView> {
               );
             } else {
               return Center(
-                  child: Text(tr(LocaleKeys.no_pdfs),
-                      style:
-                          CommonStyles.txStyF14CpFF6.copyWith(fontSize: 18)));
+                child: Text(
+                  tr(LocaleKeys.no_pdfs),
+                  style: CommonStyles.txStyF14CpFF6.copyWith(fontSize: 20),
+                ),
+              );
             }
           }
         },
@@ -547,7 +553,7 @@ class _VideoTabViewState extends State<VideoTabView> {
               return Center(
                   child: Text(tr(LocaleKeys.no_videos),
                       style:
-                          CommonStyles.txStyF14CpFF6.copyWith(fontSize: 18)));
+                          CommonStyles.txStyF14CpFF6.copyWith(fontSize: 20)));
             }
           }
         },

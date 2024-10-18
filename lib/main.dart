@@ -116,6 +116,16 @@ class MyApp extends StatelessWidget {
         /*  checkboxTheme: CheckboxThemeData(
           fillColor: WidgetStateProperty.all(CommonStyles.primaryTextColor),
         ), */
+        colorScheme: const ColorScheme.light(
+          primary: CommonStyles.primaryTextColor,
+          onPrimary: Colors.white,
+          onSurface: CommonStyles.blackColor,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: CommonStyles.primaryTextColor,
+          ),
+        ),
         progressIndicatorTheme: const ProgressIndicatorThemeData(
           color: CommonStyles.primaryTextColor,
         ),

@@ -62,15 +62,15 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                     const SizedBox(height: 30),
                     // Split the mobile numbers and format the display
                     Text(
-                      'Enter the 6 Digits Code Sent to your Registered Mobile Number(s) ${_formatMobileNumbers(widget.mobile)}',
-                      style: CommonStyles.txSty_16w_fb,
+                      '${tr(LocaleKeys.otp_desc)} ${_formatMobileNumbers(widget.mobile)}',
+                      style: CommonStyles.txStyF16CwFF6,
                     ),
                     const SizedBox(height: 30),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: PinCodeTextField(
                         appContext: context,
-                        textStyle: CommonStyles.txSty_16w_fb,
+                        textStyle: CommonStyles.txStyF16CwFF6,
                         length: 6,
                         obscureText: false,
                         animationType: AnimationType.fade,
@@ -102,22 +102,21 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    submitBtn(context, 'Submit'),
+                    submitBtn(context, tr(LocaleKeys.submit)),
                     const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         GestureDetector(
                           onTap: () {
-                            resendOTP(); // Call your resendOTP method here
+                            resendOTP();
                           },
                           child: Text(
-                            "RESEND OTP",
+                            tr(LocaleKeys.re_send),
                             style: CommonStyles.text14white.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              decoration: TextDecoration
-                                  .underline, // Optional: Add underline to indicate it's clickable
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ),

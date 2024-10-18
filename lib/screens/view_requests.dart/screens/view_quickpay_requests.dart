@@ -113,8 +113,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
                   style: CommonStyles.txSty_16p_fb,
                 ),
               );
-            }
-            else {
+            } else {
               return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
@@ -137,8 +136,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
     );
   }
 
-  Widget request(int index, QuickpayRequest request,
-      {void Function()? onTap}) {
+  Widget request(int index, QuickpayRequest request, {void Function()? onTap}) {
     return CommonWidgets.viewTemplate(
       bgColor: index.isEven ? Colors.white : Colors.grey.shade200,
       onTap: onTap,
@@ -167,7 +165,8 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
   }
 
   Future<void> fetchQuickPayDocument(String requestId) async {
-    final url = 'http://182.18.157.215/3FAkshaya/API/api/QuickPayRequest/GetQuickpayDocument/$requestId';
+    final url =
+        'http://182.18.157.215/3FAkshaya/API/api/QuickPayRequest/GetQuickpayDocument/$requestId';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -178,7 +177,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
         if (result['isSuccess']) {
           // Show the pop-up with the URL
           showPdfDialog(context, result['result']);
-       //   _showPopup(result['result']);
+          //   _showPopup(result['result']);
         } else {
           // Handle error message
           print(result['endUserMessage']);
@@ -251,31 +250,27 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
               padding: const EdgeInsets.all(8),
               color: CommonStyles.RedColor,
               width: double.infinity,
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'QuickPay Request PDF',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  tr(LocaleKeys.quick_pdf),
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
             ),
-            // WebView displaying PDF
             Expanded(
               child: Stack(
                 children: [
                   WebViewWidget(controller: _controller),
-                  if (isLoading) const Center(child: CircularProgressIndicator()),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),
-            // "OK" Button
-
-            // Additional OK Button
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.circular(20.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(20.0), // Rounded corners
                   gradient: const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -286,30 +281,26 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
                     ],
                   ),
                   border: Border.all(
-                    color: const Color(
-                        0xFFe86100), // Orange border color
+                    color: const Color(0xFFe86100), // Orange border color
                     width: 2.0,
                   ),
                 ),
-                child:
-                SizedBox(
+                child: SizedBox(
                   height: 30.0, // Set the desired height
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 35.0),
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: const Text(
-                      'OK',
+                    child: Text(
+                      tr(LocaleKeys.ok),
                       style: CommonStyles.txSty_16p_f5,
                     ),
                   ),
@@ -321,7 +312,6 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
       ),
     );
   }
-
 
 // void showSuccessquikDialog(BuildContext context, String summary) {
   //   showDialog(

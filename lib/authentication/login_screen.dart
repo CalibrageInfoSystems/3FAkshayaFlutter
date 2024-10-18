@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:akshaya_flutter/authentication/login_otp_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/FarmerResponseModel.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -77,14 +79,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 150,
                           ),
                         ),
-                        const Text('Welcome', style: CommonStyles.txSty_24w),
+                        Text(tr(LocaleKeys.welcome),
+                            style: CommonStyles.txSty_24w),
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 22.0, left: 22.0, right: 22.0),
                           child: TextFormField(
                             controller: _farmercodeController,
                             decoration: InputDecoration(
-                              hintText: 'Enter Farmer Id',
+                              hintText: tr(LocaleKeys.farmar_id),
+
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
                                   color: Colors
@@ -100,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              hintStyle: CommonStyles.txSty_20hint_fb,
+                              hintStyle: CommonStyles.txStyF20CgyFF7,
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 15),
                               alignLabelWithHint:
@@ -162,8 +166,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Login',
+                                child: Text(
+                                  tr(LocaleKeys.login),
                                   style: CommonStyles.text18orange,
                                 ),
                               ),
@@ -174,9 +178,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: const EdgeInsets.only(top: 6.0),
                           child: Container(
                             alignment: AlignmentDirectional.center,
-                            child: const Text(
-                              'OR',
-                              style: TextStyle(
+                            child: Text(
+                              tr(LocaleKeys.or),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -225,8 +229,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Scan QR',
+                                child: Text(
+                                  tr(LocaleKeys.scan_qr),
                                   style: CommonStyles.text18orange,
                                 ),
                               ),

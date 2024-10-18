@@ -138,6 +138,13 @@ class CommonStyles {
     color: primaryTextColor,
   );
 
+  static const TextStyle txStyF20CgyFF7 = TextStyle(
+    fontSize: 20,
+    fontFamily: "hind_semibold",
+    fontWeight: FontWeight.bold,
+    color: hintTextColor,
+  );
+
   /* ...................................... */
 
   static const TextStyle texthintstyle = TextStyle(
@@ -455,12 +462,13 @@ class CommonStyles {
       return false; // Not connected to the internet
     }
   }
+
   void showCustomToastMessageLong(
-      String message,
-      BuildContext context,
-      int backgroundColorType,
-      int length,
-      ) {
+    String message,
+    BuildContext context,
+    int backgroundColorType,
+    int length,
+  ) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double textWidth = screenWidth / 1.5; // Adjust multiplier as needed
 
@@ -486,7 +494,7 @@ class CommonStyles {
             ),
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Center(
                 child: Text(
                   message,
@@ -505,6 +513,7 @@ class CommonStyles {
       overlayEntry.remove();
     });
   }
+
   static void showCustomDialog(BuildContext context, String msg) {
     showGeneralDialog(
       context: context,

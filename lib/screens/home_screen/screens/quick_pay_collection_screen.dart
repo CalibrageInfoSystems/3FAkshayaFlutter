@@ -551,13 +551,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomBtn(
-              label: 'Confirm Request',
+              label: tr(LocaleKeys.confirm_req),
               onPressed: () {
                 processRequest();
               },
             ),
           ],
         ),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -824,9 +825,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   } */
 }
 
-
-
-
 class PdfViewerPopup extends StatefulWidget {
   final String pdfUrl;
 
@@ -887,7 +885,8 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
               child: Stack(
                 children: [
                   WebViewWidget(controller: _controller),
-                  if (isLoading) const Center(child: CircularProgressIndicator()),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),
@@ -898,8 +897,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
               padding: const EdgeInsets.only(bottom: 10.0),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadius.circular(20.0), // Rounded corners
+                  borderRadius: BorderRadius.circular(20.0), // Rounded corners
                   gradient: const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -910,24 +908,20 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
                     ],
                   ),
                   border: Border.all(
-                    color: const Color(
-                        0xFFe86100), // Orange border color
+                    color: const Color(0xFFe86100), // Orange border color
                     width: 2.0,
                   ),
                 ),
-                child:
-                SizedBox(
+                child: SizedBox(
                   height: 30.0, // Set the desired height
                   child: ElevatedButton(
                     onPressed: () {
-
                       Navigator.of(context).pop();
-                      showSuccessquikDialog(context, tr(LocaleKeys.qucick_success));
-
+                      showSuccessquikDialog(
+                          context, tr(LocaleKeys.qucick_success));
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 35.0),
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
@@ -957,6 +951,3 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
     );
   }
 }
-
-
-

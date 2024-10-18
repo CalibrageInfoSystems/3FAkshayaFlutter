@@ -433,7 +433,7 @@ class _MainScreenPageState extends State<MainScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(tr(LocaleKeys.confirmation),
-                      style: CommonStyles.text18orange),
+                      style: CommonStyles.txStyF16CpFF6),
                   const SizedBox(height: 10),
                   Container(
                     height: 0.5,
@@ -447,8 +447,8 @@ class _MainScreenPageState extends State<MainScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Are you sure you want to Logout?',
+                  Text(
+                    tr(LocaleKeys.alert_logout),
                     style: CommonStyles.text16white,
                     textAlign: TextAlign.center,
                   ),
@@ -493,8 +493,8 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: const Text(
-                                'Cancel',
+                              child: Text(
+                                tr(LocaleKeys.cancel),
                                 style: CommonStyles.txSty_16p_f5,
                               ),
                             ),
@@ -538,8 +538,8 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: const Text(
-                                'OK',
+                              child: Text(
+                                tr(LocaleKeys.ok),
                                 style: CommonStyles.txSty_16p_f5,
                               ),
                             ),

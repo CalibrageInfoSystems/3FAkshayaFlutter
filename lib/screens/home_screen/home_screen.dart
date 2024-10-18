@@ -3,7 +3,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:akshaya_flutter/screens/home_screen/screens/test_ffb.dart';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:akshaya_flutter/services/plots_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -12,7 +13,6 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/banner_model.dart';
 import 'package:akshaya_flutter/models/learning_model.dart';
 import 'package:akshaya_flutter/models/service_model.dart';
-import 'package:akshaya_flutter/screens/home_screen/screens/ffb_collection_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/loan_request_screen.dart';
 
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
@@ -23,6 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:marquee/marquee.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../services/GodownSelectionScreen.dart';
@@ -50,10 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<int>> getServicesData() async {
-    final apiUrl = '$baseUrl${getServices}AP';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$getServices$statecode';
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getServicesData: $apiUrl');
+      print('getServicesData: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         List<dynamic> servicesList = response['listResult'];
@@ -64,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
             .where((serviceTypeId) => serviceTypeId != 108)
             .map((id) => id!)
             .toList();
-        print('serviceTypeIds: $serviceTypeIds');
         return serviceTypeIds;
       } else {
         throw Exception('Failed to get learning data');
@@ -87,7 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<String?>> getLearningsData() async {
     final apiUrl = '$baseUrl$getlearning';
-    print('=========learningList,$apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
@@ -437,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   tr(LocaleKeys.collection), onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const TestFfbCollectionScreen(),
+                    builder: (context) => const FfbCollectionScreen(),
                   ),
                 );
               }),

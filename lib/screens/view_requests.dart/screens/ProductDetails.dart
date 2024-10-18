@@ -145,7 +145,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
           children: [
             RichText(
               text: TextSpan(
-                text: 'Request Id :  ',
+                text: '${tr(LocaleKeys.requestCodeLabel)} :  ',
                 style: CommonStyles.txStyF14CbFF6,
                 children: [
                   TextSpan(
