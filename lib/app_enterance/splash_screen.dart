@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
           builder: (context) => const MainScreen(),
         ),
       );
-    //  context.go(Routes.homeScreen.path);
+      //  context.go(Routes.homeScreen.path);
     } else {
       if (welcome) {
         Navigator.of(context).push(
@@ -69,14 +69,14 @@ class _SplashScreenState extends State<SplashScreen>
             builder: (context) => const LoginScreen(),
           ),
         );
-   //     context.go(Routes.loginScreen.path);
+        //     context.go(Routes.loginScreen.path);
       } else {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const LanguageScreen(),
           ),
         );
-       // context.go(Routes.languageScreen.path);
+        // context.go(Routes.languageScreen.path);
       }
     }
   }
@@ -126,17 +126,15 @@ class _SplashScreenState extends State<SplashScreen>
                         );
                       },
                     ),
-                    const SizedBox(
-                        height: 16), // Add spacing between logo and text
-                    // Typewriter Text
+                    const SizedBox(height: 16),
                     const TypewriterText(
                       text: "3F Oil Palm",
                       color: Color(0xFFCE0E2D),
                     ),
-                    // Add spacing between the two lines
                     const TypewriterText(
                       text: "Sowing for a Better Future",
                       color: Color(0xFFe86100),
+                      fontSize: 18,
                     ),
                   ],
                 ),
@@ -161,11 +159,13 @@ class _SplashScreenState extends State<SplashScreen>
 class TypewriterText extends StatefulWidget {
   final String text;
   final Color color;
+  final double? fontSize;
 
   const TypewriterText({
     super.key,
     required this.text,
     required this.color,
+    this.fontSize = 24,
   });
 
   @override
@@ -206,7 +206,7 @@ class _TypewriterTextState extends State<TypewriterText> {
         child: Text(
           _displayedText,
           style: TextStyle(
-            fontSize: 24,
+            fontSize: widget.fontSize,
             fontFamily: 'hind_semibold',
             color: widget.color, // Use the provided text color
           ),

@@ -433,7 +433,7 @@ class _MainScreenPageState extends State<MainScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(tr(LocaleKeys.confirmation),
-                      style: CommonStyles.txStyF16CpFF6),
+                      style: CommonStyles.text18orange),
                   const SizedBox(height: 10),
                   Container(
                     height: 0.5,
@@ -447,8 +447,8 @@ class _MainScreenPageState extends State<MainScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    tr(LocaleKeys.alert_logout),
+                  const Text(
+                    'Are you sure you want to Logout?',
                     style: CommonStyles.text16white,
                     textAlign: TextAlign.center,
                   ),
@@ -493,8 +493,8 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: Text(
-                                tr(LocaleKeys.cancel),
+                              child: const Text(
+                                'Cancel',
                                 style: CommonStyles.txSty_16p_f5,
                               ),
                             ),
@@ -538,8 +538,8 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: Text(
-                                tr(LocaleKeys.ok),
+                              child: const Text(
+                                'OK',
                                 style: CommonStyles.txSty_16p_f5,
                               ),
                             ),
@@ -656,76 +656,6 @@ class _MainScreenPageState extends State<MainScreen> {
           .pop(); // Close side menu or other dialog if applicable
     }
   }
-
-//   void openLanguageDialog(BuildContext context) {
-//     showGeneralDialog(
-//       context: context,
-//       barrierDismissible: true,
-//       barrierLabel: '',
-//       barrierColor: Colors.black54,
-//       transitionDuration: const Duration(milliseconds: 500),
-//       pageBuilder: (context, animation1, animation2) {
-//         return Center(
-//           child: Material(
-//             color: Colors.transparent,
-//             child: Container(
-//               width: MediaQuery.of(context).size.width * 0.8,
-//               padding: const EdgeInsets.all(12.0),
-//               decoration: BoxDecoration(
-//                 color: CommonStyles.blackColor,
-//                 borderRadius: BorderRadius.circular(10),
-//                 border: Border.all(
-//                   color: CommonStyles.primaryTextColor,
-//                   width: 1,
-//                 ),
-//               ),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 children: [
-//                   Text(tr(LocaleKeys.choose_language_str),
-//                       style: CommonStyles.text18orange),
-//                   const SizedBox(height: 5),
-//                   languageBox('English', colors: [
-//                     CommonStyles.primaryTextColor,
-//                     const Color.fromARGB(255, 110, 6, 228)
-//                   ], onPressed: () {
-//                     changeLocaleLanguage(context, AppLocal.englishLocale);
-//                   }),
-//                   languageBox('తెలుగు', onPressed: () {
-//                     changeLocaleLanguage(context, AppLocal.teluguLocale);
-//                   }),
-//                   languageBox('ಕನ್ನಡ', onPressed: () {
-//                     changeLocaleLanguage(context, AppLocal.kannadaLocale);
-//                   }),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         );
-//       },
-//       transitionBuilder: (context, animation1, animation2, child) {
-//         return ScaleTransition(
-//           scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-//             CurvedAnimation(
-//               parent: animation1,
-//               curve: Curves.easeOutBack,
-//             ),
-//           ),
-//           child: child,
-//         );
-//       },
-//     );
-//   }
-//
-//   void changeLocaleLanguage(BuildContext context, Locale locale) {
-//     setState(() {
-//       context.setLocale(locale);
-//
-// // Change the locale
-//     });
-//     Navigator.of(context).pop(); // Close the popup
-//     Navigator.of(context).pop(); // Close the side menu  // Trigger a rebuild
-//   }
 
   Container languageBox(String language,
       {List<Color> colors = const [Colors.grey, Colors.grey],

@@ -247,7 +247,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                             children: [
                                               const SizedBox(width: 13),
                                               Text(
-                                                tr(LocaleKeys.multistring),
+                                                tr(LocaleKeys.Valid_service),
                                                 style: CommonStyles
                                                     .txStyF16CbFF6
                                                     .copyWith(
@@ -888,60 +888,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     );
   }
  */
-//MARK: isvalidations
-  Future<bool> isvalidations() async {
-    bool isValid = true;
-
-    if (_selectedServiceTypes.isEmpty) {
-      CommonStyles.showCustomDialog(context, tr(LocaleKeys.multistring));
-
-      return false;
-    }
-    if (_dateController.text.toString().isEmpty) {
-      CommonStyles.showCustomDialog(context, tr(LocaleKeys.date_selectiomn));
-
-      return false;
-    }
-    if (_selectedDesc!.isEmpty) {
-      CommonStyles.showCustomDialog(context, tr(LocaleKeys.valid_pack));
-
-      return false;
-    }
-    if (_isagreed == false) {
-      CommonStyles.showCustomDialog(context, tr(LocaleKeys.terms_agree));
-      return false;
-    }
-    if (selectedServiceIds.contains('20')) {
-      if (harvestCost == 0.0) {
-        CommonStyles.showCustomDialog(context,
-            "'You can't Raise the Request since Harvesting Amount is 0'");
-        return false;
-      }
-    }
-
-    if (selectedServiceIds.contains('19')) {
-      if (harvestCost == 0.0) {
-        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
-        return false;
-      }
-    }
-    if (selectedServiceIds.contains('33')) {
-      if (pruningWithIntercropCost == 0.0) {
-        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
-        return false;
-      }
-    }
-    if (selectedServiceIds.contains('34')) {
-      if (harvestingWithIntercropCost == 0.0) {
-        CommonStyles.showCustomDialog(context, tr(LocaleKeys.failmsg));
-        return false;
-      }
-    }
-    return isValid; // Return true if validation is successful, false otherwise
-  }
-
-// Function to show the dialog
-
   void showSuccessDialog(
       BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
@@ -1017,7 +963,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   Future<bool> validateLabourRequest() async {
     print('_isagreed $_isagreed');
     if (selectedServiceNames.isEmpty) {
-      CommonStyles.showCustomDialog(context, tr(LocaleKeys.multistring));
+      CommonStyles.showCustomDialog(context, tr(LocaleKeys.Valid_service));
       return false;
     } else if (_dateController.text.isEmpty) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.date_selectiomn));
