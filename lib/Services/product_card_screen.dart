@@ -237,7 +237,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                                 updatedDate: DateTime.now().toIso8601String(),
                                 godownId: widget.godown.id!,
                                 paymentModeType: paymentmodeId,
-                                isImmediatePayment: true,
+                                isImmediatePayment: _isCheckboxChecked,
                                 fileName: null,
                                 fileLocation: null,
                                 fileExtension: null,
@@ -408,8 +408,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 print('setState paymentmodeId: $paymentmodeId');
 
                 // Adjust the condition for showing the checkbox based on the payment mode ID
-                _isCheckboxChecked =
-                    false; // Reset the checkbox when changing payment mode
+                _isCheckboxChecked = false; // Reset the checkbox when changing payment mode
               }
             });
           },
