@@ -42,6 +42,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
       if (response['listResult'] != null && response['listResult'].isNotEmpty) {
         List<dynamic> result = response['listResult'];
         return result.map((item) => UnpaidCollection.fromJson(item)).toList();
+
       } else {
         throw Exception(
           tr(LocaleKeys.no_unpaid_collections),
@@ -103,6 +104,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                                 CommonStyles.showHorizontalDotsLoadingDialog(
                                     context);
                               });
+                          //    blockdate(data)
                               raiseRequest(data);
                             }),
                       ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -21,6 +22,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../common_utils/SuccessDialog2.dart';
 import '../../../services/models/MsgModel.dart';
+import 'package:image/image.dart' as img;
 
 class QuickPayCollectionScreen extends StatefulWidget {
   final List<UnpaidCollection> unpaidCollections;
@@ -41,7 +43,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 
   SignatureController? controller;
   Uint8List? signature;
-
+  double? sumoftotalamounttopay;
   @override
   void initState() {
     super.initState();
@@ -201,71 +203,123 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 //MARK: Submit Request
   Future<String> submitRequest(
       List<CollectionDetails> collections, String base64Signature) async {
-    FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
-    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    const apiUrl = '$baseUrl$addQuickpayRequest';
-    final requestBody = jsonEncode({
-      "closingBalance": collections[0].dues,
-      "clusterId": farmerData.clusterId,
-      "collectionCodes": collectionCodes(widget.unpaidCollections),
-      // "COL2024TAB205CCAPKLV074-2625(2.195 MT),COL2024TAB205CCAPKLV075-2650(1.13 MT)",
-      "collectionIds": collectionIds(
-          widget.unpaidCollections, await Future.value(collectionDetailsData)),
-      // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
-      "createdDate": currentDate,
-      "createdByUserId": null,
-      "districtId": farmerData.districtId,
-      "districtName": farmerData.districtName,
-      "farmerCode": farmerData.code,
-      "farmerName": farmerData.firstName,
-      "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}',
-      "fileLocation": "",
-      "isFarmerRequest": true,
-      "isSpecialPay": false,
-      "netWeight": widget.unpaidCollections
-          .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)),
-      "reqCreatedDate": currentDate,
-      "signatureExtension": ".png",
-      "signatureName": base64Signature,
-      "stateCode": farmerData.stateCode,
-      "stateName": farmerData.stateName,
-      "updatedDate": currentDate,
-      "updatedByUserId": null,
+    // Assuming sumOfTotalAmountToPay is a calculated value
+    double sumOfTotalAmountToPay = sumoftotalamounttopay!; // Define this function to calculate
+print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
+    if (sumOfTotalAmountToPay > 0) {
+      // Get farmer information from shared preferences
+      FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
 
-      "whsCode": widget.unpaidCollections[0].whsCode
-    });
+      // Get current date
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    final jsonResponse = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: requestBody,
-    );
+      // API URL
+      const apiUrl = '$baseUrl$addQuickpayRequest';
 
-    print('submitRequest: $apiUrl');
-    print('submitRequest: $requestBody');
-
-    if (jsonResponse.statusCode == 200) {
-      final Map<String, dynamic> response = json.decode(jsonResponse.body);
-      if (response['isSuccess']) {
-        showPdfDialog(context, response['result']);
-        // showPdfDialog(context, 'http://182.18.157.215/3FAkshaya/3FAkshaya_Repo/FileRepository/2024//09//09//QuickpayPdf/20240909024807346.pdf');
-        //  ScaffoldMessenger.of(context).showSnackBar(
-        //    const SnackBar(
-        //      content: Text('Request submitted successfully'),
-        //    ),
-        //  );
-        print('result: ${response['result']}');
-        return response['result'];
+      // // Prepare request body
+      // final requestBody = jsonEncode({
+      //   "closingBalance": collections[0].dues,
+      //   "clusterId": farmerData.clusterId,
+      //   "collectionCodes": collectionCodes(widget.unpaidCollections),
+      //   "collectionIds": collectionIds(
+      //       widget.unpaidCollections, await Future.value(collectionDetailsData)),
+      //   "createdDate": currentDate,
+      //   "createdByUserId": null,
+      //   "districtId": farmerData.districtId,
+      //   "districtName": farmerData.districtName,
+      //   "farmerCode": farmerData.code,
+      //   "farmerName": farmerData.firstName,
+      //   "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}',
+      //   "fileLocation": "",
+      //   "isFarmerRequest": true,
+      //   "isSpecialPay": false,
+      //   "netWeight": widget.unpaidCollections
+      //       .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)),
+      //   "reqCreatedDate": currentDate,
+      //   "signatureExtension": ".png",
+      //   "signatureName": base64Signature,
+      //   "stateCode": farmerData.stateCode,
+      //   "stateName": farmerData.stateName,
+      //   "updatedDate": currentDate,
+      //   "updatedByUserId": null,
+      //   "whsCode": widget.unpaidCollections[0].whsCode,
+      // });
+      String  districtName;
+      int? districtIdd;
+      String CCstateCode = widget.unpaidCollections[0].stateCode ?? '';
+      String CCstateName = widget.unpaidCollections[0].stateName ?? '';
+      if (CCstateCode == "AP") {
+        districtIdd = widget.unpaidCollections[0].districtId ?? 0; // Handle null safely
+        districtName = widget.unpaidCollections[0].districtName ?? 'null'; // Default if districtName is null
       } else {
-        throw Exception('Something went wrong: ${response['endUserMessage']}');
+        // Assign default values if CCstateCode is not "AP"
+        districtIdd = 0; // Default value if not "AP"
+        districtName = 'null'; // Default if not "AP"
+      }
+
+// Prepare request body
+      final requestBody = jsonEncode({
+        "closingBalance": collections.isNotEmpty ? collections[0].dues : 0.0, // Handle case where collections might be empty
+        "clusterId": farmerData.clusterId ?? '',
+        "collectionCodes": collectionCodes(widget.unpaidCollections),
+        "collectionIds": collectionIds(widget.unpaidCollections, await Future.value(collectionDetailsData)),
+        "createdDate": currentDate,
+        "createdByUserId": null,
+        // Change if required
+        "districtId": districtIdd, // Handle null safely
+        "districtName": districtName, // Default if districtName is null
+        "farmerCode": farmerData.code ?? '', // Default empty if farmerCode is null
+        "farmerName": farmerData.firstName ?? '', // Default empty if farmerName is null
+        "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}', // Calculation logic
+        "fileLocation": "", // Empty as per the original logic
+        "isFarmerRequest": true, // Always true as per your condition
+        "isSpecialPay": false, // Special pay is false as per your requirement
+        "netWeight": widget.unpaidCollections
+            .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)), // Sum net weight
+        "reqCreatedDate": currentDate,
+        "signatureExtension": ".png", // Assuming .png is the default extension
+        "signatureName": base64Signature, // Assuming the signature is already converted to base64
+        "stateCode": widget.unpaidCollections[0].stateCode  ?? '', // Handle null safely
+        "stateName":  widget.unpaidCollections[0].stateName  ?? '', // Handle null safely
+        "updatedDate": currentDate,
+        "updatedByUserId": null, // Change if required
+        "whsCode": widget.unpaidCollections.isNotEmpty
+            ? widget.unpaidCollections[0].whsCode
+            : '', // Handle case where unpaidCollections is empty
+      });
+
+      // Make the API call
+      final jsonResponse = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      );
+
+      print('submitRequest: $apiUrl');
+      print('submitRequest: $requestBody');
+
+      if (jsonResponse.statusCode == 200) {
+        final Map<String, dynamic> response = json.decode(jsonResponse.body);
+        if (response['isSuccess']) {
+          showPdfDialog(context, response['result']);
+          print('result: ${response['result']}');
+          return response['result'];
+        } else {
+          throw Exception('Something went wrong: ${response['endUserMessage']}');
+        }
+      } else {
+        throw Exception('Failed to load data: ${jsonResponse.statusCode}');
       }
     } else {
-      throw Exception('Failed to load data: ${jsonResponse.statusCode}');
+      _showErrorDialog(tr(LocaleKeys.enter_loan_amount));
+
+      throw Exception('Total amount to pay must be greater than 0.');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +362,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         }
 
         final collections = snapshot.data as List<CollectionDetails>;
-
+  sumoftotalamounttopay = collections[0].total;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -322,21 +376,24 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     data:
                         '${calculateDynamicSum(collections, 'quickPayCost')}'),
                 buildQuickPayRow(
-                    label: tr(LocaleKeys.convenience_charge),
-                    data: '-${collections[0].transactionFee}'),
+                  label: tr(LocaleKeys.convenience_charge),
+                  data: collections[0].transactionFee! < 0 ? '0.00' : '-${collections[0].transactionFee}',
+                ),
+
                 buildQuickPayRow(
                     label: tr(LocaleKeys.quick_pay),
                     data: '-${calculateDynamicSum(collections, 'quickPay')}'),
                 buildQuickPayRow(
-                    label: tr(LocaleKeys.closingBal),
-                    data: '-${collections[0].dues}'),
+                  label: tr(LocaleKeys.closingBal),
+                  data: collections[0].dues! < 0 ? '0.00' : '-${collections[0].dues}',
+                ),
                 Container(
                   height: 0.5,
                   color: Colors.grey,
                 ),
                 buildQuickPayRow(
                     label: tr(LocaleKeys.total_amt_pay),
-                    data: '${totalSum(collections)}',
+                    data: '${collections[0].total}',
                     // data: calculateDynamicSum(collections, 'total'),
                     color: CommonStyles.primaryTextColor),
                 Container(
@@ -642,11 +699,18 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 CustomBtn(
                   label: 'Ok',
                   onPressed: () async {
+                    Navigator.of(context).pop();
+
+                    // Assuming controller?.toPngBytes() returns Uint8List of the signature
                     Uint8List? signatureBytes = await controller?.toPngBytes();
+
                     if (signatureBytes != null) {
-                      String base64Signature = base64Encode(signatureBytes);
+                      // Use the bitMapToBase64 method to convert to Base64
+                      String base64Signature = bitMapToBase64(signatureBytes);
+
+                      // Assuming collectionDetailsData is a Future
                       collectionDetailsData.then(
-                        (value) => submitRequest(value, base64Signature),
+                            (value) => submitRequest(value, base64Signature),
                       );
                       print('base64Signature:  $base64Signature');
                     } else {
@@ -660,6 +724,29 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     }
                   },
                 ),
+
+                // CustomBtn(
+                //   label: 'Ok',
+                //   onPressed: () async {
+                //     Navigator.of(context).pop();
+                //     Uint8List? signatureBytes = await controller?.toPngBytes();
+                //     if (signatureBytes != null) {
+                //       String base64Signature = base64Encode(signatureBytes);
+                //       collectionDetailsData.then(
+                //         (value) => submitRequest(value, base64Signature),
+                //       );
+                //       print('base64Signature:  $base64Signature');
+                //     } else {
+                //       ScaffoldMessenger.of(context).showSnackBar(
+                //         const SnackBar(
+                //           content: Text(
+                //             'Please sign first.',
+                //           ),
+                //         ),
+                //       );
+                //     }
+                //   },
+                // ),
               ],
             ),
           ],
@@ -813,6 +900,29 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 
   void showSuccessDialog(
       BuildContext context, List<MsgModel> displayList, String tr) {}
+
+  String bitMapToBase64(Uint8List imageData) {
+    // Decode the image data
+    img.Image? decodedImage = img.decodeImage(imageData);
+
+    if (decodedImage == null) {
+      throw Exception("Could not decode image data");
+    }
+
+    // Encode the image to PNG format without specifying quality
+    List<int> pngData = img.encodePng(decodedImage); // No quality parameter
+
+    // Convert to Base64
+    return base64Encode(pngData);
+  }
+// Example of how to use the function
+//   Future<String> convertImageToBase64(Image image) async {
+//     // Convert Flutter Image widget to Uint8List
+//     final byteData = await image.image.toByteData(format: ImageByteFormat.rawRgba);
+//     final Uint8List imageData = byteData!.buffer.asUint8List();
+//
+//     return bitMapToBase64(imageData);
+//   }
 
 /*   String collectionIds(List<UnpaidCollection> unpaidCollections) {
     // "COL2024TAB205CCAPKLV074-2625|2.195|2024-06-13T00:00:00|6000.0,COL2024TAB205CCAPKLV075-2650|1.13|2024-06-14T00:00:00|6000.0",
