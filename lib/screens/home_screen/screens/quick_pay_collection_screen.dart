@@ -47,7 +47,10 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   @override
   void initState() {
     super.initState();
-    controller = SignatureController(penStrokeWidth: 2, penColor: Colors.black);
+    controller = SignatureController(
+        penStrokeWidth: 2,
+        penColor: CommonStyles.blackColor,
+        exportBackgroundColor: CommonStyles.whiteColor);
 
     collectionDetailsData = getCollectionDetails();
   }
@@ -160,34 +163,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     }
   }
 
-  // Future<Map<String, dynamic>> getQuickPayDetails({
-  //   required int? districtId,
-  //   required String? docDate,
-  //   required String? farmerCode,
-  //   required bool? isSpecialPay,
-  //   required double? quantity,
-  //   required String? stateCode,
-  // }) async {
-  //   final apiUrl = '$baseUrl$quickPayRequest';
-  //   final requestBody = jsonEncode({
-  //     "districtId": districtId,
-  //     "docDate": docDate,
-  //     "farmerCode": farmerCode,
-  //     "isSpecialPay": isSpecialPay,
-  //     "quantity": quantity,
-  //     "stateCode": stateCode,
-  //   });
-  //   final jsonResponse = await http.post(
-  //     Uri.parse(apiUrl),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: requestBody,
-  //   );
-  //   final response = jsonDecode(jsonResponse.body);
-  //   return response['listResult'][0];
-  // }
-
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
@@ -203,13 +178,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
 //MARK: Submit Request
   Future<String> submitRequest(
       List<CollectionDetails> collections, String base64Signature) async {
-
     // Assuming sumOfTotalAmountToPay is a calculated value
-    double sumOfTotalAmountToPay = sumoftotalamounttopay!; // Define this function to calculate
-print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
+    double sumOfTotalAmountToPay =
+        sumoftotalamounttopay!; // Define this function to calculate
+    print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
     if (sumOfTotalAmountToPay > 0) {
       // Get farmer information from shared preferences
-      FarmerModel farmerData = await Future.value(getFarmerInfoFromSharedPrefs());
+      FarmerModel farmerData =
+          await Future.value(getFarmerInfoFromSharedPrefs());
 
       // Get current date
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -217,41 +193,15 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
       // API URL
       const apiUrl = '$baseUrl$addQuickpayRequest';
 
-      // // Prepare request body
-      // final requestBody = jsonEncode({
-      //   "closingBalance": collections[0].dues,
-      //   "clusterId": farmerData.clusterId,
-      //   "collectionCodes": collectionCodes(widget.unpaidCollections),
-      //   "collectionIds": collectionIds(
-      //       widget.unpaidCollections, await Future.value(collectionDetailsData)),
-      //   "createdDate": currentDate,
-      //   "createdByUserId": null,
-      //   "districtId": farmerData.districtId,
-      //   "districtName": farmerData.districtName,
-      //   "farmerCode": farmerData.code,
-      //   "farmerName": farmerData.firstName,
-      //   "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}',
-      //   "fileLocation": "",
-      //   "isFarmerRequest": true,
-      //   "isSpecialPay": false,
-      //   "netWeight": widget.unpaidCollections
-      //       .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)),
-      //   "reqCreatedDate": currentDate,
-      //   "signatureExtension": ".png",
-      //   "signatureName": base64Signature,
-      //   "stateCode": farmerData.stateCode,
-      //   "stateName": farmerData.stateName,
-      //   "updatedDate": currentDate,
-      //   "updatedByUserId": null,
-      //   "whsCode": widget.unpaidCollections[0].whsCode,
-      // });
-      String  districtName;
+      String districtName;
       int? districtIdd;
       String CCstateCode = widget.unpaidCollections[0].stateCode ?? '';
       String CCstateName = widget.unpaidCollections[0].stateName ?? '';
       if (CCstateCode == "AP") {
-        districtIdd = widget.unpaidCollections[0].districtId ?? 0; // Handle null safely
-        districtName = widget.unpaidCollections[0].districtName ?? 'null'; // Default if districtName is null
+        districtIdd =
+            widget.unpaidCollections[0].districtId ?? 0; // Handle null safely
+        districtName = widget.unpaidCollections[0].districtName ??
+            'null'; // Default if districtName is null
       } else {
         // Assign default values if CCstateCode is not "AP"
         districtIdd = 0; // Default value if not "AP"
@@ -260,33 +210,33 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
 
 // Prepare request body
       final requestBody = jsonEncode({
-        "closingBalance": collections.isNotEmpty ? collections[0].dues : 0.0, // Handle case where collections might be empty
+        "closingBalance": collections.isNotEmpty ? collections[0].dues : 0.0,
         "clusterId": farmerData.clusterId ?? '',
         "collectionCodes": collectionCodes(widget.unpaidCollections),
-        "collectionIds": collectionIds(widget.unpaidCollections, await Future.value(collectionDetailsData)),
+        "collectionIds": collectionIds(widget.unpaidCollections,
+            await Future.value(collectionDetailsData)),
         "createdDate": currentDate,
         "createdByUserId": null,
-        // Change if required
-        "districtId": districtIdd, // Handle null safely
-        "districtName": districtName, // Default if districtName is null
-        "farmerCode": farmerData.code ?? '', // Default empty if farmerCode is null
-        "farmerName": farmerData.firstName ?? '', // Default empty if farmerName is null
-        "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}', // Calculation logic
-        "fileLocation": "", // Empty as per the original logic
-        "isFarmerRequest": true, // Always true as per your condition
-        "isSpecialPay": false, // Special pay is false as per your requirement
+        "districtId": districtIdd,
+        "districtName": districtName,
+        "farmerCode": farmerData.code ?? '',
+        "farmerName": farmerData.firstName ?? '',
+        "ffbCost": '${calculateDynamicSum(collections, 'quickPayCost')}',
+        "fileLocation": "",
+        "isFarmerRequest": true,
+        "isSpecialPay": false,
         "netWeight": widget.unpaidCollections
-            .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)), // Sum net weight
+            .fold(0.0, (sum, item) => sum + (item.quantity ?? 0.0)),
         "reqCreatedDate": currentDate,
-        "signatureExtension": ".png", // Assuming .png is the default extension
-        "signatureName": base64Signature, // Assuming the signature is already converted to base64
-        "stateCode": widget.unpaidCollections[0].stateCode  ?? '', // Handle null safely
-        "stateName":  widget.unpaidCollections[0].stateName  ?? '', // Handle null safely
+        "signatureExtension": ".png",
+        "signatureName": base64Signature,
+        "stateCode": widget.unpaidCollections[0].stateCode ?? '',
+        "stateName": widget.unpaidCollections[0].stateName ?? '',
         "updatedDate": currentDate,
-        "updatedByUserId": null, // Change if required
+        "updatedByUserId": null,
         "whsCode": widget.unpaidCollections.isNotEmpty
             ? widget.unpaidCollections[0].whsCode
-            : '', // Handle case where unpaidCollections is empty
+            : '',
       });
 
       // Make the API call
@@ -300,6 +250,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
 
       print('submitRequest: $apiUrl');
       print('submitRequest: $requestBody');
+      print('submitRequest: ${jsonResponse.body}');
 
       if (jsonResponse.statusCode == 200) {
         final Map<String, dynamic> response = json.decode(jsonResponse.body);
@@ -308,7 +259,9 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
           print('result: ${response['result']}');
           return response['result'];
         } else {
-          throw Exception('Something went wrong: ${response['endUserMessage']}');
+          _showErrorDialog(response['endUserMessage']);
+          throw Exception(
+              'Something went wrong: ${response['endUserMessage']}');
         }
       } else {
         throw Exception('Failed to load data: ${jsonResponse.statusCode}');
@@ -319,7 +272,6 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
       throw Exception('Total amount to pay must be greater than 0.');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -362,7 +314,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
         }
 
         final collections = snapshot.data as List<CollectionDetails>;
-  sumoftotalamounttopay = collections[0].total;
+        sumoftotalamounttopay = collections[0].total;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -377,15 +329,18 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
                         '${calculateDynamicSum(collections, 'quickPayCost')}'),
                 buildQuickPayRow(
                   label: tr(LocaleKeys.convenience_charge),
-                  data: collections[0].transactionFee! < 0 ? '0.00' : '-${collections[0].transactionFee}',
+                  data: collections[0].transactionFee! < 0
+                      ? '0.00'
+                      : '-${collections[0].transactionFee}',
                 ),
-
                 buildQuickPayRow(
                     label: tr(LocaleKeys.quick_pay),
                     data: '-${calculateDynamicSum(collections, 'quickPay')}'),
                 buildQuickPayRow(
                   label: tr(LocaleKeys.closingBal),
-                  data: collections[0].dues! < 0 ? '0.00' : '-${collections[0].dues}',
+                  data: collections[0].dues! < 0
+                      ? '0.00'
+                      : '-${collections[0].dues}',
                 ),
                 Container(
                   height: 0.5,
@@ -458,7 +413,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
             flex: 6,
             child: Text(
               label,
-              style: CommonStyles.txSty_14b_f5.copyWith(
+              style: CommonStyles.txStyF14CbFF6.copyWith(
                 color: color,
               ),
             ),
@@ -467,7 +422,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
             flex: 1,
             child: Text(
               ':',
-              style: CommonStyles.txSty_14b_f5.copyWith(
+              style: CommonStyles.txStyF14CbFF6.copyWith(
                 color: color,
               ),
             ),
@@ -476,7 +431,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
             flex: 7,
             child: Text(
               '$data',
-              style: CommonStyles.txSty_14b_f5.copyWith(
+              style: CommonStyles.txStyF14CbFF6.copyWith(
                 color: color,
               ),
             ),
@@ -573,10 +528,10 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
         AnimatedReadMoreText(
           tr(LocaleKeys.loan_message),
           maxLines: 3,
-          readMoreText: 'Read More',
+          readMoreText: tr(LocaleKeys.read_more),
           readLessText: '  ',
-          textStyle: CommonStyles.txSty_14b_f5,
-          buttonTextStyle: CommonStyles.txSty_14p_f5,
+          textStyle: CommonStyles.txStyF14CbFF6,
+          buttonTextStyle: CommonStyles.txStyF14CpFF6,
         ),
         const SizedBox(height: 5),
         const Divider(),
@@ -662,11 +617,12 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
   }
 
   void showDigitalSignature() {
+    final size = MediaQuery.of(context).size;
     CommonStyles.customDialog(
       context,
       Container(
-        height: 300,
-        width: 300,
+        width: size.width * 0.7,
+        height: size.height * 0.4,
         padding: const EdgeInsets.all(10.0),
         color: Colors.white,
         child: Column(
@@ -675,14 +631,26 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Digital Signature',
-                    style: CommonStyles.txSty_16b_fb),
+                RichText(
+                  text: TextSpan(
+                    text: tr(LocaleKeys.digital_signature),
+                    style: CommonStyles.txStyF16CbFF6,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: ' *',
+                        style: CommonStyles.txStyF14CwFF6.copyWith(
+                          color: CommonStyles.formFieldErrorBorderColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 GestureDetector(
                     onTap: () {
                       controller?.clear();
                     },
-                    child:
-                        const Text('Clear', style: CommonStyles.txSty_16p_fb)),
+                    child: Text(tr(LocaleKeys.clear),
+                        style: CommonStyles.txStyF14CbFF6)),
               ],
             ),
             Expanded(
@@ -694,10 +662,10 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomBtn(
-                  label: 'Ok',
+                  label: tr(LocaleKeys.ok),
                   onPressed: () async {
                     Navigator.of(context).pop();
 
@@ -710,7 +678,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
 
                       // Assuming collectionDetailsData is a Future
                       collectionDetailsData.then(
-                            (value) => submitRequest(value, base64Signature),
+                        (value) => submitRequest(value, base64Signature),
                       );
                       print('base64Signature:  $base64Signature');
                     } else {
@@ -786,6 +754,7 @@ print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
   void showPdfDialog(BuildContext context, String pdfUrl) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return PdfViewerPopup(pdfUrl: pdfUrl);
       },
@@ -1038,9 +1007,9 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    child: const Text(
-                      'OK',
-                      style: CommonStyles.txSty_16p_f5,
+                    child: Text(
+                      tr(LocaleKeys.ok),
+                      style: CommonStyles.txStyF16CpFF6,
                     ),
                   ),
                 ),
@@ -1055,6 +1024,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
   void showSuccessquikDialog(BuildContext context, String summary) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return SuccessDialog2(title: summary);
       },
