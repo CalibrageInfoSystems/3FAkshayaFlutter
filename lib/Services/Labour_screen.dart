@@ -894,7 +894,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
+        return PopScope(
+            /*  onWillPop: () {
+              return Future.value(false);
+            }, */
+            canPop: false,
+            child: SuccessDialog(msg: msg, title: summary));
       },
     );
   }

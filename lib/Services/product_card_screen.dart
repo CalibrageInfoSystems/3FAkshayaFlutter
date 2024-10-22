@@ -24,13 +24,13 @@ import '../models/farmer_model.dart';
 class ProductCardScreen extends StatefulWidget {
   final List<ProductWithQuantity> products;
   final Godowndata godown;
-  final double totalAmount;  // Add this to accept the amount
+  final double totalAmount; // Add this to accept the amount
 
   const ProductCardScreen({
     super.key,
     required this.products,
     required this.godown,
-    required this.totalAmount,  // Pass this from previous screen
+    required this.totalAmount, // Pass this from previous screen
   });
 
   @override
@@ -86,7 +86,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       Statecode = '${farmer.stateCode}';
       StateName = '${farmer.stateName}';
     });
-   // print('===totalAmount ${widget.totalAmount}');
+    // print('===totalAmount ${widget.totalAmount}');
     calculateCosts();
   }
 
@@ -403,12 +403,14 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               _selectedPaymentType = value!;
               if (_selectedPaymentType != -1) {
                 paymentmodeId = paymentModes[_selectedPaymentType]['typeCdId'];
-                final paymentmodeName = paymentModes[_selectedPaymentType]['desc'];
+                final paymentmodeName =
+                    paymentModes[_selectedPaymentType]['desc'];
 
                 print('setState paymentmodeId: $paymentmodeId');
 
                 // Adjust the condition for showing the checkbox based on the payment mode ID
-                _isCheckboxChecked = false; // Reset the checkbox when changing payment mode
+                _isCheckboxChecked =
+                    false; // Reset the checkbox when changing payment mode
               }
             });
           },
@@ -495,7 +497,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.gstPercentage?.toStringAsFixed(2) ?? '0.0'}',
+            data2: product.gstPercentage?.toStringAsFixed(2) ?? '0.0',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),
@@ -599,12 +601,12 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 payableAmount = totalProductCostGst - subsidyAmount;
                 //  payableAmount = totalProductCostGst - subsidyAmount + totalTransportCostwithgst;
               } else {
-             //   payableAmount = totalProductCostGst;
+                //   payableAmount = totalProductCostGst;
                 payableAmount = totalProductCostGst + totalTransportCostwithgst;
               }
             } else {
               subsidyAmount = 0.0;
-          //    payableAmount = totalProductCostGst;
+              //    payableAmount = totalProductCostGst;
               payableAmount = totalProductCostGst + totalTransportCostwithgst;
             }
 
@@ -791,7 +793,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: displayList, title: successMessage);
+        return PopScope(
+            canPop: false,
+            child: SuccessDialog(msg: displayList, title: successMessage));
       },
     );
   }
@@ -815,17 +819,17 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       if (productWithQuantity.quantity > 0) {
         final product = productWithQuantity.product;
         final quantity = productWithQuantity.quantity;
-     //   priceInclGst
+        //   priceInclGst
         final productCost = product.priceInclGst! * quantity;
         totalProductCostGst += productCost;
 
-        print('===totalProductCostGst ${totalProductCostGst}');
+        print('===totalProductCostGst $totalProductCostGst');
         final transportCost = product.transPortActualPriceInclGst! * quantity;
         totalTransportCostwithgst += transportCost;
 
         final productGSTPercentage = product.gstPercentage ?? 0;
         amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
-      double  totalProductCostGstnew = widget.totalAmount;
+        double totalProductCostGstnew = widget.totalAmount;
         totalGST = totalProductCostGstnew - amountWithoutGst;
         totalCGST = totalGST / 2;
         totalSGST = totalGST / 2;

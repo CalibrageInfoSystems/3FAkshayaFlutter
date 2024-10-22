@@ -129,15 +129,15 @@ class _MainScreenPageState extends State<MainScreen> {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         imagePath,
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         fit: BoxFit.contain,
         color: Colors.black.withOpacity(0.6),
       ),
       activeIcon: SvgPicture.asset(
         imagePath,
-        width: 20,
-        height: 20,
+        width: 25,
+        height: 25,
         fit: BoxFit.contain,
         color: CommonStyles.primaryTextColor,
       ),
@@ -350,15 +350,15 @@ class _MainScreenPageState extends State<MainScreen> {
           ? (isPng
               ? Image.asset(
                   menuIcon,
-                  width: 20,
-                  height: 20,
+                  width: 25,
+                  height: 25,
                   fit: BoxFit.contain,
                   color: Colors.white,
                 )
               : SvgPicture.asset(
                   menuIcon,
-                  width: 20,
-                  height: 20,
+                  width: 25,
+                  height: 25,
                   fit: BoxFit.contain,
                   color: Colors.white,
                 ))

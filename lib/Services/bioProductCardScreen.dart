@@ -659,7 +659,8 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
       context: context,
       // barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
+        return PopScope(
+            canPop: false, child: SuccessDialog(msg: msg, title: summary));
       },
     );
   }

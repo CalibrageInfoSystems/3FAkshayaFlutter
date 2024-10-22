@@ -105,6 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: CommonStyles.primaryTextColor,
           unselectedLabelColor: CommonStyles.whiteColor,
+          dividerColor: Colors.transparent,
           indicator: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
@@ -282,6 +283,11 @@ class FarmerProfile extends StatelessWidget {
             CommonWidgets.commonRowWithColon(
               label: tr(LocaleKeys.address),
               data: '${farmerData.address}',
+            ),
+          if (farmerData.landmark != null)
+            CommonWidgets.commonRowWithColon(
+              label: tr(LocaleKeys.landmark),
+              data: '${farmerData.landmark}',
             ),
           if (farmerData.villageName != null)
             CommonWidgets.commonRowWithColon(

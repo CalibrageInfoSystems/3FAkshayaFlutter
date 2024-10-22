@@ -792,35 +792,40 @@ class CommonStyles {
   }
 
   static void showHorizontalDotsLoadingDialog(BuildContext context,
-      {String message = "Please Wait...", int dotCount = 5}) {
+      {String message = "Please Wait...",
+      int dotCount = 5,
+      bool canPop = true}) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Container(
-              width: MediaQuery.of(context).size.width / 1.5,
-              height: 100.0,
-              color: Colors.black,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    message,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(height: 20),
-                  SpinKitHorizontalDots(
-                    color: const Color(0xFFe86100),
+        return PopScope(
+          canPop: canPop,
+          child: Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 1.5,
+                height: 100.0,
+                color: Colors.black,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      message,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 20),
+                    SpinKitHorizontalDots(
+                      color: const Color(0xFFe86100),
 
-                    dotCount: dotCount, // Number of dots
-                  ),
-                ],
-              ),
-            ));
+                      dotCount: dotCount, // Number of dots
+                    ),
+                  ],
+                ),
+              )),
+        );
       },
     );
   }

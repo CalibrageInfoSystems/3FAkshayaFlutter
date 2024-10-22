@@ -287,7 +287,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                   style: CommonStyles.txSty_16p_f5),
               const SizedBox(height: 5),
               collectionDetails(),
-              const SizedBox(height: 10),
               quickPayDetails(),
               const SizedBox(height: 10),
               termsAndConditions(),
@@ -408,6 +407,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 6,
@@ -444,7 +444,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
   Widget collectionDetails() {
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      // color: Colors.lightGreenAccent,
       height: size.height * 0.28,
       child: FutureBuilder(
         future: collectionDetailsData,
@@ -468,7 +467,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
             itemBuilder: (context, index) {
               final collection = collections[index];
               return Container(
-                padding: const EdgeInsets.all(10),
+                // padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
                   color:
@@ -656,7 +655,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
             Expanded(
               child: Signature(
                 // width: 300,
-                height: 200,
+                // height: 200,
                 backgroundColor: Colors.white,
                 controller: controller!,
               ),
@@ -751,12 +750,13 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     return collectionIds;
   }
 
+  bool isDialog = true;
   void showPdfDialog(BuildContext context, String pdfUrl) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return PdfViewerPopup(pdfUrl: pdfUrl);
+        return PopScope(canPop: false, child: PdfViewerPopup(pdfUrl: pdfUrl));
       },
     );
   }
@@ -1026,7 +1026,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog2(title: summary);
+        return PopScope(canPop: false, child: SuccessDialog2(title: summary));
       },
     );
   }

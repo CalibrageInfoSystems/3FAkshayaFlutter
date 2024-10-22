@@ -737,7 +737,8 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
+        return PopScope(
+            canPop: false, child: SuccessDialog(msg: msg, title: summary));
       },
     );
   }

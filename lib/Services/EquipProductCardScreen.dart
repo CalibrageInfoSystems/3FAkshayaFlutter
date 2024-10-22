@@ -647,7 +647,8 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return SuccessDialog(msg: msg, title: summary);
+        return PopScope(
+            canPop: false, child: SuccessDialog(msg: msg, title: summary));
       },
     );
   }
