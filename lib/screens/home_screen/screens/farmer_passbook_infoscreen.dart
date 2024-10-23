@@ -13,6 +13,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/main.dart';
 import 'package:akshaya_flutter/models/passbook_transport_model.dart';
 import 'package:akshaya_flutter/models/passbook_vendor_model.dart';
+import 'package:auto_animated/auto_animated.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -389,7 +390,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
           children: [
             Expanded(
               child: datePickerBox(
-                dateLabel: tr(LocaleKeys.from_date),
+                dateLabel: tr(LocaleKeys.fromDateWithOutStar),
                 displaydate: displayFromDate,
                 onTap: () {
                   final currentDate = DateTime.now();
@@ -405,7 +406,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
             const SizedBox(width: 10),
             Expanded(
                 child: datePickerBox(
-              dateLabel: tr(LocaleKeys.to_date),
+              dateLabel: tr(LocaleKeys.toDateWithOutStar),
               // dateLabel: 'To Date',
               displaydate: displayToDate,
               onTap: () {
@@ -776,20 +777,28 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          displaydate == null
-              ? Row(
-                  children: [
-                    Text(dateLabel,
-                        style: CommonStyles.txSty_14black
-                            .copyWith(color: CommonStyles.whiteColor)),
-                    // const SizedBox(width: 5),
-                    // const Text('*', style: TextStyle(color: Colors.red)),
-                  ],
-                )
-              : Text(displaydate,
-                  style: CommonStyles.txSty_14black
-                      .copyWith(color: CommonStyles.whiteColor)),
-          const Divider(color: CommonStyles.whiteColor),
+          Row(
+            children: [
+              displaydate == null
+                  ? RichText(
+                      text: TextSpan(
+                        text: dateLabel,
+                        style: CommonStyles.txStyF16CbFF6.copyWith(
+                            // color: CommonStyles.dataTextColor,
+                            ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                color: CommonStyles.formFieldErrorBorderColor),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
+            ],
+          ),
+          const Divider(),
         ],
       ),
     );
@@ -1120,7 +1129,18 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                         const SizedBox(height: 5),
                         passbookVendor.result!.paymentResponce != null
                             ? Expanded(
-                                child: ListView.separated(
+                                child: CommonWidgets.customSlideAnimation(
+                                  itemCount: passbookVendor
+                                      .result!.paymentResponce!.length,
+                                  isSeparatorBuilder: true,
+                                  childBuilder: (index) {
+                                    final itemData = passbookVendor
+                                        .result!.paymentResponce![index];
+                                    return item(index, itemData: itemData);
+                                  },
+                                ),
+
+                                /* ListView.separated(
                                   itemCount: passbookVendor
                                       .result!.paymentResponce!.length,
                                   itemBuilder: (context, index) {
@@ -1130,7 +1150,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                   },
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(height: 10),
-                                ),
+                                ), */
                               )
                             : const Expanded(
                                 child: Center(

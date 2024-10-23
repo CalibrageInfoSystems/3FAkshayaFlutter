@@ -181,7 +181,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     // Assuming sumOfTotalAmountToPay is a calculated value
     double sumOfTotalAmountToPay =
         sumoftotalamounttopay!; // Define this function to calculate
-    print('==========sumOfTotalAmountToPay $sumOfTotalAmountToPay');
     if (sumOfTotalAmountToPay > 0) {
       // Get farmer information from shared preferences
       FarmerModel farmerData =
@@ -208,7 +207,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         districtName = 'null'; // Default if not "AP"
       }
 
-// Prepare request body
       final requestBody = jsonEncode({
         "closingBalance": collections.isNotEmpty ? collections[0].dues : 0.0,
         "clusterId": farmerData.clusterId ?? '',
@@ -248,6 +246,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         body: requestBody,
       );
 
+      Navigator.of(context).pop();
       print('submitRequest: $apiUrl');
       print('submitRequest: $requestBody');
       print('submitRequest: ${jsonResponse.body}');
@@ -666,8 +665,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 CustomBtn(
                   label: tr(LocaleKeys.ok),
                   onPressed: () async {
-                    Navigator.of(context).pop();
-
                     // Assuming controller?.toPngBytes() returns Uint8List of the signature
                     Uint8List? signatureBytes = await controller?.toPngBytes();
 
@@ -917,7 +914,9 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
   bool isLoading = true;
   late final WebViewController _controller;
 
-  @override
+  bool _reloadPdf = false;
+
+/*   @override
   void initState() {
     super.initState();
     _controller = WebViewController()
@@ -928,6 +927,51 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
             setState(() {
               isLoading = false;
             });
+          },
+        ),
+      )
+      ..reload()
+      ..loadRequest(Uri.parse(
+          "https://docs.google.com/gview?embedded=true&url=${widget.pdfUrl}"));
+  } */
+
+  @override
+/*************  ✨ Codeium Command ⭐  *************/
+  /// Initialize the state of the widget.
+  ///
+  /// This method is called when the widget is inserted into the tree.
+  ///
+  /// It creates a [WebViewController] and sets its JavaScript mode to
+  /// [JavaScriptMode.unrestricted] and its navigation delegate.
+  ///
+  /// The navigation delegate is used to handle page finished and web resource
+  /// error events. When the page is finished, the [isLoading] flag is set to
+  /// false. When a web resource error occurs, the page is reloaded.
+  ///
+  /// The page is loaded with the URL "https://docs.google.com/gview?embedded=true&url=<url>".
+  ///
+  /// The [isLoading] flag is used to show a loading indicator while the page is
+  /// loading.
+  ///
+  /// The [_reloadPdf] flag is used to prevent infinite reloading of the page.
+/******  163a2759-b024-4bd1-abf1-496403720b27  *******/
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {
+            if (!_reloadPdf) {
+              _reloadPdf = true;
+              _controller.loadRequest(Uri.parse(
+                  "https://docs.google.com/gview?embedded=true&url=${widget.pdfUrl}"));
+            }
           },
         ),
       )

@@ -114,7 +114,18 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   ),
                 );
               } else {
-                return ListView.separated(
+                return CommonWidgets.customSlideAnimation(
+                  itemCount: requests.length,
+                  isSeparatorBuilder: true,
+                  childBuilder: (index) {
+                    return request(
+                      index,
+                      requests[index],
+                      onTap: () => showCompleteDetailsOnDialog(requests[index]),
+                    );
+                  },
+                );
+                /*  return ListView.separated(
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
                     return request(
@@ -126,7 +137,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 10);
                   },
-                );
+                ); */
               }
             }),
       ),

@@ -114,7 +114,20 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
                 ),
               );
             } else {
-              return ListView.separated(
+              return CommonWidgets.customSlideAnimation(
+                itemCount: requests.length,
+                isSeparatorBuilder: true,
+                childBuilder: (index) {
+                  return request(
+                    index,
+                    requests[index],
+                    onTap: () {
+                      fetchQuickPayDocument(requests[index].requestCode);
+                    },
+                  );
+                },
+              );
+              /*  return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   return request(
@@ -128,7 +141,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: 10);
                 },
-              );
+              ); */
             }
           },
         ),

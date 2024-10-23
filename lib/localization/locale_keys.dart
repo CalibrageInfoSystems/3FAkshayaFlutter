@@ -140,6 +140,9 @@ class LocaleKeys {
   static const String ffb_qty = "ffb_qty";
   static const String ffbratenorthere = "ffbratenorthere";
   static const String from_date = "from_date";
+  static const String fromDateWithOutStar = "fromDateWithOutStar";
+  static const String toDateWithOutStar = "toDateWithOutStar";
+
   static const String from_month = "from_month";
   static const String fruitColor = "fruitColor";
   static const String fruitHyegiene = "fruitHyegiene";

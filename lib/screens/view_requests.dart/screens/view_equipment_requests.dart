@@ -107,14 +107,32 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
 
             final requests = snapshot.data as List<CommonViewRequestModel>;
             if (requests.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
-                  'No Requests Found',
-                  style: CommonStyles.txSty_16p_fb,
+                  tr(LocaleKeys.no_req_found),
+                  style: CommonStyles.txStyF16CpFF6,
                 ),
               );
             } else {
-              return ListView.separated(
+              return CommonWidgets.customSlideAnimation(
+                itemCount: requests.length,
+                isSeparatorBuilder: true,
+                childBuilder: (index) {
+                  return request(
+                    index,
+                    requests[index],
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProductDetails(
+                                    requestCode: requests[index].requestCode,
+                                  )));
+                    },
+                  );
+                },
+              );
+              /*  return ListView.separated( 
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   return request(
@@ -133,7 +151,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: 10);
                 },
-              );
+              ); */
             }
           },
         ),

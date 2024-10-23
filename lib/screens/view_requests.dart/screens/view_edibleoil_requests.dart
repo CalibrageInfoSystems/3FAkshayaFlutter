@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-
 class ViewEdibleoilRequests extends StatefulWidget {
   const ViewEdibleoilRequests({super.key});
 
@@ -115,7 +114,34 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
                 ),
               );
             } else {
-              return ListView.separated(
+              return CommonWidgets.customSlideAnimation(
+                itemCount: requests.length,
+                isSeparatorBuilder: true,
+                childBuilder: (index) {
+                  final request = requests[index];
+
+                  return this.request(
+                    index,
+                    request,
+                    onTap: () {
+                      // Ensuring null safety for nullable fields
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FertilizerProductDetails(
+                            requestCode: request.requestCode ?? 'N/A',
+                            payableAmount:
+                                request.paubleAmount.toString() ?? '0.0',
+                            subsidyAmount:
+                                request.subsidyAmount.toString() ?? '0.0',
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+              /* return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   final request = requests[index];
@@ -144,7 +170,7 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: 10);
                 },
-              );
+              ); */
             }
           },
         ),

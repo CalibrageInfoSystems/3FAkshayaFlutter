@@ -44,6 +44,12 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
   }
 
   Future<List<ViewVisitModel>> getVisitRequest() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     const apiUrl = '$baseUrl$getVisitRequestDetails';
@@ -61,6 +67,11 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
       },
       body: requestBody,
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
 
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
@@ -124,7 +135,51 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                   ),
                 );
               } else {
-                return ListView.builder(
+                return CommonWidgets.customSlideAnimation(
+                  itemCount: visitRequests.length,
+                  isSeparatorBuilder: true,
+                  childBuilder: (index) {
+                    final request = visitRequests[index];
+                    return visitRequest(
+                      index,
+                      request,
+                      onPressed: () {
+                        getVisitRequestMoreDetails(request.requestCode)
+                            .then((value) {
+                          // Images
+                          List<ViewVisitMoreDetailsModel> imageList = value
+                              .where((element) => element.fileTypeId == 36)
+                              .toList();
+
+                          // Audo
+                          List<ViewVisitMoreDetailsModel> audioList = value
+                              .where((element) => element.fileTypeId == 37)
+                              .toList();
+
+                          if (value.isNotEmpty) {
+                            CommonStyles.errorDialog(
+                              context,
+                              errorMessage: 'errorMessage',
+                              isHeader: false,
+                              bodyBackgroundColor: Colors.white,
+                              errorMessageColor: Colors.orange,
+                              errorBodyWidget: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  MoreDetails(
+                                    imagesList: imageList,
+                                    audioFilePath: audioList,
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+                        });
+                      },
+                    );
+                  },
+                );
+                /*  return ListView.builder(
                   itemCount: visitRequests.length,
                   itemBuilder: (context, index) {
                     final request = visitRequests[index];
@@ -167,7 +222,7 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                       },
                     );
                   },
-                );
+                ); */
               }
             }
           },
@@ -339,8 +394,7 @@ class _MoreDetailsState extends State<MoreDetails> {
   void initState() {
     super.initState();
     if (widget.audioFilePath.isNotEmpty) {
-      print(
-          'Audio path: ${widget.audioFilePath[0].fileLocation} ');
+      print('Audio path: ${widget.audioFilePath[0].fileLocation} ');
       _initAudio();
     }
     print(
@@ -379,7 +433,8 @@ class _MoreDetailsState extends State<MoreDetails> {
   Future<void> _initAudio() async {
     try {
       // Ensure the file path is sanitized by replacing backslashes with forward slashes
-      String sanitizedUrl = widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
+      String sanitizedUrl =
+          widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
 
       // Log the sanitized URL for debugging purposes
       print('Sanitized audio URL: $sanitizedUrl');
@@ -419,14 +474,14 @@ class _MoreDetailsState extends State<MoreDetails> {
     }
   }
 
-
   Future<void> playOrPause() async {
     try {
       if (isPlaying) {
         await _audioPlayer.pause();
       } else {
         // Replace backslashes with forward slashes
-        String sanitizedUrl = widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/');
+        String sanitizedUrl =
+            widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/');
 
         await _audioPlayer.play(UrlSource(sanitizedUrl));
       }
@@ -439,7 +494,6 @@ class _MoreDetailsState extends State<MoreDetails> {
       print('Error playing audio: $e');
     }
   }
-
 
   @override
   void dispose() {

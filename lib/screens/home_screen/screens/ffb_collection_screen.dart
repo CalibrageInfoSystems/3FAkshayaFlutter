@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
@@ -11,6 +12,7 @@ import 'package:akshaya_flutter/models/collection_count.dart';
 import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/collection_info_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/temp_ffb_collection_screen.dart';
+import 'package:auto_animated/auto_animated.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -216,7 +218,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Expanded(
             flex: 3,
             child: datePickerBox1(
-              dateLabel: tr(LocaleKeys.from_date),
+              dateLabel: tr(LocaleKeys.fromDateWithOutStar),
               displaydate: displayFromDate,
               onTap: () {
                 final DateTime currentDate = DateTime.now();
@@ -233,7 +235,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Expanded(
               flex: 3,
               child: datePickerBox2(
-                dateLabel: tr(LocaleKeys.to_date),
+                dateLabel: tr(LocaleKeys.toDateWithOutStar),
                 // dateLabel: 'To Date',
                 displaydate: displayToDate,
                 onTap: () async {
@@ -286,15 +288,25 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Row(
             children: [
               displaydate == null
-                  ? Text(dateLabel,
-                      style: CommonStyles.txSty_14black
-                          .copyWith(color: CommonStyles.whiteColor))
-                  : Text(displaydate,
-                      style: CommonStyles.txSty_14black
-                          .copyWith(color: CommonStyles.whiteColor)),
+                  ? RichText(
+                      text: TextSpan(
+                        text: dateLabel,
+                        style: CommonStyles.txStyF16CbFF6.copyWith(
+                            // color: CommonStyles.dataTextColor,
+                            ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                color: CommonStyles.formFieldErrorBorderColor),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
             ],
           ),
-          const Divider(color: CommonStyles.whiteColor),
+          const Divider(),
         ],
       ),
     );
@@ -312,15 +324,25 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Row(
             children: [
               displaydate == null
-                  ? Text(dateLabel,
-                      style: CommonStyles.txSty_14black
-                          .copyWith(color: CommonStyles.whiteColor))
-                  : Text(displaydate,
-                      style: CommonStyles.txSty_14black
-                          .copyWith(color: CommonStyles.whiteColor)),
+                  ? RichText(
+                      text: TextSpan(
+                        text: dateLabel,
+                        style: CommonStyles.txStyF16CbFF6.copyWith(
+                            // color: CommonStyles.dataTextColor,
+                            ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                            text: '*',
+                            style: TextStyle(
+                                color: CommonStyles.formFieldErrorBorderColor),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
             ],
           ),
-          const Divider(color: CommonStyles.whiteColor),
+          const Divider(),
         ],
       ),
     );
@@ -523,9 +545,17 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                 final collection = snapshot.data as CollectionResponse;
 
                 if (collection.collectionData != null) {
-                  return ListView.builder(
+                  /*  return ListView.builder(
                     itemCount: collection.collectionData!.length,
                     itemBuilder: (context, index) {
+                      return collectionDataItem(
+                          index: index,
+                          data: collection.collectionData![index]);
+                    },
+                  ); */
+                  return CommonWidgets.customSlideAnimation(
+                    itemCount: collection.collectionData!.length,
+                    childBuilder: (index) {
                       return collectionDataItem(
                           index: index,
                           data: collection.collectionData![index]);
@@ -725,6 +755,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     required String fromDate,
     String? toDate,
   }) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
     DateFormat formatter = DateFormat('yyyy-MM-dd');
     toDate ??= formatter.format(DateTime.now());
 
@@ -745,7 +780,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         'Content-Type': 'application/json',
       },
     );
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
     print('ffb getCollectionData: $apiUrl');
     print('ffb getCollectionData: ${json.encode(requestBody)}');
     print('ffb getCollectionData: ${jsonResponse.body}');

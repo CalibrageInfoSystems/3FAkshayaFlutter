@@ -30,6 +30,11 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
   }
 
   Future<List<ViewLoanRequest>> getLoanRequest() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     const apiUrl = '$baseUrl$getLoanRequestDetails';
@@ -47,7 +52,11 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
       },
       body: requestBody,
     );
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null) {
@@ -87,7 +96,48 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                   ),
                 );
               } else {
-                return ListView.separated(
+                return CommonWidgets.customSlideAnimation(
+                  itemCount: visitRequests.length,
+                  isSeparatorBuilder: true,
+                  childBuilder: (index) {
+                    final request = visitRequests[index];
+                    return visitRequest(
+                      index,
+                      request,
+                      viewMoreDetails: () {
+                        CommonStyles.errorDialog(
+                          context,
+                          errorHeaderColor: Colors.transparent,
+                          bodyBackgroundColor: Colors.transparent,
+                          isHeader: false,
+                          errorMessage: '',
+                          errorBodyWidget: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              (request.comments == null ||
+                                      request.comments!.isEmpty)
+                                  ? Text(tr(LocaleKeys.nocomments),
+                                      style: CommonStyles.txStyF16CpFF6)
+                                  : Text(tr(LocaleKeys.comments),
+                                      style: CommonStyles.txStyF16CpFF6),
+                              const SizedBox(height: 10),
+                              (request.comments == null ||
+                                      request.comments!.isEmpty)
+                                  ? const SizedBox()
+                                  : Row(
+                                      children: [
+                                        Text('${request.comments}',
+                                            style: CommonStyles.txStyF14CbFF6),
+                                      ],
+                                    ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+                /*  return ListView.separated(
                   itemCount: visitRequests.length,
                   separatorBuilder: (context, index) {
                     return const SizedBox(height: 10);
@@ -129,7 +179,7 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                       },
                     );
                   },
-                );
+                ); */
               }
             }
           },

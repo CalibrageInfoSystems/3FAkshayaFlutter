@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
@@ -42,7 +43,6 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
       if (response['listResult'] != null && response['listResult'].isNotEmpty) {
         List<dynamic> result = response['listResult'];
         return result.map((item) => UnpaidCollection.fromJson(item)).toList();
-
       } else {
         throw Exception(
           tr(LocaleKeys.no_unpaid_collections),
@@ -82,7 +82,15 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                 return Column(
                   children: [
                     Expanded(
-                      child: ListView.separated(
+                      child: CommonWidgets.customSlideAnimation(
+                        itemCount: data.length,
+                        isSeparatorBuilder: true,
+                        childBuilder: (index) {
+                          return quickPayBox(index: index, data: data[index]);
+                        },
+                      ),
+
+                      /* ListView.separated(
                         itemCount: data.length,
                         separatorBuilder: (context, index) {
                           return const SizedBox(height: 10);
@@ -90,7 +98,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                         itemBuilder: (context, index) {
                           return quickPayBox(index: index, data: data[index]);
                         },
-                      ),
+                      ), */
                     ),
                     const SizedBox(height: 10),
                     Row(
@@ -104,7 +112,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                                 CommonStyles.showHorizontalDotsLoadingDialog(
                                     context);
                               });
-                          //    blockdate(data)
+                              //    blockdate(data)
                               raiseRequest(data);
                             }),
                       ],

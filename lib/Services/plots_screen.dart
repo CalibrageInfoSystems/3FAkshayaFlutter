@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:akshaya_flutter/Services/Labour_screen.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
@@ -74,7 +75,30 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
                       style: CommonStyles.txStyF16CpFF6);
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
-                  return ListView.builder(
+                  return CommonWidgets.customSlideAnimation(
+                    itemCount: plots.length,
+                    childBuilder: (index) {
+                      if (plots.isNotEmpty && index < plots.length) {
+                        return CropPlotDetails(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Labourscreen(
+                                          plotdata: plots[index],
+                                        )),
+                              );
+                            },
+                            plotdata: plots[index],
+                            index: index);
+                      } else {
+                        return const SizedBox();
+                        // Return nothing or handle the error appropriately
+                      }
+                    },
+                  );
+
+                  /*  return ListView.builder(
                     itemCount: plots.length,
                     itemBuilder: (context, index) {
                       if (plots.isNotEmpty && index < plots.length) {
@@ -97,7 +121,7 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
                       }
                       return Container(); // or return any widget that makes sense in your context
                     },
-                  );
+                  ); */
                 } else {
                   return const Center(
                       child: CircularProgressIndicator.adaptive());

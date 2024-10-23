@@ -1,5 +1,6 @@
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:auto_animated/auto_animated.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -133,6 +134,35 @@ class CommonWidgets {
           ),
         ],
       ),
+    );
+  }
+
+  static Widget customSlideAnimation(
+      {required int itemCount,
+      bool isSeparatorBuilder = false,
+      required Widget Function(int index) childBuilder}) {
+    return LiveList.options(
+      options: const LiveOptions(
+        delay: Duration(milliseconds: 100),
+        showItemInterval: Duration(milliseconds: 100),
+        showItemDuration: Duration(milliseconds: 250),
+        reAnimateOnVisibility: false,
+      ),
+      itemCount: itemCount,
+      separatorBuilder: (context, index) =>
+          isSeparatorBuilder ? const SizedBox(height: 10) : const SizedBox(),
+      itemBuilder: (context, index, animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.3),
+              end: Offset.zero,
+            ).animate(animation),
+            child: childBuilder(index),
+          ),
+        );
+      },
     );
   }
 }

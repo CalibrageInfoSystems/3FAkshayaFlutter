@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/visit_request_screen.dart';
+import 'package:auto_animated/auto_animated.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,7 +91,19 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                   );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
-                  return ListView.builder(
+                  return CommonWidgets.customSlideAnimation(
+                    itemCount: plots.length,
+                    isSeparatorBuilder: true,
+                    childBuilder: (index) {
+                      return CropPlotDetails(
+                          onTap: () =>
+                              navigateAccordingToServiceTypeId(plots[index]),
+                          plotdata: plots[index],
+                          index: index);
+                    },
+                  );
+
+                  /* ListView.builder(
                     itemCount: plots.length,
                     itemBuilder: (context, index) {
                       return CropPlotDetails(
@@ -98,7 +112,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                           plotdata: plots[index],
                           index: index);
                     },
-                  );
+                  ); */
                 } else {
                   return CommonStyles.rectangularShapeShimmerEffect();
                 }

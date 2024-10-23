@@ -136,6 +136,8 @@
     "ffb_qty": "మొత్తం ఎఫ్‌ఎఫ్‌బి పరిమాణం (టన్ను)",
     "ffbratenorthere": "మీ యొక్క గెలల సేకరణలలో ఒక సేకరణకు <b>త్వరిత చెల్లింపు ధర",
     "from_date": "తేదీ నుండి * ",
+    "fromDateWithOutStar": "తేదీ నుండి ",
+    "toDateWithOutStar": "తేదీ వరకు ",
     "from_month": "నెల నుండి *",
     "fruitColor": "పండ్ల రంగు",
     "fruitHyegiene": "పండ్ల పరిశుభ్రత",
