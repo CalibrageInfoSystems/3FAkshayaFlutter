@@ -78,14 +78,14 @@ class GodownSelection extends State<GodownSelectionScreen> {
 
       print('stateCode -==$stateCode');
     });
-    setState(() {
+    /* setState(() {
       isLoading = true;
-    });
+    }); */
 
     //Show loading dialog
-    Future.delayed(Duration.zero, () {
+    /*   Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
-    });
+    }); */
     // http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP
     try {
       final response =
@@ -104,9 +104,9 @@ class GodownSelection extends State<GodownSelectionScreen> {
         throw Exception('Failed to load locations');
       }
     } catch (e) {
-      setState(() {
+      /*  setState(() {
         isLoading = false;
-      });
+      }); */
       print(e);
     } finally {
       Navigator.pop(context);
