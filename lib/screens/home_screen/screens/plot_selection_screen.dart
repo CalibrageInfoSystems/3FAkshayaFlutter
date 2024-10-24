@@ -77,17 +77,20 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          // padding: const EdgeInsets.all(12.0),
           child: FutureBuilder(
               future: plotsData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                        snapshot.error
-                            .toString()
-                            .replaceFirst('Exception: ', ''),
-                        style: CommonStyles.txStyF16CpFF6),
+                      snapshot.error.toString().replaceFirst('Exception: ', ''),
+                      // style: CommonStyles.txStyF16CpFF6,
+                      style: CommonStyles.txStyF16CpFF6.copyWith(
+                        fontSize: 20,
+                      ),
+                    ),
                   );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
@@ -267,7 +270,9 @@ class CropPlotDetails extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txStyF14CbFF6,
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                    fontSize: 14.3,
+                  ),
                 )),
             Expanded(
               flex: 6,
@@ -275,6 +280,7 @@ class CropPlotDetails extends StatelessWidget {
                 data,
                 style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: dataTextColor,
+                  fontSize: 14.3,
                 ),
               ),
             ),

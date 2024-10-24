@@ -710,8 +710,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                       child: Text(
                         item,
                         style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
@@ -784,8 +784,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                       text: TextSpan(
                         text: dateLabel,
                         style: CommonStyles.txStyF16CbFF6.copyWith(
-                            // color: CommonStyles.dataTextColor,
-                            ),
+                          color: CommonStyles.dataTextColor2,
+                        ),
                         children: const <TextSpan>[
                           TextSpan(
                             text: '*',
@@ -798,7 +798,9 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                   : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
             ],
           ),
-          const Divider(),
+          const Divider(
+            color: CommonStyles.dataTextColor2,
+          ),
         ],
       ),
     );
@@ -1116,8 +1118,13 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                       passbookVendor.result!.paymentResponce!.isEmpty) {
                     return Expanded(
                       child: Center(
-                        child: Text(tr(LocaleKeys.no_payments_found),
-                            style: CommonStyles.txStyF16CpFF6),
+                        child: Text(
+                          tr(LocaleKeys.no_payments_found),
+                          // style: CommonStyles.txStyF16CpFF6,
+                          style: CommonStyles.txStyF16CpFF6.copyWith(
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     );
                   } else {
@@ -1194,7 +1201,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           if (result.totalBalance != null)
             commonRowWithColon(
                 label: tr(LocaleKeys.totalBalance),
-                data: result.totalBalance!.toStringAsFixed(2),
+                // data: '${result.totalBalance}',
+                data: result.totalBalance!.toInt().toString(),
                 style: CommonStyles.txStyF14CwFF6,
                 isSpace: false),
         ],
@@ -1316,7 +1324,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                               itemData.amount! != 0) // && itemData.amount! > 0
                             itemRow(
                                 label: tr(LocaleKeys.amount),
-                                data: '${itemData.amount?.toStringAsFixed(2)}'),
+                                // data: '${itemData.amount?.toStringAsFixed(2)}'),
+                                data: '${itemData.amount?.toInt().toString()}'),
                           if (itemData.adjusted != null &&
                               itemData.adjusted! > 0)
                             itemRow(
@@ -1328,13 +1337,13 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             itemRow(
                                 label: tr(LocaleKeys.gr),
                                 data:
-                                    '${itemData.gRAmount?.toStringAsFixed(2)}'),
+                                    '${itemData.gRAmount?.round().toString()}'),
                           if (itemData.quantity != null &&
                               itemData.quantity! > 0)
                             itemRow(
                                 label: tr(LocaleKeys.ffb),
                                 data:
-                                    '${itemData.quantity?.toStringAsFixed(2)}'),
+                                    '${itemData.quantity?.toStringAsFixed(3)}'),
                           if (itemData.adhocRate != null &&
                               itemData.adhocRate! > 0)
                             itemRow(
@@ -1346,7 +1355,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             itemRow(
                                 label: tr(LocaleKeys.invoice_rate),
                                 data:
-                                    '${itemData.invoiceRate?.toStringAsFixed(2)}'),
+                                    '${itemData.invoiceRate?.round().toString()}'),
                           if (itemData.memo != null)
                             itemRow(
                                 label: tr(LocaleKeys.descriptionn),
@@ -1363,7 +1372,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             child: itemRow(
                                 isSpace: false,
                                 label: tr(LocaleKeys.balance),
-                                data: formatDouble(itemData.balance)),
+                                data: itemData.balance == null
+                                    ? '0'
+                                    : itemData.balance!.round().toString()),
+                            // data: formatDouble(itemData.balance)),
                           ),
                         ]))
                   ],
@@ -1524,7 +1536,8 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                     return Expanded(
                       child: Center(
                         child: Text(tr(LocaleKeys.no_trans_found),
-                            style: CommonStyles.txStyF16CpFF6),
+                            style: CommonStyles.txStyF16CpFF6
+                                .copyWith(fontSize: 15)),
                       ),
                     );
                   }

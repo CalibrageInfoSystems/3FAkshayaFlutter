@@ -165,6 +165,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
 
   Row infoBox({required String label, String? data}) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           flex: 4,
@@ -203,7 +204,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 5),
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 5),
                 child: Text(
                   data ?? '',
                   style: CommonStyles.txStyF14CwFF6,

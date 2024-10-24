@@ -74,8 +74,12 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
-                      snapshot.error.toString().replaceFirst('Exception: ', ''),
-                      style: CommonStyles.txStyF16CpFF6),
+                    snapshot.error.toString().replaceFirst('Exception: ', ''),
+                    // style: CommonStyles.txStyF16CpFF6,
+                    style: CommonStyles.txStyF16CpFF6.copyWith(
+                      fontSize: 20,
+                    ),
+                  ),
                 );
               } else {
                 final data = snapshot.data as List<UnpaidCollection>;
@@ -221,7 +225,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
             flex: 3,
             child: Text(
               label,
-              style: CommonStyles.txStyF14CbFF6,
+              style: CommonStyles.txStyF14CbFF6.copyWith(fontSize: 14.1),
             ),
           ),
           const SizedBox(width: 10),
@@ -229,9 +233,8 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
             flex: 8,
             child: Text(
               '$data',
-              style: CommonStyles.txStyF14CbFF6.copyWith(
-                color: datatextColor,
-              ),
+              style: CommonStyles.txStyF14CbFF6
+                  .copyWith(color: datatextColor, fontSize: 14.1),
             ),
           ),
         ],

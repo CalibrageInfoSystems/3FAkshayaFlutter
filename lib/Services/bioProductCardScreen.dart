@@ -370,11 +370,11 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
               }
             });
           },
-          // buttonStyleData: const ButtonStyleData(
-          //   height: 45,
-          //   width: double.infinity,
-          //   padding: EdgeInsets.only(left: 14, right: 14),
-          // ),
+          buttonStyleData: const ButtonStyleData(
+            height: 40,
+            width: double.infinity,
+            // padding: EdgeInsets.only(left: 14, right: 14),
+          ),
           iconStyleData: const IconStyleData(
             icon: Icon(
               Icons.arrow_drop_down_sharp,
@@ -451,7 +451,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.gstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.gstPercentage?.toStringAsFixed(1)}',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),

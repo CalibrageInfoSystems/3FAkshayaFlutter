@@ -726,8 +726,21 @@ class _StandardState extends State<Standard> {
             )),
         const SizedBox(height: 8),
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          child: RichText(
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Text(
+                  '${tr(LocaleKeys.notee)}  ',
+                  style: CommonStyles.text18orangeeader,
+                ),
+                Text(
+                  tr(LocaleKeys.standard_note),
+                  style: CommonStyles.txStyF14CwFF6,
+                ),
+              ],
+            )
+
+            /* RichText(
             text: TextSpan(
               text: tr(LocaleKeys.notee),
               style: CommonStyles.text18orangeeader,
@@ -738,8 +751,8 @@ class _StandardState extends State<Standard> {
                 ),
               ],
             ),
-          ),
-        ),
+          ), */
+            ),
         const SizedBox(height: 8),
         Expanded(
           child: ListView.builder(

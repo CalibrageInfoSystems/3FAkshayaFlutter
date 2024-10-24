@@ -149,7 +149,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             noteBox(),
             const SizedBox(height: 10),
             productCostbox(
@@ -376,7 +376,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             });
           },
           buttonStyleData: const ButtonStyleData(
-            height: 45,
+            height: 40,
             width: double.infinity,
             padding: EdgeInsets.only(left: 14, right: 14),
           ),
@@ -461,7 +461,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.gstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.gstPercentage?.toStringAsFixed(1)}',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),

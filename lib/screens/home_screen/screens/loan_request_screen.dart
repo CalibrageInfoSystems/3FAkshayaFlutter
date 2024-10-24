@@ -302,7 +302,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Text(tr(LocaleKeys.loan_terms),
-                      style: CommonStyles.txSty_14b_f5),
+                      style: CommonStyles.txStyF14CbFF6),
                 ),
               ),
             ),

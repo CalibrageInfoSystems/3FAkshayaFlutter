@@ -1,4 +1,6 @@
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
+import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -218,7 +220,7 @@ class SuccessDialog extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
-                                    flex: 1,
+                                    flex: 2,
                                     child: Text(
                                       msg[index].key,
                                       style:
@@ -264,7 +266,9 @@ class SuccessDialog extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomBtn(
-                                label: 'Ok',
+                                label: tr(LocaleKeys.ok),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(

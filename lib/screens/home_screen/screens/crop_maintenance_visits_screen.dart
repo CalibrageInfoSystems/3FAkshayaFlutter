@@ -482,10 +482,10 @@ class CropPlotDetails extends StatelessWidget {
     DateTime parsedDate = DateTime.parse(dateOfPlanting!);
     String year = parsedDate.year.toString();
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10).copyWith(
-        left: 10,
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      // padding: const EdgeInsets.symmetric(vertical: 10).copyWith(
+      //   left: 10,
+      // ),
+      // margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.transparent,
@@ -546,13 +546,17 @@ class CropPlotDetails extends StatelessWidget {
                 flex: 5,
                 child: Text(
                   label,
-                  style: CommonStyles.txStyF14CbFF6,
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                    fontSize: 14.3,
+                  ),
                 )),
             Expanded(
               flex: 6,
               child: Text(
                 data,
-                style: CommonStyles.txStyF14CbFF6,
+                style: CommonStyles.txStyF14CbFF6.copyWith(
+                  fontSize: 14.3,
+                ),
               ),
             ),
           ],

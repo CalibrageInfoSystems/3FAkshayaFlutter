@@ -11,6 +11,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/models/type_issue.dart';
 import 'package:akshaya_flutter/screens/main_screen.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -538,6 +539,8 @@ class _VisitRequestState extends State<VisitRequest> {
                     List<TypeIssue> dropdownItems =
                         snapshot.data as List<TypeIssue>;
 
+                    return dropdownSelector(dropdownItems);
+/* 
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -545,14 +548,73 @@ class _VisitRequestState extends State<VisitRequest> {
                       ),
                       width: double.infinity,
                       child: DropdownButtonHideUnderline(
+                        child: DropdownButton2<int>(
+                          value: selectedTypeOfIssueId,fvdfdvfdvd
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
+                          isExpanded: true,
+                          hint: const Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Select',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          items: dropdownItems.map((item) {
+                            return DropdownMenuItem<int>(
+                              value: item.typeCdId,
+                              child: Text(
+                                '${item.desc}',
+                                style: CommonStyles.txStyF14CwFF6,
+                              ),
+                            );
+                          }).toList(),
+                          dropdownStyleData: DropdownStyleData(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(12),
+                                  bottomLeft: Radius.circular(12)),
+                              color: CommonStyles.dropdownListBgColor,
+                            ),
+                            offset: const Offset(0, 0),
+                            scrollbarTheme: ScrollbarThemeData(
+                              radius: const Radius.circular(40),
+                              thickness: WidgetStateProperty.all<double>(6),
+                              thumbVisibility:
+                                  WidgetStateProperty.all<bool>(true),
+                            ),
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                          ),
+                        ),
+                      ),
+
+                      /*  
+                      DropdownButtonHideUnderline(
                         child: ButtonTheme(
                           alignedDropdown: true,
                           child: DropdownButton<int>(
                             value: selectedTypeOfIssueId,
                             dropdownColor: CommonStyles.blackColorShade,
                             hint: const Text(
-                              'Select Type of issue',
-                              style: CommonStyles.txSty_14w_fb,
+                              'Select',
+                              style: CommonStyles.txStyF14CwFF6,
                             ),
                             items: dropdownItems.map((item) {
                               return DropdownMenuItem<int>(
@@ -576,7 +638,9 @@ class _VisitRequestState extends State<VisitRequest> {
                           ),
                         ),
                       ),
+                */
                     );
+                   */
                   }
                 },
               ),
@@ -705,7 +769,7 @@ class _VisitRequestState extends State<VisitRequest> {
                           },
                           child: Image.asset(
                             Assets.images.icAdd.path,
-                            width: 75,
+                            width: 60,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -818,6 +882,75 @@ class _VisitRequestState extends State<VisitRequest> {
     );
   }
 
+  Container dropdownSelector(List<TypeIssue> dropdownItems) {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: CommonStyles.whiteColor),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<int>(
+          iconStyleData: const IconStyleData(
+            icon: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: Colors.white,
+            ),
+          ),
+          isExpanded: true,
+          hint: const Text(
+            'Select',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          ),
+          items: dropdownItems.map((item) {
+            return DropdownMenuItem<int>(
+              value: item.typeCdId,
+              child: Text(
+                '${item.desc}',
+                style: CommonStyles.txStyF14CwFF6,
+              ),
+            );
+          }).toList(),
+          value: selectedTypeOfIssueId,
+          onChanged: (int? typeIssueId) {
+            setState(() {
+              selectedTypeOfIssueId = typeIssueId;
+              TypeIssue item = dropdownItems
+                  .where((item) => item.typeCdId == typeIssueId)
+                  .first;
+              selectedTypeOfIssue = item.desc;
+            });
+          },
+          dropdownStyleData: DropdownStyleData(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12)),
+              color: CommonStyles.dropdownListBgColor,
+            ),
+            offset: const Offset(0, 0),
+            scrollbarTheme: ScrollbarThemeData(
+              radius: const Radius.circular(40),
+              thickness: WidgetStateProperty.all<double>(6),
+              thumbVisibility: WidgetStateProperty.all<bool>(true),
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40,
+            padding: EdgeInsets.only(left: 20, right: 20),
+          ),
+        ),
+      ),
+    );
+  }
+
   OutlineInputBorder outlineInputBorder() {
     return const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -842,10 +975,10 @@ class _VisitRequestState extends State<VisitRequest> {
                 'Select Action',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Select photo from gallery'),

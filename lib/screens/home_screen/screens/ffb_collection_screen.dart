@@ -134,7 +134,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                     child: Center(
                       child: Text(
                         item,
-                        style: CommonStyles.txStyF14CwFF6,
+                        style:
+                            CommonStyles.txStyF14CwFF6.copyWith(fontSize: 15),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -200,7 +201,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     return Column(
       children: [
         dropdownSelector(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         datePickerSection(),
       ],
     );
@@ -214,6 +215,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         border: Border.all(color: CommonStyles.whiteColor),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             flex: 3,
@@ -258,13 +260,14 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   }
                 },
               )),
-          const SizedBox(width: 10),
+          const SizedBox(width: 14),
           //MARK: Submit Btn
           Expanded(
             flex: 4,
             child: CustomBtn(
+                height: 45,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 5,
+                  horizontal: 10,
                 ),
                 label: tr(LocaleKeys.submit),
                 onPressed: () {
@@ -292,8 +295,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       text: TextSpan(
                         text: dateLabel,
                         style: CommonStyles.txStyF16CbFF6.copyWith(
-                            // color: CommonStyles.dataTextColor,
-                            ),
+                          color: CommonStyles.dataTextColor2,
+                        ),
                         children: const <TextSpan>[
                           TextSpan(
                             text: '*',
@@ -303,10 +306,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                         ],
                       ),
                     )
-                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
+                  : Text(displaydate, style: CommonStyles.txStyF16CwFF6),
             ],
           ),
-          const Divider(),
+          const Divider(
+            color: CommonStyles.dataTextColor2,
+          ),
         ],
       ),
     );
@@ -328,8 +333,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       text: TextSpan(
                         text: dateLabel,
                         style: CommonStyles.txStyF16CbFF6.copyWith(
-                            // color: CommonStyles.dataTextColor,
-                            ),
+                          color: CommonStyles.dataTextColor2,
+                        ),
                         children: const <TextSpan>[
                           TextSpan(
                             text: '*',
@@ -339,10 +344,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                         ],
                       ),
                     )
-                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
+                  : Text(displaydate, style: CommonStyles.txStyF16CwFF6),
             ],
           ),
-          const Divider(),
+          const Divider(
+            color: CommonStyles.dataTextColor2,
+          ),
         ],
       ),
     );

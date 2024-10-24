@@ -15,7 +15,7 @@ class CustomBtn extends StatelessWidget {
   const CustomBtn({
     super.key,
     required this.label,
-    this.borderRadius = 12,
+    this.borderRadius = 16,
     this.onPressed,
     this.btnTextStyle,
     this.borderColor = CommonStyles.btnBorderColor,

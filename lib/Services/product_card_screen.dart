@@ -166,7 +166,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
                   CommonStyles.horizontalGradientDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
@@ -415,7 +415,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             });
           },
           buttonStyleData: const ButtonStyleData(
-            height: 45,
+            height: 40,
             width: double.infinity,
             padding: EdgeInsets.only(left: 14, right: 14),
           ),
@@ -497,7 +497,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: product.gstPercentage?.toStringAsFixed(2) ?? '0.0',
+            data2: product.gstPercentage?.toStringAsFixed(1) ?? '0.0',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),
@@ -509,7 +509,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             label1: tr(LocaleKeys.transportprice),
             data1: '${product.transPortActualPriceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.transportGstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.transportGstPercentage?.toStringAsFixed(1)}',
           ),
           productInfo(
             label1: tr(LocaleKeys.totaltransportcost),

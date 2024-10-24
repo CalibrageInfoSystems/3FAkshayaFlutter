@@ -212,54 +212,66 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
                   ]),
-                  CustomBtn(
-                    label: tr(LocaleKeys.submit),
-                    borderColor: CommonStyles.primaryTextColor,
-                    borderRadius: 12,
-                    onPressed: () async {
-                      // Disable button when loading
-                      if (validations()) {
-                        if (await isOnline()) {
-                          final request = FertilizerRequest(
-                            id: 0,
-                            requestTypeId: 116,
-                            farmerCode: farmerCode,
-                            farmerName: farmerName,
-                            plotCode: null,
-                            requestCreatedDate:
-                                DateTime.now().toIso8601String(),
-                            isFarmerRequest: true,
-                            createdByUserId: null,
-                            createdDate: DateTime.now().toIso8601String(),
-                            updatedByUserId: null,
-                            updatedDate: DateTime.now().toIso8601String(),
-                            godownId: widget.godown.id!,
-                            paymentModeType: paymentmodeId,
-                            isImmediatePayment: null,
-                            fileName: null,
-                            fileLocation: null,
-                            fileExtension: null,
-                            totalCost: totalProductCostGst,
-                            subcidyAmount: subsidyAmount,
-                            paybleAmount: payableAmount,
-                            transportPayableAmount: totalTransportCostwithgst,
-                            comments: null,
-                            cropMaintainceDate: null,
-                            issueTypeId: null,
-                            godownCode: '${widget.godown.code}',
-                            requestProductDetails: productDetailsList,
-                            clusterId: Cluster_id,
-                            stateCode: Statecode,
-                            stateName: StateName,
-                          );
-                          print('CHECK BOX VALUE: $_isCheckboxChecked');
-                          await submitFertilizerRequest(request);
-                        } else {
-                          CommonStyles.showCustomDialog(
-                              context, tr(LocaleKeys.Internet));
-                        }
-                      }
-                    },
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomBtn(
+                        label: tr(LocaleKeys.submit),
+                        borderColor: CommonStyles.primaryTextColor,
+                        borderRadius: 12,
+                        onPressed: () async {
+                          // Disable button when loading
+                          if (validations()) {
+                            if (await isOnline()) {
+                              final request = FertilizerRequest(
+                                id: 0,
+                                requestTypeId: 116,
+                                farmerCode: farmerCode,
+                                farmerName: farmerName,
+                                plotCode: null,
+                                requestCreatedDate:
+                                    DateTime.now().toIso8601String(),
+                                isFarmerRequest: true,
+                                createdByUserId: null,
+                                createdDate: DateTime.now().toIso8601String(),
+                                updatedByUserId: null,
+                                updatedDate: DateTime.now().toIso8601String(),
+                                godownId: widget.godown.id!,
+                                paymentModeType: paymentmodeId,
+                                isImmediatePayment: null,
+                                fileName: null,
+                                fileLocation: null,
+                                fileExtension: null,
+                                totalCost: totalProductCostGst,
+                                subcidyAmount: subsidyAmount,
+                                paybleAmount: payableAmount,
+                                transportPayableAmount:
+                                    totalTransportCostwithgst,
+                                comments: null,
+                                cropMaintainceDate: null,
+                                issueTypeId: null,
+                                godownCode: '${widget.godown.code}',
+                                requestProductDetails: productDetailsList,
+                                clusterId: Cluster_id,
+                                stateCode: Statecode,
+                                stateName: StateName,
+                              );
+                              print('CHECK BOX VALUE: $_isCheckboxChecked');
+                              await submitFertilizerRequest(request);
+                            } else {
+                              CommonStyles.showCustomDialog(
+                                  context, tr(LocaleKeys.Internet));
+                            }
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                 ],
               ),
@@ -409,7 +421,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             });
           },
           buttonStyleData: const ButtonStyleData(
-            height: 45,
+            height: 40,
             width: double.infinity,
             padding: EdgeInsets.only(left: 14, right: 14),
           ),
@@ -476,12 +488,12 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             children: [
               Expanded(
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txSty_14b_f5),
+                    style: CommonStyles.txStyF14CpFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child:
-                    Text('${product.name}', style: CommonStyles.txSty_14p_f5),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),
@@ -490,7 +502,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.gstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.gstPercentage?.toStringAsFixed(1)}',
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),
@@ -502,7 +514,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             label1: tr(LocaleKeys.transportprice),
             data1: '${product.transPortActualPriceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${product.transportGstPercentage?.toStringAsFixed(2)}',
+            data2: '${product.transportGstPercentage?.toStringAsFixed(1)}',
           ),
           productInfo(
             label1: tr(LocaleKeys.totaltransportcost),

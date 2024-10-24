@@ -11,7 +11,8 @@ class CommonStyles {
   static const appBarColor = Color(0xfff07566);
   static const viewMoreBtnColor = Color(0xffc4c4c4);
   static const viewMoreBtnTextColor = Color(0xffd0691f);
-  static const dataTextColor = Color(0xff818181);
+  static const dataTextColor = Color(0xff707070);
+  static const dataTextColor2 = Color(0xff5b3021);
   static const screenBgColor = Color(0xfff4f3f1);
   static const screenBgColor2 = Color(0xffe9e7e8);
   static const tabBarColor = Color(0xffe46f5d);
@@ -830,9 +831,10 @@ class CommonStyles {
     );
   }
 
-  static Widget horizontalGradientDivider({List<Color>? colors}) {
+  static Widget horizontalGradientDivider(
+      {List<Color>? colors, double? height = 1}) {
     return Container(
-      height: 0.5,
+      height: height,
       margin: const EdgeInsets.symmetric(vertical: 2),
       decoration: BoxDecoration(
         gradient: LinearGradient(

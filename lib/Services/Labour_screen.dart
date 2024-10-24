@@ -247,11 +247,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                             children: [
                                               const SizedBox(width: 13),
                                               Text(
-                                                tr(LocaleKeys.Valid_service),
+                                                tr(LocaleKeys.multistring),
                                                 style: CommonStyles
                                                     .txStyF16CbFF6
                                                     .copyWith(
-                                                  fontSize: 20,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                             ],
@@ -430,11 +431,27 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             color: Colors.transparent,
                           ),
                           // Display the selected options or placeholder text
-                          child: Text(
-                            selectedServiceNames.isNotEmpty
-                                ? selectedServiceNames
-                                : 'Tap to select', // Placeholder when no service selected
-                            style: CommonStyles.txStyF14CwFF6,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                selectedServiceNames.isNotEmpty
+                                    ? selectedServiceNames
+                                    : 'Tap to select', // Placeholder when no service selected
+                                style: CommonStyles.txStyF14CwFF6,
+                              ),
+                              const Row(
+                                children: [
+                                  Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -1163,9 +1180,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
                     ),
-
-                    //  SizedBox(height: 5),
-
                     // Table
                     Column(
                       children: [
@@ -1232,59 +1246,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
-
-/* 
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFFCCCCCC),
-                              Color(0xFFFFFFFF),
-                              Color(0xFFCCCCCC),
-                            ],
-                          ),
-                          border: Border.all(
-                            color: const Color(0xFFe86100),
-                            width: 2.0,
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 0),
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                            ),
-                          ),
-                          child: Text(
-                            tr(LocaleKeys.got_it),
-                            style: CommonStyles.txSty_16p_f5,
-                          ),
-                        ),
-
-                        // CustomBtn(
-                        //   label:tr(LocaleKeys.got_it),
-                        //   borderColor: CommonStyles.primaryTextColor,
-                        //   borderRadius: 12,
-                        //   onPressed: () {
-                        //     Navigator.of(context).pop(); // Close the dialog
-                        //   },
-                        //
-                        //
-                        // ),
-                      ),
-                    ),
-                     */
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

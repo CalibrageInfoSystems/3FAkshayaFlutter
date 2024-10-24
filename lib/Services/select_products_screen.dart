@@ -191,7 +191,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               color: CommonStyles.blackColorShade,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Container(
             width: double.infinity,
             // padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -226,8 +226,13 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 return shimmerLoading();
               }
               if (snapshot.hasError) {
-                return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                    style: CommonStyles.txStyF16CpFF6);
+                return Text(
+                  '${tr(LocaleKeys.error)}: ${snapshot.error}',
+                  // style: CommonStyles.txStyF16CpFF6,
+                  style: CommonStyles.txStyF16CpFF6.copyWith(
+                    fontSize: 20,
+                  ),
+                );
               } else {
                 final products = snapshot.data as List<ProductItem>;
                 if (products.isNotEmpty) {
@@ -258,10 +263,10 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                     ),
                   );
                 } else {
-                  return const Expanded(
+                  return Expanded(
                     child: Center(
                       child: Text(
-                        'No products found',
+                        tr(LocaleKeys.no_products),
                         style: CommonStyles.txStyF16CpFF6,
                       ),
                     ),
@@ -325,7 +330,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
               Expanded(
                 child: Text(
                   'Select',
-                  style: CommonStyles.txStyF14CbFF6,
+                  style: CommonStyles.txStyF16CbFF6,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -339,7 +344,7 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                   child: Center(
                     child: Text(
                       '${category.name}',
-                      style: CommonStyles.txStyF14CbFF6,
+                      style: CommonStyles.txStyF16CbFF6,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -431,7 +436,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                     builder: (context) => ProductCardScreen(
                       products: fetchCardProducts(),
                       godown: widget.godown,
-                      totalAmount: calculateTotalAmount(),  // Send the calculated amount
+                      totalAmount:
+                          calculateTotalAmount(), // Send the calculated amount
                     ),
                   ),
                 );
@@ -509,13 +515,26 @@ class _ProductCardState extends State<ProductCard> {
                 ),
               ), */
               Expanded(
-                child: AnimatedReadMoreText(
-                  '${widget.product.name}',
-                  textStyle: CommonStyles.txStyF14CpFF6,
-                  maxLines: 2,
-                  readMoreText: '..',
-                  readLessText: '.',
-                  buttonTextStyle: CommonStyles.txSty_14p_f5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    /*  AnimatedReadMoreText(
+                      '${widget.product.name}',
+                      textStyle: CommonStyles.txStyF14CpFF6,
+                      maxLines: 2,
+                      readMoreText: '..',
+                      readLessText: '.',
+                      buttonTextStyle: CommonStyles.txSty_14p_f5,
+                    ), */
+                    Expanded(
+                      child: Text(
+                        '${widget.product.name}',
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: CommonStyles.txStyF14CpFF6,
+                      ),
+                    )
+                  ],
                 ),
               ),
               GestureDetector(
@@ -535,8 +554,10 @@ class _ProductCardState extends State<ProductCard> {
               Row(
                 children: [
                   Text(
-                    '₹${widget.product.priceInclGst}',
-                    style: CommonStyles.txStyF14CbFF6,
+                    '₹${widget.product.priceInclGst!.toStringAsFixed(2)}',
+                    style: CommonStyles.txStyF14CbFF6.copyWith(
+                      fontSize: 13,
+                    ),
                   ),
                   const SizedBox(width: 15),
                   if (widget.product.priceInclGst !=
@@ -554,7 +575,9 @@ class _ProductCardState extends State<ProductCard> {
               widget.product.size != null && widget.product.uomType != null
                   ? Text(
                       '${widget.product.size} ${widget.product.uomType}',
-                      style: CommonStyles.txStyF14CpFF6,
+                      style: CommonStyles.txStyF14CpFF6.copyWith(
+                        fontSize: 13,
+                      ),
                     )
                   : const SizedBox(),
             ],
@@ -591,7 +614,7 @@ class _ProductCardState extends State<ProductCard> {
             children: [
               const Text(
                 'Qty:',
-                style: CommonStyles.txSty_14b_f5,
+                style: CommonStyles.txStyF14CbFF6,
               ),
               const SizedBox(width: 5),
               Row(
@@ -600,7 +623,7 @@ class _ProductCardState extends State<ProductCard> {
                   GestureDetector(
                     onTap: removeProduct,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey),
@@ -609,17 +632,17 @@ class _ProductCardState extends State<ProductCard> {
                           size: 20, color: CommonStyles.primaryTextColor),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Text(
                     '$productQuantity',
                     style: CommonStyles.txStyF14CbFF6
                         .copyWith(color: CommonStyles.blackColorShade),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   GestureDetector(
                     onTap: addProduct,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.grey),

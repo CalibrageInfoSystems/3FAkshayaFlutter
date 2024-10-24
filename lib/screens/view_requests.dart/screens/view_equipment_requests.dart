@@ -132,7 +132,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
                   );
                 },
               );
-              /*  return ListView.separated( 
+              /*  return ListView.separated(
                 itemCount: requests.length,
                 itemBuilder: (context, index) {
                   return request(
