@@ -7,36 +7,33 @@ import 'common_styles.dart';
 import 'custom_btn.dart';
 
 class SuccessDialog2 extends StatelessWidget {
-
   final String title;
 
-  const SuccessDialog2({super.key,  required this.title});
-
+  const SuccessDialog2({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: const RoundedRectangleBorder(
-        //  borderRadius: BorderRadius.circular(20.0),
-      ),
+          //  borderRadius: BorderRadius.circular(20.0),
+          ),
       child: LayoutBuilder(
         builder: (context, constraints) {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // Top Container with icon
               Container(
-                padding: const EdgeInsets.all(10.0),
-                color: CommonStyles.primaryTextColor,
+                padding: const EdgeInsets.all(15.0),
+                color: CommonStyles.successDialogHeaderColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
                       Assets.images.progressComplete.path,
-                      width: 30,
-                      height: 30,
+                      width: 50,
+                      height: 50,
                       fit: BoxFit.contain,
-                      color: Colors.white,
+                      color: CommonStyles.whiteColor,
                     ),
                   ],
                 ),
@@ -48,11 +45,12 @@ class SuccessDialog2 extends StatelessWidget {
               Flexible(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.8,
                     maxHeight: MediaQuery.of(context).size.height * 0.6,
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -65,7 +63,6 @@ class SuccessDialog2 extends StatelessWidget {
                           const SizedBox(height: 20.0),
 
                           // Scrollable ListView
-
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

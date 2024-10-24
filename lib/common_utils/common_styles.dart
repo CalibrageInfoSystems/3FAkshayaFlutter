@@ -25,6 +25,7 @@ class CommonStyles {
   static const tabBorderColor = Color(0xFFeb7a00);
   static const impPlacesDataColor = Color(0xFF535353);
   static const btnBorderColor = Color(0xFFe36105);
+  static const successDialogHeaderColor = Color(0xFFf2614e);
 
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
@@ -730,18 +731,22 @@ class CommonStyles {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (isHeader)
-                      Container(
-                          height: 50,
-                          alignment: Alignment.center,
-                          color: errorHeaderColor,
-                          child: errorIcon ??
-                              Row(
+                      errorIcon != null
+                          ? Container(
+                              alignment: Alignment.center,
+                              color: errorHeaderColor,
+                              child: errorIcon)
+                          : Container(
+                              height: 50,
+                              alignment: Alignment.center,
+                              color: errorHeaderColor,
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Icon(Icons.close, color: Colors.white),
                                   const SizedBox(width: 7),
                                   Text(tr(LocaleKeys.error),
-                                      style: CommonStyles.txSty_16w_fb),
+                                      style: CommonStyles.txStyF16CwFF6),
                                 ],
                               )),
                     Container(

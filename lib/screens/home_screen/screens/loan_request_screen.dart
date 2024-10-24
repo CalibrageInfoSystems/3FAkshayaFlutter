@@ -338,7 +338,10 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
         barrierDismissible: false,
         errorIcon: SvgPicture.asset(
           Assets.images.progressComplete.path,
-          color: Colors.white,
+          width: 50,
+          height: 50,
+          fit: BoxFit.contain,
+          color: CommonStyles.whiteColor,
         ),
         bodyBackgroundColor: Colors.white,
         errorLabel: 'errorLabel',

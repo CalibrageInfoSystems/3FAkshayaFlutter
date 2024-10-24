@@ -674,8 +674,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 displayTransportamountWithoutGst;
 
             selectedList.add('$productName : $quantity');
-
-            print('444');
           }
 
           selectedName = selectedList.join(', ');
@@ -765,30 +763,6 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   } */
   Future<void> showSuccessDialog(
       BuildContext context, List<MsgModel> displayList, String successMessage) {
-    /* return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // Ensure the dialog is modal
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(successMessage),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: displayList
-                  .map((msg) => Text('${msg.key}: ${msg.value}'))
-                  .toList(),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    ); */
     return showDialog(
       context: context,
       barrierDismissible: false,

@@ -469,9 +469,21 @@ class _VisitRequestState extends State<VisitRequest> {
       context,
       errorMessage: 'errorMessage',
       barrierDismissible: false,
-      errorIcon: SvgPicture.asset(
-        Assets.images.progressComplete.path,
-        color: Colors.white,
+      errorIcon: Container(
+        padding: const EdgeInsets.all(15.0),
+        color: CommonStyles.successDialogHeaderColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              Assets.images.progressComplete.path,
+              width: 50,
+              height: 50,
+              fit: BoxFit.contain,
+              color: CommonStyles.whiteColor,
+            ),
+          ],
+        ),
       ),
       bodyBackgroundColor: Colors.white,
       errorLabel: 'errorLabel',
@@ -1217,7 +1229,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
     return dialogTemplate();
   }
 
-  Column dialogTemplate() {
+  Widget dialogTemplate() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -1230,13 +1242,14 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 5,
                 child: Text(tr(LocaleKeys.issue_type),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: CommonStyles.txStyF16CrFF6
                         .copyWith(fontWeight: FontWeight.w400)),
               ),
               Expanded(
                 flex: 1,
                 child: Text(':',
+                    textAlign: TextAlign.center,
                     style: CommonStyles.txStyF16CrFF6.copyWith(
                         fontWeight: FontWeight.w400,
                         color: CommonStyles.dataTextColor)),
@@ -1251,7 +1264,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               ),
             ],
           ),
-        if (widget.comments != null)
+        if (widget.comments != null && widget.comments!.isNotEmpty)
           Column(
             children: [
               const SizedBox(
@@ -1263,13 +1276,14 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 5,
                     child: Text(tr(LocaleKeys.comments),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: CommonStyles.txStyF16CrFF6
                             .copyWith(fontWeight: FontWeight.w400)),
                   ),
                   Expanded(
                     flex: 1,
                     child: Text(':',
+                        textAlign: TextAlign.center,
                         style: CommonStyles.txStyF16CrFF6.copyWith(
                             fontWeight: FontWeight.w400,
                             color: CommonStyles.dataTextColor)),

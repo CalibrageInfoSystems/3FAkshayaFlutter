@@ -91,8 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
-                                  color: Colors
-                                      .white, // Set the border line color to white
+                                  color: Colors.white,
                                 ),
                                 borderRadius: BorderRadius.circular(
                                     10.0), // Set the border radius
@@ -104,14 +103,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              hintStyle: CommonStyles.txStyF20CgyFF7,
+                              hintStyle: CommonStyles.txStyF20CwFF6,
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 15),
                               alignLabelWithHint:
                                   true, // Center-align the hint text
                             ),
                             textAlign: TextAlign.center,
-                            style: CommonStyles.txStyF20CwFF6,
+
+                            style: CommonStyles.txStyF20CwFF6.copyWith(
+                              // decoration: TextDecoration.underline,
+                              decorationColor: Colors.white,
+                            ),
                             textCapitalization: TextCapitalization
                                 .characters, // Automatically enables CAPS lock
                             inputFormatters: [

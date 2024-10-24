@@ -7,10 +7,10 @@
 // ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:vector_graphics/vector_graphics.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart' as _svg;
+import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
@@ -58,6 +58,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/harvesting.png
   AssetGenImage get harvesting =>
       const AssetGenImage('assets/images/harvesting.png');
+
+  /// File path: assets/images/home_icon.svg
+  SvgGenImage get homeIcon => const SvgGenImage('assets/images/home_icon.svg');
+
+  /// File path: assets/images/home_icon2.png
+  AssetGenImage get homeIcon2 =>
+      const AssetGenImage('assets/images/home_icon2.png');
 
   /// File path: assets/images/ic_add.png
   AssetGenImage get icAdd => const AssetGenImage('assets/images/ic_add.png');
@@ -180,6 +187,10 @@ class $AssetsImagesGen {
   SvgGenImage get progressComplete =>
       const SvgGenImage('assets/images/progress-complete.svg');
 
+  /// File path: assets/images/progress-complete2.svg
+  SvgGenImage get progressComplete2 =>
+      const SvgGenImage('assets/images/progress-complete2.svg');
+
   /// File path: assets/images/quick_pay.png
   AssetGenImage get quickPay =>
       const AssetGenImage('assets/images/quick_pay.png');
@@ -201,6 +212,8 @@ class $AssetsImagesGen {
         ffbCollection,
         general,
         harvesting,
+        homeIcon,
+        homeIcon2,
         icAdd,
         icBankWhite,
         icCalender,
@@ -235,6 +248,7 @@ class $AssetsImagesGen {
         passbook,
         pest,
         progressComplete,
+        progressComplete2,
         quickPay,
         visit
       ];
@@ -293,7 +307,7 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
     FilterQuality filterQuality = FilterQuality.low,
@@ -362,7 +376,7 @@ class SvgGenImage {
   final Set<String> flavors;
   final bool _isVecFormat;
 
-  SvgPicture svg({
+  _svg.SvgPicture svg({
     Key? key,
     bool matchTextDirection = false,
     AssetBundle? bundle,
@@ -375,29 +389,29 @@ class SvgGenImage {
     WidgetBuilder? placeholderBuilder,
     String? semanticsLabel,
     bool excludeFromSemantics = false,
-    SvgTheme? theme,
+    _svg.SvgTheme? theme,
     ColorFilter? colorFilter,
     Clip clipBehavior = Clip.hardEdge,
     @deprecated Color? color,
     @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
     @deprecated bool cacheColorFilter = false,
   }) {
-    final BytesLoader loader;
+    final _svg.BytesLoader loader;
     if (_isVecFormat) {
-      loader = AssetBytesLoader(
+      loader = _vg.AssetBytesLoader(
         _assetName,
         assetBundle: bundle,
         packageName: package,
       );
     } else {
-      loader = SvgAssetLoader(
+      loader = _svg.SvgAssetLoader(
         _assetName,
         assetBundle: bundle,
         packageName: package,
         theme: theme,
       );
     }
-    return SvgPicture(
+    return _svg.SvgPicture(
       loader,
       key: key,
       matchTextDirection: matchTextDirection,

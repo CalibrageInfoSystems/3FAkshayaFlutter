@@ -64,15 +64,25 @@ class ImportantContactsScreen extends StatelessWidget {
             Expanded(
                 flex: 7, child: Text(label, style: CommonStyles.txStyF14CbFF6)),
             const Text(':  ', style: CommonStyles.txStyF14CbFF6),
-            Expanded(
-              flex: 4,
-              child: Text(
-                '$data',
-                style: CommonStyles.txStyF14CbFF6.copyWith(
-                  color: datatextColor,
-                ),
-              ),
-            ),
+            data == null
+                ? Expanded(
+                    flex: 4,
+                    child: Text(
+                      'N/A',
+                      style: CommonStyles.txStyF14CbFF6.copyWith(
+                        color: datatextColor,
+                      ),
+                    ),
+                  )
+                : Expanded(
+                    flex: 4,
+                    child: Text(
+                      data,
+                      style: CommonStyles.txStyF14CbFF6.copyWith(
+                        color: datatextColor,
+                      ),
+                    ),
+                  ),
           ],
         ),
         const SizedBox(height: 12),

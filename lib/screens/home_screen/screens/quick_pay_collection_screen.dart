@@ -521,7 +521,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     return Column(
       children: [
         Text(tr(LocaleKeys.terms_conditionsss),
-            style: CommonStyles.txSty_16p_fb),
+            style: CommonStyles.txStyF16CpFF6.copyWith(
+              fontWeight: FontWeight.w500,
+            )),
         const SizedBox(height: 5),
         AnimatedReadMoreText(
           tr(LocaleKeys.loan_message),
@@ -954,7 +956,7 @@ class _PdfViewerPopupState extends State<PdfViewerPopup> {
   /// loading.
   ///
   /// The [_reloadPdf] flag is used to prevent infinite reloading of the page.
-/******  163a2759-b024-4bd1-abf1-496403720b27  *******/
+  /// ****  163a2759-b024-4bd1-abf1-496403720b27  ******
   void initState() {
     super.initState();
     _controller = WebViewController()
