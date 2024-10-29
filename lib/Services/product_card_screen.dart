@@ -506,17 +506,26 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             label2: tr(LocaleKeys.amount),
             data2: productQuantity.toStringAsFixed(2),
           ),
+          if(product.transPortActualPriceInclGst != 0.0)
           productInfo(
             label1: tr(LocaleKeys.transportprice),
             data1: '${product.transPortActualPriceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
             data2: '${product.transportGstPercentage?.toStringAsFixed(1)}',
           ),
+          if(product.transPortActualPriceInclGst != 0.0)
           productInfo(
             label1: tr(LocaleKeys.totaltransportcost),
             data1: totalTrasport.toStringAsFixed(2),
             label2: tr(LocaleKeys.total_amt),
             data2: totalAmount.toStringAsFixed(2),
+          ),
+          if(product.transPortActualPriceInclGst == 0.0)
+          productInfo(
+            label1: tr(LocaleKeys.total_amt),
+            data1: totalAmount.toStringAsFixed(2),
+            label2: "",
+            data2: "",
           ),
         ],
       ),

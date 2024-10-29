@@ -463,26 +463,23 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         visible: harvestingCheck,
                         child: plotDetailsBox(
                           label: tr(LocaleKeys.harv_amount),
-                          data: "${harvestCost ?? 0.0}",
-                          // data: "${harvestCost ?? 0.0}",
+                          data: harvestCost != null ? harvestCost!.toStringAsFixed(2) : "0.00",
                         ),
                       ),
                       Visibility(
                         visible: pruningCheck,
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            //MARK: Pruning Cost
+                            const SizedBox(height: 4),
+                            // MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
-                              data: '${prunningCost ?? 0.0}',
-                              // data: '${prunningCost ?? 0.0}',
+                              data: prunningCost != null ? prunningCost!.toStringAsFixed(2) : "0.00",
                             ),
                           ],
                         ),
                       ),
+
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -1175,11 +1172,14 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ),
                     ),
                     // Table
+
                     Column(
                       children: [
                         // Static Table Header
                         Table(
-                          border: TableBorder.all(color: Colors.orange),
+                          border: TableBorder(
+                            verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
+                          ),
                           columnWidths: const {
                             0: FlexColumnWidth(2),
                             1: FlexColumnWidth(2),
@@ -1187,35 +1187,28 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             3: FlexColumnWidth(2),
                             4: FlexColumnWidth(2),
                           },
-                          defaultVerticalAlignment:
-                              TableCellVerticalAlignment.middle,
+                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                           children: [
                             TableRow(
-                              //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
                               children: [
                                 tableHeader(tr(LocaleKeys.measurement)),
                                 tableHeader(tr(LocaleKeys.pru_amount)),
                                 tableHeader(tr(LocaleKeys.harv_amount)),
                                 tableHeader(tr(LocaleKeys.intercrop_prunning)),
                                 tableHeader(tr(LocaleKeys.harv_intercrop)),
-                                /* tableHeader('Pruning Amount/Tree (Rs)'),
-                                tableHeader('Harvesting Amount/Ton (Rs)'),
-                                tableHeader(
-                                    'Pruning with Cocoa Intercrop/Tree (Rs)'),
-                                tableHeader(
-                                    'Harvesting with Cocoa Intercrop/Ton (Rs)'), */
                               ],
                             ),
                           ],
                         ),
                         // Scrollable Table Body
                         SizedBox(
-                          height:
-                              300, // Set the fixed height for the scrollable part
+                          height: 300, // Set the fixed height for the scrollable part
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: Table(
-                              border: TableBorder.all(color: Colors.orange),
+                              border: TableBorder(
+                                verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
+                              ),
                               columnWidths: const {
                                 0: FlexColumnWidth(2),
                                 1: FlexColumnWidth(2),
@@ -1230,8 +1223,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           ),
                         ),
                       ],
-                    ),
 
+                    ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                       child: Text(
@@ -1271,19 +1264,20 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     for (int i = 1; i <= 30; i++) {
       rows.add(
         tableRow(
-          '$i Years', // Display the current year
+          '${i == 1 ? '<= 1 Year' : '$i Years'}', // Display "1 Year" if i = 1, otherwise "N Years"
           listResult[0]['c$i'].toString(), // Pruning Amount/Tree (Rs)
           listResult[1]['c$i'].toString(), // Harvesting Amount/Ton (Rs)
-          listResult[2]['c$i']
-              .toString(), // Pruning with Cocoa Intercrop/Tree (Rs)
-          listResult[3]['c$i']
-              .toString(), // Harvesting with Cocoa Intercrop/Ton (Rs)
+          listResult[2]['c$i'].toString(), // Pruning with Cocoa Intercrop/Tree (Rs)
+          listResult[3]['c$i'].toString(), // Harvesting with Cocoa Intercrop/Ton (Rs)
         ),
       );
     }
 
     return rows;
   }
+
+
+
 
 //
 

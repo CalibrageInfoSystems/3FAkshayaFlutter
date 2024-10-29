@@ -1593,7 +1593,6 @@ class ProductWithQuantity {
     };
   }
 
-
 }
 
 // class ProductWithQuantity {

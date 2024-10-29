@@ -218,8 +218,8 @@ class GoDownsCard extends StatelessWidget {
               Expanded(
                 flex: 4,
                 child: Text(label,
-                    style: CommonStyles.txStyF14CbFF6
-                        .copyWith(color: CommonStyles.blackColorShade)),
+                    style: CommonStyles.txStyF14bbFF6
+                        ),
               ),
               Text(':  ',
                   style: CommonStyles.txStyF14CbFF6

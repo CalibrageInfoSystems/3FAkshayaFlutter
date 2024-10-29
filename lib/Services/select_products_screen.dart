@@ -645,6 +645,7 @@ class _ProductCardState extends State<ProductCard> {
                 'Qty:',
                 style: CommonStyles.txStyF14CbFF6,
               ),
+
               const SizedBox(width: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

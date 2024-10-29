@@ -173,6 +173,7 @@ class _SelectEdibleProductsScreenState
                                 productQuantities.remove(product.id);
                                 orderedProductIds.remove(product.id);
                               }
+
                               updateBadgeCount();
                             });
                           },

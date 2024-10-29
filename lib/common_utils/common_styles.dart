@@ -26,7 +26,8 @@ class CommonStyles {
   static const impPlacesDataColor = Color(0xFF535353);
   static const btnBorderColor = Color(0xFFe36105);
   static const successDialogHeaderColor = Color(0xFFf2614e);
-
+  static const grycolor = Color(0xFF585858);
+static const lightgry = Color(0xffaaaaaa);
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -90,7 +91,12 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: blackColor,
   );
-
+  static const txStyF14bbFF6 = TextStyle(
+    fontSize: 13,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w700,
+    color: grycolor,
+  );
   static const txStyF14CwFF6 = TextStyle(
     fontSize: 14,
     fontFamily: FontFamily.hind,
