@@ -191,7 +191,7 @@ class GoDownsCard extends StatelessWidget {
                 children: [
                   Text(godown.name!,
                       style: CommonStyles.txStyF16CbFF6
-                          .copyWith(color: CommonStyles.blackColorShade)),
+                          .copyWith(color: CommonStyles.grycolor)),
                   CommonWidgets.customDivider(),
                   contentBox(
                       label: tr(LocaleKeys.location), data: godown.location),
@@ -217,9 +217,7 @@ class GoDownsCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 4,
-                child: Text(label,
-                    style: CommonStyles.txStyF14bbFF6
-                        ),
+                child: Text(label, style: CommonStyles.txStyF14bbFF6),
               ),
               Text(':  ',
                   style: CommonStyles.txStyF14CbFF6
