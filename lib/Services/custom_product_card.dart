@@ -248,6 +248,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     tr(LocaleKeys.name),
@@ -263,19 +264,45 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       style: CommonStyles.txStyF14CpFF6,
                     ),
                   ),
+                  const SizedBox(
+                    width: 25,
+                    height: 25,
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
               Center(
                 child: GestureDetector(
                   onTap: () => showZoomedAttachment('${product.imageUrl}'),
-                  child: CachedNetworkImage(
+                  child:
+                      /* CachedNetworkImage(
                     imageUrl: '${product.imageUrl}',
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Image.asset(
-                      Assets.images.noproductImage.path,
+                      Assets.images.icLogo.path,
                       fit: BoxFit.contain,
+                    ),
+                  ), */
+                      CachedNetworkImage(
+                    width: 150,
+                    height: 150,
+                    imageUrl: '${product.imageUrl}',
+                    placeholder: (context, url) => Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      Assets.images.noproductImage.path,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -291,7 +318,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       style: CommonStyles.txStyF14CbFF6,
                     ),
                     Text(
-                      '${product.description}',
+                      product.description!.trim(),
                       style: CommonStyles.txStyF14CbFF6,
                     ),
                   ],
@@ -299,20 +326,28 @@ class _CustomProductCardState extends State<CustomProductCard> {
               CommonStyles.horizontalGradientDivider(),
               infoRow(
                 label1: tr(LocaleKeys.price),
-                data1: '${product.priceInclGst}',
+                data1: product.priceInclGst,
                 discountPrice: product.actualPriceInclGst,
                 label2: tr(LocaleKeys.gst),
                 data2: '${product.gstPercentage}',
-                isSingle: product.gstPercentage != null ? false : true,
+                isSingle: (product.gstPercentage != null ||
+                        product.gstPercentage != 0)
+                    ? false
+                    : true,
               ),
               CommonStyles.horizontalGradientDivider(),
               if (product.size != null && widget.product.uomType != null)
-                infoRow2(
+                /*   infoRow2(
                     label1: tr(LocaleKeys.product_size),
                     data1: '${product.size} ${product.uomType}',
                     label2: 'label2',
                     data2: '${product.description}',
-                    isSingle: true),
+                    isSingle: true), */
+                infoRow2(
+                  label1: tr(LocaleKeys.product_size),
+                  data1: '${product.size} ${product.uomType}',
+                  isNull: (product.size != null || product.uomType != null),
+                ),
             ],
           ),
         ),
@@ -347,7 +382,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
 
   Widget infoRow({
     required String label1,
-    required String? data1,
+    required double? data1,
     double? discountPrice,
     required String label2,
     required String? data2,
@@ -356,40 +391,39 @@ class _CustomProductCardState extends State<CustomProductCard> {
     return Column(
       children: [
         const SizedBox(height: 10),
-        if (data1 != null)
-          Row(
-            children: [
+        Row(
+          children: [
+            if (data1 != null)
               Expanded(
-                  child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      label1,
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                  const Expanded(
-                    flex: 1,
-                    child: Text(
-                      ':',
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                  Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
                       flex: 5,
-                      child: (discountPrice == null ||
-                              data1 == discountPrice.toString())
+                      child: Text(
+                        label1,
+                        style: CommonStyles.txStyF14CbFF6,
+                      ),
+                    ),
+                    const Expanded(
+                      flex: 1,
+                      child: Text(
+                        ':',
+                        style: CommonStyles.txStyF14CbFF6,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: (discountPrice == null || data1 == discountPrice)
                           ? Text(
-                              data1,
+                              '₹${data1.toStringAsFixed(2)}',
                               style: CommonStyles.txStyF14CbFF6,
                             )
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  data1,
+                                  '₹${data1.toStringAsFixed(2)}',
                                   style: CommonStyles.txStyF14CbFF6,
                                 ),
                                 Text(
@@ -402,43 +436,45 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   ),
                                 ),
                               ],
-                            )),
-                ],
-              )),
-              const SizedBox(width: 10),
-              isSingle
-                  ? const Expanded(
-                      child: SizedBox(),
-                    )
-                  : Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              label2,
-                              style: CommonStyles.txStyF14CbFF6,
                             ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Text(
-                              ':',
-                              style: CommonStyles.txStyF14CbFF6,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              '$data2',
-                              style: CommonStyles.txStyF14CbFF6,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-            ],
-          ),
+                  ],
+                ),
+              ),
+            if (data1 != null) const SizedBox(width: 10),
+            isSingle
+                ? const Expanded(
+                    child: SizedBox(),
+                  )
+                : Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            label2,
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 1,
+                          child: Text(
+                            ':',
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            '$data2',
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ],
+        ),
       ],
     );
   }
@@ -446,92 +482,44 @@ class _CustomProductCardState extends State<CustomProductCard> {
   Widget infoRow2({
     required String label1,
     required String? data1,
-    String? discountPrice,
-    required String label2,
-    required String? data2,
-    bool isSingle = false,
+    bool isNull = true,
   }) {
     return Column(
       children: [
         const SizedBox(height: 10),
-        if (data1 != null)
+        if (isNull)
           Row(
             children: [
               Expanded(
-                  child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: discountPrice == null
-                        ? Text(
-                            label1,
-                            style: CommonStyles.txStyF14CbFF6,
-                          )
-                        : Column(
-                            children: [
-                              Text(
-                                label1,
-                                style: CommonStyles.txStyF14CbFF6,
-                              ),
-                              Text(
-                                discountPrice,
-                                style: CommonStyles.txStyF14CbFF6.copyWith(
-                                  decoration: TextDecoration.lineThrough,
-                                  decorationColor: CommonStyles.RedColor,
-                                  color: CommonStyles.formFieldErrorBorderColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                  ),
-                  const Expanded(
-                    flex: 1,
-                    child: Text(
-                      ':',
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      data1,
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                ],
-              )),
-              const SizedBox(width: 10),
-              isSingle
-                  ? const Expanded(
-                      child: SizedBox(),
-                    )
-                  : Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              label2,
-                              style: CommonStyles.txStyF14CbFF6,
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Text(
-                              ':',
-                              style: CommonStyles.txStyF14CbFF6,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              '$data2',
-                              style: CommonStyles.txStyF14CbFF6,
-                            ),
-                          ),
-                        ],
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        label1,
+                        style: CommonStyles.txStyF14CbFF6,
                       ),
                     ),
+                    const Expanded(
+                      flex: 1,
+                      child: Text(
+                        ':',
+                        style: CommonStyles.txStyF14CbFF6,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        '$data1',
+                        style: CommonStyles.txStyF14CbFF6,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Expanded(
+                child: SizedBox(),
+              )
             ],
           ),
       ],
@@ -552,47 +540,61 @@ class _CustomProductCardState extends State<CustomProductCard> {
             child: Stack(
               children: [
                 Center(
-                  child:
-            FutureBuilder(
-            future: _loadImage(imageString),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Image.asset(
-                      Assets.images.noproductImage.path, // Path to your error image
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                }
-                return PhotoViewGallery.builder(
-                  itemCount: 1,
-                  builder: (context, index) {
-                    return PhotoViewGalleryPageOptions(
-                      imageProvider: NetworkImage(imageString),
-                      minScale: PhotoViewComputedScale.covered,
-                      maxScale: PhotoViewComputedScale.covered,
-                    );
-                  },
-                  scrollDirection: Axis.vertical,
-                  backgroundDecoration: const BoxDecoration(
-                    color: Colors.white,
+                  child: FutureBuilder(
+                    future: _loadImage(imageString),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Image.asset(
+                              Assets.images.noproductImage
+                                  .path, // Path to your error image
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }
+                        return PhotoViewGallery.builder(
+                          itemCount: 1,
+                          builder: (context, index) {
+                            return PhotoViewGalleryPageOptions(
+                              imageProvider: NetworkImage(imageString),
+                              minScale: PhotoViewComputedScale.covered,
+                              maxScale: PhotoViewComputedScale.covered,
+                            );
+                          },
+                          scrollDirection: Axis.vertical,
+                          backgroundDecoration: const BoxDecoration(
+                            color: Colors.white,
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Image.asset(
+                            Assets.images.noproductImage.path,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }
+                    },
                   ),
-                );
-              } else {
-                // While loading, you can show a placeholder
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
 
-// Function to load the image and handle errors
-
-
-        ),
-
-
-
+/* 				  PhotoViewGallery.builder(
+                    itemCount: 1,
+                    builder: (context, index) {
+                      return PhotoViewGalleryPageOptions(
+                        imageProvider: NetworkImage(imageString),
+                        minScale: PhotoViewComputedScale.covered,
+                        maxScale: PhotoViewComputedScale.covered,
+                      );
+                    },
+                    scrollDirection: Axis.vertical,
+                    scrollPhysics: const PageScrollPhysics(),
+                    allowImplicitScrolling: true,
+                    backgroundDecoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ), */
+                ),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -624,11 +626,11 @@ class _CustomProductCardState extends State<CustomProductCard> {
     final img = Image.network(url);
 
     img.image.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener(
+          ImageStreamListener(
             (info, _) => completer.complete(),
-        onError: (error, stackTrace) => completer.completeError(error),
-      ),
-    );
+            onError: (error, stackTrace) => completer.completeError(error),
+          ),
+        );
     await completer.future;
   }
 }

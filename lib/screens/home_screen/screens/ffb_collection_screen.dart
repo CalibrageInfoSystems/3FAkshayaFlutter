@@ -12,7 +12,6 @@ import 'package:akshaya_flutter/models/collection_count.dart';
 import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/collection_info_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/temp_ffb_collection_screen.dart';
-import 'package:auto_animated/auto_animated.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +59,9 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       body: Column(
         children: [
           Container(
-            height: (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
-                    dropdownItems.indexOf(selectedDropDownValue!) == 1)
+            height: dropdownItems.indexOf(selectedDropDownValue!) == 0
+                /* (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
+                    dropdownItems.indexOf(selectedDropDownValue!) == 1) */
                 ? (size.height / 2) - AppBar().preferredSize.height
                 : null,
             decoration: const BoxDecoration(
