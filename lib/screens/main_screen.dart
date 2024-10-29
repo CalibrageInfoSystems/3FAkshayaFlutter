@@ -290,16 +290,16 @@ class _MainScreenPageState extends State<MainScreen> {
                                 _onItemTapped(1);
                               }),
                           menuOption(
-                              title: tr(LocaleKeys.my3F),
-                              menuIcon: Assets.images.icMySvg.path,
-                              onTap: () {
-                                _onItemTapped(2);
-                              }),
-                          menuOption(
                               title: tr(LocaleKeys.requests),
                               menuIcon: Assets.images.icRequest.path,
                               onTap: () {
                                 _onItemTapped(3);
+                              }),
+                          menuOption(
+                              title: tr(LocaleKeys.my3F),
+                              menuIcon: Assets.images.icMySvg.path,
+                              onTap: () {
+                                _onItemTapped(2);
                               }),
                           menuOption(
                               title: tr(LocaleKeys.log_off),

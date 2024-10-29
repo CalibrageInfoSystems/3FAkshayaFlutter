@@ -317,28 +317,29 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(tr(LocaleKeys.quickpay_details),
-                style: CommonStyles.txSty_16p_f5),
+                style: CommonStyles.txStyF16CpFF6),
             const SizedBox(height: 5),
             Column(
               children: [
                 buildQuickPayRow(
                     label: tr(LocaleKeys.amount_of_FFB),
-                    data:
-                        '${calculateDynamicSum(collections, 'quickPayCost')}'),
+                    data: calculateDynamicSum(collections, 'quickPayCost')
+                        .toStringAsFixed(2)),
                 buildQuickPayRow(
                   label: tr(LocaleKeys.convenience_charge),
                   data: collections[0].transactionFee! < 0
                       ? '0.00'
-                      : '-${collections[0].transactionFee}',
+                      : '-${collections[0].transactionFee!.toStringAsFixed(2)}',
                 ),
                 buildQuickPayRow(
                     label: tr(LocaleKeys.quick_pay),
-                    data: '-${calculateDynamicSum(collections, 'quickPay')}'),
+                    data:
+                        '-${calculateDynamicSum(collections, 'quickPay').toStringAsFixed(2)}'),
                 buildQuickPayRow(
                   label: tr(LocaleKeys.closingBal),
                   data: collections[0].dues! < 0
                       ? '0.00'
-                      : '-${collections[0].dues}',
+                      : '-${collections[0].dues!.toStringAsFixed(2)}',
                 ),
                 Container(
                   height: 0.5,
@@ -346,7 +347,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 ),
                 buildQuickPayRow(
                     label: tr(LocaleKeys.total_amt_pay),
-                    data: '${collections[0].total}',
+                    data: collections[0].total!.toStringAsFixed(2),
                     // data: calculateDynamicSum(collections, 'total'),
                     color: CommonStyles.primaryTextColor),
                 Container(
@@ -401,7 +402,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     // return double.parse(sum.toStringAsFixed(2));
   }
 
-  Widget buildQuickPayRow(
+/*   Widget buildQuickPayRow(
       {required String label, required String? data, Color? color}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
@@ -438,12 +439,53 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         ],
       ),
     );
+  } */
+  Widget buildQuickPayRow(
+      {required String label, required String? data, Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Text(
+              label,
+              style: CommonStyles.txStyF14CbFF6.copyWith(
+                color: color,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              ':',
+              textAlign: TextAlign.center,
+              style: CommonStyles.txStyF14CbFF6.copyWith(
+                color: color,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 8,
+            child: Text(
+              '$data',
+              style: CommonStyles.txStyF14CbFF6.copyWith(
+                color: color,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget collectionDetails() {
     final size = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
       height: size.height * 0.28,
+      color: CommonStyles.screenBgColor,
+      padding: const EdgeInsets.all(5),
       child: FutureBuilder(
         future: collectionDetailsData,
         builder: (context, snapshot) {
@@ -466,7 +508,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
             itemBuilder: (context, index) {
               final collection = collections[index];
               return Container(
-                // padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 margin: const EdgeInsets.only(bottom: 10),
                 decoration: BoxDecoration(
                   color:
@@ -476,22 +518,27 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                 ),
                 child: Column(
                   children: [
-                    buildQuickPayRow(
-                        label: tr(LocaleKeys.collection_Id),
-                        data: collection.collectionId),
-                    buildQuickPayRow(
-                      label: tr(LocaleKeys.quantity_mt),
-                      data: formatNetWeight(collection.collectionQuantity),
-                    ),
-                    buildQuickPayRow(
-                        label: tr(LocaleKeys.date_label),
-                        data: formateDate(collection.date)),
-                    buildQuickPayRow(
-                        label: tr(LocaleKeys.ffb_flot),
-                        data: collection.quickPayRate.toString()),
-                    buildQuickPayRow(
-                        label: tr(LocaleKeys.amount_of_FFB),
-                        data: collection.quickPayCost.toString()),
+                    if (collection.collectionId != null)
+                      buildQuickPayRow(
+                          label: tr(LocaleKeys.collection_Id),
+                          data: collection.collectionId),
+                    if (collection.collectionQuantity != null)
+                      buildQuickPayRow(
+                        label: tr(LocaleKeys.quantity_mt),
+                        data: formatNetWeight(collection.collectionQuantity),
+                      ),
+                    if (collection.date != null)
+                      buildQuickPayRow(
+                          label: tr(LocaleKeys.date_label),
+                          data: CommonStyles.formatDate(collection.date)),
+                    if (collection.quickPayRate != null)
+                      buildQuickPayRow(
+                          label: tr(LocaleKeys.ffb_flot),
+                          data: collection.quickPayRate!.toStringAsFixed(2)),
+                    if (collection.quickPayCost != null)
+                      buildQuickPayRow(
+                          label: tr(LocaleKeys.amount_of_FFB),
+                          data: collection.quickPayCost!.toStringAsFixed(2)),
                   ],
                 ),
               );
@@ -522,8 +569,8 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       children: [
         Text(tr(LocaleKeys.terms_conditionsss),
             style: CommonStyles.txStyF16CpFF6.copyWith(
-              fontWeight: FontWeight.w500,
-            )),
+                // fontWeight: FontWeight.w500,
+                )),
         const SizedBox(height: 5),
         AnimatedReadMoreText(
           tr(LocaleKeys.loan_message),
@@ -537,7 +584,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         const Divider(),
         GestureDetector(
           onTap: () {
-            isChecked = !isChecked;
+            setState(() {
+              isChecked = !isChecked;
+            });
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -1,30 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
-// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
-import 'package:akshaya_flutter/services/models/Godowndata.dart';
-
-import 'package:akshaya_flutter/Services/models/catogery_item_model.dart';
-import 'package:akshaya_flutter/Services/models/product_item_model.dart';
-import 'package:akshaya_flutter/Services/product_card_screen.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
-import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
-import 'package:akshaya_flutter/common_utils/custom_btn.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
-import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:shimmer/shimmer.dart';
-import 'package:badges/badges.dart' as badges;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:akshaya_flutter/Services/models/product_item_model.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-
-import '../../common_utils/api_config.dart';
-import '../../screens/home_screen/screens/plot_selection_screen.dart';
 
 class CustomProductCard extends StatefulWidget {
   final ProductItem product;
@@ -325,16 +310,17 @@ class _CustomProductCardState extends State<CustomProductCard> {
                 ),
               CommonStyles.horizontalGradientDivider(),
               infoRow(
-                label1: tr(LocaleKeys.price),
-                data1: product.priceInclGst,
-                discountPrice: product.actualPriceInclGst,
-                label2: tr(LocaleKeys.gst),
-                data2: '${product.gstPercentage}',
-                isSingle: (product.gstPercentage != null ||
+                  label1: tr(LocaleKeys.price),
+                  data1: product.priceInclGst,
+                  discountPrice: product.actualPriceInclGst,
+                  label2: tr(LocaleKeys.gst),
+                  data2: product.gstPercentage,
+                  isSingle: product.gstPercentage != null
+                  /* isSingle: (product.gstPercentage != null ||
                         product.gstPercentage != 0)
                     ? false
-                    : true,
-              ),
+                    : true, */
+                  ),
               CommonStyles.horizontalGradientDivider(),
               if (product.size != null && widget.product.uomType != null)
                 /*   infoRow2(
@@ -385,9 +371,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
     required double? data1,
     double? discountPrice,
     required String label2,
-    required String? data2,
+    required double? data2,
     bool isSingle = false,
   }) {
+    print('Condition: ${data2 != null} && ${data2 != 0}');
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -442,11 +429,8 @@ class _CustomProductCardState extends State<CustomProductCard> {
                 ),
               ),
             if (data1 != null) const SizedBox(width: 10),
-            isSingle
-                ? const Expanded(
-                    child: SizedBox(),
-                  )
-                : Expanded(
+            (data2 != null && data2 != 0)
+                ? Expanded(
                     child: Row(
                       children: [
                         Expanded(
@@ -472,7 +456,10 @@ class _CustomProductCardState extends State<CustomProductCard> {
                         ),
                       ],
                     ),
-                  ),
+                  )
+                : const Expanded(
+                    child: SizedBox(),
+                  )
           ],
         ),
       ],

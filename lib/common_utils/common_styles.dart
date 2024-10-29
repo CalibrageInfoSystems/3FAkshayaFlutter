@@ -27,8 +27,8 @@ class CommonStyles {
   static const btnBorderColor = Color(0xFFe36105);
   static const successDialogHeaderColor = Color(0xFFf2614e);
   static const grycolor = Color(0xFF585858);
-static const lightgry = Color(0xffaaaaaa);
-  static const halfback = Color(0xFFCB000000);
+  static const lightgry = Color(0xffaaaaaa);
+  static const halfback = Color(0xffcb000000);
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -857,11 +857,12 @@ static const lightgry = Color(0xffaaaaaa);
   }
 
   static Widget horizontalGradientDivider(
-      {List<Color>? colors, double? height = 1}) {
+      {List<Color>? colors, double? height = 0.5}) {
     return Container(
       height: height,
       margin: const EdgeInsets.symmetric(vertical: 2),
-      decoration: BoxDecoration(
+      color: const Color(0xFFe86100),
+      /* decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: colors ??
               [
@@ -870,7 +871,7 @@ static const lightgry = Color(0xffaaaaaa);
                 const Color(0xCBBEBEBE),
               ],
         ),
-      ),
+      ), */
     );
   }
 

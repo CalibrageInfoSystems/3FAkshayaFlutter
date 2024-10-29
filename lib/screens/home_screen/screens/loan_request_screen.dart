@@ -206,46 +206,56 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: Checkbox(
-                          value: _isAgree,
-                          activeColor: CommonStyles.primaryTextColor,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isAgree = value!;
-                              if (_isAgree) {
-                                showTermsAndConditionsPopup();
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Flexible(
-                        child: RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: tr(LocaleKeys.i_have_agree),
-                                style: CommonStyles.txStyF14CwFF6,
-                              ),
-                              TextSpan(
-                                text: ' ${tr(LocaleKeys.terms_conditionsss)}',
-                                style: CommonStyles.txStyF14CpFF6.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: CommonStyles.primaryTextColor),
-                              ),
-                            ],
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isAgree = !_isAgree;
+                      });
+                      if (_isAgree) {
+                        showTermsAndConditionsPopup();
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: Checkbox(
+                            value: _isAgree,
+                            activeColor: CommonStyles.primaryTextColor,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isAgree = value!;
+                                if (_isAgree) {
+                                  showTermsAndConditionsPopup();
+                                }
+                              });
+                            },
                           ),
-                          softWrap: true,
-                          overflow: TextOverflow.visible,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 5),
+                        Flexible(
+                          child: RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: tr(LocaleKeys.i_have_agree),
+                                  style: CommonStyles.txStyF14CwFF6,
+                                ),
+                                TextSpan(
+                                  text: ' ${tr(LocaleKeys.terms_conditionsss)}',
+                                  style: CommonStyles.txStyF14CpFF6.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: CommonStyles.primaryTextColor),
+                                ),
+                              ],
+                            ),
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(
