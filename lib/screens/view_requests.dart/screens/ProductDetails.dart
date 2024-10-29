@@ -192,16 +192,20 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 productCostbox(
                     title: tr(LocaleKeys.amount),
                     data:
-                        totalBasePrice.toStringAsFixed(2)), // Total base price
+                        totalBasePrice.toStringAsFixed(2)),
+                CommonStyles.horizontalGradien_Divider2(),// Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
-                    data: totalAmount.toStringAsFixed(2)), // Total base price
+                    data: totalAmount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradien_Divider2(),// Total base price
                 // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
                 // productCostbox(
                 //     title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
@@ -244,15 +248,24 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txStyF14CbFF6),
+              Flexible(
+                flex: 2,
+                child: Text(tr(LocaleKeys.product), style: CommonStyles.txStyF14CbFF6),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 25),
               Expanded(
-                child:
-                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+                flex: 8,
+                child: Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
+            //   Expanded(
+            //     child: Text(tr(LocaleKeys.product),
+            //         style: CommonStyles.txStyF14CbFF6),
+            //   ),
+            // //  const SizedBox(width: 10),
+            //   Expanded(
+            //     child:
+            //         Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+            //   ),
             ],
           ),
           productInfo(
@@ -295,11 +308,11 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
-          const Color(0xFFFF4500),
-          const Color(0xFFA678EF),
-          const Color(0xFFFF4500),
-        ]),
+        // CommonStyles.horizontalGradientDivider(colors: [
+        //   const Color(0xFFFF4500),
+        //   const Color(0xFFA678EF),
+        //   const Color(0xFFFF4500),
+        // ]),
         const SizedBox(height: 2),
         Row(
           children: [
@@ -336,7 +349,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalGradientDivider2(),
         Row(
           children: [
             Expanded(
@@ -374,6 +387,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             ),
           ],
         ),
+        const SizedBox(height: 2),
       ],
     );
   }

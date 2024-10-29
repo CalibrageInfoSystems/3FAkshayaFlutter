@@ -78,7 +78,12 @@ class CommonStyles {
     fontWeight: FontWeight.w600,
     color: primaryTextColor,
   );
-
+  static const txStyF13CpFF6 = TextStyle(
+    fontSize: 13,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: primaryTextColor,
+  );
   static const txStyF12CwFF6 = TextStyle(
     fontSize: 12,
     fontFamily: FontFamily.hind,
@@ -87,7 +92,7 @@ class CommonStyles {
   );
 
   static const txStyF14CbFF6 = TextStyle(
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: blackColor,
@@ -874,7 +879,42 @@ class CommonStyles {
       ), */
     );
   }
-
+  static Widget horizontalGradientDivider2(
+      {List<Color>? colors, double? height = 0.4}) {
+    return Container(
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: colors ??
+              [
+              //  e86100
+                const Color(0xFFe86100),
+                const Color(0xFFe86100),
+                const Color(0xFFe86100),
+              ],
+        ),
+      ),
+    );
+  }
+  static Widget horizontalGradien_Divider2(
+      {List<Color>? colors, double? height = 0.4}) {
+    return Container(
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: colors ??
+              [
+                //  FF4500
+                const Color(0xFFFF4500),
+                const Color(0xFFA678EF),
+                const Color(0xFFFF4500),
+              ],
+        ),
+      ),
+    );
+  }
   static void hideHorizontalDotsLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
   }

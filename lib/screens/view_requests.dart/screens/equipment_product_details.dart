@@ -99,9 +99,13 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
               children: [
                 const SizedBox(height: 10),
                 productCostbox(title: tr(LocaleKeys.amount), data: 'data'),
+                CommonStyles.horizontalGradien_Divider2(),
                 productCostbox(title: tr(LocaleKeys.cgst_amount), data: 'data'),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(title: tr(LocaleKeys.sgst_amount), data: 'data'),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(title: tr(LocaleKeys.total_amt), data: 'data'),
+                CommonStyles.horizontalGradien_Divider2(),
                 /* productCostbox(title: tr(LocaleKeys.transamount), data: 'data'),
                 productCostbox(
                     title: tr(LocaleKeys.tcgst_amount), data: 'data'),
@@ -150,9 +154,9 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
                 child: Text(tr(LocaleKeys.product),
                     style: CommonStyles.txStyF14CbFF6),
               ),
-              const SizedBox(width: 10),
+           //   const SizedBox(width: 10),
               Expanded(
-                flex: 8,
+                flex: 6,
                 child:
                     Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
@@ -198,11 +202,11 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
-          const Color(0xFFFF4500),
-          const Color(0xFFA678EF),
-          const Color(0xFFFF4500),
-        ]),
+        // CommonStyles.horizontalGradientDivider(colors: [
+        //   const Color(0xFFFF4500),
+        //   const Color(0xFFA678EF),
+        //   const Color(0xFFFF4500),
+        // ]),
         const SizedBox(height: 2),
         Row(
           children: [
@@ -239,7 +243,7 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalGradientDivider2(),
         Row(
           children: [
             Expanded(

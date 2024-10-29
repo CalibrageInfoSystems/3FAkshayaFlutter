@@ -73,7 +73,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
 
         // Calculate GST and ensure two decimal points
         double gstAmount =
-            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
         totalSGst = gstAmount / 2;
         double transgstAmount = double.parse(
             (totalTransportAmount - totalBaseTransportAmount)
@@ -193,35 +193,44 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 const SizedBox(height: 10),
                 productCostbox(
                     title: tr(LocaleKeys.amount),
-                    data:
-                        totalBasePrice.toStringAsFixed(2)), // Total base price
+                    data: totalBasePrice.toStringAsFixed(2)),
+                CommonStyles.horizontalGradien_Divider2(),// Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
-                    data: totalAmount.toStringAsFixed(2)), // Total base price
+                    data: totalAmount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),// Total base price
                 productCostbox(
                     title: tr(LocaleKeys.transamount),
                     data: totalBaseTransportAmount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tcgst_amount),
                     data: totalTransportSGST.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tsgst_amount),
                     data: totalTransportSGST.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.trnstotal_amt),
                     data: totalTransportAmount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
-                    title: tr(LocaleKeys.subsidy_amt),
+                    title: tr(LocaleKeys.subcd_amt),
                     data: subsidyAmount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.amount_payble),
                     data: paybleamount.toStringAsFixed(2)),
+                CommonStyles.horizontalGradien_Divider2(),// Total base price
                 const SizedBox(height: 20),
               ],
             )
@@ -306,35 +315,32 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
-          const Color(0xFFFF4500),
-          const Color(0xFFA678EF),
-          const Color(0xFFFF4500),
-        ]),
-        const SizedBox(height: 2),
+
+      const SizedBox(height: 2),
         Row(
           children: [
             Expanded(
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
           ],
         ),
-        const SizedBox(height: 2),
+
+       // const SizedBox(height: 2),
       ],
     );
   }
@@ -347,7 +353,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalGradientDivider2(),
         Row(
           children: [
             Expanded(
@@ -367,7 +373,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 ],
               ),
             ),
-            const SizedBox(width: 5),
+    const SizedBox(width: 2),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
