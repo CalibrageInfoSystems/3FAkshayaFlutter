@@ -10,6 +10,7 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/Services/custom_product_card.dart';
 import 'package:animated_read_more_text/animated_read_more_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -208,7 +209,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
         itemBuilder: (context, index) {
           final product = products[index];
           final quantity = productQuantities[product.id] ?? 0;
-          return ProductCard(
+          return CustomProductCard(
             product: product,
             quantity: quantity,
             onQuantityChanged: (newQuantity) {

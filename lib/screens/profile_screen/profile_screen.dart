@@ -267,7 +267,6 @@ class FarmerProfile extends StatelessWidget {
                 dataTextColor: Colors.green),
           if (farmerData.mobileNumber != null)
             CommonWidgets.commonRowWithColon(
-              // label: 'Alternate Mobile Number',
               label: tr(LocaleKeys.alter_mobile),
               data: '${farmerData.mobileNumber}',
             ),

@@ -141,35 +141,6 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
                   );
                 },
               );
-              /* return ListView.separated(
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  final request = requests[index];
-
-                  return this.request(
-                    index,
-                    request,
-                    onTap: () {
-                      // Ensuring null safety for nullable fields
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FertilizerProductDetails(
-                            requestCode: request.requestCode ?? 'N/A',
-                            payableAmount:
-                                request.paubleAmount.toString() ?? '0.0',
-                            subsidyAmount:
-                                request.subsidyAmount.toString() ?? '0.0',
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const SizedBox(height: 10);
-                },
-              ); */
             }
           },
         ),

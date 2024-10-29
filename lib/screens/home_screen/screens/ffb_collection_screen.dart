@@ -60,7 +60,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       body: Column(
         children: [
           Container(
-            height: dropdownItems.indexOf(selectedDropDownValue!) == 0
+            height: (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
+                    dropdownItems.indexOf(selectedDropDownValue!) == 1)
                 ? (size.height / 2) - AppBar().preferredSize.height
                 : null,
             decoration: const BoxDecoration(
@@ -95,7 +96,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   Container dropdownSelector() {
     return Container(
       alignment: Alignment.center,
-      padding: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: CommonStyles.whiteColor),
@@ -109,25 +109,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
             ),
           ),
           isExpanded: true,
-          hint: const Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    'Select Item',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
           items: dropdownItems
               .map((String item) => DropdownMenuItem<String>(
                     value: item,
@@ -223,12 +204,24 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               dateLabel: tr(LocaleKeys.fromDateWithOutStar),
               displaydate: displayFromDate,
               onTap: () {
-                final DateTime currentDate = DateTime.now();
-                final DateTime firstDate = DateTime(currentDate.year - 100);
-                launchFromDatePicker(
+                /* final DateTime currentDate = DateTime.now();
+                final DateTime firstDate = DateTime(currentDate.year - 100); */
+                /*  launchFromDatePicker(
                   context,
                   firstDate: firstDate,
                   lastDate: currentDate,
+                ); */
+                CommonWidgets.launchDatePicker(
+                  context,
+                  onDateSelected: (pickedDay) {
+                    if (pickedDay != null) {
+                      setState(() {
+                        selectedFromDate = pickedDay;
+                        displayFromDate =
+                            DateFormat('dd/MM/yyyy').format(selectedFromDate!);
+                      });
+                    }
+                  },
                 );
               },
             ),
@@ -241,23 +234,35 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                 // dateLabel: 'To Date',
                 displaydate: displayToDate,
                 onTap: () async {
-                  final DateTime currentDate = DateTime.now();
-                  final DateTime firstDate = DateTime(currentDate.year - 100);
-                  final DateTime? pickedDay = await showDatePicker(
+                  /*  final DateTime currentDate = DateTime.now();
+                  final DateTime firstDate = DateTime(currentDate.year - 100); */
+
+                  CommonWidgets.launchDatePicker(context,
+                      onDateSelected: (pickedDay) {
+                    if (pickedDay != null) {
+                      setState(() {
+                        selectedToDate = pickedDay;
+                        displayToDate =
+                            DateFormat('dd/MM/yyyy').format(selectedToDate!);
+                      });
+                    }
+                  });
+
+                  /* final DateTime? pickedDay = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now(),
                     initialEntryMode: DatePickerEntryMode.calendarOnly,
                     firstDate: firstDate,
                     lastDate: DateTime.now(),
                     initialDatePickerMode: DatePickerMode.day,
-                  );
+                  ); 
                   if (pickedDay != null) {
                     setState(() {
                       selectedToDate = pickedDay;
                       displayToDate =
                           DateFormat('dd/MM/yyyy').format(selectedToDate!);
                     });
-                  }
+                  }*/
                 },
               )),
           const SizedBox(width: 14),
@@ -355,25 +360,26 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
-  Future<void> launchFromDatePicker(BuildContext context,
+/*   Future<void> launchFromDatePicker(BuildContext context,
       {required DateTime firstDate,
       required DateTime lastDate,
       DateTime? initialDate}) async {
     final DateTime? pickedDay = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      firstDate: firstDate,
-      lastDate: lastDate,
-      initialDatePickerMode: DatePickerMode.day,
-    );
+        context: context,
+        initialDate: initialDate ?? DateTime.now(),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        initialDatePickerMode: DatePickerMode.day,
+        confirmText: tr(LocaleKeys.ok),
+        cancelText: tr(LocaleKeys.cancel_capitalized));
     if (pickedDay != null) {
       setState(() {
         selectedFromDate = pickedDay;
         displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
       });
     }
-  }
+  } */
 
   Future<void> launchToDatePicker(BuildContext context,
       {required DateTime firstDate,

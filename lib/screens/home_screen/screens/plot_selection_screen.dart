@@ -34,13 +34,22 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
   }
 
   Future<List<PlotDetailsModel>> getPlotDetails() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
     final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
-
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
     try {
-      final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         if (response['listResult'] != null) {
@@ -117,7 +126,8 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                     },
                   ); */
                 } else {
-                  return CommonStyles.rectangularShapeShimmerEffect();
+                  return const SizedBox.shrink();
+                  // return CommonStyles.rectangularShapeShimmerEffect();
                 }
               }),
         ),

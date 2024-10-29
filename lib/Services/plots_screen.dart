@@ -98,7 +98,6 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
                             index: index);
                       } else {
                         return const SizedBox();
-                        // Return nothing or handle the error appropriately
                       }
                     },
                   );

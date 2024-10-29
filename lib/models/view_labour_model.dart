@@ -63,7 +63,7 @@ class ViewLabourModel {
   final double? paidHarvestingAmount;
   final double? miscellaneousIncome;
   final double? harvestingFund;
-  final String? peakSeasonCharge;
+  final double? peakSeasonCharge;
   final String? labours;
   final String? labourIds;
   final double? serviceChargeAmount;

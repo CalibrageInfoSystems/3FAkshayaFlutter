@@ -54,6 +54,7 @@ class LocaleKeys {
   static const String btn_kn = "btn_kn";
   static const String btn_te = "btn_te";
   static const String cancel = "cancel";
+  static const String cancel_capitalized = "cancel_capitalized";
   static const String cancel_success = "cancel_success";
   static const String care = "care";
   static const String cc = "cc";

@@ -455,6 +455,13 @@ class CommonStyles {
     );
   }
 
+  static Widget snapshotError(Object? error) {
+    return Center(
+      child: Text(error.toString().replaceFirst('Exception: ', ''),
+          style: CommonStyles.txStyF16CpFF6),
+    );
+  }
+
   static Future<bool> checkInternetConnectivity() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||

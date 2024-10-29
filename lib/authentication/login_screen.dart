@@ -103,7 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              hintStyle: CommonStyles.txStyF20CwFF6,
+                              hintStyle: CommonStyles.txStyF20CwFF6.copyWith(
+                                color: Colors.grey.shade500,
+                              ),
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 15),
                               alignLabelWithHint:

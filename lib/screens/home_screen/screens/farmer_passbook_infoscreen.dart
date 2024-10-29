@@ -523,6 +523,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     showMonthPicker(context,
         firstYear: firstYear,
         lastYear: lastYear,
+        selectButtonText: tr(LocaleKeys.ok),
+        cancelButtonText: tr(LocaleKeys.cancel_capitalized),
         initialSelectedMonth: initialSelectedMonth,
         highlightColor: CommonStyles.appBarColor,
         textColor: CommonStyles.whiteColor,
@@ -795,7 +797,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                         ],
                       ),
                     )
-                  : Text(displaydate, style: CommonStyles.txStyF16CbFF6),
+                  : Text(displaydate, style: CommonStyles.txStyF16CwFF6),
             ],
           ),
           const Divider(
@@ -1121,9 +1123,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                         child: Text(
                           tr(LocaleKeys.no_payments_found),
                           // style: CommonStyles.txStyF16CpFF6,
-                          style: CommonStyles.txStyF16CpFF6.copyWith(
-                            fontSize: 20,
-                          ),
+                          style: CommonStyles.txStyF16CpFF6,
                         ),
                       ),
                     );

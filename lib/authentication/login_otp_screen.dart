@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
+import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -36,98 +37,96 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('====>${widget.mobile}');
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/appbg.png',
-                fit: BoxFit.cover,
-              ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              Assets.images.appbg.path,
+              // 'assets/images/appbg.png',
+              fit: BoxFit.cover,
             ),
-            Positioned.fill(
-              child: Container(
-                color: const Color(0x8D000000),
-              ),
+          ),
+          Positioned.fill(
+            child: Container(
+              color: const Color(0x8D000000),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 30),
-                    // Split the mobile numbers and format the display
-                    Text(
-                      '${tr(LocaleKeys.otp_desc)} ${_formatMobileNumbers(widget.mobile)}',
-                      style: CommonStyles.txStyF16CwFF6,
-                    ),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: PinCodeTextField(
-                        appContext: context,
-                        textStyle: CommonStyles.txStyF16CwFF6,
-                        length: 6,
-                        obscureText: false,
-                        animationType: AnimationType.fade,
-                        pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.underline,
-                          borderRadius: BorderRadius.circular(10),
-                          fieldWidth: 45,
-                          activeColor: CommonStyles.primaryTextColor,
-                          selectedColor: CommonStyles.primaryTextColor,
-                          selectedFillColor: Colors.transparent,
-                          activeFillColor: Colors.transparent,
-                          inactiveFillColor: Colors.transparent,
-                          inactiveColor: Colors.white,
-                        ),
-                        animationDuration: const Duration(milliseconds: 300),
-                        enableActiveFill: true,
-                        keyboardType: TextInputType.number,
-                        onCompleted: (v) {
-                          print(v);
-                          setState(() {
-                            enteredOTP = v;
-                          });
-                          print("Completed");
-                        },
-                        beforeTextPaste: (text) {
-                          print("Allowing to paste $text");
-                          return true;
-                        },
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 70),
+                  // Split the mobile numbers and format the display
+                  Text(
+                    '${tr(LocaleKeys.otp_desc)} ${_formatMobileNumbers(widget.mobile)}',
+                    style: CommonStyles.txStyF16CwFF6,
+                  ),
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: PinCodeTextField(
+                      appContext: context,
+                      textStyle: CommonStyles.txStyF16CwFF6,
+                      length: 6,
+                      autoFocus: true,
+                      obscureText: false,
+                      animationType: AnimationType.fade,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.underline,
+                        borderRadius: BorderRadius.circular(10),
+                        fieldWidth: 45,
+                        activeColor: CommonStyles.primaryTextColor,
+                        selectedColor: CommonStyles.primaryTextColor,
+                        selectedFillColor: Colors.transparent,
+                        activeFillColor: Colors.transparent,
+                        inactiveFillColor: Colors.transparent,
+                        inactiveColor: Colors.white,
                       ),
+                      animationDuration: const Duration(milliseconds: 300),
+                      enableActiveFill: true,
+                      keyboardType: TextInputType.number,
+                      onCompleted: (v) {
+                        print(v);
+                        setState(() {
+                          enteredOTP = v;
+                        });
+                        print("Completed");
+                      },
+                      beforeTextPaste: (text) {
+                        print("Allowing to paste $text");
+                        return true;
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    submitBtn(context, tr(LocaleKeys.submit)),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            resendOTP();
-                          },
-                          child: Text(
-                            tr(LocaleKeys.re_send),
-                            style: CommonStyles.text14white.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                            ),
+                  ),
+                  const SizedBox(height: 20),
+                  submitBtn(context, tr(LocaleKeys.submit)),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          resendOTP();
+                        },
+                        child: Text(
+                          tr(LocaleKeys.re_send),
+                          style: CommonStyles.text14white.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

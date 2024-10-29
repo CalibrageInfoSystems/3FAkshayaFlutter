@@ -1,8 +1,6 @@
-// ignore_for_file: file_names
-
 import 'dart:convert';
 
-// import 'package:akshaya_flutter/Services/models/Godowndata.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/services/models/Godowndata.dart';
 
 import 'package:akshaya_flutter/Services/select_products_screen.dart';
@@ -78,14 +76,14 @@ class GodownSelection extends State<GodownSelectionScreen> {
 
       print('stateCode -==$stateCode');
     });
-    /* setState(() {
+    setState(() {
       isLoading = true;
-    }); */
+    });
 
     //Show loading dialog
-    /*   Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
-    }); */
+    });
     // http://182.18.157.215/3FAkshaya/API/api/Godown/GetActiveGodowns/AP
     try {
       final response =
@@ -104,9 +102,9 @@ class GodownSelection extends State<GodownSelectionScreen> {
         throw Exception('Failed to load locations');
       }
     } catch (e) {
-      /*  setState(() {
+      setState(() {
         isLoading = false;
-      }); */
+      });
       print(e);
     } finally {
       Navigator.pop(context);
@@ -194,33 +192,10 @@ class GoDownsCard extends StatelessWidget {
                   Text(godown.name!,
                       style: CommonStyles.txStyF16CbFF6
                           .copyWith(color: CommonStyles.blackColorShade)),
-                  Container(
-                    height: 0.5,
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xCBBEBEBE),
-                          Color(0xFFe86100),
-                          Color(0xCBBEBEBE),
-                        ],
-                      ),
-                    ),
-                  ),
+                  CommonWidgets.customDivider(),
                   contentBox(
                       label: tr(LocaleKeys.location), data: godown.location),
-                  Container(
-                    height: 0.5,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0x00bebebe),
-                          Color(0xFFe86100),
-                          Color(0xCBBEBEBE),
-                        ],
-                      ),
-                    ),
-                  ),
+                  CommonWidgets.customDivider(),
                   contentBox(
                       label: tr(LocaleKeys.address), data: godown.address),
                 ],

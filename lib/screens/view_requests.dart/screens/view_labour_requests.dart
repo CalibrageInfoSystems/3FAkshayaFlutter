@@ -191,7 +191,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
       ),
     );
   }
-
+/* 
   Widget commonRow({
     required String label,
     required String data,
@@ -222,7 +222,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
         const SizedBox(height: 10),
       ],
     );
-  }
+  } */
 
   void showCompleteDetailsOnDialog(ViewLabourModel request) {
     final df = NumberFormat("#,##0.00");
@@ -243,52 +243,66 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               Text('${request.requestCode}', style: CommonStyles.txStyF16CpFF6),
               const SizedBox(height: 10),
               if (request.plotCode != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.plot_code),
                   data: '${request.plotCode}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               if (request.palmArea != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.plot_size),
                   data:
                       '${df.format(request.palmArea)} Ha (${df.format(request.palmArea! * 2.5)} Acre)',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               if (request.plotVillage != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.village),
                   data: '${request.plotVillage}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               /* if (request.leader != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.labour_leader),
                   data: '${request.leader}',
                 ), */
               if (request.startDate != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.startDate),
                   data: '${CommonStyles.formatDisplayDate(request.startDate)}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               if (request.serviceTypes != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.serviceType),
                   data: '${request.serviceTypes}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               /* if (request.updatedDate != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.job_done),
                   data:
                       '${CommonStyles.formatDisplayDate(request.updatedDate)}',
                 ), */
               if (request.duration != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.Package),
                   // data: '${CommonStyles.formatDate(request.assignedDate)}',
                   data: '${request.duration}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               if (request.statusType != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.status),
                   data: '${request.statusType}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               /*  if (request.createdDate != null)
                 commonRow(
@@ -314,9 +328,11 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               ),
               const SizedBox(height: 5),
               if (request.totalCost != null)
-                commonRow(
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.total_amt),
                   data: request.totalCost!.toStringAsFixed(2),
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
                 ),
               const SizedBox(height: 10),
               Row(

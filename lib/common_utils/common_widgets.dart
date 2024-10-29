@@ -11,36 +11,40 @@ class CommonWidgets {
     Color? labelTextColor,
     Color? dataTextColor = CommonStyles.dataTextColor,
     bool isColon = false,
+    TextStyle? style,
     List<int> flex = const [6, 1, 7],
   }) {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               flex: flex[0],
               child: Text(
                 label,
-                style: CommonStyles.txStyF14CbFF6.copyWith(
-                  color: labelTextColor,
-                ),
+                style: style ??
+                    CommonStyles.txStyF14CbFF6.copyWith(
+                      color: labelTextColor,
+                    ),
               ),
             ),
             isColon
                 ? Expanded(
                     flex: flex[1],
-                    child: const Text(
+                    child: Text(
                       ':',
-                      style: CommonStyles.txStyF14CbFF6,
+                      style: style ?? CommonStyles.txStyF14CbFF6,
                     ))
                 : const SizedBox(width: 10),
             Expanded(
               flex: flex[2],
               child: Text(
                 data,
-                style: CommonStyles.txStyF14CbFF6.copyWith(
-                  color: dataTextColor,
-                ),
+                style: style ??
+                    CommonStyles.txStyF14CbFF6.copyWith(
+                      color: dataTextColor,
+                    ),
               ),
             ),
           ],
@@ -118,17 +122,13 @@ class CommonWidgets {
               padding: const EdgeInsets.symmetric(vertical: 10),
               alignment: Alignment.center,
               decoration: const BoxDecoration(
-                // borderRadius: BorderRadius.circular(10),
                 color: CommonStyles.listOddColor,
               ),
               child: Text(
                 tr(LocaleKeys.complete_details),
                 style: CommonStyles.txStyF16CbFF6.copyWith(
                     color: CommonStyles.viewMoreBtnTextColor,
-                    fontSize: 18,
                     fontWeight: FontWeight.w600),
-                /*  style: TextStyle(
-                    fontWeight: FontWeight.w600), */
               ),
             ),
           ),
@@ -145,7 +145,7 @@ class CommonWidgets {
       options: const LiveOptions(
         delay: Duration(milliseconds: 100),
         showItemInterval: Duration(milliseconds: 100),
-        showItemDuration: Duration(milliseconds: 250),
+        showItemDuration: Duration(milliseconds: 500),
         reAnimateOnVisibility: false,
       ),
       itemCount: itemCount,
@@ -163,6 +163,33 @@ class CommonWidgets {
           ),
         );
       },
+    );
+  }
+
+  static Future<void> launchDatePicker(
+    BuildContext context, {
+    DateTime? initialDate,
+    Function(DateTime? pickedDay)? onDateSelected,
+  }) async {
+    final DateTime currentDate = DateTime.now();
+    final DateTime firstDate = DateTime(currentDate.year - 100);
+    final DateTime? pickedDay = await showDatePicker(
+        context: context,
+        initialDate: initialDate ?? DateTime.now(),
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        firstDate: firstDate,
+        lastDate: currentDate,
+        initialDatePickerMode: DatePickerMode.day,
+        confirmText: tr(LocaleKeys.ok),
+        cancelText: tr(LocaleKeys.cancel_capitalized));
+    onDateSelected?.call(pickedDay);
+  }
+
+  static customDivider(
+      {double? height = 0.5, Color? color = const Color(0xFFe86100)}) {
+    return Container(
+      height: height,
+      color: color,
     );
   }
 }

@@ -302,14 +302,12 @@ class _MainScreenPageState extends State<MainScreen> {
                                 _onItemTapped(3);
                               }),
                           menuOption(
-                              title: tr(LocaleKeys.logout),
+                              title: tr(LocaleKeys.log_off),
                               menuIcon: Assets.images.icLogout.path,
                               isPng: true,
                               onTap: () {
                                 logOutDialog(context);
                               }),
-
-                          // menuOption(title: 'Version 1.0.1', onTap: () {}),
                         ],
                       ),
                     ),

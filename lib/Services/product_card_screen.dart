@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/services/models/Godowndata.dart';
 
 import 'package:akshaya_flutter/Services/models/MsgModel.dart';
@@ -529,13 +530,16 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     required String data2,
   }) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        // CommonStyles.horizontalGradientDivider(),
+        CommonWidgets.customDivider(),
         Row(
           children: [
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     flex: 4,
@@ -553,6 +557,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     flex: 4,

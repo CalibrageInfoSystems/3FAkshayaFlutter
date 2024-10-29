@@ -6,6 +6,7 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/Services/custom_product_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +149,7 @@ class _SelectEdibleProductsScreenState
                       itemBuilder: (context, index) {
                         final product = products[index];
                         final quantity = productQuantities[product.id] ?? 0;
-                        return ProductCard(
+                        return CustomProductCard(
                           product: product,
                           quantity: quantity,
                           onQuantityChanged: (newQuantity) {

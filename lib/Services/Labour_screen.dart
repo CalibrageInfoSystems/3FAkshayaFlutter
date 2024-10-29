@@ -751,12 +751,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                               ),
                             ),
                           ),
-                          /*  Text(
-                            tr(LocaleKeys.terms_conditions),
-                            style: CommonStyles.txStyF14CpFF6.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: CommonStyles.primaryTextColor),
-                          ), */
                           const SizedBox(width: 5),
                           Flexible(
                             child: RichText(
