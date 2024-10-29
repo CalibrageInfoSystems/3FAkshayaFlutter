@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 // import 'package:akshaya_flutter/Services/models/Godowndata.dart';
@@ -143,7 +144,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                               borderRadius: BorderRadius.circular(10.0),
                             ))),
                 errorWidget: (context, url, error) => Image.asset(
-                  Assets.images.icLogo.path,
+                  Assets.images.noproductImage.path,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -273,7 +274,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
                     errorWidget: (context, url, error) => Image.asset(
-                      Assets.images.icLogo.path,
+                      Assets.images.noproductImage.path,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -551,23 +552,47 @@ class _CustomProductCardState extends State<CustomProductCard> {
             child: Stack(
               children: [
                 Center(
-                  child: PhotoViewGallery.builder(
-                    itemCount: 1,
-                    builder: (context, index) {
-                      return PhotoViewGalleryPageOptions(
-                        imageProvider: NetworkImage(imageString),
-                        minScale: PhotoViewComputedScale.covered,
-                        maxScale: PhotoViewComputedScale.covered,
-                      );
-                    },
-                    scrollDirection: Axis.vertical,
-                    scrollPhysics: const PageScrollPhysics(),
-                    allowImplicitScrolling: true,
-                    backgroundDecoration: const BoxDecoration(
-                      color: Colors.white,
+                  child:
+            FutureBuilder(
+            future: _loadImage(imageString),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Image.asset(
+                      Assets.images.noproductImage.path, // Path to your error image
+                      fit: BoxFit.cover,
                     ),
+                  );
+                }
+                return PhotoViewGallery.builder(
+                  itemCount: 1,
+                  builder: (context, index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: NetworkImage(imageString),
+                      minScale: PhotoViewComputedScale.covered,
+                      maxScale: PhotoViewComputedScale.covered,
+                    );
+                  },
+                  scrollDirection: Axis.vertical,
+                  backgroundDecoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                ),
+                );
+              } else {
+                // While loading, you can show a placeholder
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+
+// Function to load the image and handle errors
+
+
+        ),
+
+
+
                 Positioned(
                   top: 0,
                   right: 0,
@@ -592,5 +617,18 @@ class _CustomProductCardState extends State<CustomProductCard> {
         );
       },
     );
+  }
+
+  Future<void> _loadImage(String url) async {
+    final completer = Completer<void>();
+    final img = Image.network(url);
+
+    img.image.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener(
+            (info, _) => completer.complete(),
+        onError: (error, stackTrace) => completer.completeError(error),
+      ),
+    );
+    await completer.future;
   }
 }

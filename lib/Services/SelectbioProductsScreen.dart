@@ -42,6 +42,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
   late List<ProductItem> copyProductsData = [];
+  List<int> orderedProductIds = [];
   // List<ProductWithQuantity>? copyProductsData;
   @override
   void initState() {
@@ -74,13 +75,19 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
   }
 
   List<ProductWithQuantity> fetchCardProducts() {
-    return copyProductsData
-        .where((product) => productQuantities.containsKey(product.id))
-        .map((product) => ProductWithQuantity(
-              product: product,
-              quantity: productQuantities[product.id] ?? 0,
-            ))
+    final result = orderedProductIds
+        .where((id) => productQuantities.containsKey(id))
+        .map((id) {
+      final product = copyProductsData.firstWhere((p) => p.id == id);
+      return ProductWithQuantity(
+        product: product,
+        quantity: productQuantities[id] ?? 0,
+      );
+    })
         .toList();
+    print(
+        'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
+    return result;
   }
 
   Future<List<ProductItem>> getProducts() async {
@@ -214,7 +221,17 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
             quantity: quantity,
             onQuantityChanged: (newQuantity) {
               setState(() {
-                productQuantities[product.id!] = newQuantity;
+                if (newQuantity > 0) {
+                  productQuantities[product.id!] = newQuantity;
+                  // Add to ordered list if not already present
+                  if (!orderedProductIds.contains(product.id)) {
+                    orderedProductIds.add(product.id!);
+                  }
+                } else {
+                  // Remove from both lists if quantity is zero
+                  productQuantities.remove(product.id);
+                  orderedProductIds.remove(product.id);
+                }
                 updateBadgeCount();
               });
             },

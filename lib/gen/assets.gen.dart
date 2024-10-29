@@ -169,6 +169,10 @@ class $AssetsImagesGen {
   AssetGenImage get mainVisit =>
       const AssetGenImage('assets/images/main_visit.png');
 
+  /// File path: assets/images/noproduct_image.png
+  AssetGenImage get noproductImage =>
+      const AssetGenImage('assets/images/noproduct_image.png');
+
   /// File path: assets/images/nurseries_icon.png
   AssetGenImage get nurseriesIcon =>
       const AssetGenImage('assets/images/nurseries_icon.png');
@@ -243,6 +247,7 @@ class $AssetsImagesGen {
         loan,
         logoFinal,
         mainVisit,
+        noproductImage,
         nurseriesIcon,
         oilpalm,
         passbook,

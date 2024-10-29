@@ -713,8 +713,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 value: payableAmount.toStringAsFixed(2)),
           ];
 
-          showSuccessDialog(
-              context, displayList, tr(LocaleKeys.success_fertilizer));
+          showSuccessDialog(context, displayList, tr(LocaleKeys.success_fertilizer));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -792,35 +791,39 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
     // totalTransportGST = 0.0;
     // totalTransCGST = 0.0;
     // totalTrasSGST = 0.0;
+// Sort the products list if needed, e.g., by product code or ID
+//     widget.products.sort((a, b) => a.product.code.compareTo(b.product.code));
 
     for (var productWithQuantity in widget.products) {
-      print('===totalAmount ${widget.totalAmount}');
+      print('Product Code: ${productWithQuantity.product.code}, Quantity: ${productWithQuantity.quantity}');
+
       if (productWithQuantity.quantity > 0) {
         final product = productWithQuantity.product;
         final quantity = productWithQuantity.quantity;
-        //   priceInclGst
+
+        // Calculations as you have them
         final productCost = product.priceInclGst! * quantity;
         totalProductCostGst += productCost;
 
-        print('===totalProductCostGst $totalProductCostGst');
         final transportCost = product.transPortActualPriceInclGst! * quantity;
         totalTransportCostwithgst += transportCost;
 
         final productGSTPercentage = product.gstPercentage ?? 0;
         amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+
         double totalProductCostGstnew = widget.totalAmount;
         totalGST = totalProductCostGstnew - amountWithoutGst;
         totalCGST = totalGST / 2;
         totalSGST = totalGST / 2;
 
         final transportGSTPercentage = product.transportGstPercentage ?? 0;
-        TransportamountWithoutGst +=
-            transportCost / (1 + (transportGSTPercentage / 100));
+        TransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
 
-        totalTransportGST =
-            totalTransportCostwithgst - TransportamountWithoutGst;
+        totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
         totalTransCGST = totalTransportGST / 2;
         totalTrasSGST = totalTransportGST / 2;
+
+        // Adding product details to the list
         productDetailsList.add(
           RequestProductDetails(
             productId: product.id!,
@@ -835,6 +838,54 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         );
       }
     }
+
+// Optional: Print final list to verify order
+    for (var item in productDetailsList) {
+      print('Added Product Code in Order: ${item.productCode}');
+    }
+
+    // for (var productWithQuantity in widget.products) {
+    //   print('===totalAmount ${widget.totalAmount}');
+    //   if (productWithQuantity.quantity > 0) {
+    //     final product = productWithQuantity.product;
+    //     final quantity = productWithQuantity.quantity;
+    //     //   priceInclGst
+    //     final productCost = product.priceInclGst! * quantity;
+    //     totalProductCostGst += productCost;
+    //
+    //     print('===totalProductCostGst $totalProductCostGst');
+    //     final transportCost = product.transPortActualPriceInclGst! * quantity;
+    //     totalTransportCostwithgst += transportCost;
+    //
+    //     final productGSTPercentage = product.gstPercentage ?? 0;
+    //     amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+    //     double totalProductCostGstnew = widget.totalAmount;
+    //     totalGST = totalProductCostGstnew - amountWithoutGst;
+    //     totalCGST = totalGST / 2;
+    //     totalSGST = totalGST / 2;
+    //
+    //     final transportGSTPercentage = product.transportGstPercentage ?? 0;
+    //     TransportamountWithoutGst +=
+    //         transportCost / (1 + (transportGSTPercentage / 100));
+    //
+    //     totalTransportGST =
+    //         totalTransportCostwithgst - TransportamountWithoutGst;
+    //     totalTransCGST = totalTransportGST / 2;
+    //     totalTrasSGST = totalTransportGST / 2;
+    //     productDetailsList.add(
+    //       RequestProductDetails(
+    //         productId: product.id!,
+    //         quantity: quantity,
+    //         bagCost: product.priceInclGst ?? 0,
+    //         size: product.size ?? 0,
+    //         gstPersentage: product.gstPercentage ?? 0,
+    //         productCode: product.code!,
+    //         transGstPercentage: product.transportGstPercentage ?? 0,
+    //         transportCost: product.transPortActualPriceInclGst ?? 0,
+    //       ),
+    //     );
+    //   }
+    // }
 
     // Calculate total amount with GST
     totalAmountWithGST = totalProductCostGst + totalTransportCostwithgst;

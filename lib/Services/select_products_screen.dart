@@ -44,6 +44,8 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   String? selectedDropDownValue;
   late Future<List<ProductItem>> productsData;
   late List<ProductItem> copyProductsData = [];
+  List<int> orderedProductIds = [];
+
   @override
   void initState() {
     super.initState();
@@ -65,19 +67,34 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
   void copyProducts() async {
     copyProductsData = await productsData;
   }
-
   List<ProductWithQuantity> fetchCardProducts() {
-    final result = copyProductsData
-        .where((product) => productQuantities.containsKey(product.id))
-        .map((product) => ProductWithQuantity(
-              product: product,
-              quantity: productQuantities[product.id] ?? 0,
-            ))
+    final result = orderedProductIds
+        .where((id) => productQuantities.containsKey(id))
+        .map((id) {
+      final product = copyProductsData.firstWhere((p) => p.id == id);
+      return ProductWithQuantity(
+        product: product,
+        quantity: productQuantities[id] ?? 0,
+      );
+    })
         .toList();
     print(
         'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
     return result;
   }
+
+  // List<ProductWithQuantity> fetchCardProducts() {
+  //   final result = copyProductsData
+  //       .where((product) => productQuantities.containsKey(product.id))
+  //       .map((product) => ProductWithQuantity(
+  //             product: product,
+  //             quantity: productQuantities[product.id] ?? 0,
+  //           ))
+  //       .toList();
+  //   print(
+  //       'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
+  //   return result;
+  // }
 
   Future<List<CategoryItem>> getDropdownData() async {
     final apiUrl = '$baseUrl$GetCategoriesByParentCategory';
@@ -255,10 +272,21 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                           quantity: quantity,
                           onQuantityChanged: (newQuantity) {
                             setState(() {
-                              productQuantities[product.id!] = newQuantity;
+                              if (newQuantity > 0) {
+                                productQuantities[product.id!] = newQuantity;
+                                // Add to ordered list if not already present
+                                if (!orderedProductIds.contains(product.id)) {
+                                  orderedProductIds.add(product.id!);
+                                }
+                              } else {
+                                // Remove from both lists if quantity is zero
+                                productQuantities.remove(product.id);
+                                orderedProductIds.remove(product.id);
+                              }
                               updateBadgeCount();
                             });
                           },
+
                         );
                       },
                     ),
