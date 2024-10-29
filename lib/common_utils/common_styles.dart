@@ -28,6 +28,7 @@ class CommonStyles {
   static const successDialogHeaderColor = Color(0xFFf2614e);
   static const grycolor = Color(0xFF585858);
 static const lightgry = Color(0xffaaaaaa);
+  static const halfback = Color(0xFFCB000000);
   // colors
   static const gradientColor1 = Color(0xffDB5D4B);
   static const gradientColor2 = Color(0xffE39A63);
@@ -102,6 +103,12 @@ static const lightgry = Color(0xffaaaaaa);
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: whiteColor,
+  );
+  static const txStyhalfblack = TextStyle(
+    fontSize: 12,
+    fontFamily: FontFamily.hind,
+    fontWeight: FontWeight.w600,
+    color: halfback,
   );
 
   static const txStyF16CbFF6 = TextStyle(

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +20,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 
+import '../common_utils/DottedLine.dart';
 import '../common_utils/custom_appbar.dart';
 import 'models/MsgModel.dart';
 
@@ -758,18 +760,24 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                     style: CommonStyles.txStyF14CwFF6,
                                   ),
                                   TextSpan(
-                                    text:
-                                        '  ${tr(LocaleKeys.terms_conditions)}',
+                                    text: '  ${tr(LocaleKeys.terms_conditions)}',
                                     style: CommonStyles.txStyF14CpFF6.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: CommonStyles.primaryTextColor),
+                                      fontWeight: FontWeight.bold,
+                                      color: CommonStyles.primaryTextColor,
+                                    ),
+                                    // Wrap with GestureDetector for click action
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        showRateChartDialog(context); // Correctly calling the function
+                                      },
                                   ),
                                 ],
                               ),
                               softWrap: true,
                               overflow: TextOverflow.visible,
                             ),
-                          ),
+                          )
+
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -1102,12 +1110,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         if (responseData['isSuccess']) {
-          String prningcost = prunningCost.toString();
+          String prningcost = prunningCost!.toStringAsFixed(2);
+          String Harvestingcost = harvestCost!.toStringAsFixed(2);
           List<MsgModel> displayList = [
-            MsgModel(
-                key: tr(LocaleKeys.select_labour_type),
-                value: selectedServiceNames),
+            MsgModel(key: tr(LocaleKeys.select_labour_type), value: selectedServiceNames),
             MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+            MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
             MsgModel(
                 key: tr(LocaleKeys.Package), value: "$selectedDropDownValue"),
             MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
@@ -1150,8 +1158,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
             ),
             child: SizedBox(
               //  padding: EdgeInsets.all(2),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.8,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.75,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1160,8 +1168,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     Container(
                       color: CommonStyles.primaryTextColor,
                       alignment: Alignment.center, // Center the title
-                      padding: const EdgeInsets.all(
-                          8), // Optional padding for better spacing
+                      padding: const EdgeInsets.all(8), // Optional padding for better spacing
                       child: Text(
                         tr(LocaleKeys.terms_conditions),
                         style: const TextStyle(
@@ -1177,9 +1184,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       children: [
                         // Static Table Header
                         Table(
-                          border: TableBorder(
-                            verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
-                          ),
+                          border: TableBorder.all(color: CommonStyles.lightgry),
                           columnWidths: const {
                             0: FlexColumnWidth(2),
                             1: FlexColumnWidth(2),
@@ -1187,27 +1192,30 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             3: FlexColumnWidth(2),
                             4: FlexColumnWidth(2),
                           },
-                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                          defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
                           children: [
                             TableRow(
+                              //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
                               children: [
                                 tableHeader(tr(LocaleKeys.measurement)),
                                 tableHeader(tr(LocaleKeys.pru_amount)),
                                 tableHeader(tr(LocaleKeys.harv_amount)),
                                 tableHeader(tr(LocaleKeys.intercrop_prunning)),
                                 tableHeader(tr(LocaleKeys.harv_intercrop)),
+
                               ],
                             ),
                           ],
                         ),
                         // Scrollable Table Body
                         SizedBox(
-                          height: 300, // Set the fixed height for the scrollable part
+                          height: 220, // Set the fixed height for the scrollable part
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: Table(
                               border: TableBorder(
-                                verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
+                              verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
                               ),
                               columnWidths: const {
                                 0: FlexColumnWidth(2),
@@ -1222,8 +1230,27 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             ),
                           ),
                         ),
-                      ],
+              // SizedBox(
+              //   height: 300, // Set the fixed height for the scrollable part
+              //   child: SingleChildScrollView(
+              //     scrollDirection: Axis.vertical,
+              //     child: Table(
+              //       columnWidths: const {
+              //         0: FlexColumnWidth(2),
+              //         1: FlexColumnWidth(2),
+              //         2: FlexColumnWidth(2),
+              //         3: FlexColumnWidth(2),
+              //         4: FlexColumnWidth(2),
+              //       },
+              //       children: [
+              //         // Generate table rows with dotted lines
+              //         ...generateTableRows(listResult),
+              //       ],
+              //     ),
+              //   ),
+              // )
 
+              ],
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -1256,38 +1283,54 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-// Step 3: Helper function to generate table rows
+
   List<TableRow> generateTableRows(List<dynamic> listResult) {
     List<TableRow> rows = [];
 
     // Loop for each year (c1 to c30 represent the values for years 1 to 30)
     for (int i = 1; i <= 30; i++) {
+      // Create a TableRow for the data
       rows.add(
-        tableRow(
-          '${i == 1 ? '<= 1 Year' : '$i Years'}', // Display "1 Year" if i = 1, otherwise "N Years"
-          listResult[0]['c$i'].toString(), // Pruning Amount/Tree (Rs)
-          listResult[1]['c$i'].toString(), // Harvesting Amount/Ton (Rs)
-          listResult[2]['c$i'].toString(), // Pruning with Cocoa Intercrop/Tree (Rs)
-          listResult[3]['c$i'].toString(), // Harvesting with Cocoa Intercrop/Ton (Rs)
+        TableRow(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text('${i == 1 ? '<= 1 Year' : '$i Years'}',style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Measurement
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(listResult[0]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Pruning Amount/Tree
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(listResult[1]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Harvesting Amount/Ton
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(listResult[2]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Pruning with Cocoa Intercrop/Tree
+            ),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(listResult[3]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Harvesting with Cocoa Intercrop/Ton
+            ),
+          ],
         ),
       );
+
+
     }
 
     return rows;
   }
 
 
-
-
-//
-
 // Helper widget for table headers
   Widget tableHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(3.0),
       child: Text(
         title,
-        style: CommonStyles.txStyF14CpFF6,
+        style: CommonStyles.txStyF12CpFF6,
         textAlign: TextAlign.center,
       ),
     );
@@ -1355,6 +1398,37 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           .toList();
     }
   }
+
+  // List<TableRow> generateTableRowsWithDottedLines(List<dynamic> listResult) {
+  //   List<TableRow> rows = [];
+  //
+  //   // Loop for each year (c1 to c30 represent the values for years 1 to 30)
+  //   for (int i = 1; i <= 30; i++) {
+  //     rows.add(
+  //       TableRow(
+  //         children: [
+  //           // Measurement
+  //           TableCell(child: Padding(padding: const EdgeInsets.all(8.0), child: Text('$i Years'))),
+  //           const DottedLine(height: 40, width: 1, color: CommonStyles.lightgry), // Dotted line
+  //           // Pruning Amount/Tree
+  //           TableCell(child: Padding(padding: const EdgeInsets.all(8.0), child: Text(listResult[0]['c$i'].toString()))),
+  //           const DottedLine(height: 40, width: 1, color: CommonStyles.lightgry), // Dotted line
+  //           // Harvesting Amount/Ton
+  //           TableCell(child: Padding(padding: const EdgeInsets.all(8.0), child: Text(listResult[1]['c$i'].toString()))),
+  //           const DottedLine(height: 40, width: 1, color: CommonStyles.lightgry), // Dotted line
+  //           // Pruning with Cocoa Intercrop/Tree
+  //           TableCell(child: Padding(padding: const EdgeInsets.all(8.0), child: Text(listResult[2]['c$i'].toString()))),
+  //           const DottedLine(height: 40, width: 1, color: CommonStyles.lightgry), // Dotted line
+  //           // Harvesting with Cocoa Intercrop/Ton
+  //           TableCell(child: Padding(padding: const EdgeInsets.all(8.0), child: Text(listResult[3]['c$i'].toString()))),
+  //         ],
+  //       ),
+  //     );
+  //   }
+  //
+  //   return rows;
+  // }
+
 }
 
 class MultiDialogContent extends StatelessWidget {
