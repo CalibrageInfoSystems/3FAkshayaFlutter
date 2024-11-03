@@ -445,74 +445,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     );
   }
 
-/* 
-  Widget datePickerSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(bottom: 10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CommonStyles.whiteColor),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: datePickerBox(
-                dateLabel: tr(LocaleKeys.from_date),
-                displaydate: displayFromDate,
-                onTap: () {
-                  final DateTime currentDate = DateTime.now();
-                  final DateTime firstDate = DateTime(currentDate.year - 100);
-                  launchFromDatePicker(
-                    context,
-                    firstDate: firstDate,
-                    lastDate: currentDate,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-                child: datePickerBox(
-              dateLabel: tr(LocaleKeys.to_date),
-              // dateLabel: 'To Date',
-              displaydate: displayToDate,
-              onTap: () {
-                final DateTime currentDate = DateTime.now();
-                final DateTime firstDate = DateTime(currentDate.year - 100);
-                launchToDatePicker(context,
-                    firstDate: selectedFromDate ?? firstDate,
-                    lastDate: currentDate,
-                    initialDate: selectedFromDate);
-              },
-            )),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 1,
-              child: CustomBtn(
-                  label: tr(LocaleKeys.submit),
-                  onPressed: () {
-                    if (selectedFromDate == null || selectedToDate == null) {
-                      return CommonStyles.errorDialog(context,
-                          errorMessage: tr(LocaleKeys.enter_Date));
-                    } else if (selectedToDate!.isBefore(selectedFromDate!)) {
-                      return CommonStyles.errorDialog(context,
-                          errorMessage: tr(LocaleKeys.datevalidation));
-                    } else {
-                      validateAndSubmit(
-                          CommonStyles.formatApiDate(selectedFromDate),
-                          CommonStyles.formatApiDate(selectedToDate));
-                    }
-                  }),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
- */
-
   Future<void> launchFromDatePicker(
     BuildContext context, {
     required int? firstYear,
@@ -547,40 +479,16 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   void showToastMsg(String message) {
-    Fluttertoast.showToast(
+    /*  Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-    );
+    ); */
+
+    CommonStyles.showCustomToast(context, title: message);
   }
 
-/* 
-  Future<void> launchToDatePicker(
-    BuildContext context, {
-    required int? firstYear,
-    required int? lastYear,
-    int? initialSelectedMonth,
-    int? initialSelectedYear,
-  }) async {
-    showMonthPicker(context,
-        firstYear: firstYear,
-        lastYear: lastYear,
-        highlightColor: CommonStyles.appBarColor,
-        textColor: CommonStyles.whiteColor,
-        initialSelectedMonth: initialSelectedMonth,
-        initialSelectedYear: initialSelectedYear, onSelected: (month, year) {
-      setState(() {
-        displayToDate = '31/$month/$year';
-        selectedToDate = CommonStyles.parseDateString(displayToDate);
-        print('custom Todate: $displayToDate');
-        print(
-            'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
-        // apiFromDate = '$year-$month-1';
-      });
-    });
-  }
- */
   Future<void> launchToDatePicker(
     BuildContext context, {
     required int? firstYear,
@@ -597,19 +505,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       initialSelectedMonth: initialSelectedMonth,
       initialSelectedYear: initialSelectedYear,
       onSelected: (month, year) {
-        /* setState(() {
-          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
-
-          displayToDate =
-              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
-
-          selectedToDate = CommonStyles.parseDateString(displayToDate);
-
-          print(
-              'custom Todate: $displayToDate'); // Will print the last day of the selected month
-          print(
-              'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
-        }); */
         setState(() {
           DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
           final selectedDate =
@@ -1146,18 +1041,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                     return item(index, itemData: itemData);
                                   },
                                 ),
-
-                                /* ListView.separated(
-                                  itemCount: passbookVendor
-                                      .result!.paymentResponce!.length,
-                                  itemBuilder: (context, index) {
-                                    final itemData = passbookVendor
-                                        .result!.paymentResponce![index];
-                                    return item(index, itemData: itemData);
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 10),
-                                ), */
                               )
                             : const Expanded(
                                 child: Center(
@@ -1365,8 +1248,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
                               border: Border.all(
-                                color: Colors.grey,
-                                // color: CommonStyles.whiteColor,
+                                // color: Colors.grey,
+                                color: CommonStyles.whiteColor,
                               ),
                             ),
                             child: itemRow(
@@ -1889,9 +1772,9 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: const Text(
-                                'OK',
-                                style: CommonStyles.txStyF14CpFF6,
+                              child: Text(
+                                tr(LocaleKeys.ok),
+                                style: CommonStyles.txStyF14CbFF6,
                               ),
                             ),
                           ),

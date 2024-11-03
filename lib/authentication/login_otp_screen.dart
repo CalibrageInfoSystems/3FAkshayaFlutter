@@ -282,12 +282,13 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   }
 
   void _showDialog(String message) {
-    Fluttertoast.showToast(
+    /*  Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.CENTER,
       timeInSecForIosWeb: 1,
-    );
+    ); */
+    CommonStyles.showCustomToast(context, title: message);
   }
 
   void resendOTP() async {
@@ -319,7 +320,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             String mobileNumber = farmerResponseModel.result!;
             print('mobile_number=== $mobileNumber');
             //otpsuccess
-            Fluttertoast.showToast(
+            /* Fluttertoast.showToast(
                 msg: tr(LocaleKeys.otpsuccess),
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity
@@ -327,7 +328,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                 timeInSecForIosWeb: 1, // Duration for iOS and Web
                 backgroundColor: Colors.black,
                 textColor: Colors.white,
-                fontSize: 16.0);
+                fontSize: 16.0); */
+
+            CommonStyles.showCustomToast(
+              context,
+              title: tr(LocaleKeys.otpsuccess),
+            );
           } else {
             CommonStyles.showCustomDialog(
                 context, 'No Register Mobile Number for Send Otp');

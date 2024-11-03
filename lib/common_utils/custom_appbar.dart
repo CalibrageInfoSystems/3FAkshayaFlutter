@@ -21,7 +21,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      shape: const RoundedRectangleBorder(
+          side: BorderSide(
+        color: Colors.transparent,
+      )),
       backgroundColor: appBarColor,
+      elevation: 0,
       scrolledUnderElevation: 0,
       leading: GestureDetector(
         onTap: () {
@@ -29,7 +34,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
         child: Image.asset(Assets.images.icLeft.path),
       ),
-      elevation: 0,
       title: Text(
         title,
         textAlign: TextAlign.center,
@@ -48,42 +52,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
           child: actionIcon ??
               Image.asset(
-                width: 30,
-                height: 30,
+                // width: 30,
+                // height: 30,
+                width: 24,
+                height: 24,
                 Assets.images.homeIcon2.path,
               ),
         ),
         const SizedBox(width: 20),
-        /*  SvgPicture.asset(
-              'assets/images/home_icon.svg',
-              width: 25,
-              height: 25,
-              fit: BoxFit.contain,
-              color: Colors.red,
-            ), */
-        /*  IconButton(
-              icon: SvgPicture.asset( 
-                Assets.images.homeIcon.path,
-                // width: 25,
-                // height: 25,
-                fit: BoxFit.contain,
-                color: Colors.red,
-              ),
-
-              /*  const Icon(
-                Icons.home,
-                color: Colors.white,
-              ), */
-              onPressed: onPressed ??
-                  () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreen(),
-                      ),
-                    );
-                  },
-            ), */
       ],
     );
   }

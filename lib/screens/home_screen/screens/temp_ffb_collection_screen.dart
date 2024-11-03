@@ -994,6 +994,7 @@ class InfoDialog extends StatelessWidget {
                   children: [
                     CustomBtn(
                       label: tr(LocaleKeys.close),
+                      btnColor: CommonStyles.blackColor,
                       borderRadius: 24,
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -1066,7 +1067,7 @@ class InfoDialog extends StatelessWidget {
 
   Widget buildInfoRow(String label, String? value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

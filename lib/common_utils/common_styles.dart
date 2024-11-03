@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:toastification/toastification.dart';
 
 class CommonStyles {
   static const appBarColor = Color(0xfff07566);
@@ -541,6 +542,30 @@ class CommonStyles {
     });
   }
 
+  static void showCustomToast(
+    BuildContext context, {
+    required String title,
+  }) {
+    toastification.show(
+      context: context,
+      type: ToastificationType.success,
+      style: ToastificationStyle.flat,
+      autoCloseDuration: const Duration(seconds: 3),
+      title: Text(title),
+      alignment: Alignment.bottomCenter,
+      icon: Image.asset(Assets.images.icLogo.path, width: 30, height: 30),
+      showProgressBar: false,
+      showIcon: true,
+      backgroundColor: CommonStyles.screenBgColor,
+      foregroundColor: CommonStyles.primaryTextColor,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 33, vertical: 8),
+      borderRadius: BorderRadius.circular(32),
+    );
+  }
+
   static void showCustomDialog(BuildContext context, String msg) {
     showGeneralDialog(
       context: context,
@@ -879,6 +904,7 @@ class CommonStyles {
       ), */
     );
   }
+
   static Widget horizontalGradientDivider2(
       {List<Color>? colors, double? height = 0.4}) {
     return Container(
@@ -888,7 +914,7 @@ class CommonStyles {
         gradient: LinearGradient(
           colors: colors ??
               [
-              //  e86100
+                //  e86100
                 const Color(0xFFe86100),
                 const Color(0xFFe86100),
                 const Color(0xFFe86100),
@@ -897,6 +923,7 @@ class CommonStyles {
       ),
     );
   }
+
   static Widget horizontalGradien_Divider2(
       {List<Color>? colors, double? height = 0.4}) {
     return Container(
@@ -915,6 +942,7 @@ class CommonStyles {
       ),
     );
   }
+
   static void hideHorizontalDotsLoadingDialog(BuildContext context) {
     Navigator.of(context).pop();
   }

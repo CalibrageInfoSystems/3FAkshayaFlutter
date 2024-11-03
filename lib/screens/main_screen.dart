@@ -321,7 +321,7 @@ class _MainScreenPageState extends State<MainScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 10.0,
+                      height: 20.0,
                     ),
                   ],
                 ),
@@ -655,28 +655,31 @@ class _MainScreenPageState extends State<MainScreen> {
     }
   }
 
-  Container languageBox(String language,
+  Widget languageBox(String language,
       {List<Color> colors = const [Colors.grey, Colors.grey],
       required void Function()? onPressed}) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          Container(
-            height: 0.5,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: colors),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        margin: const EdgeInsets.only(top: 10),
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            Container(
+              height: 0.5,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: colors),
+              ),
             ),
-          ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-            ),
-            child: Text(language, style: CommonStyles.txSty_16w_fb),
-          ),
-        ],
+            // const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text(language, style: CommonStyles.txStyF16CwFF6),
+            ), // txSty_16w_fb
+
+            // const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
