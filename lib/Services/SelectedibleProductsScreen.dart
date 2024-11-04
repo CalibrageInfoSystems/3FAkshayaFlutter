@@ -261,6 +261,7 @@ class _SelectEdibleProductsScreenState
           ),
           CustomBtn(
             label: tr(LocaleKeys.next),
+            btnTextColor: CommonStyles.primaryTextColor,
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {

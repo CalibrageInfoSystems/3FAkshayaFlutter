@@ -220,6 +220,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                     children: [
                       CustomBtn(
                         label: tr(LocaleKeys.submit),
+                        btnTextColor: CommonStyles.primaryTextColor,
                         borderColor: CommonStyles.primaryTextColor,
                         borderRadius: 12,
                         onPressed: () async {
@@ -784,14 +785,14 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
         totalTrasSGST = totalTransportGST / 2;
         productDetailsList.add(
           RequestProductDetails(
-            productId: product.id!,
+            productId: product.id,
             quantity: quantity,
-            bagCost: product.priceInclGst!,
-            size: product.size!,
-            gstPersentage: product.gstPercentage!,
-            productCode: product.code!,
-            transGstPercentage: product.transportGstPercentage!,
-            transportCost: product.transPortActualPriceInclGst!,
+            bagCost: product.priceInclGst,
+            size: product.size,
+            gstPersentage: product.gstPercentage,
+            productCode: product.code,
+            transGstPercentage: product.transportGstPercentage,
+            transportCost: product.transPortActualPriceInclGst,
           ),
         );
       }

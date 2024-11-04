@@ -78,27 +78,23 @@ class _CustomProductCardState extends State<CustomProductCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Text(
-                    '₹${widget.product.priceInclGst!.toStringAsFixed(2)}',
-                    style: CommonStyles.txStyF14CbFF6.copyWith(
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  if (widget.product.priceInclGst !=
-                      widget.product.actualPriceInclGst)
-                    Text(
-                      '₹${widget.product.actualPriceInclGst!.toStringAsFixed(2)}',
-                      style: CommonStyles.txStyF14CbFF6.copyWith(
-                        decoration: TextDecoration.lineThrough,
-                        decorationColor: CommonStyles.RedColor,
-                        color: CommonStyles.formFieldErrorBorderColor,
-                      ),
-                    ),
-                ],
+              Text(
+                '₹${widget.product.priceInclGst!.toStringAsFixed(2)}',
+                style: CommonStyles.txStyF14CbFF6.copyWith(
+                  fontSize: 13,
+                ),
               ),
+              // const SizedBox(width: 15),
+              if (widget.product.priceInclGst !=
+                  widget.product.actualPriceInclGst)
+                Text(
+                  '₹${widget.product.actualPriceInclGst!.toStringAsFixed(2)}',
+                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: CommonStyles.RedColor,
+                    color: CommonStyles.formFieldErrorBorderColor,
+                  ),
+                ),
               widget.product.size != null && widget.product.uomType != null
                   ? Text(
                       '${widget.product.size} ${widget.product.uomType}',
