@@ -73,7 +73,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
 
         // Calculate GST and ensure two decimal points
         double gstAmount =
-        double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
         totalSGst = gstAmount / 2;
         double transgstAmount = double.parse(
             (totalTransportAmount - totalBaseTransportAmount)
@@ -194,7 +194,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 productCostbox(
                     title: tr(LocaleKeys.amount),
                     data: totalBasePrice.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(),// Total base price
+                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
@@ -206,7 +206,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
                     data: totalAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),// Total base price
+                CommonStyles.horizontalGradientDivider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.transamount),
                     data: totalBaseTransportAmount.toStringAsFixed(2)),
@@ -230,7 +230,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 productCostbox(
                     title: tr(LocaleKeys.amount_payble),
                     data: paybleamount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(),// Total base price
+                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 const SizedBox(height: 20),
               ],
             )
@@ -262,13 +262,16 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                flex: 3,
                 child: Text(tr(LocaleKeys.product),
                     style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
+                flex: 7,
                 child:
                     Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
@@ -288,7 +291,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           ),
           productInfo(
             label1: tr(LocaleKeys.transportprice),
-            data1: '${product.transPortCost ?? '0.0'}',
+            data1: formatDouble(
+                product.transPortCost), // '${product.transPortCost ?? '0.0'}',
             label2: tr(LocaleKeys.gst),
             data2: '${product.transPortGstPercentage ?? '0.0'}',
           ),
@@ -315,8 +319,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   }) {
     return Column(
       children: [
-
-      const SizedBox(height: 2),
+        const SizedBox(height: 2),
         Row(
           children: [
             Expanded(
@@ -340,7 +343,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           ],
         ),
 
-       // const SizedBox(height: 2),
+        // const SizedBox(height: 2),
       ],
     );
   }
@@ -353,13 +356,13 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider2(),
+        CommonStyles.horizontalDivider(),
         Row(
           children: [
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     flex: 4,
@@ -373,10 +376,11 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 ],
               ),
             ),
-    const SizedBox(width: 2),
+            const SizedBox(width: 5),
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     flex: 4,

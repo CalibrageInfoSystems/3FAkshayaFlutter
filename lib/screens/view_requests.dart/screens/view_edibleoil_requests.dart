@@ -208,12 +208,12 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
           if (request.paubleAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.amount_payble),
-              data: '${request.paubleAmount}',
+              data: request.paubleAmount!.toStringAsFixed(2),
             ),
           if (request.subsidyAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.subcd_amt),
-              data: '${request.subsidyAmount}',
+              data: request.subsidyAmount!.toStringAsFixed(2),
             ),
           if (request.paymentMode != null)
             CommonWidgets.commonRow(

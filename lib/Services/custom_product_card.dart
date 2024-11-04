@@ -90,7 +90,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   if (widget.product.priceInclGst !=
                       widget.product.actualPriceInclGst)
                     Text(
-                      '₹${widget.product.actualPriceInclGst}',
+                      '₹${widget.product.actualPriceInclGst!.toStringAsFixed(2)}',
                       style: CommonStyles.txStyF14CbFF6.copyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: CommonStyles.RedColor,
@@ -241,7 +241,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                   ),
                   const Text(
                     '     : ',
-                    style: CommonStyles.txStyF14CbFF6,
+                    style: CommonStyles.txStyF14CpFF6,
                   ),
                   Expanded(
                     child: Text(
@@ -308,7 +308,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     ),
                   ],
                 ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               infoRow(
                   label1: tr(LocaleKeys.price),
                   data1: product.priceInclGst,
@@ -321,7 +321,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                     ? false
                     : true, */
                   ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               if (product.size != null && widget.product.uomType != null)
                 /*   infoRow2(
                     label1: tr(LocaleKeys.product_size),
@@ -414,7 +414,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
                                   style: CommonStyles.txStyF14CbFF6,
                                 ),
                                 Text(
-                                  '$discountPrice',
+                                  discountPrice.toStringAsFixed(2),
                                   style: CommonStyles.txStyF14CbFF6.copyWith(
                                     decoration: TextDecoration.lineThrough,
                                     decorationColor: CommonStyles.RedColor,

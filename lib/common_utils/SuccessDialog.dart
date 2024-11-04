@@ -118,6 +118,7 @@ class SuccessDialog extends StatelessWidget {
                             children: [
                               CustomBtn(
                                 label: tr(LocaleKeys.ok),
+                                btnTextColor: CommonStyles.primaryTextColor,
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 30),
                                 onPressed: () {

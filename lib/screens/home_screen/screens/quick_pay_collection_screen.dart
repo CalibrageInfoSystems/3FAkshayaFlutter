@@ -613,6 +613,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           children: [
             CustomBtn(
               label: tr(LocaleKeys.confirm_req),
+              btnTextColor: CommonStyles.primaryTextColor,
               onPressed: () {
                 processRequest();
               },
@@ -670,7 +671,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
     CommonStyles.customDialog(
       context,
       Container(
-        width: size.width * 0.7,
+        width: size.width * 0.8,
         height: size.height * 0.4,
         padding: const EdgeInsets.all(10.0),
         color: Colors.white,

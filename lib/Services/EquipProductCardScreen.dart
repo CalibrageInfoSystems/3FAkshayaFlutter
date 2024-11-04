@@ -171,7 +171,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             // productCostbox(title: tr(LocaleKeys.trnstotal_amt), data: totalTransportCostwithgst.toStringAsFixed(2)),
             // productCostbox(title: tr(LocaleKeys.subsidy_amt), data: subsidyAmount.toStringAsFixed(2)),
             // productCostbox(title: tr(LocaleKeys.amount_payble), data: payableAmount.toStringAsFixed(2)),
-            CommonStyles.horizontalGradientDivider(colors: [
+            CommonStyles.horizontalDivider(colors: [
               const Color(0xFFFF4500),
               const Color(0xFFA678EF),
               const Color(0xFFFF4500),
@@ -183,6 +183,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
               children: [
                 CustomBtn(
                   label: tr(LocaleKeys.submit),
+                  btnTextColor: CommonStyles.primaryTextColor,
                   borderColor: CommonStyles.primaryTextColor,
                   borderRadius: 12,
                   onPressed: () async {
@@ -243,7 +244,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
+        CommonStyles.horizontalDivider(colors: [
           const Color(0xFFFF4500),
           const Color(0xFFA678EF),
           const Color(0xFFFF4500),
@@ -494,7 +495,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalDivider(),
         Row(
           children: [
             Expanded(

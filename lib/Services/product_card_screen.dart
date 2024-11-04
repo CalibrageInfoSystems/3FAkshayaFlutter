@@ -136,7 +136,30 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               const SizedBox(height: 5),
               dropdownWidget(),
               if (paymentmodeId == 26)
-                Row(
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isCheckboxChecked = !_isCheckboxChecked;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: _isCheckboxChecked,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isCheckboxChecked = value ?? false;
+                          });
+                        },
+                      ),
+                      Text(
+                        tr(LocaleKeys.imdpayment),
+                        style: CommonStyles.txStyF16CbFF6,
+                      ),
+                    ],
+                  ),
+                ),
+              /*    Row(
                   children: [
                     Checkbox(
                       value: _isCheckboxChecked,
@@ -149,7 +172,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     Text(tr(LocaleKeys.imdpayment),
                         style: CommonStyles.txStyF16CbFF6),
                   ],
-                ),
+                ), */
               const SizedBox(height: 10),
               Text(tr(LocaleKeys.product_details),
                   style: CommonStyles.txStyF16CbFF6),
@@ -168,7 +191,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  CommonStyles.horizontalGradientDivider(colors: [
+                  CommonStyles.horizontalDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
@@ -206,7 +229,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                   productCostbox(
                       title: tr(LocaleKeys.amount_payble),
                       data: payableAmount.toStringAsFixed(2)),
-                  CommonStyles.horizontalGradientDivider(colors: [
+                  CommonStyles.horizontalDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
@@ -218,6 +241,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                       CustomBtn(
                         label: tr(LocaleKeys.submit),
                         borderColor: CommonStyles.primaryTextColor,
+                        btnTextColor: CommonStyles.primaryTextColor,
                         borderRadius: 12,
                         onPressed: () async {
                           // Disable button when loading
@@ -281,7 +305,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
+        CommonStyles.horizontalDivider(colors: [
           const Color(0xFFFF4500),
           const Color(0xFFA678EF),
           const Color(0xFFFF4500),
@@ -506,27 +530,28 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             label2: tr(LocaleKeys.amount),
             data2: productQuantity.toStringAsFixed(2),
           ),
-          if(product.transPortActualPriceInclGst != 0.0)
-          productInfo(
-            label1: tr(LocaleKeys.transportprice),
-            data1: '${product.transPortActualPriceInclGst?.toStringAsFixed(2)}',
-            label2: tr(LocaleKeys.gst),
-            data2: '${product.transportGstPercentage?.toStringAsFixed(1)}',
-          ),
-          if(product.transPortActualPriceInclGst != 0.0)
-          productInfo(
-            label1: tr(LocaleKeys.totaltransportcost),
-            data1: totalTrasport.toStringAsFixed(2),
-            label2: tr(LocaleKeys.total_amt),
-            data2: totalAmount.toStringAsFixed(2),
-          ),
-          if(product.transPortActualPriceInclGst == 0.0)
-          productInfo(
-            label1: tr(LocaleKeys.total_amt),
-            data1: totalAmount.toStringAsFixed(2),
-            label2: "",
-            data2: "",
-          ),
+          if (product.transPortActualPriceInclGst != 0.0)
+            productInfo(
+              label1: tr(LocaleKeys.transportprice),
+              data1:
+                  '${product.transPortActualPriceInclGst?.toStringAsFixed(2)}',
+              label2: tr(LocaleKeys.gst),
+              data2: '${product.transportGstPercentage?.toStringAsFixed(1)}',
+            ),
+          if (product.transPortActualPriceInclGst != 0.0)
+            productInfo(
+              label1: tr(LocaleKeys.totaltransportcost),
+              data1: totalTrasport.toStringAsFixed(2),
+              label2: tr(LocaleKeys.total_amt),
+              data2: totalAmount.toStringAsFixed(2),
+            ),
+          if (product.transPortActualPriceInclGst == 0.0)
+            productInfo(
+              label1: tr(LocaleKeys.total_amt),
+              data1: totalAmount.toStringAsFixed(2),
+              label2: "",
+              data2: "",
+            ),
         ],
       ),
     );
@@ -722,7 +747,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
                 value: payableAmount.toStringAsFixed(2)),
           ];
 
-          showSuccessDialog(context, displayList, tr(LocaleKeys.success_fertilizer));
+          showSuccessDialog(
+              context, displayList, tr(LocaleKeys.success_fertilizer));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -804,7 +830,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
 //     widget.products.sort((a, b) => a.product.code.compareTo(b.product.code));
 
     for (var productWithQuantity in widget.products) {
-      print('Product Code: ${productWithQuantity.product.code}, Quantity: ${productWithQuantity.quantity}');
+      print(
+          'Product Code: ${productWithQuantity.product.code}, Quantity: ${productWithQuantity.quantity}');
 
       if (productWithQuantity.quantity > 0) {
         final product = productWithQuantity.product;
@@ -826,9 +853,11 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         totalSGST = totalGST / 2;
 
         final transportGSTPercentage = product.transportGstPercentage ?? 0;
-        TransportamountWithoutGst += transportCost / (1 + (transportGSTPercentage / 100));
+        TransportamountWithoutGst +=
+            transportCost / (1 + (transportGSTPercentage / 100));
 
-        totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
+        totalTransportGST =
+            totalTransportCostwithgst - TransportamountWithoutGst;
         totalTransCGST = totalTransportGST / 2;
         totalTrasSGST = totalTransportGST / 2;
 

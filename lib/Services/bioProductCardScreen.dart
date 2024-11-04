@@ -169,7 +169,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
                 data: totalProductCostGst.toStringAsFixed(2)),
 
             // Divider and Submit Button
-            CommonStyles.horizontalGradientDivider(colors: [
+            CommonStyles.horizontalDivider(colors: [
               const Color(0xFFFF4500),
               const Color(0xFFA678EF),
               const Color(0xFFFF4500),
@@ -238,7 +238,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
+        CommonStyles.horizontalDivider(colors: [
           const Color(0xFFFF4500),
           const Color(0xFFA678EF),
           const Color(0xFFFF4500),
@@ -436,11 +436,13 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
           Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Text(tr(LocaleKeys.product),
                     style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
+                flex: 8,
                 child:
                     Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
@@ -485,7 +487,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalDivider(),
         Row(
           children: [
             Expanded(

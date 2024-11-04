@@ -171,7 +171,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  CommonStyles.horizontalGradientDivider(colors: [
+                  CommonStyles.horizontalDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
@@ -207,7 +207,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
                   productCostbox(
                       title: tr(LocaleKeys.amount_payble),
                       data: payableAmount.toStringAsFixed(2)),
-                  CommonStyles.horizontalGradientDivider(colors: [
+                  CommonStyles.horizontalDivider(colors: [
                     const Color(0xFFFF4500),
                     const Color(0xFFA678EF),
                     const Color(0xFFFF4500),
@@ -288,7 +288,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(colors: [
+        CommonStyles.horizontalDivider(colors: [
           const Color(0xFFFF4500),
           const Color(0xFFA678EF),
           const Color(0xFFFF4500),
@@ -535,7 +535,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider(),
+        CommonStyles.horizontalDivider(),
         Row(
           children: [
             Expanded(

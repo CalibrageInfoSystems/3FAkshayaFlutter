@@ -19,6 +19,7 @@ class CommonStyles {
   static const tabBarColor = Color(0xffe46f5d);
   static const appBarColor2 = Color(0xffdd6950);
   static const dropdownListBgColor = Color(0xff6f6f6f);
+  static const labourTemplateColor = Color(0xff636363);
   static const blackColorShade = Color(0xFF636363);
   static const listOddColor = Color(0xFFdfdfdf);
   static const listEvenColor = Color(0xFFf5f5f5);
@@ -93,13 +94,13 @@ class CommonStyles {
   );
 
   static const txStyF14CbFF6 = TextStyle(
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: blackColor,
   );
   static const txStyF14bbFF6 = TextStyle(
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w700,
     color: grycolor,
@@ -886,22 +887,16 @@ class CommonStyles {
     );
   }
 
-  static Widget horizontalGradientDivider(
-      {List<Color>? colors, double? height = 0.5}) {
+  static Widget horizontalDivider({
+    List<Color>? colors,
+    double? height = 0.5,
+    EdgeInsetsGeometry? margin = const EdgeInsets.symmetric(vertical: 2),
+    Color? color = const Color(0xFFe86100),
+  }) {
     return Container(
       height: height,
-      margin: const EdgeInsets.symmetric(vertical: 2),
-      color: const Color(0xFFe86100),
-      /* decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: colors ??
-              [
-                const Color(0xCBBEBEBE),
-                const Color(0xFFe86100),
-                const Color(0xCBBEBEBE),
-              ],
-        ),
-      ), */
+      margin: margin,
+      color: color,
     );
   }
 

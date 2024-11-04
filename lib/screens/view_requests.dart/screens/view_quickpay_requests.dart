@@ -158,7 +158,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
           CommonWidgets.commonRow(
               label: tr(LocaleKeys.requestCodeLabel),
               data: request.requestCode,
-              dataTextColor: CommonStyles.appBarColor),
+              dataTextColor: CommonStyles.primaryTextColor), // appBarColor
           if (request.reqCreatedDate != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.req_date),
@@ -170,7 +170,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
           ),
           CommonWidgets.commonRow(
             label: tr(LocaleKeys.total_amt),
-            data: '${request.totalCost}',
+            data: request.totalCost.toStringAsFixed(2),
           ),
         ],
       ),

@@ -661,7 +661,7 @@ class _MainScreenPageState extends State<MainScreen> {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         color: Colors.transparent,
         child: Column(
           children: [
@@ -673,7 +673,7 @@ class _MainScreenPageState extends State<MainScreen> {
             ),
             // const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.only(top: 15, bottom: 10),
               child: Text(language, style: CommonStyles.txStyF16CwFF6),
             ), // txSty_16w_fb
 

@@ -33,7 +33,6 @@ class SelectbioProductsScreen extends StatefulWidget {
       _SelectbioProductsScreenState();
 }
 
-
 class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
   // tr(LocaleKeys.crop),
 
@@ -84,8 +83,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
         product: product,
         quantity: productQuantities[id] ?? 0,
       );
-    })
-        .toList();
+    }).toList();
     print(
         'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
     return result;
@@ -308,6 +306,7 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
           ),
           CustomBtn(
             label: tr(LocaleKeys.next),
+            btnTextColor: CommonStyles.primaryTextColor,
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
             onPressed: () {
@@ -656,7 +655,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ],
                 ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               infoRow(
                 label1: tr(LocaleKeys.price),
                 data1: '${product.priceInclGst}',
@@ -665,7 +664,7 @@ class _ProductCardState extends State<ProductCard> {
                 data2: '${product.gstPercentage}',
                 isSingle: product.gstPercentage != null ? false : true,
               ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               if (product.size != null && widget.product.uomType != null)
                 infoRow2(
                     label1: tr(LocaleKeys.product_size),

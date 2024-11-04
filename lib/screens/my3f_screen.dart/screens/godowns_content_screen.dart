@@ -14,7 +14,7 @@ class GoDownsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
       // color: Colors.grey,
       child: ListView.builder(
         itemCount: godowns.length,

@@ -118,7 +118,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       context: context,
       initialDate: initialDate,
       firstDate: initialDate,
-      // lastDate: DateTime(2101),
+      cancelText: tr(LocaleKeys.cancel_capitalized),
+      selectableDayPredicate: (DateTime date) {
+        return date.weekday != DateTime.sunday;
+      },
       lastDate: DateTime(DateTime.now().year + 100),
       builder: (context, child) {
         return Theme(
@@ -195,7 +198,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.0),
-                  color: CommonStyles.dropdownListBgColor,
+                  color: CommonStyles.labourTemplateColor,
                   // color: CommonStyles.screenBgColor,
                 ),
                 child: SingleChildScrollView(
@@ -465,7 +468,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         visible: harvestingCheck,
                         child: plotDetailsBox(
                           label: tr(LocaleKeys.harv_amount),
-                          data: harvestCost != null ? harvestCost!.toStringAsFixed(2) : "0.00",
+                          data: harvestCost != null
+                              ? harvestCost!.toStringAsFixed(2)
+                              : "0.00",
                         ),
                       ),
                       Visibility(
@@ -476,13 +481,59 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             // MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
-                              data: prunningCost != null ? prunningCost!.toStringAsFixed(2) : "0.00",
+                              data: prunningCost != null
+                                  ? prunningCost!.toStringAsFixed(2)
+                                  : "0.00",
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isChecked = !_isChecked;
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: Checkbox(
+                                value: _isChecked,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isChecked = value!;
+                                  });
+                                },
+                                checkColor: Colors.grey,
+                                fillColor:
+                                    WidgetStateProperty.resolveWith<Color>(
+                                        (states) {
+                                  if (states.contains(WidgetState.selected)) {
+                                    return Colors.white;
+                                  }
+                                  return Colors.transparent;
+                                }),
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              tr(LocaleKeys.have_pole),
+                              style: CommonStyles.txStyF14CwFF6,
                             ),
                           ],
                         ),
                       ),
 
-
+                      const SizedBox(height: 10),
+/* 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -499,22 +550,21 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                               if (states.contains(WidgetState.selected)) {
                                 return Colors.white;
                               }
-                              return Colors
-                                  .transparent; // Transparent background when unchecked
+                              return Colors.transparent;
                             }),
                             side: const BorderSide(
-                              color:
-                                  Colors.black, // Black border when unchecked
-                              width: 2, // Border width
+                              color: Colors.black,
+                              width: 2,
                             ),
                           ),
-                          //SizedBox(width: 8),
                           Text(
                             tr(LocaleKeys.have_pole),
                             style: CommonStyles.txStyF14CwFF6,
                           ),
                         ],
                       ),
+                     */
+
                       Row(
                         children: [
                           Text(
@@ -719,6 +769,79 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isagreed = !_isagreed;
+                            if (_isagreed) {
+                              showRateChartDialog(context);
+                            }
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: Checkbox(
+                                value: _isagreed,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isagreed = !_isagreed;
+                                    if (_isagreed) {
+                                      showRateChartDialog(context);
+                                    }
+                                  });
+                                },
+                                checkColor: Colors.grey,
+                                fillColor:
+                                    WidgetStateProperty.resolveWith<Color>(
+                                        (states) {
+                                  if (states.contains(WidgetState.selected)) {
+                                    return Colors.white;
+                                  }
+                                  return Colors.transparent;
+                                }),
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Flexible(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: tr(LocaleKeys.i_have_agree),
+                                      style: CommonStyles.txStyF14CwFF6,
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          ' ${tr(LocaleKeys.terms_conditions)}',
+                                      style:
+                                          CommonStyles.txStyF14CpFF6.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: CommonStyles.primaryTextColor,
+                                      ),
+                                      /*  recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          showRateChartDialog(context);
+                                        }, */
+                                    ),
+                                  ],
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.visible,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+/* 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -760,7 +883,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                     style: CommonStyles.txStyF14CwFF6,
                                   ),
                                   TextSpan(
-                                    text: '  ${tr(LocaleKeys.terms_conditions)}',
+                                    text:
+                                        '  ${tr(LocaleKeys.terms_conditions)}',
                                     style: CommonStyles.txStyF14CpFF6.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: CommonStyles.primaryTextColor,
@@ -768,7 +892,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                     // Wrap with GestureDetector for click action
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        showRateChartDialog(context); // Correctly calling the function
+                                        showRateChartDialog(
+                                            context); // Correctly calling the function
                                       },
                                   ),
                                 ],
@@ -777,9 +902,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                               overflow: TextOverflow.visible,
                             ),
                           )
-
                         ],
                       ),
+                      */
+
                       const SizedBox(height: 10),
                       submitBtn(context, tr(LocaleKeys.submit_req)),
                     ],
@@ -841,6 +967,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       children: [
         CustomBtn(
             label: language,
+            btnTextColor: CommonStyles.primaryTextColor,
             onPressed: () async {
               bool validationSuccess = await validateLabourRequest();
               if (validationSuccess) {
@@ -1113,9 +1240,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           String prningcost = prunningCost!.toStringAsFixed(2);
           String Harvestingcost = harvestCost!.toStringAsFixed(2);
           List<MsgModel> displayList = [
-            MsgModel(key: tr(LocaleKeys.select_labour_type), value: selectedServiceNames),
-            MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+            MsgModel(
+                key: tr(LocaleKeys.select_labour_type),
+                value: selectedServiceNames),
             MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
+            MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
             MsgModel(
                 key: tr(LocaleKeys.Package), value: "$selectedDropDownValue"),
             MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
@@ -1168,7 +1297,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                     Container(
                       color: CommonStyles.primaryTextColor,
                       alignment: Alignment.center, // Center the title
-                      padding: const EdgeInsets.all(8), // Optional padding for better spacing
+                      padding: const EdgeInsets.all(
+                          8), // Optional padding for better spacing
                       child: Text(
                         tr(LocaleKeys.terms_conditions),
                         style: const TextStyle(
@@ -1193,7 +1323,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             4: FlexColumnWidth(2),
                           },
                           defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
+                              TableCellVerticalAlignment.middle,
                           children: [
                             TableRow(
                               //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
@@ -1203,19 +1333,21 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                 tableHeader(tr(LocaleKeys.harv_amount)),
                                 tableHeader(tr(LocaleKeys.intercrop_prunning)),
                                 tableHeader(tr(LocaleKeys.harv_intercrop)),
-
                               ],
                             ),
                           ],
                         ),
                         // Scrollable Table Body
                         SizedBox(
-                          height: 220, // Set the fixed height for the scrollable part
+                          height:
+                              220, // Set the fixed height for the scrollable part
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: Table(
-                              border: TableBorder(
-                              verticalInside: BorderSide(color: CommonStyles.lightgry), // Add vertical border
+                              border: const TableBorder(
+                                verticalInside: BorderSide(
+                                    color: CommonStyles
+                                        .lightgry), // Add vertical border
                               ),
                               columnWidths: const {
                                 0: FlexColumnWidth(2),
@@ -1230,27 +1362,26 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             ),
                           ),
                         ),
-              // SizedBox(
-              //   height: 300, // Set the fixed height for the scrollable part
-              //   child: SingleChildScrollView(
-              //     scrollDirection: Axis.vertical,
-              //     child: Table(
-              //       columnWidths: const {
-              //         0: FlexColumnWidth(2),
-              //         1: FlexColumnWidth(2),
-              //         2: FlexColumnWidth(2),
-              //         3: FlexColumnWidth(2),
-              //         4: FlexColumnWidth(2),
-              //       },
-              //       children: [
-              //         // Generate table rows with dotted lines
-              //         ...generateTableRows(listResult),
-              //       ],
-              //     ),
-              //   ),
-              // )
-
-              ],
+                        // SizedBox(
+                        //   height: 300, // Set the fixed height for the scrollable part
+                        //   child: SingleChildScrollView(
+                        //     scrollDirection: Axis.vertical,
+                        //     child: Table(
+                        //       columnWidths: const {
+                        //         0: FlexColumnWidth(2),
+                        //         1: FlexColumnWidth(2),
+                        //         2: FlexColumnWidth(2),
+                        //         3: FlexColumnWidth(2),
+                        //         4: FlexColumnWidth(2),
+                        //       },
+                        //       children: [
+                        //         // Generate table rows with dotted lines
+                        //         ...generateTableRows(listResult),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // )
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -1283,7 +1414,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-
   List<TableRow> generateTableRows(List<dynamic> listResult) {
     List<TableRow> rows = [];
 
@@ -1295,34 +1425,51 @@ class _LabourscreenScreenState extends State<Labourscreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Text('${i == 1 ? '<= 1 Year' : '$i Years'}',style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Measurement
+              child: Text(
+                i == 1 ? '<= 1 Year' : '$i Years',
+                style: CommonStyles.txStyhalfblack,
+                textAlign: TextAlign.center,
+              ), // Measurement
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Text(listResult[0]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Pruning Amount/Tree
+              child: Text(
+                listResult[0]['c$i'].toStringAsFixed(2),
+                style: CommonStyles.txStyhalfblack,
+                textAlign: TextAlign.center,
+              ), // Pruning Amount/Tree
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Text(listResult[1]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Harvesting Amount/Ton
+              child: Text(
+                listResult[1]['c$i'].toStringAsFixed(2),
+                style: CommonStyles.txStyhalfblack,
+                textAlign: TextAlign.center,
+              ), // Harvesting Amount/Ton
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Text(listResult[2]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Pruning with Cocoa Intercrop/Tree
+              child: Text(
+                listResult[2]['c$i'].toStringAsFixed(2),
+                style: CommonStyles.txStyhalfblack,
+                textAlign: TextAlign.center,
+              ), // Pruning with Cocoa Intercrop/Tree
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
-              child: Text(listResult[3]['c$i'].toStringAsFixed(2),style: CommonStyles.txStyhalfblack,  textAlign: TextAlign.center,), // Harvesting with Cocoa Intercrop/Ton
+              child: Text(
+                listResult[3]['c$i'].toStringAsFixed(2),
+                style: CommonStyles.txStyhalfblack,
+                textAlign: TextAlign.center,
+              ), // Harvesting with Cocoa Intercrop/Ton
             ),
           ],
         ),
       );
-
-
     }
 
     return rows;
   }
-
 
 // Helper widget for table headers
   Widget tableHeader(String title) {
@@ -1428,7 +1575,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   //
   //   return rows;
   // }
-
 }
 
 class MultiDialogContent extends StatelessWidget {

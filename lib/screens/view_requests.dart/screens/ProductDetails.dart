@@ -10,15 +10,6 @@ import '../../../localization/locale_keys.dart';
 import '../../../models/fertilizer_view_product_model.dart';
 import 'package:http/http.dart' as http;
 
-// class ProductDetails extends StatefulWidget {
-//   final String requestCode;
-//
-//
-//   const ProductDetails({
-//     Key? key,
-//     required this.requestCode,
-//
-//   }) : super(key: key);
 class ProductDetails extends StatefulWidget {
   final String? requestCode;
   const ProductDetails({super.key, required this.requestCode});
@@ -191,9 +182,8 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 const SizedBox(height: 10),
                 productCostbox(
                     title: tr(LocaleKeys.amount),
-                    data:
-                        totalBasePrice.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(),// Total base price
+                    data: totalBasePrice.toStringAsFixed(2)),
+                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
@@ -205,7 +195,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
                     data: totalAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(),// Total base price
+                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
                 // productCostbox(
                 //     title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
@@ -247,25 +237,19 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Flexible(
-                flex: 2,
-                child: Text(tr(LocaleKeys.product), style: CommonStyles.txStyF14CbFF6),
-              ),
-              const SizedBox(width: 25),
               Expanded(
-                flex: 8,
-                child: Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+                flex: 3,
+                child: Text(tr(LocaleKeys.product),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
-            //   Expanded(
-            //     child: Text(tr(LocaleKeys.product),
-            //         style: CommonStyles.txStyF14CbFF6),
-            //   ),
-            // //  const SizedBox(width: 10),
-            //   Expanded(
-            //     child:
-            //         Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
-            //   ),
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 7,
+                child:
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+              ),
             ],
           ),
           productInfo(
@@ -308,11 +292,11 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   }) {
     return Column(
       children: [
-        // CommonStyles.horizontalGradientDivider(colors: [
-        //   const Color(0xFFFF4500),
-        //   const Color(0xFFA678EF),
-        //   const Color(0xFFFF4500),
-        // ]),
+        CommonStyles.horizontalDivider(colors: [
+          const Color(0xFFFF4500),
+          const Color(0xFFA678EF),
+          const Color(0xFFFF4500),
+        ]),
         const SizedBox(height: 2),
         Row(
           children: [
@@ -349,7 +333,7 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   }) {
     return Column(
       children: [
-        CommonStyles.horizontalGradientDivider2(),
+        CommonStyles.horizontalDivider(),
         Row(
           children: [
             Expanded(
@@ -387,7 +371,6 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             ),
           ],
         ),
-        const SizedBox(height: 2),
       ],
     );
   }

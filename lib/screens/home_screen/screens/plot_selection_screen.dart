@@ -216,11 +216,12 @@ class CropPlotDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10).copyWith(
         left: 10,
       ),
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      // margin: const EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color:
-            index.isEven ? CommonStyles.whiteColor : CommonStyles.listEvenColor,
+        color: index.isEven
+            ? CommonStyles.listEvenColor
+            : CommonStyles.listOddColor,
         //  ? CommonStyles.listEvenColor
         //     : CommonStyles.listOddColor,
       ),

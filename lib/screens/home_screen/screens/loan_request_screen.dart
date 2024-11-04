@@ -123,7 +123,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       ];
 
       // Show success dialog
-      showSuccessDialog(context, displayList, tr(LocaleKeys.success_Loan));
+      showTestDialog(context, displayList, tr(LocaleKeys.success_Loan));
       // showSuccessDialog();
       print('loanRequestSubmit: ${response["isSuccess"]}');
       return response['isSuccess'] as bool;
@@ -148,7 +148,8 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: const Color(0xff6f6f6f),
+                color: CommonStyles
+                    .labourTemplateColor, // const Color(0xff6f6f6f),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -263,6 +264,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                     children: [
                       CustomBtn(
                         label: tr(LocaleKeys.submit_req),
+                        btnTextColor: CommonStyles.primaryTextColor,
                         onPressed: submitForm,
                         height: 50,
                         borderRadius: 16,
@@ -323,6 +325,7 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
                 children: [
                   CustomBtn(
                       label: tr(LocaleKeys.got_it),
+                      btnTextColor: CommonStyles.primaryTextColor,
                       borderRadius: 20,
                       onPressed: () => Navigator.pop(context)),
                 ],
@@ -341,73 +344,135 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     );
   }
 
+  void showTestDialog(BuildContext context, List<MsgModel> msg, String title) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: false,
+          child: Material(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: CommonStyles.txStyF16CpFF6.copyWith(
+                    fontSize: 17,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                ...msg.map((msg) {
+                  return msg.value.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  msg.key,
+                                  style: CommonStyles.txStyF14CrFF6.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  msg.value,
+                                  style: CommonStyles.txStyF14CrFF6.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: CommonStyles.dataTextColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox();
+                }),
+                const CustomBtn(label: 'label'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   void showSuccessDialog(
       BuildContext context, List<MsgModel> msg, String title) {
-    CommonStyles.errorDialog(context,
-        errorMessage: 'errorMessage',
-        barrierDismissible: false,
-        errorIcon: SvgPicture.asset(
-          Assets.images.progressComplete.path,
-          width: 50,
-          height: 50,
-          fit: BoxFit.contain,
-          color: CommonStyles.whiteColor,
-        ),
-        bodyBackgroundColor: Colors.white,
-        errorLabel: 'errorLabel',
-        borderColor: Colors.transparent,
-        errorHeaderColor: CommonStyles.primaryTextColor,
-        errorMessageColor: Colors.orange, onPressed: () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-        (Route<dynamic> route) => false,
-      );
-    },
-        errorBodyWidget: Container(
-          child: Column(
-            children: [
-              Text(
-                title,
-                style: CommonStyles.txStyF16CpFF6.copyWith(
-                  fontSize: 17,
-                ),
+    CommonStyles.errorDialog(
+      context,
+      errorMessage: 'errorMessage',
+      barrierDismissible: false,
+      errorIcon: SvgPicture.asset(
+        Assets.images.progressComplete.path,
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+        color: CommonStyles.whiteColor,
+      ),
+      bodyBackgroundColor: Colors.white,
+      errorLabel: 'errorLabel',
+      borderColor: Colors.transparent,
+      errorHeaderColor: CommonStyles.primaryTextColor,
+      errorMessageColor: Colors.orange,
+      onPressed: () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (Route<dynamic> route) => false,
+        );
+      },
+      errorBodyWidget: Container(
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: CommonStyles.txStyF16CpFF6.copyWith(
+                fontSize: 17,
               ),
-              const SizedBox(height: 20.0),
-              ...msg.map((msg) {
-                return msg.value.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                msg.key,
-                                style: CommonStyles.txStyF14CrFF6.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                ),
+            ),
+            const SizedBox(height: 20.0),
+            ...msg.map((msg) {
+              return msg.value.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              msg.key,
+                              style: CommonStyles.txStyF14CrFF6.copyWith(
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                msg.value,
-                                style: CommonStyles.txStyF14CrFF6.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: CommonStyles.dataTextColor,
-                                ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              msg.value,
+                              style: CommonStyles.txStyF14CrFF6.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: CommonStyles.dataTextColor,
                               ),
                             ),
-                          ],
-                        ),
-                      )
-                    : const SizedBox();
-              }),
-            ],
-          ),
-        ));
+                          ),
+                        ],
+                      ),
+                    )
+                  : const SizedBox();
+            }),
+          ],
+        ),
+      ),
+    );
   }
 }

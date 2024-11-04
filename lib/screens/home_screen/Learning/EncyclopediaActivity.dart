@@ -479,73 +479,106 @@ class _VideoTabViewState extends State<VideoTabView> {
             final mediaData = filterMediaData(data, 4);
             if (mediaData.isNotEmpty) {
               return GridView.builder(
-                padding: const EdgeInsets.all(8),
+                // padding: const EdgeInsets.all(8),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 1,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  childAspectRatio: 16 / 9,
+                  childAspectRatio: 16 / 11.2,
+                  // childAspectRatio: 16 / 9,
                 ),
                 itemCount: mediaData.length,
                 itemBuilder: (context, index) {
                   final mediaInfo = mediaData[index];
 
-                  return YoutubePlayerBuilder(
-                    player: YoutubePlayer(
-                      bottomActions: [
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.zoom_out_map_outlined,
-                            size: 22,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VideoPlayerScreen(
-                                  fileUrl: mediaInfo.fileUrl,
+                  return Container(
+                    // padding: const EdgeInsets.only(bottom: 40),
+                    color: CommonStyles.screenBgColor2,
+                    child: Stack(
+                      children: [
+                        YoutubePlayerBuilder(
+                          player: YoutubePlayer(
+                            bottomActions: [
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.zoom_out_map_outlined,
+                                  size: 22,
+                                  color: Colors.white,
                                 ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoPlayerScreen(
+                                        fileUrl: mediaInfo.fileUrl,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                            controller: YoutubePlayerController(
+                              initialVideoId: mediaInfo.fileUrl!,
+                              flags: const YoutubePlayerFlags(
+                                  mute: false,
+                                  autoPlay: false,
+                                  disableDragSeek: false,
+                                  loop: false,
+                                  isLive: false,
+                                  forceHD: false,
+                                  enableCaption: true,
+                                  useHybridComposition: true),
+                            ),
+                            showVideoProgressIndicator: true,
+                            progressIndicatorColor: Colors.blueAccent,
+                          ),
+                          builder: (context, player) {
+                            return Card(
+                              child: Column(
+                                children: [
+                                  Expanded(child: player),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      mediaInfo.name ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           },
                         ),
-                      ],
-                      controller: YoutubePlayerController(
-                        initialVideoId: mediaInfo.fileUrl!,
-                        flags: const YoutubePlayerFlags(
-                            mute: false,
-                            autoPlay: false,
-                            disableDragSeek: false,
-                            loop: false,
-                            isLive: false,
-                            forceHD: false,
-                            enableCaption: true,
-                            // controlsVisibleAtStart: true,
-                            useHybridComposition: true),
-                      ),
-                      showVideoProgressIndicator: true,
-                      progressIndicatorColor: Colors.blueAccent,
-                    ),
-                    builder: (context, player) {
-                      return Card(
-                        child: Column(
-                          children: [
-                            Expanded(child: player),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                '${mediaInfo.name}',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
+                        Positioned(
+                          bottom: 20,
+                          left: 0,
+                          right: 0,
+                          child: Text(
+                            mediaInfo.name ?? '',
+                            style: CommonStyles.txStyF20CwFF6.copyWith(
+                              color: CommonStyles.dataTextColor,
                             ),
-                          ],
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      );
-                    },
+                        Positioned(
+                          bottom: 5,
+                          left: 0,
+                          right: 0,
+                          child: Text(
+                            mediaInfo.description ?? '',
+                            style: CommonStyles.txStyF14CwFF6.copyWith(
+                              color: CommonStyles.dataTextColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
               );
@@ -731,7 +764,7 @@ class _StandardState extends State<Standard> {
               children: [
                 Text(
                   '${tr(LocaleKeys.notee)}  ',
-                  style: CommonStyles.text18orangeeader,
+                  style: CommonStyles.txStyF16CrFF6,
                 ),
                 Text(
                   tr(LocaleKeys.standard_note),

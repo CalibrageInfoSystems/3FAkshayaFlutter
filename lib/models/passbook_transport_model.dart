@@ -41,7 +41,8 @@ class TranspotationCharge {
   final String? collectionCode;
   final String? farmerCode;
   final String? farmerName;
-  final double? tonnageCost;
+  final dynamic tonnageCost;
+  // final double? tonnageCost;
   final double? rate;
   final double? qty;
   final DateTime? receiptGeneratedDate;
@@ -61,7 +62,8 @@ class TranspotationCharge {
         collectionCode: json["collectionCode"],
         farmerCode: json["farmerCode"],
         farmerName: json["farmerName"],
-        tonnageCost: json["tonnageCost"]?.toDouble(),
+        tonnageCost: json["tonnageCost"],
+        // tonnageCost: json["tonnageCost"]?.toDouble(),
         rate: json["rate"]?.toDouble(),
         qty: json["qty"]?.toDouble(),
         receiptGeneratedDate: json["receiptGeneratedDate"] == null

@@ -711,7 +711,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       Expanded(
                           child: Text(
                         tr(LocaleKeys.status),
-                        style: CommonStyles.txSty_14b_f5,
+                        style: CommonStyles.txStyF14CbFF6,
                       )),
                       Text(
                         ':  ',
@@ -723,7 +723,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                         data.uApaystat != 'Paid'
                             ? 'Pending'
                             : '${data.uApaystat}',
-                        style: CommonStyles.txF14Fw5Cb.copyWith(
+                        style: CommonStyles.txStyF14CbFF6.copyWith(
                           color: data.uApaystat == 'Paid'
                               ? CommonStyles.statusGreenText
                               : CommonStyles.RedColor,

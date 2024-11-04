@@ -75,6 +75,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   String? displayToDate;
 
   bool isTimePeriod = false;
+  bool isInitialDisplay = false;
 
   late PassbookData futureData;
 
@@ -173,11 +174,102 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
 
   PassbookData getDataByCustomDates({String? fromDate, String? toDate}) {
     return PassbookData(
-      passbookVendorModel: getVendorData(
+      passbookVendorModel: getCustomVendorData(
           fromDate: fromDate, toDate: toDate, isCustomDates: false),
-      passbookTransportModel: getTransportData(
+      passbookTransportModel: getCustomTransportData(
           fromDate: fromDate, toDate: toDate, isCustomDates: false),
     );
+  }
+
+  Future<PassbookVendorModel> getCustomVendorData(
+      {required String? fromDate,
+      required String? toDate,
+      bool? isCustomDates = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final code = prefs.getString(SharedPrefsKeys.farmerCode);
+    final farmerCode = "V${code!.substring(2)}";
+    final apiUrl = baseUrl + getvendordata;
+    final requestBody = {
+      "vendorCode": farmerCode,
+      "fromDate": fromDate,
+      "toDate": toDate,
+    };
+
+    final jsonResponse = await http
+        .post(Uri.parse(apiUrl), body: jsonEncode(requestBody), headers: {
+      'Content-Type': 'application/json',
+    });
+
+    print('passbook 1: $apiUrl');
+    print('passbook 1: ${jsonEncode(requestBody)}');
+    // print('passbook 1: ${jsonResponse.body}');
+
+    if (jsonResponse.statusCode == 200) {
+      setState(() {
+        if (isCustomDates!) {
+          isTimePeriod = false;
+        }
+        isInitialDisplay = false;
+      });
+
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['result'] != null) {
+        return passbookVendorModelFromJson(jsonResponse.body);
+      } else {
+        return throw Exception(tr(LocaleKeys.no_data));
+      }
+    } else {
+      setState(() {
+        if (isCustomDates!) {
+          isTimePeriod = false;
+        }
+        isInitialDisplay = false;
+      });
+      throw Exception(
+          'Request failed with status: ${jsonResponse.statusCode}.');
+    }
+  }
+
+  Future<PassbookTransportModel> getCustomTransportData(
+      {required String? fromDate,
+      required String? toDate,
+      bool? isCustomDates = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
+    final apiUrl = baseUrl + getTranspotationdata;
+    final requestBody = {
+      "vendorCode": farmerCode,
+      "fromDate": fromDate,
+      "toDate": toDate,
+    };
+
+    final jsonResponse = await http
+        .post(Uri.parse(apiUrl), body: jsonEncode(requestBody), headers: {
+      'Content-Type': 'application/json',
+    });
+
+    print('passbook 2: $apiUrl');
+    print('passbook 2: ${jsonEncode(requestBody)}');
+    // print('passbook 2: ${jsonResponse.body}');
+
+    if (jsonResponse.statusCode == 200) {
+      setState(() {
+        if (isCustomDates!) {
+          isTimePeriod = false;
+        }
+        isInitialDisplay = false;
+      });
+      return passbookTransportModelFromJson(jsonResponse.body);
+    } else {
+      setState(() {
+        if (isCustomDates!) {
+          isTimePeriod = false;
+        }
+        isInitialDisplay = false;
+      });
+      throw Exception(
+          'Request failed with status: ${jsonResponse.statusCode}.');
+    }
   }
 
   Future<PassbookVendorModel> getVendorData(
@@ -299,9 +391,13 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                 ],
               ),
             ),
-            Expanded(
-              child: tabView(),
-            ),
+            isInitialDisplay
+                ? Expanded(
+                    child: emptyTabView(),
+                  )
+                : Expanded(
+                    child: tabView(),
+                  ),
           ],
         ),
       ),
@@ -368,6 +464,100 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     );
   }
 
+  Widget tabView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
+      child: TabBarView(
+        children: [
+          FarmerPassbookTabView(
+              future: futureData.passbookVendorModel,
+              accountHolderName: widget.accountHolderName,
+              accountNumber: widget.accountNumber,
+              bankName: widget.bankName,
+              branchName: widget.branchName,
+              district: widget.district,
+              farmerCode: widget.farmerCode,
+              guardianName: widget.guardianName,
+              ifscCode: widget.ifscCode,
+              mandal: widget.mandal,
+              state: widget.state,
+              village: widget.village),
+          FarmerTransportTabView(
+            future: futureData.passbookTransportModel,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget emptyTabView() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
+      child: TabBarView(
+        children: [
+          Column(
+            children: [
+              const Expanded(
+                child: SizedBox(),
+              ),
+              vendorNote(),
+              const SizedBox(height: 10),
+            ],
+          ),
+          Column(
+            children: [
+              const Expanded(
+                child: SizedBox(),
+              ),
+              transportNote(),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget vendorNote() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: CommonStyles.noteColor,
+        border: Border.all(color: CommonStyles.primaryTextColor, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(tr(LocaleKeys.notee), style: CommonStyles.txStyF14CpFF6),
+          const SizedBox(height: 5),
+          Text(tr(LocaleKeys.paymentnote_note),
+              style: CommonStyles.txStyF14CbFF6),
+        ],
+      ),
+    );
+  }
+
+  Widget transportNote() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: CommonStyles.noteColor,
+        border: Border.all(color: CommonStyles.primaryTextColor, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(tr(LocaleKeys.notee), style: CommonStyles.txStyF14CpFF6),
+          const SizedBox(height: 5),
+          Text(tr(LocaleKeys.tansportation_note),
+              style: CommonStyles.txStyF14CbFF6),
+        ],
+      ),
+    );
+  }
+
   TextStyle tabLabelStyle() {
     return const TextStyle(
       height: 1.2,
@@ -385,8 +575,10 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: CommonStyles.whiteColor),
+          // color: Colors.green,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
               child: datePickerBox(
@@ -424,6 +616,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
               flex: 1,
               child: CustomBtn(
                   label: tr(LocaleKeys.submit),
+                  btnTextColor: CommonStyles.primaryTextColor,
                   onPressed: () {
                     if (selectedFromDate == null || selectedToDate == null) {
                       return CommonStyles.errorDialog(context,
@@ -479,14 +672,12 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   }
 
   void showToastMsg(String message) {
-    /*  Fluttertoast.showToast(
+    Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-    ); */
-
-    CommonStyles.showCustomToast(context, title: message);
+    );
   }
 
   Future<void> launchToDatePicker(
@@ -505,6 +696,19 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       initialSelectedMonth: initialSelectedMonth,
       initialSelectedYear: initialSelectedYear,
       onSelected: (month, year) {
+        /* setState(() {
+          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
+
+          displayToDate =
+              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
+
+          selectedToDate = CommonStyles.parseDateString(displayToDate);
+
+          print(
+              'custom Todate: $displayToDate'); // Will print the last day of the selected month
+          print(
+              'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
+        }); */
         setState(() {
           DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
           final selectedDate =
@@ -530,32 +734,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       return DateTime(year + 1, 1, 0);
     }
     return DateTime(year, month + 1, 0);
-  }
-
-  Widget tabView() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
-      child: TabBarView(
-        children: [
-          FarmerPassbookTabView(
-              future: futureData.passbookVendorModel,
-              accountHolderName: widget.accountHolderName,
-              accountNumber: widget.accountNumber,
-              bankName: widget.bankName,
-              branchName: widget.branchName,
-              district: widget.district,
-              farmerCode: widget.farmerCode,
-              guardianName: widget.guardianName,
-              ifscCode: widget.ifscCode,
-              mandal: widget.mandal,
-              state: widget.state,
-              village: widget.village),
-          FarmerTransportTabView(
-            future: futureData.passbookTransportModel,
-          ),
-        ],
-      ),
-    );
   }
 
   CustomAppBar appBar() {
@@ -624,12 +802,16 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
 
               if (dropdownItems.indexOf(selectedDropDownValue!) == 3) {
                 isTimePeriod = true;
+                isInitialDisplay = true;
               } else {
                 isTimePeriod = false;
+                isInitialDisplay = false;
                 displayFromDate = null;
                 displayToDate = null;
+                selectedFromDate = null;
+                selectedToDate = null;
               }
-              filterVendorAndTransportDataBasedOnDates(
+              filterVendorAndTransportDataAccordingToDropDownSelection(
                   dropdownItems.indexOf(selectedDropDownValue!));
             });
           },
@@ -695,32 +877,31 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
                   : Text(displaydate, style: CommonStyles.txStyF16CwFF6),
             ],
           ),
-          const Divider(
+          /* const Divider(
             color: CommonStyles.dataTextColor2,
-          ),
+          ), */
+          CommonStyles.horizontalDivider(
+              color: CommonStyles.dataTextColor2,
+              margin: const EdgeInsets.all(0))
         ],
       ),
     );
   }
 
-  void filterVendorAndTransportDataBasedOnDates(int value) {
-    switch (value) {
-      case 0:
-        setState(() {
+  void filterVendorAndTransportDataAccordingToDropDownSelection(int value) {
+    setState(() {
+      switch (value) {
+        case 0:
           futureData = getInitialData();
-        });
-        break;
-      case 1:
-        setState(() {
+          break;
+        case 1:
           futureData = getLastThreeMonthsData();
-        });
-        break;
-      case 2:
-        setState(() {
+          break;
+        case 2:
           futureData = getLastFinancialYearData();
-        });
-        break;
-    }
+          break;
+      }
+    });
   }
 
   Future<void> checkStoragePermission() async {
@@ -946,7 +1127,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     }
     String filePath = directoryPath.path;
     String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-    String fileName = "ledger_$timestamp.xlsx";
+    String fileName = "3FAkshaya_ledger_$timestamp.xlsx";
 
     final File file = File('$filePath/$fileName');
 
@@ -976,9 +1157,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     );
     _showNotification(
         id: 1,
-        title: file.path,
-        message: 'File Downloaded Successfully',
-        path: '/sdcard/Download/3FAkshaya/ledger');
+        title: fileName, // file.path,
+        message: 'Downloaded Successfully',
+        path: file.path);
+    // path: '/sdcard/Download/3FAkshaya/ledger');
   }
 
   String sanitizeBase64(String base64String) {
@@ -1041,6 +1223,18 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                     return item(index, itemData: itemData);
                                   },
                                 ),
+
+                                /* ListView.separated(
+                                  itemCount: passbookVendor
+                                      .result!.paymentResponce!.length,
+                                  itemBuilder: (context, index) {
+                                    final itemData = passbookVendor
+                                        .result!.paymentResponce![index];
+                                    return item(index, itemData: itemData);
+                                  },
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 10),
+                                ), */
                               )
                             : const Expanded(
                                 child: Center(
@@ -1048,6 +1242,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                       style: CommonStyles.txStyF16CpFF6),
                                 ),
                               ),
+                        const SizedBox(height: 5),
                         downloadBtns(),
                         const SizedBox(height: 10),
                       ],
@@ -1058,7 +1253,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
             ),
           ),
           note(),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -1134,18 +1329,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     );
   }
 
-  String? formatDouble(double? value) {
-    if (value == null) {
-      return null;
-    }
-    String formattedValue = value.abs().toStringAsFixed(2);
-    if (value < 0) {
-      return '($formattedValue)';
-    } else {
-      return formattedValue;
-    }
-  }
-
   Widget item(int index, {required PaymentResponce itemData}) {
     return IntrinsicHeight(
       child: ClipRRect(
@@ -1170,8 +1353,10 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                           borderRadius: BorderRadius.circular(7.0),
                           child: Image.asset(
                             Assets.images.icCalender.path,
-                            height: 25,
-                            width: 25,
+                            /*  height: 25,
+                            width: 25, */
+                            height: 40,
+                            width: 40,
                           ),
                         ),
                         const SizedBox(height: 2.0),
@@ -1185,7 +1370,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                       ],
                     ),
                     Container(
-                      width: 2,
+                      width: 1,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
@@ -1194,7 +1379,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             Color(0xFFA678EF),
                             Color(0xFFFF4500),
                           ],
-                          end: Alignment.topRight,
                         ),
                       ),
                     ),
@@ -1208,7 +1392,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             itemRow(
                                 label: tr(LocaleKeys.amount),
                                 // data: '${itemData.amount?.toStringAsFixed(2)}'),
-                                data: '${itemData.amount?.toInt().toString()}'),
+                                data: '${itemData.amount?.round().toString()}'),
                           if (itemData.adjusted != null &&
                               itemData.adjusted! > 0)
                             itemRow(
@@ -1257,7 +1441,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                 label: tr(LocaleKeys.balance),
                                 data: itemData.balance == null
                                     ? '0'
-                                    : itemData.balance!.round().toString()),
+                                    : formatDouble(itemData.balance)),
+                            // : itemData.balance!.round().toString()),
                             // data: formatDouble(itemData.balance)),
                           ),
                         ]))
@@ -1267,6 +1452,18 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
             ),
           )),
     );
+  }
+
+  String? formatDouble(double? value) {
+    if (value == null) {
+      return null;
+    }
+    String formattedValue = value.abs().round().toString();
+    if (value < 0) {
+      return '($formattedValue)';
+    } else {
+      return formattedValue;
+    }
   }
 
   Widget itemRow({required String label, String? data, bool isSpace = true}) {
@@ -1324,20 +1521,24 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-            child: CustomBtn(
-          label: tr(LocaleKeys.download),
-          padding: const EdgeInsets.all(0),
-          height: 60,
-          onPressed: checkAndOpenDirectory,
-        )),
+          child: CustomBtn(
+            label: tr(LocaleKeys.download),
+            padding: const EdgeInsets.all(0),
+            height: 60,
+            btnTextColor: CommonStyles.primaryTextColor,
+            onPressed: checkAndOpenDirectory,
+          ),
+        ),
         const SizedBox(width: 10),
         Expanded(
-            child: CustomBtn(
-          padding: const EdgeInsets.all(0),
-          label: tr(LocaleKeys.click_downlad),
-          height: 60,
-          onPressed: exportPaymentsAndDownloadFile,
-        )),
+          child: CustomBtn(
+            padding: const EdgeInsets.all(0),
+            label: tr(LocaleKeys.click_downlad),
+            height: 60,
+            btnTextColor: CommonStyles.primaryTextColor,
+            onPressed: exportPaymentsAndDownloadFile,
+          ),
+        ),
       ],
     );
   }
@@ -1399,6 +1600,16 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                     return Column(
                       children: [
                         Expanded(
+                          child: CommonWidgets.customSlideAnimation(
+                            itemCount: transportionData.length,
+                            isSeparatorBuilder: true,
+                            childBuilder: (index) {
+                              final itemData = transportionData[index];
+                              return item(index, itemData: itemData);
+                            },
+                          ),
+                        )
+                        /*  Expanded(
                           child: ListView.separated(
                             itemCount: transportionData.length,
                             itemBuilder: (context, index) {
@@ -1412,7 +1623,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                             separatorBuilder: (context, index) =>
                                 const SizedBox(height: 10),
                           ),
-                        ),
+                        ), */
                       ],
                     );
                   } else {
@@ -1428,10 +1639,11 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
               },
             ),
           ),
+          const SizedBox(height: 5),
           transportationRateBtn(widget.future),
           const SizedBox(height: 10),
           note(),
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -1510,7 +1722,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
     if (value == null) {
       return null;
     }
-    String formattedValue = value.abs().toStringAsFixed(2);
+    String formattedValue = value.round().toString();
     if (value < 0) {
       return '($formattedValue)';
     } else {
@@ -1521,91 +1733,103 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
   Widget item(int index, {required TranspotationCharge itemData}) {
     return IntrinsicHeight(
       child: ClipRRect(
-          borderRadius: BorderRadius.circular(12.0),
-          child: GestureDetector(
-            onTap: () {},
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                color: index.isEven
-                    ? Colors.transparent
-                    : CommonStyles.listOddColor,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(7.0),
-                          child: Image.asset(
-                            Assets.images.icCalender.path,
-                            height: 25,
-                            width: 25,
-                          ),
-                        ),
-                        const SizedBox(height: 2.0),
-                        Text(
-                          '${CommonStyles.formatApiDate(itemData.receiptGeneratedDate)}',
-                          style: CommonStyles.txStyF14CbFF6.copyWith(
-                              // color: CommonStyles.dataTextColor,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 2,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFFFF4500),
-                            Color(0xFFA678EF),
-                            Color(0xFFFF4500),
-                          ],
-                          end: Alignment.topRight,
+        borderRadius: BorderRadius.circular(12.0),
+        child: GestureDetector(
+          onTap: () {},
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              color:
+                  index.isEven ? Colors.transparent : CommonStyles.listOddColor,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(7.0),
+                        child: Image.asset(
+                          Assets.images.icCalender.path,
+                          /*  height: 25,
+                          width: 25, */
+                          height: 40,
+                          width: 40,
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (itemData.collectionCode != null)
-                            Column(
-                              children: [
-                                Text('${itemData.collectionCode}',
-                                    style: CommonStyles.txStyF16CpFF6),
-                                const SizedBox(height: 5),
-                              ],
-                            ),
-                          if (itemData.tonnageCost != null &&
-                              itemData.tonnageCost! > 0)
-                            itemRow(
-                                label: tr(LocaleKeys.amount),
-                                data:
-                                    '${itemData.tonnageCost?.toStringAsFixed(2)}'),
-                          if (itemData.qty != null && itemData.qty! > 0)
-                            itemRow(
-                                label: tr(LocaleKeys.quantity),
-                                data: '${itemData.qty?.toStringAsFixed(2)}'),
-                          if (itemData.rate != null && itemData.rate! > 0)
-                            itemRow(
-                                label: tr(LocaleKeys.rate),
-                                data: '${itemData.rate?.toStringAsFixed(2)}'),
+                      const SizedBox(height: 2.0),
+                      Text(
+                        '${CommonStyles.formatDisplayDate(itemData.receiptGeneratedDate)}',
+                        // '${CommonStyles.formatApiDate(itemData.receiptGeneratedDate)}',
+                        style: CommonStyles.txStyF14CbFF6.copyWith(
+                            // color: CommonStyles.dataTextColor,
+                            fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 1,
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFFFF4500),
+                          Color(0xFFA678EF),
+                          Color(0xFFFF4500),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (itemData.collectionCode != null)
+                          Column(
+                            children: [
+                              Text('${itemData.collectionCode}',
+                                  style: CommonStyles
+                                      .txStyF14CpFF6), // txStyF16CpFF6
+                              const SizedBox(height: 5),
+                            ],
+                          ),
+                        if (itemData.tonnageCost != null)
+                          itemRow(
+                              label: tr(LocaleKeys.trans_charges),
+                              data: checkTypeAndFormat(itemData.tonnageCost)),
+                        // '${itemData.tonnageCost?.toStringAsFixed(2)}'),
+                        if (itemData.qty != null) // && itemData.qty! > 0
+                          itemRow(
+                              label: tr(LocaleKeys.net_weightt),
+                              data: '${itemData.qty?.toStringAsFixed(3)}'),
+                        if (itemData.rate != null) // && itemData.rate! > 0
+                          itemRow(
+                              label: tr(LocaleKeys.total_amt),
+                              data: formatTotalAmount(itemData.rate!)),
+                        // data: '${itemData.rate?.toStringAsFixed(2)}'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
     );
+  }
+
+  String? checkTypeAndFormat(dynamic value) {
+    if (value is double) {
+      return value.toStringAsFixed(2);
+    } else if (value is String) {
+      return value;
+    }
+    return null;
   }
 
   Widget itemRow({required String label, String? data, bool isSpace = true}) {
@@ -1633,13 +1857,22 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
     );
   }
 
+  String formatTotalAmount(double amount) {
+    if (amount < 1000) {
+      return amount.toStringAsFixed(2); // Ensures two decimal places
+    }
+    final formatter = NumberFormat('#,##,##0.00',
+        'en_IN'); // Indian numbering format with two decimal places
+    return formatter.format(amount);
+  }
+
   Row transportationRateBtn(Future<PassbookTransportModel> future) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         CustomBtn(
           label: tr(LocaleKeys.transportationrates),
-          padding: const EdgeInsets.symmetric(horizontal: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           btnChild: Row(
             children: [
               Image.asset(
@@ -1738,6 +1971,11 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      CustomBtn(
+                        label: tr(LocaleKeys.ok),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      /* 
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
                         child: Container(
@@ -1772,14 +2010,15 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: Text(
-                                tr(LocaleKeys.ok),
-                                style: CommonStyles.txStyF14CbFF6,
+                              child: const Text(
+                                'OK',
+                                style: CommonStyles.txStyF14CpFF6,
                               ),
                             ),
                           ),
                         ),
                       )
+                     */
                     ],
                   ),
                 ],

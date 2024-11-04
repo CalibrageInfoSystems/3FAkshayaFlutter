@@ -81,13 +81,11 @@ class _SelectEdibleProductsScreenState
         product: product,
         quantity: productQuantities[id] ?? 0,
       );
-    })
-        .toList();
+    }).toList();
     print(
         'fetchCardProducts: ${jsonEncode(result.map((p) => p.toJson()).toList())}');
     return result;
   }
-
 
   Future<List<ProductItem>> getProducts() async {
     try {
@@ -144,7 +142,7 @@ class _SelectEdibleProductsScreenState
                 headerSection(),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -1287,7 +1285,7 @@ class _ProductCardState extends State<ProductCard> {
                     ),
                   ],
                 ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               infoRow(
                 label1: tr(LocaleKeys.price),
                 data1: product.priceInclGst!.toStringAsFixed(2),
@@ -1296,7 +1294,7 @@ class _ProductCardState extends State<ProductCard> {
                 data2: '${product.gstPercentage}',
                 isSingle: product.gstPercentage != null ? false : true,
               ),
-              CommonStyles.horizontalGradientDivider(),
+              CommonStyles.horizontalDivider(),
               if (product.size != null && widget.product.uomType != null)
                 infoRow2(
                     label1: tr(LocaleKeys.product_size),

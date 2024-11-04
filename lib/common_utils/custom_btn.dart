@@ -12,6 +12,7 @@ class CustomBtn extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final void Function()? onPressed;
   final Widget? btnChild;
+  final Color? btnTextColor;
   const CustomBtn({
     super.key,
     required this.label,
@@ -25,6 +26,7 @@ class CustomBtn extends StatelessWidget {
     this.height = 40.0,
     this.btnColor,
     this.btnChild,
+    this.btnTextColor = CommonStyles.blackColor,
   });
 
   @override
@@ -56,11 +58,12 @@ class CustomBtn extends StatelessWidget {
             Text(
               label,
               style: btnTextStyle ??
-                  const TextStyle(
+                  TextStyle(
                     fontSize: 14,
                     fontFamily: FontFamily.hind,
                     fontWeight: FontWeight.w600,
-                    color: CommonStyles.primaryTextColor,
+                    color: btnTextColor,
+                    // color: CommonStyles.primaryTextColor,
                   ),
             ),
       ),

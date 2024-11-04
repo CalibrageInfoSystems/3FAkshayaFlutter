@@ -105,7 +105,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                     ),
                   ),
                 ),
-                CommonStyles.horizontalGradientDivider(colors: [
+                CommonStyles.horizontalDivider(colors: [
                   const Color(0xFFFF4500),
                   const Color(0xFFA678EF),
                   const Color(0xFFFF4500),
@@ -123,7 +123,18 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CustomBtn(
+                        label: tr(LocaleKeys.App_version),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const TestScreen()),
+                          );
+                        },
+                      ),
+                      CustomBtn(
                         label: tr(LocaleKeys.next),
+                        btnTextColor: CommonStyles.primaryTextColor,
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -143,16 +154,6 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                                 village: farmerinfolist[0].village,
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      CustomBtn(
-                        label: tr(LocaleKeys.App_version),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const TestScreen()),
                           );
                         },
                       ),
