@@ -21,6 +21,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../common_utils/api_config.dart';
+import '../screens/home_screen/screens/CustomequipProductCard.dart';
 
 class SelectEquipProductsScreen extends StatefulWidget {
   final Godowndata godown;
@@ -42,6 +43,7 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
   late Future<List<ProductItem>> productsData;
   late List<ProductItem> copyProductsData = [];
   List<int> orderedProductIds = [];
+  bool isAddButtonEnabled = true; // Define this boolean at the top level
   // List<ProductWithQuantity>? copyProductsData;
   @override
   void initState() {
@@ -152,34 +154,50 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                   final products = snapshot.data as List<ProductItem>;
                   if (products.isNotEmpty) {
                     return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 5.0,
-                              mainAxisSpacing: 5.0,
-                              mainAxisExtent: 250,
-                              childAspectRatio: 8 / 2),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 5.0,
+                        mainAxisExtent: 250,
+                        childAspectRatio: 8 / 2,
+                      ),
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
                         final quantity = productQuantities[product.id] ?? 0;
-                        return CustomProductCard(
+                        final availableQuantity = product.availableQuantity;
+                        return CustomequipProductCard(
                           product: product,
                           quantity: quantity,
+                          availableQuantity: availableQuantity!, // Pass the boolean field here
                           onQuantityChanged: (newQuantity) {
                             setState(() {
-                              if (newQuantity > 0) {
-                                productQuantities[product.id!] = newQuantity;
-                                // Add to ordered list if not already present
-                                if (!orderedProductIds.contains(product.id)) {
-                                  orderedProductIds.add(product.id!);
+                              if (newQuantity <= product.availableQuantity!) {
+                                isAddButtonEnabled = true; // Enable the button
+
+                                // If quantity is within available limit
+                                if (newQuantity > 0) {
+                                  productQuantities[product.id!] = newQuantity;
+
+                                  // Add to ordered list if not already present
+                                  if (!orderedProductIds.contains(product.id)) {
+                                    orderedProductIds.add(product.id!);
+                                  }
+                                } else {
+                                  // Remove from both lists if quantity is zero
+                                  productQuantities.remove(product.id);
+                                  orderedProductIds.remove(product.id);
                                 }
+                                updateBadgeCount();
                               } else {
-                                // Remove from both lists if quantity is zero
-                                productQuantities.remove(product.id);
-                                orderedProductIds.remove(product.id);
+                                isAddButtonEnabled = false;
+                                // Show dialog if quantity exceeds available limit
+                                CommonStyles.showCustomDialog(
+                                    context,
+                                    "Available only " + product.availableQuantity!.toString() + " " + product.name! + " products in this Godown."
+                                );
+
                               }
-                              updateBadgeCount();
                             });
                           },
                         );
@@ -189,13 +207,13 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                     return Center(
                       child: Text(
                         tr(LocaleKeys.no_products),
-                        // style: CommonStyles.txStyF16CpFF6,
                         style: CommonStyles.txStyF16CpFF6.copyWith(
                           fontSize: 20,
                         ),
                       ),
                     );
                   }
+
                 }
               },
             ),

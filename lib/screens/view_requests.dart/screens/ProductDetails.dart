@@ -179,7 +179,9 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             ),
             Column(
               children: [
+                CommonStyles.horizontalGradientDivider2(), // Total base price
                 const SizedBox(height: 10),
+
                 productCostbox(
                     title: tr(LocaleKeys.amount),
                     data: totalBasePrice.toStringAsFixed(2)),
@@ -242,13 +244,13 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
               Expanded(
                 flex: 3,
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txStyF14CbFF6),
+                    style: CommonStyles.txStyF13CpFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
                 flex: 7,
                 child:
-                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
+                    Text('${product.name}', style: CommonStyles.txStyF13CpFF6),
               ),
             ],
           ),
@@ -304,19 +306,19 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txStyF14CpFF6,
+                  style: CommonStyles.txStyF13CpFF6,
                 )),
           ],
         ),
@@ -342,12 +344,12 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 children: [
                   Flexible(
                     flex: 4,
-                    child: Text(label1, style: CommonStyles.txStyF14CbFF6),
+                    child: Text(label1, style: CommonStyles.txStyF13CpFF6),
                   ),
                   const SizedBox(width: 3),
                   Expanded(
                     flex: 2,
-                    child: Text(data1, style: CommonStyles.txStyF14CbFF6),
+                    child: Text(data1, style: CommonStyles.txStyF13CpFF6),
                   ),
                 ],
               ),
@@ -359,12 +361,12 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 children: [
                   Flexible(
                     flex: 4,
-                    child: Text(label2, style: CommonStyles.txStyF14CbFF6),
+                    child: Text(label2, style: CommonStyles.txStyF13CpFF6),
                   ),
                   const SizedBox(width: 3),
                   Expanded(
                     flex: 2,
-                    child: Text(data2, style: CommonStyles.txStyF14CbFF6),
+                    child: Text(data2, style: CommonStyles.txStyF13CpFF6),
                   ),
                 ],
               ),

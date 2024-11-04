@@ -81,7 +81,7 @@ class CommonStyles {
     color: primaryTextColor,
   );
   static const txStyF13CpFF6 = TextStyle(
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: FontFamily.hind,
     fontWeight: FontWeight.w600,
     color: primaryTextColor,
