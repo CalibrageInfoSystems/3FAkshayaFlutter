@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/SuccessDialog.dart';
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
@@ -118,12 +119,13 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       List<MsgModel> displayList = [
         MsgModel(
             key: tr(LocaleKeys.loan_amount), value: _loanAmountController.text),
-        MsgModel(
-            key: tr(LocaleKeys.reason_loan), value: _reasonController.text),
+        if (_reasonController.text.isNotEmpty)
+          MsgModel(
+              key: tr(LocaleKeys.reason_loan), value: _reasonController.text),
       ];
 
       // Show success dialog
-      showTestDialog(context, displayList, tr(LocaleKeys.success_Loan));
+      showSuccessDialog(context, displayList, tr(LocaleKeys.success_Loan));
       // showSuccessDialog();
       print('loanRequestSubmit: ${response["isSuccess"]}');
       return response['isSuccess'] as bool;
@@ -344,65 +346,18 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
     );
   }
 
-  void showTestDialog(BuildContext context, List<MsgModel> msg, String title) {
+  void showSuccessDialog(
+      BuildContext context, List<MsgModel> msg, String summary) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return PopScope(
-          canPop: false,
-          child: Material(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: CommonStyles.txStyF16CpFF6.copyWith(
-                    fontSize: 17,
-                  ),
-                ),
-                const SizedBox(height: 20.0),
-                ...msg.map((msg) {
-                  return msg.value.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  msg.key,
-                                  style: CommonStyles.txStyF14CrFF6.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  msg.value,
-                                  style: CommonStyles.txStyF14CrFF6.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: CommonStyles.dataTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox();
-                }),
-                const CustomBtn(label: 'label'),
-              ],
-            ),
-          ),
-        );
+            canPop: false, child: SuccessDialog(msg: msg, title: summary));
       },
     );
   }
-
+/* 
   void showSuccessDialog(
       BuildContext context, List<MsgModel> msg, String title) {
     CommonStyles.errorDialog(
@@ -475,4 +430,5 @@ class _LoanRequestScreenState extends State<LoanRequestScreen> {
       ),
     );
   }
+ */
 }
