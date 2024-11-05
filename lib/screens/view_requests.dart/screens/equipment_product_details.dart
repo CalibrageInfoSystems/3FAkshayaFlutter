@@ -154,7 +154,7 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
                 child: Text(tr(LocaleKeys.product),
                     style: CommonStyles.txStyF14CbFF6),
               ),
-           //   const SizedBox(width: 10),
+              //   const SizedBox(width: 10),
               Expanded(
                 flex: 6,
                 child:
