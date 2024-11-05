@@ -46,6 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
     final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
 
+    print('profile: $apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
