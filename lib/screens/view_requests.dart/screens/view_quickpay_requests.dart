@@ -242,61 +242,21 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
                     Expanded(
                       child: SfPdfViewer.network(pdfUrl),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(20.0), // Rounded corners
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Color(0xFFCCCCCC), // Start color (light gray)
-                              Color(0xFFFFFFFF), // Center color (white)
-                              Color(0xFFCCCCCC), // End color (light gray)
-                            ],
-                          ),
-                          border: Border.all(
-                            color:
-                                const Color(0xFFe86100), // Orange border color
-                            width: 2.0,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            CustomBtn(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                btnTextColor: CommonStyles.primaryTextColor,
-                                label: tr(LocaleKeys.ok)),
-                          ],
-                        ),
 
-                        /* SizedBox(
-                          height: 30.0, // Set the desired height
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 35.0),
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            ),
-                            child: Text(
-                              tr(LocaleKeys.ok),
-                              style: CommonStyles.txSty_16p_f5,
-                            ),
-                          ),
-                        ), */
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomBtn(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              btnTextColor: CommonStyles.primaryTextColor,
+                              label: tr(LocaleKeys.ok)),
+                        ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
