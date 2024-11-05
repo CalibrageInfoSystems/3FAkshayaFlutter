@@ -148,8 +148,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         // Check if listResult is null or empty
         if (response['listResult'] == null || response['listResult'].isEmpty) {
           _showErrorDialog(tr(LocaleKeys.ffbratenorthere));
-          throw Exception(
-              'One of your Collections does not have Quick Pay Rate');
+          throw Exception(tr(LocaleKeys.ffbratenorthere));
         }
 
         return response['listResult'][0];
@@ -302,13 +301,21 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return shimmerEffect();
-        } else if (snapshot.hasError) {
-          return Text(
-            snapshot.error.toString(),
-            style: CommonStyles.txStyF16CpFF6,
+        }
+        /* else if (snapshot.hasError) {
+          return Center(
+            child: Text(
+              snapshot.error.toString(),
+              style: CommonStyles.txStyF16CpFF6,
+            ),
           );
-        } else if (!snapshot.hasData) {
-          return const Text('No data');
+        }  */
+        else if (!snapshot.hasData) {
+          return Center(
+              child: Text(
+            tr(LocaleKeys.no_data),
+            style: CommonStyles.txStyF16CpFF6,
+          ));
         }
 
         final collections = snapshot.data as List<CollectionDetails>;
@@ -492,12 +499,15 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return shimmerEffect();
           } else if (snapshot.hasError) {
-            return Text(
-              snapshot.error.toString(),
-              style: CommonStyles.txStyF16CpFF6,
+            return Center(
+              child: Text(
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
             );
           } else if (!snapshot.hasData) {
-            return const Center(child: Text('No Collection found'));
+            return Center(
+                child: Text(tr(LocaleKeys.no_data),
+                    style: CommonStyles.txStyF16CpFF6));
           }
 
           final collections = snapshot.data as List<CollectionDetails>;
@@ -831,7 +841,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           ),
           child: Container(
             color: CommonStyles.blackColor,
-            padding: const EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(12.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -843,23 +853,21 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.close, color: Colors.white),
-                      Text('  Error', style: CommonStyles.txSty_20w_fb),
+                      Text('  Error', style: CommonStyles.txStyF16CwFF6),
                       SizedBox(
                           width: 24.0), // Spacer to align text in the center
                     ],
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                // Message Text
+                const SizedBox(height: 10.0),
                 Text(
                   msg,
                   textAlign: TextAlign.center,
                   style: CommonStyles.text16white,
                 ),
-                const SizedBox(height: 20.0),
                 // OK Button
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
+                  padding: const EdgeInsets.all(12),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius:
@@ -893,16 +901,16 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                               .pop(); // Navigates to the previous screen
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                         ),
-                        child: const Text(
-                          'OK',
-                          style: CommonStyles.txSty_16b_fb,
+                        child: Text(
+                          tr(LocaleKeys.ok),
+                          style: CommonStyles.txStyF14CbFF6,
                         ),
                       ),
                     ),

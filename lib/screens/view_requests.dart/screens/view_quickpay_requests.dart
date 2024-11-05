@@ -4,12 +4,14 @@ import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
+import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../Services/models/QuickpayRequest.dart';
@@ -206,12 +208,180 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
   }
 
   void showPdfDialog(BuildContext context, String pdfUrl) {
-    showDialog(
+    /* showDialog(
       context: context,
       builder: (BuildContext context) {
         return PdfViewerPopup(pdfUrl: pdfUrl);
       },
-    );
+    ); */
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(2.0),
+              ),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                color: const Color(
+                    0x8D000000), // Background color with transparency
+                child: Column(
+                  children: <Widget>[
+                    // Header
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      color: CommonStyles.RedColor,
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          tr(LocaleKeys.quick_pdf),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SfPdfViewer.network(pdfUrl),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(20.0), // Rounded corners
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFFCCCCCC), // Start color (light gray)
+                              Color(0xFFFFFFFF), // Center color (white)
+                              Color(0xFFCCCCCC), // End color (light gray)
+                            ],
+                          ),
+                          border: Border.all(
+                            color:
+                                const Color(0xFFe86100), // Orange border color
+                            width: 2.0,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            CustomBtn(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                btnTextColor: CommonStyles.primaryTextColor,
+                                label: tr(LocaleKeys.ok)),
+                          ],
+                        ),
+
+                        /* SizedBox(
+                          height: 30.0, // Set the desired height
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 35.0),
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                            child: Text(
+                              tr(LocaleKeys.ok),
+                              style: CommonStyles.txSty_16p_f5,
+                            ),
+                          ),
+                        ), */
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
+
+        /* 
+      AlertDialog(
+        title: const Text("PDF Viewer"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        content: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          color: const Color(0x8D000000), // Background color with transparency
+          child: Column(
+            children: <Widget>[
+              // Header
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: CommonStyles.RedColor,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    tr(LocaleKeys.quick_pdf),
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: SfPdfViewer.network(pdfUrl),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFFCCCCCC),
+                        Color(0xFFFFFFFF),
+                        Color(0xFFCCCCCC),
+                      ],
+                    ),
+                    border: Border.all(
+                      color: const Color(0xFFe86100),
+                      width: 2.0,
+                    ),
+                  ),
+                  child: SizedBox(
+                    height: 30.0,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                      ),
+                      child: Text(
+                        tr(LocaleKeys.ok),
+                        style: CommonStyles.txSty_16p_f5,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("Close"),
+          ),
+        ],
+      ),
+    */
+
+        );
   }
 }
 

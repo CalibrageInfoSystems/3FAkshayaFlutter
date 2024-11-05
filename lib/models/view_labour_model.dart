@@ -39,7 +39,7 @@ class ViewLabourModel {
   final double? totalCost;
   final String? collectionIds;
   final String? collectionswithDate;
-  final String? isIntercrop;
+  final bool? isIntercrop;
   final String? comments;
   final double? harvestingAmount;
   final double? pruningAmount;

@@ -169,8 +169,9 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
   Container quickPayBox({required int index, required UnpaidCollection data}) {
     return Container(
       decoration: BoxDecoration(
-        color:
-            index.isEven ? CommonStyles.whiteColor : CommonStyles.listOddColor,
+        color: index.isEven
+            ? CommonStyles.listEvenColor
+            : CommonStyles.listOddColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
@@ -246,11 +247,12 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl = '$baseUrl$raiseCollectionRequest$farmerCode/null/13';
-    print('apiUrl: y $apiUrl');
     final jsonResponse = await http.get(Uri.parse(apiUrl));
     setState(() {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     });
+    print('raiseRequest: $apiUrl');
+    print('raiseRequest: ${jsonResponse.body}');
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['isSuccess']) {

@@ -1,4 +1,4 @@
-import 'dart:convert';
+/* import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
@@ -995,6 +995,9 @@ class InfoDialog extends StatelessWidget {
                     CustomBtn(
                       label: tr(LocaleKeys.close),
                       btnColor: CommonStyles.blackColor,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                      ),
                       borderRadius: 24,
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -1091,3 +1094,4 @@ class InfoDialog extends StatelessWidget {
     );
   }
 }
+ */

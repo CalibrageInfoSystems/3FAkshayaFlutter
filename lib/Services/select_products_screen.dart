@@ -163,14 +163,21 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.pushReplacement(
+              /* Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const PlotSelectionScreen(
                     serviceTypeId: 100,
                   ),
                 ),
-              );
+              ); */
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PlotSelectionScreen(
+                      serviceTypeId: 100,
+                    ),
+                  ));
             },
             child: Container(
               width: 120,

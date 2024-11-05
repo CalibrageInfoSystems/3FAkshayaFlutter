@@ -408,7 +408,7 @@ class PlotDetails extends StatelessWidget {
           CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.address),
             dataTextColor: CommonStyles.dataTextColor,
-            data: '${plotdata.clusterName}',
+            data: '${plotdata.villageName}',
           ),
           CommonWidgets.commonRowWithColon(
             label: tr(LocaleKeys.land_mark),

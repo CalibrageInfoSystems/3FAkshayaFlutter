@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Item {
@@ -75,6 +75,48 @@ class TestScreen extends StatelessWidget {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+ */
+
+import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
+class TestScreen extends StatelessWidget {
+  final String pdfUrl =
+      'https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf'; // Replace with your PDF URL
+
+  const TestScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('PDF Viewer Dialog Example')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text("PDF Viewer"),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  height: 500, // Set a suitable height for the dialog
+                  child: SfPdfViewer.network(pdfUrl),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("Close"),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: const Text("Open PDF Dialog"),
         ),
       ),
     );

@@ -12,6 +12,7 @@ import 'package:akshaya_flutter/models/collection_count.dart';
 import 'package:akshaya_flutter/models/collection_data_model.dart';
 import 'package:akshaya_flutter/models/collection_info_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/temp_ffb_collection_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +70,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               gradient: LinearGradient(
                 colors: [
                   CommonStyles.appBarColor,
-                  CommonStyles.gradientColor1,
+                  // CommonStyles.gradientColor1,
                   CommonStyles.gradientColor2,
                 ],
                 begin: Alignment.topCenter,
@@ -339,27 +340,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
     );
   }
 
-/*   Future<void> launchFromDatePicker(BuildContext context,
-      {required DateTime firstDate,
-      required DateTime lastDate,
-      DateTime? initialDate}) async {
-    final DateTime? pickedDay = await showDatePicker(
-        context: context,
-        initialDate: initialDate ?? DateTime.now(),
-        initialEntryMode: DatePickerEntryMode.calendarOnly,
-        firstDate: firstDate,
-        lastDate: lastDate,
-        initialDatePickerMode: DatePickerMode.day,
-        confirmText: tr(LocaleKeys.ok),
-        cancelText: tr(LocaleKeys.cancel_capitalized));
-    if (pickedDay != null) {
-      setState(() {
-        selectedFromDate = pickedDay;
-        displayFromDate = DateFormat('dd/MM/yyyy').format(selectedFromDate!);
-      });
-    }
-  } */
-
   Future<void> launchToDatePicker(BuildContext context,
       {required DateTime firstDate,
       required DateTime lastDate,
@@ -606,118 +586,112 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Text(
-                        tr(LocaleKeys.only_date),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
-                      Text(
-                        ' :  ',
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      ),
-                      Expanded(
-                          child: Text(
-                        '${CommonStyles.formatDate(data.docDate)}',
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      )),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Text(
-                        tr(LocaleKeys.weight),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
-                      Text(
-                        ':  ',
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      ),
-                      Expanded(
-                          child: Text(
-                        formatText('${data.quantity}'),
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      )),
-                    ],
-                  ),
-                ),
-              ],
+            cardRow(
+              label1: tr(LocaleKeys.only_date),
+              data1: '${CommonStyles.formatDate(data.docDate)}',
+              label2: tr(LocaleKeys.weight),
+              data2: formatText('${data.quantity}'),
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                    flex: 7,
-                    child: Text(
-                      tr(LocaleKeys.cc),
-                      style: CommonStyles.txStyF14CbFF6,
-                    )),
-                Text(
-                  ':  ',
-                  style: CommonStyles.txStyF14CbFF6
-                      .copyWith(color: CommonStyles.dataTextColor),
-                ),
-                Expanded(
-                    flex: 22,
-                    child: Text(
-                      '${data.whsName}',
-                      style: CommonStyles.txStyF14CbFF6
-                          .copyWith(color: CommonStyles.dataTextColor),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: Text(
-                        tr(LocaleKeys.status),
-                        style: CommonStyles.txStyF14CbFF6,
-                      )),
-                      Text(
-                        ':  ',
-                        style: CommonStyles.txStyF14CbFF6
-                            .copyWith(color: CommonStyles.dataTextColor),
-                      ),
-                      Expanded(
-                          child: Text(
-                        data.uApaystat != 'Paid'
-                            ? 'Pending'
-                            : '${data.uApaystat}',
-                        style: CommonStyles.txStyF14CbFF6.copyWith(
-                          color: data.uApaystat == 'Paid'
-                              ? CommonStyles.statusGreenText
-                              : CommonStyles.RedColor,
-                        ),
-                      )),
-                    ],
-                  ),
-                ),
-                const Expanded(
-                  child: SizedBox(),
-                ),
-              ],
+            const SizedBox(height: 8),
+            singleCardRow(label: tr(LocaleKeys.cc), data: '${data.whsName}'),
+            const SizedBox(height: 8),
+            singleCardRow(
+              label: tr(LocaleKeys.status),
+              data: data.uApaystat != 'Paid' ? 'Pending' : '${data.uApaystat}',
+              dataStyle: CommonStyles.txStyF14CbFF6.copyWith(
+                color: data.uApaystat == 'Paid'
+                    ? CommonStyles.statusGreenText
+                    : CommonStyles.RedColor,
+              ),
             ),
           ],
         ));
+  }
+
+  Row singleCardRow(
+      {required String label, required String data, TextStyle? dataStyle}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+            flex: 5,
+            child: Text(
+              label,
+              style: CommonStyles.txStyF14CbFF6,
+            )),
+        Expanded(
+          flex: 1,
+          child: Text(
+            ':',
+            textAlign: TextAlign.center,
+            style: dataStyle ??
+                CommonStyles.txStyF14CbFF6
+                    .copyWith(color: CommonStyles.dataTextColor),
+          ),
+        ),
+        Expanded(
+          flex: 22,
+          child: Text(
+            data,
+            style: CommonStyles.txStyF14CbFF6
+                .copyWith(color: CommonStyles.dataTextColor),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget cardRow({
+    required String label1,
+    required String data1,
+    required String label2,
+    required String data2,
+  }) {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            dataItem(label: label1, data: data1),
+            const SizedBox(width: 15),
+            dataItem(label: label2, data: data2),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Expanded dataItem({required String label, required String data}) {
+    return Expanded(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+              flex: 4,
+              child: Text(
+                label,
+                style: CommonStyles.txStyF14CbFF6,
+              )),
+          Expanded(
+            flex: 1,
+            child: Text(
+              ':',
+              textAlign: TextAlign.center,
+              style: CommonStyles.txStyF14CbFF6
+                  .copyWith(color: CommonStyles.dataTextColor),
+            ),
+          ),
+          Expanded(
+            flex: 6,
+            child: Text(
+              data,
+              style: CommonStyles.txStyF14CbFF6
+                  .copyWith(color: CommonStyles.dataTextColor),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> getInfoCollectionInfo(String code) async {
@@ -869,5 +843,180 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           break;
       }
     });
+  }
+}
+
+class CollectionResponse {
+  final CollectionCount? collectionCount;
+  final List<CollectionData>? collectionData;
+
+  CollectionResponse(this.collectionCount, this.collectionData);
+}
+
+class InfoDialog extends StatelessWidget {
+  final CollectionInfo? info;
+  const InfoDialog({super.key, required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Container(
+      width: size.width * 0.75,
+      padding: const EdgeInsets.all(12.0),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+      ),
+      child: info != null
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(info!.code!, style: CommonStyles.txStyF14CpFF6),
+                const SizedBox(height: 10),
+                buildInfoRow(tr(LocaleKeys.driver_name), info!.driverName),
+                buildInfoRow(
+                    tr(LocaleKeys.vehicle_Number), info!.vehicleNumber),
+                buildInfoRow(
+                    tr(LocaleKeys.collectionCenter), info!.collectionCenter),
+                buildInfoRow(
+                    tr(LocaleKeys.grossWeight), info!.grossWeight.toString()),
+                buildInfoRow(
+                    tr(LocaleKeys.tareWeight), info!.tareWeight.toString()),
+                buildInfoRow(
+                    tr(LocaleKeys.net_weight), info!.netWeight.toString()),
+                buildInfoRow(tr(LocaleKeys.only_date),
+                    CommonStyles.formatDate(info!.receiptGeneratedDate)),
+                buildInfoRow(tr(LocaleKeys.operatorName), info!.operatorName),
+                if (info!.comments!.isNotEmpty)
+                  buildInfoRow(tr(LocaleKeys.comments), info!.comments),
+                const SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      CommonStyles.customDialognew(
+                        context,
+                        CachedNetworkImage(
+                          imageUrl: info!.receiptImg!,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => Image.asset(
+                            Assets.images.icLogo.path,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(tr(LocaleKeys.recept),
+                        style: CommonStyles.txStyF14CpFF6),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                      label: tr(LocaleKeys.close),
+                      btnColor: CommonStyles.blackColor,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                      ),
+                      borderRadius: 24,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(tr(LocaleKeys.comments),
+                    style: CommonStyles.txStyF14CpFF6),
+                const SizedBox(height: 10),
+                buildInfoRow(tr(LocaleKeys.driver_name), ''),
+                buildInfoRow(tr(LocaleKeys.vehicle_Number), ''),
+                buildInfoRow(tr(LocaleKeys.collectionCenter), ''),
+                buildInfoRow(tr(LocaleKeys.grossWeight), ''),
+                buildInfoRow(tr(LocaleKeys.tareWeight), ''),
+                buildInfoRow(tr(LocaleKeys.net_weight), ''),
+                buildInfoRow(tr(LocaleKeys.only_date), ''),
+                buildInfoRow(tr(LocaleKeys.operatorName), ''),
+                buildInfoRow(tr(LocaleKeys.comments), ''),
+                const SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      CommonStyles.customDialognew(
+                        context,
+                        Container(
+                            color: CommonStyles.whiteColor,
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: const Center(
+                              child: Text('No receipt found'),
+                            )),
+                        // CachedNetworkImage(
+                        //   imageUrl: info!.receiptImg!,
+                        //   placeholder: (context, url) =>
+                        //       const CircularProgressIndicator(),
+                        //   errorWidget: (context, url, error) => Image.asset(
+                        //     Assets.images.icLogo.path,
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
+                      );
+                    },
+                    child: Text(tr(LocaleKeys.recept),
+                        style: CommonStyles.txStyF14CpFF6),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                      label: tr(LocaleKeys.close),
+                      /* height: 30,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                      ), */
+                      borderRadius: 24,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget buildInfoRow(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(label, style: CommonStyles.txStyF14CbFF6),
+          ),
+          const Expanded(
+            flex: 1,
+            child: Text(
+              ':',
+              style: CommonStyles.txStyF14CbFF6,
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text('$value', style: CommonStyles.txStyF14CbFF6),
+          ),
+        ],
+      ),
+    );
   }
 }

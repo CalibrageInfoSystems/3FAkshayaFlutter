@@ -372,12 +372,12 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    CommonStyles.appBarColor,
+                    /*  CommonStyles.appBarColor,
                     Color.fromARGB(255, 238, 145, 74),
-                    CommonStyles.gradientColor2,
-                    /*  CommonStyles.appBarColor, 
-                    CommonStyles.gradientColor1,
                     CommonStyles.gradientColor2, */
+                    CommonStyles.appBarColor,
+                    // CommonStyles.gradientColor1,
+                    CommonStyles.gradientColor2,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -1159,11 +1159,12 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
       });
     });
-    ScaffoldMessenger.of(context).showSnackBar(
+    /*  ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('File downloaded successfully'),
       ),
-    );
+    ); */
+    CommonStyles.showToast('File downloaded successfully');
     _showNotification(
         id: 1,
         title: fileName, // file.path,
@@ -1966,8 +1967,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                                     flex: [5, 1, 6],
                                     label: tr(LocaleKeys.mandal),
                                     data: '${trasportRates[0].mandal}'),
-                              if (trasportRates[0].rate != null &&
-                                  trasportRates[0].rate!.isNotEmpty)
+                              if (trasportRates[0].rate != null)
                                 CommonWidgets.commonRowWithColon(
                                   flex: [5, 1, 6],
                                   label: tr(LocaleKeys.rate),
@@ -2058,7 +2058,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
   }
 
   String? formatToTwoDecimalPlaces(String? value) {
-    if (value == null) {
+    if (value == null || value.isEmpty) {
       return value;
     }
     double? parsedValue = double.tryParse(value);

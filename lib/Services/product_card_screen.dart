@@ -136,28 +136,36 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               const SizedBox(height: 5),
               dropdownWidget(),
               if (paymentmodeId == 26)
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isCheckboxChecked = !_isCheckboxChecked;
-                    });
-                  },
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: _isCheckboxChecked,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isCheckboxChecked = value ?? false;
-                          });
-                        },
+                Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isCheckboxChecked = !_isCheckboxChecked;
+                        });
+                      },
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: Checkbox(
+                              value: _isCheckboxChecked,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _isCheckboxChecked = value ?? false;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(tr(LocaleKeys.imdpayment),
+                              style: CommonStyles.txStyF14CbFF6),
+                        ],
                       ),
-                      Text(
-                        tr(LocaleKeys.imdpayment),
-                        style: CommonStyles.txStyF16CbFF6,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               /*    Row(
                   children: [
@@ -380,8 +388,9 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
             final paymentModes = snapshot.data as List<dynamic>;
             return filterDropDown(paymentModes);
           } else if (snapshot.hasError) {
-            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6);
+            return const SizedBox();
+            /* return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
+                style: CommonStyles.txStyF16CpFF6); */
           }
           return Container(
             padding: const EdgeInsets.all(10),
@@ -403,7 +412,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
               value: -1,
               child: Text(
                 'Select',
-                style: CommonStyles.txSty_14b_f6,
+                style: CommonStyles.txStyF14CbFF6,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
               ),

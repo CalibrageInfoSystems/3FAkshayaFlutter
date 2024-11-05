@@ -105,11 +105,24 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                     ),
                   ),
                 ),
-                CommonStyles.horizontalDivider(colors: [
+                Container(
+                  height: 0.5,
+                  margin: const EdgeInsets.symmetric(vertical: 2),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFFFF4500),
+                        Color.fromARGB(255, 164, 114, 243),
+                        Color(0xFFFF4500),
+                      ],
+                    ),
+                  ),
+                ),
+                /*  CommonStyles.horizontalDivider(colors: [
                   const Color(0xFFFF4500),
                   const Color(0xFFA678EF),
                   const Color(0xFFFF4500),
-                ]),
+                ]), */
                 infoBox(
                     label: tr(LocaleKeys.bank_holder), data: accountholdername),
                 infoBox(label: tr(LocaleKeys.account_no), data: accountnum),
@@ -119,10 +132,10 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomBtn(
+                      /*   CustomBtn(
                         label: tr(LocaleKeys.App_version),
                         onPressed: () {
                           Navigator.push(
@@ -131,7 +144,7 @@ class _FarmerPassbookScreen extends State<FarmerPassbookScreen> {
                                 builder: (context) => TestScreen()),
                           );
                         },
-                      ),
+                      ), */
                       CustomBtn(
                         label: tr(LocaleKeys.next),
                         btnTextColor: CommonStyles.primaryTextColor,

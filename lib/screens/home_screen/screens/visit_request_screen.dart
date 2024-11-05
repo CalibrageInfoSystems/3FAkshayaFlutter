@@ -882,6 +882,7 @@ class _VisitRequestState extends State<VisitRequest> {
                 children: [
                   CustomBtn(
                     label: tr(LocaleKeys.submit_req),
+                    btnTextColor: CommonStyles.primaryTextColor,
                     onPressed: validateFields,
                   ),
                 ],

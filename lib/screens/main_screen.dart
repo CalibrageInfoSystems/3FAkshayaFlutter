@@ -328,9 +328,10 @@ class _MainScreenPageState extends State<MainScreen> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Text(
-              'Error: ${snapshot.error}',
-              style: CommonStyles.txStyF16CpFF6,
+            return Center(
+              child: Text(
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
             );
           } else {
             return const Center(child: CircularProgressIndicator());
