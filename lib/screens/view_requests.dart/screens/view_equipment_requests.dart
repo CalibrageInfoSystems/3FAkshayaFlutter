@@ -189,7 +189,7 @@ class _ViewEquipmentRequestsState extends State<ViewEquipmentRequests> {
           if (request.paubleAmount != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.total_amt),
-              data: '${request.paubleAmount}',
+              data: request.paubleAmount!.toStringAsFixed(2),
             ),
           if (request.paymentMode != null)
             CommonWidgets.commonRow(

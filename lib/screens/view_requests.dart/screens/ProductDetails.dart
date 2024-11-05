@@ -100,29 +100,6 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
     }
   }
 
-  // Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
-  //   final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
-  //
-  //   final jsonResponse = await http.get(Uri.parse(apiUrl));
-  //
-  //   print('api: $apiUrl');
-  //   print('api: ${jsonResponse.body}');
-  //
-  //   if (jsonResponse.statusCode == 200) {
-  //     Map<String, dynamic> response = jsonDecode(jsonResponse.body);
-  //     if (response['listResult'] != null) {
-  //       List<dynamic> list = response['listResult'];
-  //       List<FetilizerViewProduct> products =
-  //           list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
-  //       return products;
-  //     } else {
-  //       throw Exception('list result is null');
-  //     }
-  //   } else {
-  //     throw Exception('Request failed with status: ${jsonResponse.statusCode}');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
@@ -179,25 +156,20 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
             ),
             Column(
               children: [
-                CommonStyles.horizontalGradientDivider2(), // Total base price
-                const SizedBox(height: 10),
-
                 productCostbox(
                     title: tr(LocaleKeys.amount),
                     data: totalBasePrice.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
                     data: totalAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(), // Total base price
+                CommonStyles.horizontalDivider(),
+
                 // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),
                 // productCostbox(
                 //     title: tr(LocaleKeys.tcgst_amount), data:totalTransportSGST.toStringAsFixed(2)),
@@ -244,13 +216,13 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
               Expanded(
                 flex: 3,
                 child: Text(tr(LocaleKeys.product),
-                    style: CommonStyles.txStyF13CpFF6),
+                    style: CommonStyles.txStyF14CbFF6),
               ),
               const SizedBox(width: 10),
               Expanded(
                 flex: 7,
                 child:
-                    Text('${product.name}', style: CommonStyles.txStyF13CpFF6),
+                    Text('${product.name}', style: CommonStyles.txStyF14CpFF6),
               ),
             ],
           ),
@@ -306,19 +278,19 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
           ],
         ),
@@ -344,12 +316,12 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 children: [
                   Flexible(
                     flex: 4,
-                    child: Text(label1, style: CommonStyles.txStyF13CpFF6),
+                    child: Text(label1, style: CommonStyles.txStyF14CbFF6),
                   ),
                   const SizedBox(width: 3),
                   Expanded(
                     flex: 2,
-                    child: Text(data1, style: CommonStyles.txStyF13CpFF6),
+                    child: Text(data1, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
@@ -361,12 +333,12 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                 children: [
                   Flexible(
                     flex: 4,
-                    child: Text(label2, style: CommonStyles.txStyF13CpFF6),
+                    child: Text(label2, style: CommonStyles.txStyF14CbFF6),
                   ),
                   const SizedBox(width: 3),
                   Expanded(
                     flex: 2,
-                    child: Text(data2, style: CommonStyles.txStyF13CpFF6),
+                    child: Text(data2, style: CommonStyles.txStyF14CbFF6),
                   ),
                 ],
               ),
