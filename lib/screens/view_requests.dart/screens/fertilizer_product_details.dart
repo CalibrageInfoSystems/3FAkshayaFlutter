@@ -287,7 +287,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label1: tr(LocaleKeys.quantity),
             data1: '${product.quantity}',
             label2: tr(LocaleKeys.amount),
-            data2: formatDouble(product.amount),
+            data2: product.amount!.round().toStringAsFixed(2),
           ),
           productInfo(
             label1: tr(LocaleKeys.transportprice),
@@ -326,19 +326,19 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                 flex: 6,
                 child: Text(
                   title,
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             const Expanded(
                 flex: 1,
                 child: Text(
                   ':',
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
             Expanded(
                 flex: 5,
                 child: Text(
                   data,
-                  style: CommonStyles.txStyF13CpFF6,
+                  style: CommonStyles.txStyF14CpFF6,
                 )),
           ],
         ),

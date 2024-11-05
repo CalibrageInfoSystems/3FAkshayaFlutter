@@ -65,6 +65,7 @@ class CommonWidgets {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
                 flex: flex[0],

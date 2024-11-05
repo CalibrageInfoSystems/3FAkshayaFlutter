@@ -13,6 +13,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -310,7 +311,33 @@ class _PdfTabViewState extends State<PdfTabView> {
             final mediaData = filterMediaData(data, 5);
 
             if (mediaData.isNotEmpty) {
-              return GridView.builder(
+              return MasonryGridView.count(
+                crossAxisCount: 2,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                itemCount: mediaData.length,
+                itemBuilder: (context, index) {
+                  final fileUrl = mediaData[index].fileUrl;
+                  final title = mediaData[index].name;
+                  final description = mediaData[index].description;
+                  return GestureDetector(
+                      onTap: () {
+                        // "https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf",
+                        createFileOfPdfUrl(fileUrl!).then((item) => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PDFViewScreen(path: item.path),
+                                ),
+                              )
+                            });
+                      },
+                      child: pdfTemplate(fileUrl, title, description));
+                },
+              );
+
+              /*  return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8.0,
@@ -338,7 +365,7 @@ class _PdfTabViewState extends State<PdfTabView> {
                       },
                       child: pdfTemplate(fileUrl, title, description));
                 },
-              );
+              ); */
             } else {
               return Center(
                 child: Text(
@@ -364,29 +391,34 @@ class _PdfTabViewState extends State<PdfTabView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Expanded(
-              child: Center(
+          Center(
             child: CachedNetworkImage(
               imageUrl: Assets.images.icPdf.path,
               placeholder: (context, url) => const CircularProgressIndicator(),
               errorWidget: (context, url, error) => Image.asset(
+                width: 100,
+                height: 100,
                 Assets.images.icPdf.path,
                 fit: BoxFit.cover,
               ),
             ),
-          )),
+          ),
           const SizedBox(height: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 '$title',
+                // maxLines: 2,
+                // overflow: TextOverflow.ellipsis,
                 style: CommonStyles.txStyF16CbFF6.copyWith(
                   color: CommonStyles.dataTextColor,
                 ),
               ),
               Text(
                 '$description',
+                // maxLines: 2,
+                // overflow: TextOverflow.ellipsis,
                 style: CommonStyles.txStyF14CbFF6.copyWith(
                   color: CommonStyles.dataTextColor,
                 ),
@@ -759,33 +791,20 @@ class _StandardState extends State<Standard> {
             )),
         const SizedBox(height: 8),
         Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              children: [
-                Text(
-                  '${tr(LocaleKeys.notee)}  ',
-                  style: CommonStyles.txStyF16CrFF6,
-                ),
-                Text(
-                  tr(LocaleKeys.standard_note),
-                  style: CommonStyles.txStyF14CwFF6,
-                ),
-              ],
-            )
-
-            /* RichText(
-            text: TextSpan(
-              text: tr(LocaleKeys.notee),
-              style: CommonStyles.text18orangeeader,
-              children: [
-                TextSpan(
-                  text: tr(LocaleKeys.standard_note),
-                  style: CommonStyles.txStyF14CwFF6,
-                ),
-              ],
-            ),
-          ), */
-            ),
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              Text(
+                '${tr(LocaleKeys.notee)}  ',
+                style: CommonStyles.txStyF14CbFF6,
+              ),
+              Text(
+                tr(LocaleKeys.standard_note),
+                style: CommonStyles.txStyF14CwFF6,
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 8),
         Expanded(
           child: ListView.builder(

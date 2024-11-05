@@ -281,7 +281,7 @@ class FarmerProfile extends StatelessWidget {
           if (farmerData.address != null)
             CommonWidgets.commonRowWithColon(
               label: tr(LocaleKeys.address),
-              data: '${farmerData.address}',
+              data: '${farmerData.addressLine1} - ${farmerData.addressLine2}',
             ),
           if (farmerData.landmark != null)
             CommonWidgets.commonRowWithColon(

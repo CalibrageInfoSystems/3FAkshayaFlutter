@@ -696,20 +696,28 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       initialSelectedMonth: initialSelectedMonth,
       initialSelectedYear: initialSelectedYear,
       onSelected: (month, year) {
-        /* setState(() {
-          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
-
-          displayToDate =
-              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
-
-          selectedToDate = CommonStyles.parseDateString(displayToDate);
-
-          print(
-              'custom Todate: $displayToDate'); // Will print the last day of the selected month
-          print(
-              'custom Todate: ${selectedToDate!.year}-${selectedToDate!.month}-${selectedToDate!.day}');
-        }); */
         setState(() {
+          DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
+          final selectedDate =
+              '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
+          final formatDateTime = CommonStyles.parseDateString(selectedDate);
+
+          // Get the last day of the current month
+          DateTime currentMonthEnd =
+              _getLastDayOfMonth(DateTime.now().year, DateTime.now().month);
+
+          if (formatDateTime != null) {
+            if (formatDateTime.isBefore(currentMonthEnd) ||
+                formatDateTime.isAtSameMomentAs(currentMonthEnd)) {
+              displayToDate = selectedDate;
+              selectedToDate = formatDateTime;
+            } else {
+              showToastMsg(tr(LocaleKeys.unableselect));
+            }
+          }
+        });
+
+/*         setState(() {
           DateTime lastDayOfMonth = _getLastDayOfMonth(year, month);
           final selectedDate =
               '${lastDayOfMonth.day}/${lastDayOfMonth.month}/${lastDayOfMonth.year}';
@@ -724,7 +732,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
               showToastMsg(tr(LocaleKeys.unableselect));
             }
           }
-        });
+        }
+        ); */
       },
     );
   }
@@ -1394,31 +1403,31 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                                 // data: '${itemData.amount?.toStringAsFixed(2)}'),
                                 data: '${itemData.amount?.round().toString()}'),
                           if (itemData.adjusted != null &&
-                              itemData.adjusted! > 0)
+                              itemData.adjusted! != 0)
                             itemRow(
                                 label: tr(LocaleKeys.adjusted),
                                 data:
-                                    '${itemData.adjusted?.toStringAsFixed(2)}'),
+                                    '${itemData.adjusted?.round().toString()}'),
                           if (itemData.gRAmount != null &&
-                              itemData.gRAmount! > 0)
+                              itemData.gRAmount! != 0)
                             itemRow(
                                 label: tr(LocaleKeys.gr),
                                 data:
                                     '${itemData.gRAmount?.round().toString()}'),
                           if (itemData.quantity != null &&
-                              itemData.quantity! > 0)
+                              itemData.quantity! != 0)
                             itemRow(
                                 label: tr(LocaleKeys.ffb),
                                 data:
                                     '${itemData.quantity?.toStringAsFixed(3)}'),
                           if (itemData.adhocRate != null &&
-                              itemData.adhocRate! > 0)
+                              itemData.adhocRate! != 0)
                             itemRow(
                                 label: tr(LocaleKeys.adhoc_rate),
                                 data:
-                                    '${itemData.adhocRate?.toStringAsFixed(2)}'),
+                                    '${itemData.adhocRate?.round().toString()}'),
                           if (itemData.invoiceRate != null &&
-                              itemData.invoiceRate! > 0)
+                              itemData.invoiceRate! != 0)
                             itemRow(
                                 label: tr(LocaleKeys.invoice_rate),
                                 data:
@@ -1947,18 +1956,25 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
                             children: [
-                              CommonWidgets.commonRowWithColon(
-                                  flex: [5, 1, 6],
-                                  label: tr(LocaleKeys.village),
-                                  data: '${trasportRates[0].village}'),
-                              CommonWidgets.commonRowWithColon(
-                                  flex: [5, 1, 6],
-                                  label: tr(LocaleKeys.mandal),
-                                  data: '${trasportRates[0].mandal}'),
-                              CommonWidgets.commonRowWithColon(
+                              if (trasportRates[0].village != null)
+                                CommonWidgets.commonRowWithColon(
+                                    flex: [5, 1, 6],
+                                    label: tr(LocaleKeys.village),
+                                    data: '${trasportRates[0].village}'),
+                              if (trasportRates[0].mandal != null)
+                                CommonWidgets.commonRowWithColon(
+                                    flex: [5, 1, 6],
+                                    label: tr(LocaleKeys.mandal),
+                                    data: '${trasportRates[0].mandal}'),
+                              if (trasportRates[0].rate != null &&
+                                  trasportRates[0].rate!.isNotEmpty)
+                                CommonWidgets.commonRowWithColon(
                                   flex: [5, 1, 6],
                                   label: tr(LocaleKeys.rate),
-                                  data: '${trasportRates[0].rate}'),
+                                  data:
+                                      '${formatToTwoDecimalPlaces(trasportRates[0].rate)}', // '${trasportRates[0].rate}',
+                                  // data: '${trasportRates[0].rate}',
+                                ),
                             ],
                           ),
                         );
@@ -2039,6 +2055,19 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
         );
       },
     );
+  }
+
+  String? formatToTwoDecimalPlaces(String? value) {
+    if (value == null) {
+      return value;
+    }
+    double? parsedValue = double.tryParse(value);
+
+    if (parsedValue == null) {
+      throw ArgumentError("Invalid input");
+    }
+
+    return parsedValue.toStringAsFixed(2);
   }
 
   Widget note() {

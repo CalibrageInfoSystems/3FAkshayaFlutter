@@ -58,6 +58,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
       ),
       body: Column(
         children: [
+          //MARK: header
           Container(
             height: dropdownItems.indexOf(selectedDropDownValue!) == 0
                 /* (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
@@ -204,13 +205,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               dateLabel: tr(LocaleKeys.fromDateWithOutStar),
               displaydate: displayFromDate,
               onTap: () {
-                /* final DateTime currentDate = DateTime.now();
-                final DateTime firstDate = DateTime(currentDate.year - 100); */
-                /*  launchFromDatePicker(
-                  context,
-                  firstDate: firstDate,
-                  lastDate: currentDate,
-                ); */
                 CommonWidgets.launchDatePicker(
                   context,
                   onDateSelected: (pickedDay) {
@@ -247,22 +241,6 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                       });
                     }
                   });
-
-                  /* final DateTime? pickedDay = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    initialEntryMode: DatePickerEntryMode.calendarOnly,
-                    firstDate: firstDate,
-                    lastDate: DateTime.now(),
-                    initialDatePickerMode: DatePickerMode.day,
-                  ); 
-                  if (pickedDay != null) {
-                    setState(() {
-                      selectedToDate = pickedDay;
-                      displayToDate =
-                          DateFormat('dd/MM/yyyy').format(selectedToDate!);
-                    });
-                  }*/
                 },
               )),
           const SizedBox(width: 14),
@@ -275,6 +253,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   horizontal: 10,
                 ),
                 label: tr(LocaleKeys.submit),
+                btnTextColor: CommonStyles.primaryTextColor,
                 onPressed: () {
                   validateAndSubmit(selectedFromDate, selectedToDate);
                 }),

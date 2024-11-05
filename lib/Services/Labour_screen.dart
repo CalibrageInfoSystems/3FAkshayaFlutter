@@ -930,34 +930,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     }
   }
 
-//MARK: _getDropdownItems
-/*   List<DropdownMenuItem<String>> _getDropdownItems() {
-    print(
-        'List<LabourRequest> _labourRequests: ${_labourRequests.map((req) => req.desc).join(', ')}');
-    if (_selectedServiceTypes.any((service) => service.typeCdId == 19) &&
-        !_selectedServiceTypes.any((service) => service.typeCdId == 20)) {
-      return [_labourRequests[0]]
-          .map((request) => DropdownMenuItem<String>(
-                value: request.desc,
-                child: Text(
-                  request.desc,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ))
-          .toList();
-    } else {
-      return _labourRequests
-          .map((request) => DropdownMenuItem<String>(
-                value: request.desc,
-                child: Text(
-                  request.desc,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ))
-          .toList();
-    }
-  }
- */
+//MARK: submitBtn
   Widget submitBtn(
     BuildContext context,
     String language,
@@ -1208,8 +1181,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "updatedByUserId": 1,
       "updatedDate": CommonStyles.formatApiDate(currentDate),
       "amount": 1.1,
-      "harvestingAmount": harvestCost,
-      "pruningAmount": prunningCost,
+      "harvestingAmount": harvestingCheck ? harvestCost : null,
+      "pruningAmount": pruningCheck ? prunningCost : null,
       "pruningWithIntercropAmount": 0.0,
       "harvestingWithIntercropAmount": 0.0,
       "yearofPlanting": "${widget.plotdata.dateOfPlanting}",
@@ -1243,8 +1216,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
             MsgModel(
                 key: tr(LocaleKeys.select_labour_type),
                 value: selectedServiceNames),
-            MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
-            MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+            if (harvestingCheck)
+              MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
+            if (pruningCheck)
+              MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
             MsgModel(
                 key: tr(LocaleKeys.Package), value: "$selectedDropDownValue"),
             MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),

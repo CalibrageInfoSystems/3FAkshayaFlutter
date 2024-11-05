@@ -751,6 +751,7 @@ class CommonStyles {
     Widget? errorIcon,
     String? errorLabel,
     Color? errorHeaderColor = const Color(0xffc93436),
+    Color? btnTextColor = CommonStyles.primaryTextColor,
     Widget? errorBodyWidget,
     required String errorMessage,
     bool barrierDismissible = true,
@@ -820,6 +821,7 @@ class CommonStyles {
                             children: [
                               CustomBtn(
                                   label: tr(LocaleKeys.ok),
+                                  btnTextColor: btnTextColor,
                                   onPressed: onPressed ??
                                       () {
                                         Navigator.of(context).pop();

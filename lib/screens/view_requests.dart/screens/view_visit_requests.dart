@@ -927,49 +927,13 @@ class _MoreDetailsState extends State<MoreDetails> {
     print(
         'camp: ${widget.imagesList.length} | ${widget.audioFilePath.length} ');
   }
-/*
-  Future<void> _initAudio() async {
-    await _audioPlayer.setSourceUrl(widget.audioFilePath[0].fileLocation!);
-    _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
-      if (mounted) {
-        setState(() {
-          totalDuration = duration.inSeconds.toDouble();
-        });
-      }
-    });
-
-    _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
-      if (mounted) {
-        setState(() {
-          currentPosition = position.inSeconds.toDouble();
-        });
-      }
-    });
-
-    _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
-      if (mounted) {
-        setState(() {
-          isPlaying = false;
-          currentPosition = 0;
-        });
-      }
-    });
-  }
- */
 
   Future<void> _initAudio() async {
     try {
-      // Ensure the file path is sanitized by replacing backslashes with forward slashes
       String sanitizedUrl =
           widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
-
-      // Log the sanitized URL for debugging purposes
       print('Sanitized audio URL: $sanitizedUrl');
-
-      // Set the audio source with the sanitized URL
       await _audioPlayer.setSource(UrlSource(sanitizedUrl));
-
-      // Listen to duration changes
       _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
         if (mounted) {
           setState(() {
@@ -978,7 +942,6 @@ class _MoreDetailsState extends State<MoreDetails> {
         }
       });
 
-      // Listen to position changes
       _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
         if (mounted) {
           setState(() {
@@ -986,8 +949,6 @@ class _MoreDetailsState extends State<MoreDetails> {
           });
         }
       });
-
-      // Listen for when the audio completes
       _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
         if (mounted) {
           setState(() {
@@ -1006,7 +967,6 @@ class _MoreDetailsState extends State<MoreDetails> {
       if (isPlaying) {
         await _audioPlayer.pause();
       } else {
-        // Replace backslashes with forward slashes
         String sanitizedUrl =
             widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/');
 
@@ -1090,6 +1050,38 @@ class _MoreDetailsState extends State<MoreDetails> {
                   ),
                   onPressed: playOrPause,
                 ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Slider(
+                        value: currentPosition,
+                        min: 0,
+                        max: totalDuration,
+                        activeColor: CommonStyles.primaryTextColor,
+                        onChanged: (value) {
+                          setState(() {
+                            currentPosition = value;
+                          });
+                          _audioPlayer.seek(Duration(seconds: value.toInt()));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Text(formatTime(currentPosition.toInt())),
+              ],
+            ),
+/* 
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_filled,
+                  ),
+                  onPressed: playOrPause,
+                ),
                 if (totalDuration > 0)
                   Expanded(
                     child: Slider(
@@ -1108,6 +1100,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                 Text(formatTime(currentPosition.toInt())),
               ],
             ),
+       */
         ],
       ),
     );

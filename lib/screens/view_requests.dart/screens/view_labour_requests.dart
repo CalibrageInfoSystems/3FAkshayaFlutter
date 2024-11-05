@@ -172,6 +172,11 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               label: tr(LocaleKeys.village),
               data: '${request.plotVillage}',
             ),
+          if (request.leader != null)
+            CommonWidgets.commonRow(
+              label: tr(LocaleKeys.labour_leader),
+              data: '${request.leader}',
+            ),
           if (request.startDate != null)
             CommonWidgets.commonRow(
               label: tr(LocaleKeys.startDate),
@@ -264,11 +269,13 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   style: CommonStyles.txStyF14CwFF6,
                   isColon: true,
                 ),
-              /* if (request.leader != null)
+              if (request.leader != null)
                 CommonWidgets.commonRow(
                   label: tr(LocaleKeys.labour_leader),
                   data: '${request.leader}',
-                ), */
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
+                ),
               if (request.startDate != null)
                 CommonWidgets.commonRow(
                   label: tr(LocaleKeys.startDate),
@@ -304,12 +311,14 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   style: CommonStyles.txStyF14CwFF6,
                   isColon: true,
                 ),
-              /*  if (request.createdDate != null)
-                commonRow(
+              if (request.createdDate != null)
+                CommonWidgets.commonRow(
                   label: tr(LocaleKeys.assign_date),
                   data:
                       '${CommonStyles.formatDisplayDate(request.createdDate)}',
-                ), */
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
+                ),
               Text(tr(LocaleKeys.payment_details),
                   style: CommonStyles.txStyF16CpFF6),
               const SizedBox(height: 5),
