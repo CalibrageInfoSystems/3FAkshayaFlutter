@@ -5,6 +5,8 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/fertilizer_view_product_model.dart';
+import 'package:decimal/decimal.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -138,6 +140,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     // 'Payable Amount: $payableAmount'
+
+
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.product_details)),
       body: Padding(
@@ -191,42 +195,50 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             Column(
               children: [
                 const SizedBox(height: 10),
+
                 productCostbox(
                     title: tr(LocaleKeys.amount),
-                    data: totalBasePrice.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalBasePrice.toString()).toStringAsFixed(2)),
+
                 CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
+
                     title: tr(LocaleKeys.cgst_amount),
-                    data: totalSGst.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
-                    data: totalSGst.toStringAsFixed(2)),
+                    data: Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
-                    data: totalAmount.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalAmount.toString()).toStringAsFixed(2)),
+                    // data: totalAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.transamount),
-                    data: totalBaseTransportAmount.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalBaseTransportAmount.toString()).toStringAsFixed(2)),
+                    // data: totalBaseTransportAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tcgst_amount),
-                    data: totalTransportSGST.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalTransportSGST.toString()).toStringAsFixed(2)),
+                    // data: totalTransportSGST.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tsgst_amount),
-                    data: totalTransportSGST.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalTransportSGST.toString()).toStringAsFixed(2)),
+                    // data: totalTransportSGST.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.trnstotal_amt),
-                    data: totalTransportAmount.toStringAsFixed(2)),
+                    data:  Decimal.parse(totalTransportAmount.toString()).toStringAsFixed(2)),
+                    // data: totalTransportAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.subcd_amt),
                     data: subsidyAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
+                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.amount_payble),
                     data: paybleamount.toStringAsFixed(2)),
@@ -289,6 +301,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label2: tr(LocaleKeys.amount),
             data2: product.amount!.round().toStringAsFixed(2),
           ),
+          if (product.transPortCost != 0.0)
           productInfo(
             label1: tr(LocaleKeys.transportprice),
             data1: formatDouble(
@@ -296,6 +309,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label2: tr(LocaleKeys.gst),
             data2: '${product.transPortGstPercentage ?? '0.0'}',
           ),
+          if (product.transPortCost != 0.0)
           productInfo(
             label1: tr(LocaleKeys.totaltransportcost),
             data1: formatDouble(product.transPortTotalAmount ?? 0.0),
@@ -303,6 +317,14 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             data2: formatDouble(
                 product.totalAmount! + product.transPortTotalAmount!),
           ),
+          if (product.transPortCost == 0.0)
+            productInfo(
+              label1: tr(LocaleKeys.total_amt),
+              data1: formatDouble(
+                  product.totalAmount!),
+              label2: "",
+              data2: "",
+            ),
         ],
       ),
     );

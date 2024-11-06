@@ -66,6 +66,8 @@ dependencies:
   vector_graphics: any
   webview_flutter: ^4.8.0
   youtube_player_flutter: ^8.0.0
+  decimal: ^3.0.2
+#  decimal: ^2.2.0  # Check for the latest version on pub.dev
 
 dependency_overrides:
   fading_edge_scrollview: ^4.1.1
