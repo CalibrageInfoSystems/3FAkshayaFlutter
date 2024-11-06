@@ -74,8 +74,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
         }
 
         // Calculate GST and ensure two decimal points
-        double gstAmount =
-            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        double gstAmount =(totalAmount - totalBasePrice);
+        print('gstAmount=====$gstAmount');
         totalSGst = gstAmount / 2;
         double transgstAmount = double.parse(
             (totalTransportAmount - totalBaseTransportAmount)
