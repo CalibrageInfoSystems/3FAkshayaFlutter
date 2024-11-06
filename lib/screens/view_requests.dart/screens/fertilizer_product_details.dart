@@ -143,10 +143,10 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
 
         // Sum basePrice and totalAmount
         for (var product in products) {
-          totalBasePrice += product.basePrice!;
-          totalAmount += product.totalAmount!;
-          totalBaseTransportAmount += product.transPortAmount!;
-          totalTransportAmount += product.transPortTotalAmount!;
+          totalBasePrice += product.basePrice ?? 0.0;
+          totalAmount += product.totalAmount ?? 0.0;
+          totalBaseTransportAmount += product.transPortAmount ?? 0.0;
+          totalTransportAmount += product.transPortTotalAmount ?? 0.0;
         }
 
         // Calculate GST and ensure two decimal points
@@ -379,8 +379,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
               label1: tr(LocaleKeys.totaltransportcost),
               data1: formatDouble(product.transPortTotalAmount ?? 0.0),
               label2: tr(LocaleKeys.total_amt),
-              data2: formatDouble(
-                  product.totalAmount! + product.transPortTotalAmount!),
+              data2: formatDouble((product.totalAmount ?? 0.0) +
+                  (product.transPortTotalAmount ?? 0.0)),
             ),
           if (product.transPortCost == 0.0)
             productInfo(

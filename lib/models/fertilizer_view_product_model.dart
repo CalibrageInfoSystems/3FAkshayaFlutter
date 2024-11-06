@@ -1,36 +1,44 @@
+import 'dart:convert';
+
+FetilizerViewProduct fetilizerViewProductFromJson(String str) =>
+    FetilizerViewProduct.fromJson(json.decode(str));
+
+String fetilizerViewProductToJson(FetilizerViewProduct data) =>
+    json.encode(data.toJson());
+
 class FetilizerViewProduct {
-  final String? requestCode;
-  final int? productId;
-  final String? productCode;
-  final String? godownCode;
-  final String? name;
-  final int? quantity;
-  final double? bagCost;
-  final String? farmerCode;
-  final double? bagSize;
-  final String? size;
-  final double? amount;
-  final double? gstPercentage;
-  final double? cgstPercentage;
-  final double? sgstPercentage;
-  final double? cgst;
-  final double? sgst;
-  final double? basePrice;
-  final double? transPortGstPercentage;
-  final double? transPortCgstPercentage;
-  final double? transPortSgstPercentage;
-  final double? transPortCgst;
-  final double? transPortSgst;
-  final double? transportBasePrice;
-  final double? transPortAmount;
-  final double? transPortTotalAmount;
-  final double? transPortCost;
-  final double? totalAmount;
-  final dynamic closedDate;
-  final double? requestTotalAmount;
-  final double? requestTotalTransport;
-  final int? licenseTypeId;
-  final String? licenceType;
+  String? requestCode;
+  int? productId;
+  String? productCode;
+  String? godownCode;
+  String? name;
+  int? quantity;
+  double? bagCost;
+  String? farmerCode;
+  double? bagSize;
+  String? size;
+  double? amount;
+  double? gstPercentage;
+  double? cgstPercentage;
+  double? sgstPercentage;
+  double? cgst;
+  double? sgst;
+  double? basePrice;
+  double? transPortGstPercentage;
+  double? transPortCgstPercentage;
+  double? transPortSgstPercentage;
+  double? transPortCgst;
+  double? transPortSgst;
+  double? transportBasePrice;
+  double? transPortAmount;
+  double? transPortTotalAmount;
+  double? transPortCost;
+  double? totalAmount;
+  DateTime? closedDate;
+  double? requestTotalAmount;
+  double? requestTotalTransport;
+  int? licenseTypeId;
+  String? licenceType;
 
   FetilizerViewProduct({
     this.requestCode,
@@ -96,7 +104,9 @@ class FetilizerViewProduct {
         transPortTotalAmount: json["transPortTotalAmount"]?.toDouble(),
         transPortCost: json["transPortCost"]?.toDouble(),
         totalAmount: json["totalAmount"]?.toDouble(),
-        closedDate: json["closedDate"],
+        closedDate: json["closedDate"] == null
+            ? null
+            : DateTime.parse(json["closedDate"]),
         requestTotalAmount: json["requestTotalAmount"]?.toDouble(),
         requestTotalTransport: json["requestTotalTransport"]?.toDouble(),
         licenseTypeId: json["licenseTypeId"],
@@ -131,7 +141,7 @@ class FetilizerViewProduct {
         "transPortTotalAmount": transPortTotalAmount,
         "transPortCost": transPortCost,
         "totalAmount": totalAmount,
-        "closedDate": closedDate,
+        "closedDate": closedDate?.toIso8601String(),
         "requestTotalAmount": requestTotalAmount,
         "requestTotalTransport": requestTotalTransport,
         "licenseTypeId": licenseTypeId,
