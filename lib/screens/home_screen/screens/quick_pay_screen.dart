@@ -75,7 +75,7 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
                 return Center(
                   child: Text(
                     snapshot.error.toString().replaceFirst('Exception: ', ''),
-                    // style: CommonStyles.txStyF16CpFF6,
+                    textAlign: TextAlign.center,
                     style: CommonStyles.txStyF16CpFF6.copyWith(
                       fontSize: 20,
                     ),

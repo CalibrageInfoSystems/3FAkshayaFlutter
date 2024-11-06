@@ -578,6 +578,7 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
         // CommonStyles.horizontalGradientDivider(),
         CommonWidgets.customDivider(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Row(

@@ -501,6 +501,7 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
+                  textAlign: TextAlign.center,
                   snapshot.error.toString().replaceFirst('Exception: ', ''),
                   style: CommonStyles.txStyF16CpFF6),
             );

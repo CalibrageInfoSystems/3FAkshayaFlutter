@@ -317,8 +317,12 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
             final paymentModes = snapshot.data as List<dynamic>;
             return filterDropDown(paymentModes);
           } else if (snapshot.hasError) {
-            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6);
+            return Center(
+              child: Text(
+                  textAlign: TextAlign.center,
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
+            );
           }
           return Container(
             padding: const EdgeInsets.all(10),
@@ -497,6 +501,7 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
       children: [
         CommonStyles.horizontalDivider(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Row(

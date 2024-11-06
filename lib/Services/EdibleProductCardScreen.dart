@@ -362,8 +362,12 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             final paymentModes = snapshot.data as List<dynamic>;
             return filterDropDown(paymentModes);
           } else if (snapshot.hasError) {
-            return Text('${tr(LocaleKeys.error)}: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6);
+            return Center(
+              child: Text(
+                  textAlign: TextAlign.center,
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
+            );
           }
           return Container(
             padding: const EdgeInsets.all(10),
@@ -503,8 +507,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
             //  label1: 'Item Cost(Rs)',
             data1: '${product.priceInclGst?.toStringAsFixed(2)}',
             label2: tr(LocaleKeys.gst),
-            data2: '${(product.gstPercentage ?? 0.0).toStringAsFixed(1)}',
-
+            data2: (product.gstPercentage ?? 0.0).toStringAsFixed(1),
           ),
           productInfo(
             label1: tr(LocaleKeys.quantity),
@@ -539,6 +542,7 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
       children: [
         CommonStyles.horizontalDivider(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Row(
@@ -675,7 +679,8 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
           displayTransportamountWithGst += transportCost;
 
           final productGSTPercentage = product.gstPercentage ?? 0.0;
-          displayamountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
+          displayamountWithoutGst +=
+              productCost / (1 + (productGSTPercentage / 100));
 
           displaytotalGst =
               displaytotalProductCostGst - displayamountWithoutGst;
@@ -765,21 +770,25 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
         final productCost = (product.priceInclGst ?? 0) * quantity;
         totalProductCostGst += productCost;
 
-        final transportCost = (product.transPortActualPriceInclGst ?? 0) * quantity;
+        final transportCost =
+            (product.transPortActualPriceInclGst ?? 0) * quantity;
         totalTransportCostwithgst += transportCost;
 
-        final productGSTPercentage = product.gstPercentage ?? 0; // Handle null value
+        final productGSTPercentage =
+            product.gstPercentage ?? 0; // Handle null value
         amountWithoutGst += productCost / (1 + (productGSTPercentage / 100));
 
         totalGST = totalProductCostGst - amountWithoutGst;
         totalCGST = totalGST / 2;
         totalSGST = totalGST / 2;
 
-        final transportGSTPercentage = product.transportGstPercentage ?? 0; // Handle null value
+        final transportGSTPercentage =
+            product.transportGstPercentage ?? 0; // Handle null value
         TransportamountWithoutGst +=
             transportCost / (1 + (transportGSTPercentage / 100));
 
-        totalTransportGST = totalTransportCostwithgst - TransportamountWithoutGst;
+        totalTransportGST =
+            totalTransportCostwithgst - TransportamountWithoutGst;
         totalTransCGST = totalTransportGST / 2;
         totalTrasSGST = totalTransportGST / 2;
 
@@ -797,7 +806,6 @@ class _ProductCardScreenState extends State<EdibleProductCardScreen> {
         );
       }
     }
-
 
     // Calculate total amount with GST
     totalAmountWithGST = totalProductCostGst + totalTransportCostwithgst;

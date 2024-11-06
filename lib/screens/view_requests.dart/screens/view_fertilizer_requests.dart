@@ -97,9 +97,11 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox();
             } else if (snapshot.hasError) {
-              return Text(
-                'Error: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6,
+              return Center(
+                child: Text(
+                    textAlign: TextAlign.center,
+                    snapshot.error.toString().replaceFirst('Exception: ', ''),
+                    style: CommonStyles.txStyF16CpFF6),
               );
             } else if (!snapshot.hasData) {
               return const Text('No data');

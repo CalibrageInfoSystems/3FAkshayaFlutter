@@ -94,12 +94,11 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
                 if (snapshot.hasError) {
                   return Center(
                     child: Text(
-                      snapshot.error.toString().replaceFirst('Exception: ', ''),
-                      // style: CommonStyles.txStyF16CpFF6,
-                      style: CommonStyles.txStyF16CpFF6.copyWith(
-                        fontSize: 20,
-                      ),
-                    ),
+                        textAlign: TextAlign.center,
+                        snapshot.error
+                            .toString()
+                            .replaceFirst('Exception: ', ''),
+                        style: CommonStyles.txStyF16CpFF6),
                   );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;

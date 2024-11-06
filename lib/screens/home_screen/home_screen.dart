@@ -300,6 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ); */
                         return Center(
                           child: Text(
+                              textAlign: TextAlign.center,
                               snapshot.error
                                   .toString()
                                   .replaceFirst('Exception: ', ''),

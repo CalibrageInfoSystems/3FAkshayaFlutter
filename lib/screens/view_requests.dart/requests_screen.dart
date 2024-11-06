@@ -86,8 +86,12 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6);
+            return Center(
+              child: Text(
+                  textAlign: TextAlign.center,
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
+            );
           } else {
             final serviceTypeIdList = snapshot.data as List<int>;
             return ListView.builder(

@@ -1201,6 +1201,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                     return Expanded(
                       child: Center(
                         child: Text(
+                            textAlign: TextAlign.center,
                             snapshot.error
                                 .toString()
                                 .replaceFirst('Exception: ', ''),
@@ -1211,6 +1212,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                   return Expanded(
                     child: Center(
                       child: Text(
+                          textAlign: TextAlign.center,
                           snapshot.error
                               .toString()
                               .replaceFirst('Exception: ', ''),
@@ -1611,9 +1613,14 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CommonStyles.rectangularShapeShimmerEffect();
                 } else if (snapshot.hasError) {
-                  return Text(
-                      snapshot.error.toString().replaceFirst('Exception: ', ''),
-                      style: CommonStyles.txStyF16CpFF6);
+                  return Center(
+                    child: Text(
+                        textAlign: TextAlign.center,
+                        snapshot.error
+                            .toString()
+                            .replaceFirst('Exception: ', ''),
+                        style: CommonStyles.txStyF16CpFF6),
+                  );
                 } else {
                   final response = snapshot.data as PassbookTransportModel;
                   List<TranspotationCharge>? transportionData =
@@ -1655,6 +1662,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                     return Expanded(
                       child: Center(
                         child: Text(tr(LocaleKeys.no_trans_found),
+                            textAlign: TextAlign.center,
                             style: CommonStyles.txStyF16CpFF6
                                 .copyWith(fontSize: 15)),
                       ),

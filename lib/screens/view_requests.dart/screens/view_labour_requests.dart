@@ -100,6 +100,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
+                      textAlign: TextAlign.center,
                       snapshot.error.toString().replaceFirst('Exception: ', ''),
                       style: CommonStyles.txStyF16CpFF6),
                 );

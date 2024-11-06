@@ -330,6 +330,7 @@ class _MainScreenPageState extends State<MainScreen> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
+                  textAlign: TextAlign.center,
                   snapshot.error.toString().replaceFirst('Exception: ', ''),
                   style: CommonStyles.txStyF16CpFF6),
             );
@@ -446,8 +447,8 @@ class _MainScreenPageState extends State<MainScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Are you sure you want to Logout?',
+                  Text(
+                    tr(LocaleKeys.alert_logout),
                     style: CommonStyles.text16white,
                     textAlign: TextAlign.center,
                   ),
@@ -492,9 +493,9 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: const Text(
-                                'Cancel',
-                                style: CommonStyles.txSty_16p_f5,
+                              child: Text(
+                                tr(LocaleKeys.cancel_capitalized),
+                                style: CommonStyles.txStyF16CpFF6,
                               ),
                             ),
                           ),
@@ -537,9 +538,9 @@ class _MainScreenPageState extends State<MainScreen> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                               ),
-                              child: const Text(
-                                'OK',
-                                style: CommonStyles.txSty_16p_f5,
+                              child: Text(
+                                tr(LocaleKeys.ok),
+                                style: CommonStyles.txStyF16CpFF6,
                               ),
                             ),
                           ),

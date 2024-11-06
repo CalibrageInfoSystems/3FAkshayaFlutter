@@ -226,6 +226,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                     } else if (snapshot.hasError) {
                       return Center(
                         child: Text(
+                            textAlign: TextAlign.center,
                             snapshot.error
                                 .toString()
                                 .replaceFirst('Exception: ', ''),
@@ -360,7 +361,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label2: tr(LocaleKeys.amount),
             data2: product.amount!.round().toStringAsFixed(2),
           ),
-          if (product.transPortCost != null || product.transPortCost != 0.0)
+          if (product.transPortCost != null && product.transPortCost != 0.0)
             productInfo(
               label1: tr(LocaleKeys.transportprice),
               data1: formatDouble(product
@@ -444,6 +445,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
       children: [
         CommonStyles.horizontalDivider(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Row(

@@ -77,11 +77,14 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.hasError) {
-                    return Text(
-                        snapshot.error
-                            .toString()
-                            .replaceFirst('Exception: ', ''),
-                        style: CommonStyles.txStyF16CpFF6);
+                    return Center(
+                      child: Text(
+                          textAlign: TextAlign.center,
+                          snapshot.error
+                              .toString()
+                              .replaceFirst('Exception: ', ''),
+                          style: CommonStyles.txStyF16CpFF6),
+                    );
                   }
                   final products = snapshot.data as List<FetilizerViewProduct>;
 
@@ -245,6 +248,7 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
       children: [
         CommonStyles.horizontalGradientDivider2(),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Row(

@@ -444,10 +444,11 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           }
           if (snapshot.hasError) {
             return Center(
-                child: Text(
-              'Error: ${snapshot.error}',
-              style: CommonStyles.txStyF16CpFF6,
-            ));
+              child: Text(
+                  textAlign: TextAlign.center,
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6),
+            );
           }
           // return const Center(child: CircularProgressIndicator());
           return const SizedBox();
@@ -510,9 +511,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               //   CommonStyles.hideHorizontalDotsLoadingDialog(context);
               // });
               if (snapshot.hasError) {
-                return Text(
-                    snapshot.error.toString().replaceFirst('Exception: ', ''),
-                    style: CommonStyles.txStyF16CpFF6);
+                return Center(
+                  child: Text(
+                      textAlign: TextAlign.center,
+                      snapshot.error.toString().replaceFirst('Exception: ', ''),
+                      style: CommonStyles.txStyF16CpFF6),
+                );
               } else {
                 final collection = snapshot.data as CollectionResponse;
 

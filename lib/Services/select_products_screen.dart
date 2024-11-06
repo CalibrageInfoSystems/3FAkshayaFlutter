@@ -251,12 +251,11 @@ class _SelectProductsScreenState extends State<SelectProductsScreen> {
                 return Expanded(child: shimmerLoading());
               }
               if (snapshot.hasError) {
-                return Text(
-                  '${tr(LocaleKeys.error)}: ${snapshot.error}',
-                  // style: CommonStyles.txStyF16CpFF6,
-                  style: CommonStyles.txStyF16CpFF6.copyWith(
-                    fontSize: 20,
-                  ),
+                return Center(
+                  child: Text(
+                      textAlign: TextAlign.center,
+                      snapshot.error.toString().replaceFirst('Exception: ', ''),
+                      style: CommonStyles.txStyF16CpFF6),
                 );
               } else {
                 final products = snapshot.data as List<ProductItem>;

@@ -138,8 +138,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               future: farmerData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}',
-                      style: CommonStyles.txStyF16CpFF6);
+                  return Center(
+                    child: Text(
+                        textAlign: TextAlign.center,
+                        snapshot.error
+                            .toString()
+                            .replaceFirst('Exception: ', ''),
+                        style: CommonStyles.txStyF16CpFF6),
+                  );
                 } else if (snapshot.hasData) {
                   final farmer = snapshot.data as FarmerModel;
                   return FarmerProfile(farmerData: farmer);
@@ -151,8 +157,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               future: plotsData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}',
-                      style: CommonStyles.txStyF16CpFF6);
+                  return Center(
+                    child: Text(
+                        textAlign: TextAlign.center,
+                        snapshot.error
+                            .toString()
+                            .replaceFirst('Exception: ', ''),
+                        style: CommonStyles.txStyF16CpFF6),
+                  );
                 } else if (snapshot.hasData) {
                   final plots = snapshot.data as List<PlotDetailsModel>;
                   return ListView.builder(
