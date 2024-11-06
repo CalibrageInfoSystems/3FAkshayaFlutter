@@ -81,7 +81,7 @@ class TestScreen extends StatelessWidget {
   }
 }
  */
-
+/* 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -117,6 +117,51 @@ class TestScreen extends StatelessWidget {
             );
           },
           child: const Text("Open PDF Dialog"),
+        ),
+      ),
+    );
+  }
+} */
+
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:open_filex/open_filex.dart';
+
+class TestScreen extends StatelessWidget {
+  const TestScreen({super.key});
+
+  Future<void> _openDownloadFolder() async {
+    // Check for storage permission
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isGranted) {
+      // Path to download directory (adjust if necessary)
+      const String downloadFolderPath = '/storage/emulated/0/Download';
+
+      // Open the specified directory
+      final result = await OpenFilex.open(downloadFolderPath);
+
+      if (result.type == ResultType.error) {
+        print('Error: Could not open the directory');
+      }
+    } else {
+      const String downloadFolderPath = '/storage/emulated/0/Download';
+
+      final result = await OpenFilex.open(downloadFolderPath);
+
+      if (result.type == ResultType.error) {
+        print('Error: Could not open the directory');
+      }
+      print('Storage permission is required to access this folder.');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _openDownloadFolder,
+          child: const Text('Open Download Folder'),
         ),
       ),
     );

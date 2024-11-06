@@ -624,17 +624,17 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           child: Text(
             ':',
             textAlign: TextAlign.center,
-            style: dataStyle ??
-                CommonStyles.txStyF14CbFF6
-                    .copyWith(color: CommonStyles.dataTextColor),
+            style: CommonStyles.txStyF14CbFF6
+                .copyWith(color: CommonStyles.dataTextColor),
           ),
         ),
         Expanded(
           flex: 22,
           child: Text(
             data,
-            style: CommonStyles.txStyF14CbFF6
-                .copyWith(color: CommonStyles.dataTextColor),
+            style: dataStyle ??
+                CommonStyles.txStyF14CbFF6
+                    .copyWith(color: CommonStyles.dataTextColor),
           ),
         ),
       ],

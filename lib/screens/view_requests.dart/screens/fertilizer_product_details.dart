@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
 import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/fertilizer_view_product_model.dart';
-import 'package:decimal/decimal.dart';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:decimal/decimal.dart';
 
 class FertilizerProductDetails extends StatefulWidget {
   final String requestCode;
@@ -50,6 +50,82 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
     // Parse the string to double
   }
 
+/* 
+  Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
+    /*  setState(() {
+      CommonStyles.showHorizontalDotsLoadingDialog(context);
+    }); */
+    final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
+    final jsonResponse = await http.get(Uri.parse(apiUrl));
+
+    print('api: $apiUrl');
+    print('api: ${jsonResponse.body}');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
+    if (jsonResponse.statusCode == 200) {
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+
+      if (response['listResult'] != null) {
+        List<dynamic> list = response['listResult'];
+        List<FetilizerViewProduct> products =
+            list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
+
+        // Sum basePrice and totalAmount
+        for (var product in products) {
+          totalBasePrice += product.basePrice!;
+          totalAmount += product.totalAmount!;
+          totalBaseTransportAmount += product.transPortAmount!;
+          totalTransportAmount += product.transPortTotalAmount!;
+        }
+
+        // Calculate GST and ensure two decimal points
+        double gstAmount =
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        totalSGst = gstAmount / 2;
+        double transgstAmount = double.parse(
+            (totalTransportAmount - totalBaseTransportAmount)
+                .toStringAsFixed(2));
+        totalTransportSGST = transgstAmount / 2;
+        // Ensure the values have two decimal places
+        totalBasePrice = double.parse(totalBasePrice.toStringAsFixed(2));
+        totalAmount = double.parse(totalAmount.toStringAsFixed(2));
+        totalBaseTransportAmount =
+            double.parse(totalBaseTransportAmount.toStringAsFixed(2));
+        totalTransportAmount =
+            double.parse(totalTransportAmount.toStringAsFixed(2));
+        totalTransportGST = double.parse(totalTransportGST.toStringAsFixed(2));
+
+        // Bind values to your UI elements
+        setState(() {
+          // Assuming you store these values in variables
+          totalBasePrice = totalBasePrice;
+          totalAmount = totalAmount;
+          totalSGst = totalSGst;
+          totalBaseTransportAmount = totalBaseTransportAmount;
+          totalTransportAmount = totalTransportAmount;
+          totalTransportGST = totalTransportGST;
+          totalTransportSGST = totalTransportSGST;
+          paybleamount = double.tryParse(widget.payableAmount) ?? 0.0;
+          subsidyAmount = double.tryParse(widget.subsidyAmount) ?? 0.0;
+        });
+
+        return products;
+      } else {
+        throw Exception('list result is null');
+      }
+    } else {
+      throw Exception('Request failed with status: ${jsonResponse.statusCode}');
+    }
+  }
+ */
   Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
     final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
     final jsonResponse = await http.get(Uri.parse(apiUrl));
@@ -74,7 +150,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
         }
 
         // Calculate GST and ensure two decimal points
-        double gstAmount =(totalAmount - totalBasePrice);
+        double gstAmount = (totalAmount - totalBasePrice);
         print('gstAmount=====$gstAmount');
         totalSGst = gstAmount / 2;
         double transgstAmount = double.parse(
@@ -113,35 +189,10 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
     }
   }
 
-  // Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
-  //   final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
-  //
-  //   final jsonResponse = await http.get(Uri.parse(apiUrl));
-  //
-  //   print('api: $apiUrl');
-  //   print('api: ${jsonResponse.body}');
-  //
-  //   if (jsonResponse.statusCode == 200) {
-  //     Map<String, dynamic> response = jsonDecode(jsonResponse.body);
-  //     if (response['listResult'] != null) {
-  //       List<dynamic> list = response['listResult'];
-  //       List<FetilizerViewProduct> products =
-  //           list.map((item) => FetilizerViewProduct.fromJson(item)).toList();
-  //       return products;
-  //     } else {
-  //       throw Exception('list result is null');
-  //     }
-  //   } else {
-  //     throw Exception('Request failed with status: ${jsonResponse.statusCode}');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     // final size = MediaQuery.of(context).size;
     // 'Payable Amount: $payableAmount'
-
-
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.product_details)),
       body: Padding(
@@ -151,7 +202,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
           children: [
             RichText(
               text: TextSpan(
-                text: 'Request Id ',
+                text: '${tr(LocaleKeys.requestCodeLabel)} ',
                 style: CommonStyles.txStyF14CbFF6,
                 children: [
                   TextSpan(
@@ -168,9 +219,10 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                   future: futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
+                      return const SizedBox();
+                      /* return const Center(
                         child: CircularProgressIndicator(),
-                      );
+                      ); */
                     } else if (snapshot.hasError) {
                       return Text(
                           snapshot.error
@@ -180,14 +232,20 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                     }
                     final products =
                         snapshot.data as List<FetilizerViewProduct>;
-
-                    return ListView.builder(
+                    return CommonWidgets.customSlideAnimation(
+                      itemCount: products.length,
+                      childBuilder: (index) {
+                        final product = products[index];
+                        return productBox(product);
+                      },
+                    );
+                    /*  return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
                         return productBox(product);
                       },
-                    );
+                    ); */
                   },
                 ),
               ),
@@ -198,47 +256,54 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
 
                 productCostbox(
                     title: tr(LocaleKeys.amount),
-                    data:  Decimal.parse(totalBasePrice.toString()).toStringAsFixed(2)),
+                    data: Decimal.parse(totalBasePrice.toString())
+                        .toStringAsFixed(2)),
 
                 CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
-
                     title: tr(LocaleKeys.cgst_amount),
-                    data:  Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
+                    data:
+                        Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
-                    data: Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
+                    data: totalSGst.toStringAsFixed(2)),
+                // Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
-                    data:  Decimal.parse(totalAmount.toString()).toStringAsFixed(2)),
-                    // data: totalAmount.toStringAsFixed(2)),
+                    data: Decimal.parse(totalAmount.toString())
+                        .toStringAsFixed(2)),
+                // data: totalAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.transamount),
-                    data:  Decimal.parse(totalBaseTransportAmount.toString()).toStringAsFixed(2)),
-                    // data: totalBaseTransportAmount.toStringAsFixed(2)),
+                    data: Decimal.parse(totalBaseTransportAmount.toString())
+                        .toStringAsFixed(2)),
+                // data: totalBaseTransportAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tcgst_amount),
-                    data:  Decimal.parse(totalTransportSGST.toString()).toStringAsFixed(2)),
-                    // data: totalTransportSGST.toStringAsFixed(2)),
+                    data: Decimal.parse(totalTransportSGST.toString())
+                        .toStringAsFixed(2)),
+                // data: totalTransportSGST.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tsgst_amount),
-                    data:  Decimal.parse(totalTransportSGST.toString()).toStringAsFixed(2)),
-                    // data: totalTransportSGST.toStringAsFixed(2)),
+                    data: Decimal.parse(totalTransportSGST.toString())
+                        .toStringAsFixed(2)),
+                // data: totalTransportSGST.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.trnstotal_amt),
-                    data:  Decimal.parse(totalTransportAmount.toString()).toStringAsFixed(2)),
-                    // data: totalTransportAmount.toStringAsFixed(2)),
+                    data: Decimal.parse(totalTransportAmount.toString())
+                        .toStringAsFixed(2)),
+                // data: totalTransportAmount.toStringAsFixed(2)),
                 CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.subcd_amt),
                     data: subsidyAmount.toStringAsFixed(2)),
-                 CommonStyles.horizontalGradientDivider2(),
+                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.amount_payble),
                     data: paybleamount.toStringAsFixed(2)),
@@ -302,26 +367,25 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             data2: product.amount!.round().toStringAsFixed(2),
           ),
           if (product.transPortCost != 0.0)
-          productInfo(
-            label1: tr(LocaleKeys.transportprice),
-            data1: formatDouble(
-                product.transPortCost), // '${product.transPortCost ?? '0.0'}',
-            label2: tr(LocaleKeys.gst),
-            data2: '${product.transPortGstPercentage ?? '0.0'}',
-          ),
+            productInfo(
+              label1: tr(LocaleKeys.transportprice),
+              data1: formatDouble(product
+                  .transPortCost), // '${product.transPortCost ?? '0.0'}',
+              label2: tr(LocaleKeys.gst),
+              data2: '${product.transPortGstPercentage ?? '0.0'}',
+            ),
           if (product.transPortCost != 0.0)
-          productInfo(
-            label1: tr(LocaleKeys.totaltransportcost),
-            data1: formatDouble(product.transPortTotalAmount ?? 0.0),
-            label2: tr(LocaleKeys.total_amt),
-            data2: formatDouble(
-                product.totalAmount! + product.transPortTotalAmount!),
-          ),
+            productInfo(
+              label1: tr(LocaleKeys.totaltransportcost),
+              data1: formatDouble(product.transPortTotalAmount ?? 0.0),
+              label2: tr(LocaleKeys.total_amt),
+              data2: formatDouble(
+                  product.totalAmount! + product.transPortTotalAmount!),
+            ),
           if (product.transPortCost == 0.0)
             productInfo(
               label1: tr(LocaleKeys.total_amt),
-              data1: formatDouble(
-                  product.totalAmount!),
+              data1: formatDouble(product.totalAmount!),
               label2: "",
               data2: "",
             ),

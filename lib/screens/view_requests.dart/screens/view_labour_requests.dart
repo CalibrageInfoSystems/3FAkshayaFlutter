@@ -97,11 +97,18 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox();
               } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}',
-                    style: CommonStyles.txStyF16CpFF6);
+                return Center(
+                  child: Text(
+                      snapshot.error.toString().replaceFirst('Exception: ', ''),
+                      style: CommonStyles.txStyF16CpFF6),
+                );
               } else if (!snapshot.hasData) {
-                return const Text('No Labour Request Available',
-                    style: TextStyle(fontSize: 16, color: Colors.black));
+                return Center(
+                  child: Text(
+                    tr(LocaleKeys.no_req_found),
+                    style: CommonStyles.txStyF16CpFF6,
+                  ),
+                );
               }
 
               final requests = snapshot.data as List<ViewLabourModel>;
@@ -110,7 +117,7 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                 return Center(
                   child: Text(
                     tr(LocaleKeys.no_req_found),
-                    style: CommonStyles.txSty_16p_fb,
+                    style: CommonStyles.txStyF16CpFF6,
                   ),
                 );
               } else {
@@ -125,19 +132,6 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                     );
                   },
                 );
-                /*  return ListView.separated(
-                  itemCount: requests.length,
-                  itemBuilder: (context, index) {
-                    return request(
-                      index,
-                      requests[index],
-                      onTap: () => showCompleteDetailsOnDialog(requests[index]),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 10);
-                  },
-                ); */
               }
             }),
       ),
@@ -296,6 +290,13 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
                   data:
                       '${CommonStyles.formatDisplayDate(request.updatedDate)}',
                 ), */
+              if (request.jobDoneDate != null)
+                CommonWidgets.commonRow(
+                  label: tr(LocaleKeys.job_done),
+                  data: '${request.jobDoneDate}',
+                  style: CommonStyles.txStyF14CwFF6,
+                  isColon: true,
+                ),
               if (request.duration != null)
                 CommonWidgets.commonRow(
                   label: tr(LocaleKeys.Package),

@@ -518,10 +518,10 @@ class _VisitRequestState extends State<VisitRequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RichText(
-                text: TextSpan(
-                  text: tr(LocaleKeys.issue_type),
+                text: const TextSpan(
+                  text: 'tr(LocaleKeys.issue_type)',
                   style: CommonStyles.txStyF14CwFF6,
-                  children: const <TextSpan>[
+                  children: <TextSpan>[
                     TextSpan(
                       text: ' *',
                       style: TextStyle(
@@ -535,10 +535,21 @@ class _VisitRequestState extends State<VisitRequest> {
                 future: dropDownTypeIssues,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
+                    /*  return const Center(
+                      child:
+                          SizedBox(), // CircularProgressIndicator.adaptive(),
+                    ); */
+                    return Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: CommonStyles.whiteColor),
+                      ),
+                      child: const SizedBox(),
                     );
-                  } else if (snapshot.hasError) {
+                  }
+                  /* else if (snapshot.hasError) {
                     return Center(
                       child: Text(
                           snapshot.error
@@ -546,7 +557,8 @@ class _VisitRequestState extends State<VisitRequest> {
                               .replaceFirst('Exception: ', ''),
                           style: CommonStyles.txStyF16CpFF6),
                     );
-                  } else {
+                  }  */
+                  else {
                     // Casting the response to a list of TypeIssue
                     List<TypeIssue> dropdownItems =
                         snapshot.data as List<TypeIssue>;

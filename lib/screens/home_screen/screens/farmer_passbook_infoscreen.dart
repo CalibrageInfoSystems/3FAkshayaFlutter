@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
@@ -285,37 +286,42 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
       "fromDate": fromDate,
       "toDate": toDate,
     };
+    try {
+      final jsonResponse = await http
+          .post(Uri.parse(apiUrl), body: jsonEncode(requestBody), headers: {
+        'Content-Type': 'application/json',
+      });
 
-    final jsonResponse = await http
-        .post(Uri.parse(apiUrl), body: jsonEncode(requestBody), headers: {
-      'Content-Type': 'application/json',
-    });
+      print('passbook 1: $apiUrl');
+      print('passbook 1: ${jsonEncode(requestBody)}');
+      // print('passbook 1: ${jsonResponse.body}');
 
-    print('passbook 1: $apiUrl');
-    print('passbook 1: ${jsonEncode(requestBody)}');
-    // print('passbook 1: ${jsonResponse.body}');
+      if (jsonResponse.statusCode == 200) {
+        if (isCustomDates!) {
+          setState(() {
+            isTimePeriod = false;
+          });
+        }
 
-    if (jsonResponse.statusCode == 200) {
-      if (isCustomDates!) {
-        setState(() {
-          isTimePeriod = false;
-        });
-      }
-
-      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
-      if (response['result'] != null) {
-        return passbookVendorModelFromJson(jsonResponse.body);
+        Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+        if (response['result'] != null) {
+          return passbookVendorModelFromJson(jsonResponse.body);
+        } else {
+          return throw Exception(tr(LocaleKeys.no_data));
+        }
       } else {
-        return throw Exception(tr(LocaleKeys.no_data));
+        if (isCustomDates!) {
+          setState(() {
+            isTimePeriod = false;
+          });
+        }
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}.');
       }
-    } else {
-      if (isCustomDates!) {
-        setState(() {
-          isTimePeriod = false;
-        });
-      }
-      throw Exception(
-          'Request failed with status: ${jsonResponse.statusCode}.');
+    } on TimeoutException catch (_) {
+      throw TimeoutException('Request timed out. Please try again later.');
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -659,11 +665,15 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
         final formatDateTime = CommonStyles.parseDateString(selectedDate);
 
         if (formatDateTime != null) {
+          print(
+              'Formatted DateTime: ${DateFormat('dd/MM/yyyy').format(formatDateTime)} | Current Date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}');
+
           if (formatDateTime.isBefore(DateTime.now()) ||
               formatDateTime.isAtSameMomentAs(DateTime.now())) {
             displayFromDate = selectedDate;
             selectedFromDate = formatDateTime;
           } else {
+            print('dateValidation: else executes');
             showToastMsg(tr(LocaleKeys.unableselect));
           }
         }
@@ -1149,7 +1159,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       print('Error deleting existing file: $e');
     }
 
-    // Create and write to the file
     await file.create(recursive: true);
 
     await file.writeAsBytes(excelBytes);
@@ -1159,12 +1168,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
       });
     });
-    /*  ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('File downloaded successfully'),
-      ),
-    ); */
-    CommonStyles.showToast('File downloaded successfully');
+    CommonStyles.showToast('File Downloaded Successfully');
     _showNotification(
         id: 1,
         title: fileName, // file.path,
@@ -1191,6 +1195,17 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CommonStyles.rectangularShapeShimmerEffect();
                 } else if (snapshot.hasError) {
+                  if (snapshot.error is TimeoutException) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(
+                            snapshot.error
+                                .toString()
+                                .replaceFirst('Exception: ', ''),
+                            style: CommonStyles.txStyF16CpFF6),
+                      ),
+                    );
+                  }
                   return Expanded(
                     child: Center(
                       child: Text(
