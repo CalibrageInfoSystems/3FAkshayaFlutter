@@ -214,6 +214,74 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
         return PdfViewerPopup(pdfUrl: pdfUrl);
       },
     ); */
+    print('showPdfDialog: $pdfUrl');
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2.0),
+        ),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          color: CommonStyles.screenBgColor,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                color: CommonStyles.RedColor,
+                width: double.infinity,
+                child: Center(
+                  child: Text(
+                    tr(LocaleKeys.quick_pdf),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder(
+                  future: _loadPdf(pdfUrl),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                        child: Text(
+                          'Failed to load PDF Please try again later.',
+                          style: CommonStyles.txStyF16CpFF6,
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    } else {
+                      // Display PDF if loaded successfully
+                      return SfPdfViewer.network(pdfUrl);
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomBtn(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      btnTextColor: CommonStyles.primaryTextColor,
+                      label: tr(LocaleKeys.ok),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+/* 
     showDialog(
         context: context,
         builder: (context) => Dialog(
@@ -223,10 +291,9 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.7,
                 color: const Color(
-                    0x8D000000), // Background color with transparency
+                    0x8D000000),
                 child: Column(
-                  children: <Widget>[
-                    // Header
+                  children: [
                     Container(
                       padding: const EdgeInsets.all(8),
                       color: CommonStyles.RedColor,
@@ -261,87 +328,16 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
                 ),
               ),
             )
-
-        /* 
-      AlertDialog(
-        title: const Text("PDF Viewer"),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        content: Container(
-          height: MediaQuery.of(context).size.height * 0.7,
-          color: const Color(0x8D000000), // Background color with transparency
-          child: Column(
-            children: <Widget>[
-              // Header
-              Container(
-                padding: const EdgeInsets.all(8),
-                color: CommonStyles.RedColor,
-                width: double.infinity,
-                child: Center(
-                  child: Text(
-                    tr(LocaleKeys.quick_pdf),
-                    style: const TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: SfPdfViewer.network(pdfUrl),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xFFCCCCCC),
-                        Color(0xFFFFFFFF),
-                        Color(0xFFCCCCCC),
-                      ],
-                    ),
-                    border: Border.all(
-                      color: const Color(0xFFe86100),
-                      width: 2.0,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 30.0,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 35.0),
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      child: Text(
-                        tr(LocaleKeys.ok),
-                        style: CommonStyles.txSty_16p_f5,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Close"),
-          ),
-        ],
-      ),
-    */
-
         );
+   */
+  }
+
+  Future<void> _loadPdf(String pdfUrl) async {
+    // Make a request to check if the PDF exists
+    final response = await http.head(Uri.parse(pdfUrl));
+    if (response.statusCode == 404) {
+      throw Exception('PDF not found');
+    }
   }
 }
 

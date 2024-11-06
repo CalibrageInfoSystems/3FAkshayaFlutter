@@ -37,7 +37,6 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   void initState() {
     super.initState();
     futureData = getFetilizerProductDetails();
-    // Parse the string to double
   }
 
   Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
@@ -59,8 +58,8 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
         for (var product in products) {
           totalBasePrice += product.basePrice!;
           totalAmount += product.totalAmount!;
-          totalBaseTransportAmount += product.transportBasePrice!;
-          totalTransportAmount += product.transPortAmount!;
+          totalBaseTransportAmount += product.transportBasePrice ?? 0.0;
+          totalTransportAmount += product.transPortAmount ?? 0.0;
         }
 
         // Calculate GST and ensure two decimal points
@@ -134,11 +133,13 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (snapshot.hasError) {
-                      return Text(
+                      return Text('error: ${snapshot.error}',
+                          style: CommonStyles.txStyF16CbFF6);
+                      /* return Text(
                           snapshot.error
                               .toString()
                               .replaceFirst('Exception: ', ''),
-                          style: CommonStyles.txStyF16CpFF6);
+                          style: CommonStyles.txStyF16CpFF6); */
                     }
                     final products =
                         snapshot.data as List<FetilizerViewProduct>;
