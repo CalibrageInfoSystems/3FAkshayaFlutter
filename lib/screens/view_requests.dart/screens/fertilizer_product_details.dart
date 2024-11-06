@@ -196,7 +196,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.product_details)),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -366,7 +366,7 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
             label2: tr(LocaleKeys.amount),
             data2: product.amount!.round().toStringAsFixed(2),
           ),
-          if (product.transPortCost != 0.0)
+          if (product.transPortCost != null || product.transPortCost != 0.0)
             productInfo(
               label1: tr(LocaleKeys.transportprice),
               data1: formatDouble(product
@@ -374,7 +374,8 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
               label2: tr(LocaleKeys.gst),
               data2: '${product.transPortGstPercentage ?? '0.0'}',
             ),
-          if (product.transPortCost != 0.0)
+          if (product.transPortTotalAmount != null &&
+              product.transPortTotalAmount != 0.0)
             productInfo(
               label1: tr(LocaleKeys.totaltransportcost),
               data1: formatDouble(product.transPortTotalAmount ?? 0.0),

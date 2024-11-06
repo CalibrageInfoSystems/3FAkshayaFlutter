@@ -130,7 +130,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget tabView() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+      // padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+      padding: const EdgeInsets.all(12),
       child: TabBarView(
         children: [
           FutureBuilder(

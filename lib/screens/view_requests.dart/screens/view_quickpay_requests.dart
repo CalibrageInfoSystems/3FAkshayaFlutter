@@ -93,7 +93,7 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
         title: tr(LocaleKeys.quick_req),
       ), // actionIcon: const SizedBox()
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.all(12),
         child: FutureBuilder(
           future: futureRequests,
           builder: (context, snapshot) {

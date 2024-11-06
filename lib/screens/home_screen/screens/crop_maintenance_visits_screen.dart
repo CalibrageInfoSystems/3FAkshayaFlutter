@@ -134,7 +134,8 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
       appBar: CustomAppBar(title: tr(LocaleKeys.crop)),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+          padding: const EdgeInsets.all(12),
+          // padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,

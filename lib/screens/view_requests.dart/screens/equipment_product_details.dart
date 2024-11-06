@@ -52,7 +52,7 @@ class _EquipmentProductDetailsState extends State<EquipmentProductDetails> {
     return Scaffold(
       appBar: CustomAppBar(title: tr(LocaleKeys.product_details)),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12).copyWith(top: 12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

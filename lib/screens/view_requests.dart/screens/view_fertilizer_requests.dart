@@ -90,7 +90,7 @@ class _ViewFertilizerRequestsState extends State<ViewFertilizerRequests> {
         actionIcon: const SizedBox(),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8).copyWith(top: 12),
+        padding: const EdgeInsets.all(12),
         child: FutureBuilder(
           future: futureRequests,
           builder: (context, snapshot) {

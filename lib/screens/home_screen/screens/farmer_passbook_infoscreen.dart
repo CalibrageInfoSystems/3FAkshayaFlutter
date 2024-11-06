@@ -1982,7 +1982,8 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                                     flex: [5, 1, 6],
                                     label: tr(LocaleKeys.mandal),
                                     data: '${trasportRates[0].mandal}'),
-                              if (trasportRates[0].rate != null)
+                              if (trasportRates[0].rate != null &&
+                                  trasportRates[0].rate!.isNotEmpty)
                                 CommonWidgets.commonRowWithColon(
                                   flex: [5, 1, 6],
                                   label: tr(LocaleKeys.rate),
