@@ -1244,27 +1244,24 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
   void showRateChartDialog(BuildContext context) async {
     // Step 1: Fetch the data from the API
-    const url =
-        'http://182.18.157.215/3FAkshaya/API/api/LabourServiceCost/GetLabourServiceCost/null';
+    const url = baseUrl + getlabourservicecost;
+    // 'http://182.18.157.215/3FAkshaya/API/api/LabourServiceCost/GetLabourServiceCost/null';
+
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       List<dynamic> listResult = data['listResult'];
-
-      // Step 2: Show the dialog with dynamically generated table rows
-      showDialog(
+      /* showDialog(
         context: context,
         builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(1.0),
-            ),
-            child: SizedBox(
-              //  padding: EdgeInsets.all(2),
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.75,
-              child: SingleChildScrollView(
+          return Material(
+            color: Colors.transparent,
+            child: Center(
+              child: Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.75,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1283,13 +1280,38 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
                     ),
-                    // Table
-
-                    Column(
+                    // Table Header
+                    Table(
+                      border: TableBorder.all(color: CommonStyles.lightgry),
+                      columnWidths: const {
+                        0: FlexColumnWidth(2),
+                        1: FlexColumnWidth(2),
+                        2: FlexColumnWidth(2),
+                        3: FlexColumnWidth(2),
+                        4: FlexColumnWidth(2),
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
                       children: [
-                        // Static Table Header
-                        Table(
-                          border: TableBorder.all(color: CommonStyles.lightgry),
+                        TableRow(
+                          children: [
+                            tableHeader(tr(LocaleKeys.measurement)),
+                            tableHeader(tr(LocaleKeys.pru_amount)),
+                            tableHeader(tr(LocaleKeys.harv_amount)),
+                            tableHeader(tr(LocaleKeys.intercrop_prunning)),
+                            tableHeader(tr(LocaleKeys.harv_intercrop)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    // Main content section
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Table(
+                          border: const TableBorder(
+                            verticalInside:
+                                BorderSide(color: CommonStyles.lightgry),
+                          ),
                           columnWidths: const {
                             0: FlexColumnWidth(2),
                             1: FlexColumnWidth(2),
@@ -1297,66 +1319,11 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             3: FlexColumnWidth(2),
                             4: FlexColumnWidth(2),
                           },
-                          defaultVerticalAlignment:
-                              TableCellVerticalAlignment.middle,
                           children: [
-                            TableRow(
-                              //   decoration: BoxDecoration(color: CommonStyles.primaryTextColor),
-                              children: [
-                                tableHeader(tr(LocaleKeys.measurement)),
-                                tableHeader(tr(LocaleKeys.pru_amount)),
-                                tableHeader(tr(LocaleKeys.harv_amount)),
-                                tableHeader(tr(LocaleKeys.intercrop_prunning)),
-                                tableHeader(tr(LocaleKeys.harv_intercrop)),
-                              ],
-                            ),
+                            ...generateTableRows(listResult),
                           ],
                         ),
-                        // Scrollable Table Body
-                        SizedBox(
-                          height:
-                              220, // Set the fixed height for the scrollable part
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Table(
-                              border: const TableBorder(
-                                verticalInside: BorderSide(
-                                    color: CommonStyles
-                                        .lightgry), // Add vertical border
-                              ),
-                              columnWidths: const {
-                                0: FlexColumnWidth(2),
-                                1: FlexColumnWidth(2),
-                                2: FlexColumnWidth(2),
-                                3: FlexColumnWidth(2),
-                                4: FlexColumnWidth(2),
-                              },
-                              children: [
-                                ...generateTableRows(listResult),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // SizedBox(
-                        //   height: 300, // Set the fixed height for the scrollable part
-                        //   child: SingleChildScrollView(
-                        //     scrollDirection: Axis.vertical,
-                        //     child: Table(
-                        //       columnWidths: const {
-                        //         0: FlexColumnWidth(2),
-                        //         1: FlexColumnWidth(2),
-                        //         2: FlexColumnWidth(2),
-                        //         3: FlexColumnWidth(2),
-                        //         4: FlexColumnWidth(2),
-                        //       },
-                        //       children: [
-                        //         // Generate table rows with dotted lines
-                        //         ...generateTableRows(listResult),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // )
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -1370,9 +1337,115 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomBtn(
-                            label: tr(LocaleKeys.got_it),
-                            borderRadius: 22,
-                            onPressed: () => Navigator.of(context).pop()),
+                          label: tr(LocaleKeys.got_it),
+                          btnTextColor: CommonStyles.primaryTextColor,
+                          borderRadius: 22,
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    */
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: MediaQuery.of(context).size.height * 0.75,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    Container(
+                      color: CommonStyles.primaryTextColor,
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        tr(LocaleKeys.terms_conditions),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    // Table Header
+                    Table(
+                      border: TableBorder.all(color: CommonStyles.lightgry),
+                      columnWidths: const {
+                        0: FlexColumnWidth(2),
+                        1: FlexColumnWidth(2),
+                        2: FlexColumnWidth(2),
+                        3: FlexColumnWidth(2),
+                        4: FlexColumnWidth(2),
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        TableRow(
+                          children: [
+                            tableHeader(tr(LocaleKeys.measurement)),
+                            tableHeader(tr(LocaleKeys.pru_amount)),
+                            tableHeader(tr(LocaleKeys.harv_amount)),
+                            tableHeader(tr(LocaleKeys.intercrop_prunning)),
+                            tableHeader(tr(LocaleKeys.harv_intercrop)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    // Main content section
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Table(
+                          border: const TableBorder(
+                            verticalInside:
+                                BorderSide(color: CommonStyles.lightgry),
+                          ),
+                          columnWidths: const {
+                            0: FlexColumnWidth(2),
+                            1: FlexColumnWidth(2),
+                            2: FlexColumnWidth(2),
+                            3: FlexColumnWidth(2),
+                            4: FlexColumnWidth(2),
+                          },
+                          children: [
+                            ...generateTableRows(listResult),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child: Text(
+                        tr(LocaleKeys.inter_coco),
+                        style: CommonStyles.txStyF12CpFF6,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomBtn(
+                          label: tr(LocaleKeys.got_it),
+                          btnTextColor: CommonStyles.primaryTextColor,
+                          borderRadius: 22,
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),

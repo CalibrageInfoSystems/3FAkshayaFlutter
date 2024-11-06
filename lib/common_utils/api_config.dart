@@ -58,5 +58,5 @@ const get3FInfo = 'Farmer/Get3FInfo/';
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
 var getLabourDuration = "TypeCdDmt/7";
 var getLabourServiceCost = 'LabourServiceCost/GetLabourServiceCostCalculation';
-var getlabourservicecost = 'LabourServiceCost/GetLabourServiceCost/null';
+const getlabourservicecost = 'LabourServiceCost/GetLabourServiceCost/null';
 var addlabourequest = 'LabourRequest/AddLabourRequestHeader';
