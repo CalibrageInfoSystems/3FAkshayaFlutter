@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/common_widgets.dart';
+import 'package:decimal/decimal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -40,12 +42,22 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
   }
 
   Future<List<FetilizerViewProduct>> getFetilizerProductDetails() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.showHorizontalDotsLoadingDialog(context);
+      });
+    });
     final apiUrl = '$baseUrl$getFertilizerProductDetails${widget.requestCode}';
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
     print('api: $apiUrl');
     print('api: ${jsonResponse.body}');
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      });
+    });
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
 
@@ -56,15 +68,17 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
 
         // Sum basePrice and totalAmount
         for (var product in products) {
-          totalBasePrice += product.basePrice!;
-          totalAmount += product.totalAmount!;
+          totalBasePrice += product.basePrice ?? 0.0;
+          totalAmount += product.totalAmount ?? 0.0;
           totalBaseTransportAmount += product.transportBasePrice ?? 0.0;
           totalTransportAmount += product.transPortAmount ?? 0.0;
         }
 
         // Calculate GST and ensure two decimal points
-        double gstAmount =
-            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
+        /* double gstAmount =
+            double.parse((totalAmount - totalBasePrice).toStringAsFixed(2)); */
+
+        double gstAmount = (totalAmount - totalBasePrice);
         totalSGst = gstAmount / 2;
         double transgstAmount =
             double.parse((totalAmount - totalBasePrice).toStringAsFixed(2));
@@ -129,28 +143,30 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
                   future: futureData,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const SizedBox();
                     } else if (snapshot.hasError) {
-                      return Text('error: ${snapshot.error}',
-                          style: CommonStyles.txStyF16CbFF6);
-                      /* return Text(
+                      return Text(
                           snapshot.error
                               .toString()
                               .replaceFirst('Exception: ', ''),
-                          style: CommonStyles.txStyF16CpFF6); */
+                          style: CommonStyles.txStyF16CpFF6);
                     }
                     final products =
                         snapshot.data as List<FetilizerViewProduct>;
-
-                    return ListView.builder(
+                    return CommonWidgets.customSlideAnimation(
+                      itemCount: products.length,
+                      childBuilder: (index) {
+                        final product = products[index];
+                        return productBox(product);
+                      },
+                    );
+                    /* return ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
                         final product = products[index];
                         return productBox(product);
                       },
-                    );
+                    ); */
                   },
                 ),
               ),
@@ -159,16 +175,21 @@ class _FertilizerProductDetailsState extends State<ProductDetails> {
               children: [
                 productCostbox(
                     title: tr(LocaleKeys.amount),
-                    data: totalBasePrice.toStringAsFixed(2)),
+                    data: Decimal.parse(totalBasePrice.toString())
+                        .toStringAsFixed(2)),
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
-                    data: totalSGst.toStringAsFixed(2)),
+                    data:
+                        Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
+                // data: totalSGst.toStringAsFixed(2)),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
-                    data: totalSGst.toStringAsFixed(2)),
+                    data:
+                        Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
-                    data: totalAmount.toStringAsFixed(2)),
+                    data: Decimal.parse(totalAmount.toString())
+                        .toStringAsFixed(2)),
                 CommonStyles.horizontalDivider(),
 
                 // productCostbox(title: tr(LocaleKeys.transamount), data:totalBaseTransportAmount.toStringAsFixed(2)),

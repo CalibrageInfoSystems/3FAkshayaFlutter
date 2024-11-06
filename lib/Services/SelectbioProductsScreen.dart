@@ -279,22 +279,25 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
         children: [
           Row(
             children: [
-              badges.Badge(
-                badgeContent: Text(
-                  '$badgeCount',
-                  style: CommonStyles.txSty_12W_fb,
-                ),
-                badgeAnimation: const badges.BadgeAnimation.fade(
-                  animationDuration: Duration(seconds: 1),
-                  colorChangeAnimationDuration: Duration(seconds: 1),
-                  loopAnimation: false,
-                  curve: Curves.fastOutSlowIn,
-                  colorChangeAnimationCurve: Curves.easeInCubic,
-                ),
-                child: Image.asset(
-                  Assets.images.cart.path,
-                  width: 30,
-                  height: 30,
+              GestureDetector(
+                onTap: checkingCartProducts,
+                child: badges.Badge(
+                  badgeContent: Text(
+                    '$badgeCount',
+                    style: CommonStyles.txStyF12CwFF6,
+                  ),
+                  badgeAnimation: const badges.BadgeAnimation.fade(
+                    animationDuration: Duration(seconds: 1),
+                    colorChangeAnimationDuration: Duration(seconds: 1),
+                    loopAnimation: false,
+                    curve: Curves.fastOutSlowIn,
+                    colorChangeAnimationCurve: Curves.easeInCubic,
+                  ),
+                  child: Image.asset(
+                    Assets.images.cart.path,
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
               ),
               const SizedBox(width: 10), // Spacing between cart icon and text
@@ -309,31 +312,33 @@ class _SelectbioProductsScreenState extends State<SelectbioProductsScreen> {
             btnTextColor: CommonStyles.primaryTextColor,
             borderColor: CommonStyles.primaryTextColor,
             borderRadius: 16,
-            onPressed: () {
-              if (calculateTotalAmount() != 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BioProductCardScreen(
-                      products: fetchCardProducts(),
-                      godown: widget.godown,
-                    ),
-                  ),
-                );
-              } else {
-                /*  ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please add at least one product.'),
-                  ),
-                ); */
-                CommonStyles.showCustomDialog(
-                    context, tr(LocaleKeys.select_product_toast));
-              }
-            },
+            onPressed: checkingCartProducts,
           ),
         ],
       ),
     );
+  }
+
+  void checkingCartProducts() {
+    if (calculateTotalAmount() != 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BioProductCardScreen(
+            products: fetchCardProducts(),
+            godown: widget.godown,
+          ),
+        ),
+      );
+    } else {
+      /*  ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please add at least one product.'),
+                  ),
+                ); */
+      CommonStyles.showCustomDialog(
+          context, tr(LocaleKeys.select_product_toast));
+    }
   }
 
   void updateBadgeCount() {

@@ -224,14 +224,17 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                         child: CircularProgressIndicator(),
                       ); */
                     } else if (snapshot.hasError) {
-                      return Text(
-                          snapshot.error
-                              .toString()
-                              .replaceFirst('Exception: ', ''),
-                          style: CommonStyles.txStyF16CpFF6);
+                      return Center(
+                        child: Text(
+                            snapshot.error
+                                .toString()
+                                .replaceFirst('Exception: ', ''),
+                            style: CommonStyles.txStyF16CpFF6),
+                      );
                     }
                     final products =
                         snapshot.data as List<FetilizerViewProduct>;
+
                     return CommonWidgets.customSlideAnimation(
                       itemCount: products.length,
                       childBuilder: (index) {
@@ -259,55 +262,46 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
                     data: Decimal.parse(totalBasePrice.toString())
                         .toStringAsFixed(2)),
 
-                CommonStyles.horizontalGradien_Divider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.cgst_amount),
                     data:
                         Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.sgst_amount),
                     data: totalSGst.toStringAsFixed(2)),
                 // Decimal.parse(totalSGst.toString()).toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.total_amt),
                     data: Decimal.parse(totalAmount.toString())
                         .toStringAsFixed(2)),
                 // data: totalAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(), // Total base price
                 productCostbox(
                     title: tr(LocaleKeys.transamount),
                     data: Decimal.parse(totalBaseTransportAmount.toString())
                         .toStringAsFixed(2)),
                 // data: totalBaseTransportAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tcgst_amount),
                     data: Decimal.parse(totalTransportSGST.toString())
                         .toStringAsFixed(2)),
                 // data: totalTransportSGST.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.tsgst_amount),
                     data: Decimal.parse(totalTransportSGST.toString())
                         .toStringAsFixed(2)),
                 // data: totalTransportSGST.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.trnstotal_amt),
                     data: Decimal.parse(totalTransportAmount.toString())
                         .toStringAsFixed(2)),
                 // data: totalTransportAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.subcd_amt),
                     data: subsidyAmount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradientDivider2(),
                 productCostbox(
                     title: tr(LocaleKeys.amount_payble),
                     data: paybleamount.toStringAsFixed(2)),
-                CommonStyles.horizontalGradien_Divider2(), // Total base price
+                CommonStyles.horizontalDivider(),
                 const SizedBox(height: 20),
               ],
             )
@@ -406,6 +400,11 @@ class _FertilizerProductDetailsState extends State<FertilizerProductDetails> {
   }) {
     return Column(
       children: [
+        CommonStyles.horizontalDivider(colors: [
+          const Color(0xFFFF4500),
+          const Color(0xFFA678EF),
+          const Color(0xFFFF4500),
+        ]),
         const SizedBox(height: 2),
         Row(
           children: [

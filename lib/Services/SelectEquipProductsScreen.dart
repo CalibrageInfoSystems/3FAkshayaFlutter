@@ -154,7 +154,8 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                   final products = snapshot.data as List<ProductItem>;
                   if (products.isNotEmpty) {
                     return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 5.0,
                         mainAxisSpacing: 5.0,
@@ -169,7 +170,8 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                         return CustomequipProductCard(
                           product: product,
                           quantity: quantity,
-                          availableQuantity: availableQuantity!, // Pass the boolean field here
+                          availableQuantity:
+                              availableQuantity!, // Pass the boolean field here
                           onQuantityChanged: (newQuantity) {
                             setState(() {
                               if (newQuantity <= product.availableQuantity!) {
@@ -192,11 +194,8 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                               } else {
                                 isAddButtonEnabled = false;
                                 // Show dialog if quantity exceeds available limit
-                                CommonStyles.showCustomDialog(
-                                    context,
-                                    "Available only " + product.availableQuantity!.toString() + " " + product.name! + " products in this Godown."
-                                );
-
+                                CommonStyles.showCustomDialog(context,
+                                    "Available only ${product.availableQuantity!} ${product.name!} products in this Godown.");
                               }
                             });
                           },
@@ -213,7 +212,6 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                       ),
                     );
                   }
-
                 }
               },
             ),
@@ -259,22 +257,25 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
         children: [
           Row(
             children: [
-              badges.Badge(
-                badgeContent: Text(
-                  '$badgeCount',
-                  style: CommonStyles.txSty_12W_fb,
-                ),
-                badgeAnimation: const badges.BadgeAnimation.fade(
-                  animationDuration: Duration(seconds: 1),
-                  colorChangeAnimationDuration: Duration(seconds: 1),
-                  loopAnimation: false,
-                  curve: Curves.fastOutSlowIn,
-                  colorChangeAnimationCurve: Curves.easeInCubic,
-                ),
-                child: Image.asset(
-                  Assets.images.cart.path,
-                  width: 30,
-                  height: 30,
+              GestureDetector(
+                onTap: checkingCartProducts,
+                child: badges.Badge(
+                  badgeContent: Text(
+                    '$badgeCount',
+                    style: CommonStyles.txStyF12CwFF6,
+                  ),
+                  badgeAnimation: const badges.BadgeAnimation.fade(
+                    animationDuration: Duration(seconds: 1),
+                    colorChangeAnimationDuration: Duration(seconds: 1),
+                    loopAnimation: false,
+                    curve: Curves.fastOutSlowIn,
+                    colorChangeAnimationCurve: Curves.easeInCubic,
+                  ),
+                  child: Image.asset(
+                    Assets.images.cart.path,
+                    width: 30,
+                    height: 30,
+                  ),
                 ),
               ),
               const SizedBox(width: 10), // Spacing between cart icon and text
@@ -292,32 +293,28 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
             ),
-            onPressed: () {
-              // if (fetchCardProducts().isNotEmpty) {
-              if (calculateTotalAmount() != 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EquipProductCardScreen(
-                      products: fetchCardProducts(),
-                      godown: widget.godown,
-                    ),
-                  ),
-                );
-              } else {
-                /* ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please add at least one product.'),
-                  ),
-                ); */
-                CommonStyles.showCustomDialog(
-                    context, tr(LocaleKeys.select_product_toast));
-              }
-            },
+            onPressed: checkingCartProducts,
           ),
         ],
       ),
     );
+  }
+
+  void checkingCartProducts() {
+    if (calculateTotalAmount() != 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EquipProductCardScreen(
+            products: fetchCardProducts(),
+            godown: widget.godown,
+          ),
+        ),
+      );
+    } else {
+      CommonStyles.showCustomDialog(
+          context, tr(LocaleKeys.select_product_toast));
+    }
   }
 
   void updateBadgeCount() {

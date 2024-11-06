@@ -319,6 +319,8 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
             'Request failed with status: ${jsonResponse.statusCode}.');
       }
     } on TimeoutException catch (_) {
+      CommonStyles.showCustomDialog(
+          context, tr(LocaleKeys.select_product_toast));
       throw TimeoutException('Request timed out. Please try again later.');
     } catch (e) {
       rethrow;
@@ -1224,7 +1226,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                       child: Center(
                         child: Text(
                           tr(LocaleKeys.no_payments_found),
-                          // style: CommonStyles.txStyF16CpFF6,
                           style: CommonStyles.txStyF16CpFF6,
                         ),
                       ),
@@ -1236,40 +1237,39 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
                             ? quantityAndBalanceTemplate(passbookVendor.result!)
                             : const SizedBox(),
                         const SizedBox(height: 5),
-                        passbookVendor.result!.paymentResponce != null
+                        passbookVendor.result!.paymentResponce != null &&
+                                passbookVendor
+                                    .result!.paymentResponce!.isNotEmpty
                             ? Expanded(
-                                child: CommonWidgets.customSlideAnimation(
-                                  itemCount: passbookVendor
-                                      .result!.paymentResponce!.length,
-                                  isSeparatorBuilder: true,
-                                  childBuilder: (index) {
-                                    final itemData = passbookVendor
-                                        .result!.paymentResponce![index];
-                                    return item(index, itemData: itemData);
-                                  },
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: CommonWidgets.customSlideAnimation(
+                                        itemCount: passbookVendor
+                                            .result!.paymentResponce!.length,
+                                        isSeparatorBuilder: true,
+                                        childBuilder: (index) {
+                                          final itemData = passbookVendor
+                                              .result!.paymentResponce![index];
+                                          return item(index,
+                                              itemData: itemData);
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    downloadBtns(),
+                                    const SizedBox(height: 10),
+                                  ],
                                 ),
-
-                                /* ListView.separated(
-                                  itemCount: passbookVendor
-                                      .result!.paymentResponce!.length,
-                                  itemBuilder: (context, index) {
-                                    final itemData = passbookVendor
-                                        .result!.paymentResponce![index];
-                                    return item(index, itemData: itemData);
-                                  },
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 10),
-                                ), */
                               )
-                            : const Expanded(
+                            : Expanded(
                                 child: Center(
-                                  child: Text('List is empty',
-                                      style: CommonStyles.txStyF16CpFF6),
+                                  child: Text(
+                                    tr(LocaleKeys.no_payments_found),
+                                    style: CommonStyles.txStyF16CpFF6,
+                                  ),
                                 ),
                               ),
-                        const SizedBox(height: 5),
-                        downloadBtns(),
-                        const SizedBox(height: 10),
                       ],
                     );
                   }

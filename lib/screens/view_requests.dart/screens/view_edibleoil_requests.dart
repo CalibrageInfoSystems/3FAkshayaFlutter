@@ -98,20 +98,14 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
               return const SizedBox();
             } else if (snapshot.hasError) {
               return Text(
-                'Error: ${snapshot.error}',
-                style: CommonStyles.txStyF16CpFF6,
-              );
-            } else if (!snapshot.hasData) {
-              return const Text('No data');
+                  snapshot.error.toString().replaceFirst('Exception: ', ''),
+                  style: CommonStyles.txStyF16CpFF6);
             }
-
             final requests = snapshot.data as List<CommonViewRequestModel>;
             if (requests.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No Requests Found',
-                  style: CommonStyles.txSty_16p_fb,
-                ),
+              return Center(
+                child: Text(tr(LocaleKeys.no_req_found),
+                    style: CommonStyles.txStyF16CpFF6),
               );
             } else {
               return CommonWidgets.customSlideAnimation(
@@ -124,7 +118,6 @@ class _ViewEdibleoilRequestsState extends State<ViewEdibleoilRequests> {
                     index,
                     request,
                     onTap: () {
-                      // Ensuring null safety for nullable fields
                       Navigator.push(
                         context,
                         MaterialPageRoute(

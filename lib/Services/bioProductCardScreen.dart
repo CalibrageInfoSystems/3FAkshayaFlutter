@@ -180,6 +180,7 @@ class _ProductCardScreenState extends State<BioProductCardScreen> {
               children: [
                 CustomBtn(
                   label: tr(LocaleKeys.submit),
+                  btnTextColor: CommonStyles.primaryTextColor,
                   borderColor: CommonStyles.primaryTextColor,
                   borderRadius: 12,
                   onPressed: () async {
