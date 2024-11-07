@@ -59,7 +59,7 @@ class CustomBtn extends StatelessWidget {
               label,
               style: btnTextStyle ??
                   TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontFamily: FontFamily.hind,
                     fontWeight: FontWeight.w600,
                     color: btnTextColor,

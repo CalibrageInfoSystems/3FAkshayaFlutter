@@ -295,7 +295,8 @@ class _ViewLabourRequestsState extends State<ViewLabourRequests> {
               if (request.jobDoneDate != null)
                 CommonWidgets.commonRow(
                   label: tr(LocaleKeys.job_done),
-                  data: '${request.jobDoneDate}',
+                  data:
+                      '${CommonStyles.formatDate(request.jobDoneDate)}', //'${request.jobDoneDate}',
                   style: CommonStyles.txStyF14CwFF6,
                   isColon: true,
                 ),

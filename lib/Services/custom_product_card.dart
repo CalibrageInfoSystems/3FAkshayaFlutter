@@ -375,6 +375,7 @@ class _CustomProductCardState extends State<CustomProductCard> {
       children: [
         const SizedBox(height: 10),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (data1 != null)
               Expanded(
@@ -399,14 +400,14 @@ class _CustomProductCardState extends State<CustomProductCard> {
                       flex: 5,
                       child: (discountPrice == null || data1 == discountPrice)
                           ? Text(
-                              '₹${data1.toStringAsFixed(2)}',
+                              data1.toStringAsFixed(2), //₹
                               style: CommonStyles.txStyF14CbFF6,
                             )
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '₹${data1.toStringAsFixed(2)}',
+                                  data1.toStringAsFixed(2),
                                   style: CommonStyles.txStyF14CbFF6,
                                 ),
                                 Text(

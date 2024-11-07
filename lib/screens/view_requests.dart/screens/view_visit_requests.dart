@@ -811,6 +811,7 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
                           CommonStyles.errorDialog(
                             context,
                             errorMessage: 'errorMessage',
+                            btnTextColor: CommonStyles.primaryTextColor,
                             isHeader: false,
                             bodyBackgroundColor: Colors.white,
                             errorMessageColor: Colors.orange,
@@ -928,11 +929,12 @@ class _MoreDetailsState extends State<MoreDetails> {
         'camp: ${widget.imagesList.length} | ${widget.audioFilePath.length} ');
   }
 
+/* 
   Future<void> _initAudio() async {
     try {
       String sanitizedUrl =
           widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
-      print('Sanitized audio URL: $sanitizedUrl');
+
       await _audioPlayer.setSource(UrlSource(sanitizedUrl));
       _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
         if (mounted) {
@@ -949,6 +951,42 @@ class _MoreDetailsState extends State<MoreDetails> {
           });
         }
       });
+      _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
+        if (mounted) {
+          setState(() {
+            isPlaying = false;
+            currentPosition = 0;
+          });
+        }
+      });
+    } catch (e) {
+      print('Error initializing audio: $e');
+    }
+  }
+ */
+  Future<void> _initAudio() async {
+    try {
+      String sanitizedUrl =
+          widget.audioFilePath[0].fileLocation!.replaceAll(r'\', '/').trim();
+
+      await _audioPlayer.setSource(UrlSource(sanitizedUrl));
+
+      _durationSubscription = _audioPlayer.onDurationChanged.listen((duration) {
+        if (mounted && duration.inSeconds > 0) {
+          setState(() {
+            totalDuration = duration.inSeconds.toDouble();
+          });
+        }
+      });
+
+      _positionSubscription = _audioPlayer.onPositionChanged.listen((position) {
+        if (mounted) {
+          setState(() {
+            currentPosition = position.inSeconds.toDouble();
+          });
+        }
+      });
+
       _completeSubscription = _audioPlayer.onPlayerComplete.listen((event) {
         if (mounted) {
           setState(() {
@@ -1040,6 +1078,45 @@ class _MoreDetailsState extends State<MoreDetails> {
             ),
           const SizedBox(height: 10),
           if (widget.audioFilePath.isNotEmpty)
+
+            /* 
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_filled,
+                  ),
+                  onPressed: playOrPause,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      totalDuration > 0
+                          ? Slider(
+                              value: currentPosition.clamp(0,
+                                  totalDuration), // Ensure value stays within bounds
+                              min: 0,
+                              max: totalDuration,
+                              activeColor: CommonStyles.primaryTextColor,
+                              onChanged: (value) {
+                                setState(() {
+                                  currentPosition = value;
+                                });
+                                _audioPlayer
+                                    .seek(Duration(seconds: value.toInt()));
+                              },
+                            )
+                          : const SizedBox(), // Show nothing or a placeholder if totalDuration is 0
+                    ],
+                  ),
+                ),
+                Text(formatTime(currentPosition.toInt())),
+              ],
+            ),
+ */
+
             Row(
               children: [
                 IconButton(
@@ -1054,9 +1131,11 @@ class _MoreDetailsState extends State<MoreDetails> {
                   child: Column(
                     children: [
                       Slider(
+                        // value: currentPosition,
                         value: currentPosition,
                         min: 0,
-                        max: totalDuration,
+                        max: currentPosition,
+                        // max: totalDuration,
                         activeColor: CommonStyles.primaryTextColor,
                         onChanged: (value) {
                           setState(() {
@@ -1071,6 +1150,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                 Text(formatTime(currentPosition.toInt())),
               ],
             ),
+
 /* 
             Row(
               children: [

@@ -377,6 +377,7 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                     onTap: () {
                       CommonStyles.errorDialog(
                         context,
+                        btnTextColor: CommonStyles.primaryTextColor,
                         errorHeaderColor: Colors.transparent,
                         bodyBackgroundColor: Colors.transparent,
                         isHeader: false,

@@ -110,7 +110,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
     return FarmerModel.fromJson(farmerResult);
   }
-
+/* 
   Future<void> _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now().add(const Duration(days: 3));
     DateTime? picked = await showDatePicker(
@@ -118,16 +118,54 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       context: context,
       initialDate: initialDate,
       firstDate: initialDate,
+      lastDate: DateTime(DateTime.now().year + 100),
       cancelText: tr(LocaleKeys.cancel_capitalized),
       selectableDayPredicate: (DateTime date) {
         return date.weekday != DateTime.sunday;
       },
-      lastDate: DateTime(DateTime.now().year + 100),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             inputDecorationTheme: const InputDecorationTheme(
-              enabledBorder: InputBorder.none, // Hide manual entry underline
+              enabledBorder: InputBorder.none,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
+      });
+    }
+  }
+ */
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now().add(const Duration(days: 3));
+
+    // Check if initialDate falls on a Sunday and adjust if necessary
+    if (initialDate.weekday == DateTime.sunday) {
+      initialDate = initialDate.add(const Duration(days: 1)); // Move to Monday
+    }
+
+    DateTime? picked = await showDatePicker(
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      context: context,
+      initialDate: initialDate,
+      firstDate: initialDate,
+      lastDate: DateTime(DateTime.now().year + 100),
+      cancelText: tr(LocaleKeys.cancel_capitalized),
+      selectableDayPredicate: (DateTime date) {
+        return date.weekday != DateTime.sunday; // Only allow non-Sunday dates
+      },
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            inputDecorationTheme: const InputDecorationTheme(
+              enabledBorder: InputBorder.none,
             ),
           ),
           child: child!,
@@ -222,7 +260,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 8,
                       ),
                       //MARK: Multi selecter
                       GestureDetector(
@@ -488,7 +526,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -581,6 +619,48 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           )
                         ],
                       ),
+                      const SizedBox(height: 8),
+/* 
+                      GestureDetector(
+                        onTap: () async {
+                          await _selectDate(context);
+                        },
+                        child: Container(
+                          height: 45,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.transparent,
+                          ),
+                          child: AbsorbPointer(
+                            child: Container(
+                              height: 45,
+                              padding: const EdgeInsets.only(
+                                  left: 0, top: 10.0, right: 0),
+                              child: TextFormField(
+                                controller: _dateController,
+                                style: CommonStyles.txStyF14CwFF6,
+                                decoration: InputDecoration(
+                                  hintText: tr(LocaleKeys.slecteddate),
+                                  hintStyle: CommonStyles.txStyF14CwFF6,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 10.0),
+                                  // Adjust padding as needed
+                                  suffixIcon: const Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.white,
+                                  ),
+                                  border: InputBorder.none,
+                                  isDense: true,
+                                ),
+                                textAlignVertical: TextAlignVertical.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      */
                       Container(
                         height: 55,
                         padding:
@@ -627,6 +707,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           ),
                         ),
                       ),
+
                       const SizedBox(
                         height: 8,
                       ),

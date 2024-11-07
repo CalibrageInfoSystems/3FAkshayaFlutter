@@ -1641,21 +1641,6 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                             },
                           ),
                         )
-                        /*  Expanded(
-                          child: ListView.separated(
-                            itemCount: transportionData.length,
-                            itemBuilder: (context, index) {
-                              final itemData = transportionData[index];
-
-                              /* return const ListTile(
-                                title: Text('data'),
-                              ); */
-                              return item(index, itemData: itemData);
-                            },
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 10),
-                          ),
-                        ), */
                       ],
                     );
                   } else {
@@ -1928,6 +1913,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
     );
   }
 
+//MARK: Transportation Dialog
   void trasportRatesDialog(
       BuildContext context, Future<PassbookTransportModel> future) {
     showGeneralDialog(
@@ -1969,12 +1955,15 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                     ),
                   ),
                   const SizedBox(height: 10),
+
+/* 
                   FutureBuilder(
                     future: future,
                     builder: (context, snapshot) {
-                      final passBook = snapshot.data as PassbookTransportModel;
+                      final passBook = snapshot.data;
                       List<TrasportRate>? trasportRates =
-                          passBook.trasportRates;
+                          passBook?.trasportRates;
+                      print('trasportRates: ${trasportRates?[0].village}');
                       if (trasportRates != null) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -2003,6 +1992,62 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                           ),
                         );
                       } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                   */
+                  FutureBuilder(
+                    future: future,
+                    builder: (context, snapshot) {
+                      // Check if snapshot has data and is not null
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        // Optionally return a loading indicator
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        // Handle error case
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.hasData) {
+                        // Now that snapshot has data, we safely access it
+                        final passBook = snapshot.data;
+                        List<TrasportRate>? trasportRates =
+                            passBook?.trasportRates;
+
+                        if (trasportRates != null && trasportRates.isNotEmpty) {
+                          print('trasportRates: ${trasportRates[0].village}');
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Column(
+                              children: [
+                                if (trasportRates[0].village != null)
+                                  CommonWidgets.commonRowWithColon(
+                                    flex: [5, 1, 6],
+                                    label: tr(LocaleKeys.village),
+                                    data: '${trasportRates[0].village}',
+                                  ),
+                                if (trasportRates[0].mandal != null)
+                                  CommonWidgets.commonRowWithColon(
+                                    flex: [5, 1, 6],
+                                    label: tr(LocaleKeys.mandal),
+                                    data: '${trasportRates[0].mandal}',
+                                  ),
+                                if (trasportRates[0].rate != null &&
+                                    trasportRates[0].rate!.isNotEmpty)
+                                  CommonWidgets.commonRowWithColon(
+                                      flex: [5, 1, 6],
+                                      label: tr(LocaleKeys.rate),
+                                      data: '${trasportRates[0].rate}'
+                                      // '${formatToTwoDecimalPlaces(trasportRates[0].rate)}',
+                                      ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return const Text(
+                              'No transportation rates available');
+                        }
+                      } else {
+                        // Fallback UI for when data is null
                         return const SizedBox();
                       }
                     },
@@ -2082,16 +2127,23 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
   }
 
   String? formatToTwoDecimalPlaces(String? value) {
-    if (value == null || value.isEmpty) {
-      return value;
-    }
-    double? parsedValue = double.tryParse(value);
+    print('catch: $value');
+    try {
+      if (value == null || value.isEmpty) {
+        return value;
+      }
 
-    if (parsedValue == null) {
-      throw ArgumentError("Invalid input");
-    }
+      double? parsedValue = double.tryParse(value);
 
-    return parsedValue.toStringAsFixed(2);
+      if (parsedValue == null) {
+        throw ArgumentError("Invalid input");
+      }
+
+      return parsedValue.toStringAsFixed(2);
+    } catch (e) {
+      print('catch: $e');
+      rethrow;
+    }
   }
 
   Widget note() {

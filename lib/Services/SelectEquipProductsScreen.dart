@@ -130,7 +130,8 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
 
   Widget filterAndProductSection() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
+      padding: const EdgeInsets.all(10),
+      // padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -280,8 +281,11 @@ class _SelectEquipProductsScreenState extends State<SelectEquipProductsScreen> {
                 ),
               ),
               const SizedBox(width: 10), // Spacing between cart icon and text
+
               Text(
-                ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
+                calculateTotalAmount() == 0
+                    ? ' ₹0'
+                    : ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
                 style: CommonStyles.text16white,
               ),
             ],

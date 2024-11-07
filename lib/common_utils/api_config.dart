@@ -53,6 +53,7 @@ const getLabProductDetails = 'FertilizerRequest/GetChemicalRequestDetails';
 const getLabourProductDetails = 'GetLabourRequestDetails';
 const collectionInfoById = 'Collection/CollectionInfoById/';
 const get3FInfo = 'Farmer/Get3FInfo/';
+const getQuickpayDocument = 'QuickPayRequest/GetQuickpayDocument/';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

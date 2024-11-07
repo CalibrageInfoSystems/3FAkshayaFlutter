@@ -183,9 +183,10 @@ class _ViewQuickpayRequestsState extends State<ViewQuickpayRequests> {
   }
 
   Future<void> fetchQuickPayDocument(String requestId) async {
-    final url =
-        'http://182.18.157.215/3FAkshaya/API/api/QuickPayRequest/GetQuickpayDocument/$requestId';
+    final url = '$baseUrl$getQuickpayDocument$requestId';
+    // 'http://182.18.157.215/3FAkshaya/API/api/QuickPayRequest/GetQuickpayDocument/$requestId';
 
+    print('fetchQuickPayDocument: $url');
     try {
       final response = await http.get(Uri.parse(url));
 

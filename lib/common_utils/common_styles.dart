@@ -752,7 +752,7 @@ class CommonStyles {
     Widget? errorIcon,
     String? errorLabel,
     Color? errorHeaderColor = const Color(0xffc93436),
-    Color? btnTextColor = CommonStyles.primaryTextColor,
+    Color? btnTextColor = CommonStyles.blackColor,
     Widget? errorBodyWidget,
     required String errorMessage,
     bool barrierDismissible = true,

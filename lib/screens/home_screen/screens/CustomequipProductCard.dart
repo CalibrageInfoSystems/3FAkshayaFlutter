@@ -103,11 +103,11 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
               ),
               widget.product.size != null && widget.product.uomType != null
                   ? Text(
-                '${widget.product.size} ${widget.product.uomType}',
-                style: CommonStyles.txStyF14CpFF6.copyWith(
-                  fontSize: 13,
-                ),
-              )
+                      '${widget.product.size} ${widget.product.uomType}',
+                      style: CommonStyles.txStyF14CpFF6.copyWith(
+                        fontSize: 13,
+                      ),
+                    )
                   : const SizedBox(),
             ],
           ),
@@ -119,17 +119,17 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                 height: 100,
                 imageUrl: '${widget.product.imageUrl}',
                 placeholder: (context, url) =>
-                // const CircularProgressIndicator(),
-                Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ))),
+                    // const CircularProgressIndicator(),
+                    Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ))),
                 errorWidget: (context, url, error) => Image.asset(
                   Assets.images.noproductImage.path,
                   fit: BoxFit.cover,
@@ -179,7 +179,9 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                       child: Icon(
                         Icons.add,
                         size: 20,
-                        color: isAddButtonEnabled ? CommonStyles.statusGreenText : Colors.grey,
+                        color: isAddButtonEnabled
+                            ? CommonStyles.statusGreenText
+                            : Colors.grey,
                       ),
                     ),
                   ),
@@ -261,7 +263,7 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                   ),
                   const Text(
                     '     : ',
-                    style: CommonStyles.txStyF14CbFF6,
+                    style: CommonStyles.txStyF14CpFF6,
                   ),
                   Expanded(
                     child: Text(
@@ -280,7 +282,7 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                 child: GestureDetector(
                   onTap: () => showZoomedAttachment('${product.imageUrl}'),
                   child:
-                  /* CachedNetworkImage(
+                      /* CachedNetworkImage(
                     imageUrl: '${product.imageUrl}',
                     placeholder: (context, url) =>
                         const CircularProgressIndicator(),
@@ -289,7 +291,7 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                       fit: BoxFit.contain,
                     ),
                   ), */
-                  CachedNetworkImage(
+                      CachedNetworkImage(
                     width: 150,
                     height: 150,
                     imageUrl: '${product.imageUrl}',
@@ -336,14 +338,14 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                   label2: tr(LocaleKeys.gst),
                   data2: product.gstPercentage,
                   isSingle: product.gstPercentage != null
-                /* isSingle: (product.gstPercentage != null ||
+                  /* isSingle: (product.gstPercentage != null ||
                         product.gstPercentage != 0)
                     ? false
                     : true, */
-              ),
+                  ),
               CommonStyles.horizontalDivider(),
               if (product.size != null && widget.product.uomType != null)
-              /*   infoRow2(
+                /*   infoRow2(
                     label1: tr(LocaleKeys.product_size),
                     data1: '${product.size} ${product.uomType}',
                     label2: 'label2',
@@ -423,27 +425,27 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
                       flex: 5,
                       child: (discountPrice == null || data1 == discountPrice)
                           ? Text(
-                        '₹${data1.toStringAsFixed(2)}',
-                        style: CommonStyles.txStyF14CbFF6,
-                      )
+                              data1.toStringAsFixed(2), // ₹
+                              style: CommonStyles.txStyF14CbFF6,
+                            )
                           : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '₹${data1.toStringAsFixed(2)}',
-                            style: CommonStyles.txStyF14CbFF6,
-                          ),
-                          Text(
-                            '$discountPrice',
-                            style: CommonStyles.txStyF14CbFF6.copyWith(
-                              decoration: TextDecoration.lineThrough,
-                              decorationColor: CommonStyles.RedColor,
-                              color:
-                              CommonStyles.formFieldErrorBorderColor,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data1.toStringAsFixed(2),
+                                  style: CommonStyles.txStyF14CbFF6,
+                                ),
+                                Text(
+                                  '$discountPrice',
+                                  style: CommonStyles.txStyF14CbFF6.copyWith(
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: CommonStyles.RedColor,
+                                    color:
+                                        CommonStyles.formFieldErrorBorderColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
@@ -451,35 +453,35 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
             if (data1 != null) const SizedBox(width: 10),
             (data2 != null && data2 != 0)
                 ? Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      label2,
-                      style: CommonStyles.txStyF14CbFF6,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            label2,
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                        const Expanded(
+                          flex: 1,
+                          child: Text(
+                            ':',
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 5,
+                          child: Text(
+                            '$data2',
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const Expanded(
-                    flex: 1,
-                    child: Text(
-                      ':',
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      '$data2',
-                      style: CommonStyles.txStyF14CbFF6,
-                    ),
-                  ),
-                ],
-              ),
-            )
+                  )
                 : const Expanded(
-              child: SizedBox(),
-            )
+                    child: SizedBox(),
+                  )
           ],
         ),
       ],
@@ -633,11 +635,11 @@ class _CustomequipProductCard extends State<CustomequipProductCard> {
     final img = Image.network(url);
 
     img.image.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener(
+          ImageStreamListener(
             (info, _) => completer.complete(),
-        onError: (error, stackTrace) => completer.completeError(error),
-      ),
-    );
+            onError: (error, stackTrace) => completer.completeError(error),
+          ),
+        );
     await completer.future;
   }
 }

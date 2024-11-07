@@ -141,7 +141,8 @@ class _SelectEdibleProductsScreenState
                 headerSection(),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
+                    padding: const EdgeInsets.all(10),
+                    // padding: const EdgeInsets.fromLTRB(12, 12, 12, 10),
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -255,8 +256,11 @@ class _SelectEdibleProductsScreenState
                 ),
               ),
               const SizedBox(width: 10), // Spacing between cart icon and text
+
               Text(
-                ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
+                calculateTotalAmount() == 0
+                    ? ' ₹0'
+                    : ' ₹${calculateTotalAmount().toStringAsFixed(2)}',
                 style: CommonStyles.text16white,
               ),
             ],

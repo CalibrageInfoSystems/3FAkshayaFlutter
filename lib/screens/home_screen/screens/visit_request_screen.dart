@@ -518,10 +518,10 @@ class _VisitRequestState extends State<VisitRequest> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RichText(
-                text: const TextSpan(
-                  text: 'tr(LocaleKeys.issue_type)',
+                text: TextSpan(
+                  text: tr(LocaleKeys.issue_type),
                   style: CommonStyles.txStyF14CwFF6,
-                  children: <TextSpan>[
+                  children: const <TextSpan>[
                     TextSpan(
                       text: ' *',
                       style: TextStyle(
@@ -766,8 +766,7 @@ class _VisitRequestState extends State<VisitRequest> {
                                       width: 24,
                                       height: 24,
                                       decoration: const BoxDecoration(
-                                        color: CommonStyles
-                                            .formFieldErrorBorderColor,
+                                        color: CommonStyles.primaryTextColor,
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
@@ -1262,7 +1261,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 1,
                 child: Text(':',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: CommonStyles.txStyF16CrFF6.copyWith(
                         fontWeight: FontWeight.w400,
                         color: CommonStyles.dataTextColor)),
@@ -1270,7 +1269,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               Expanded(
                 flex: 7,
                 child: Text('${widget.selectedTypeOfIssue}',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     style: CommonStyles.txStyF16CrFF6.copyWith(
                         fontWeight: FontWeight.w400,
                         color: CommonStyles.dataTextColor)),
