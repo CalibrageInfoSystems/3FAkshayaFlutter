@@ -754,6 +754,7 @@ class CommonStyles {
     Color? errorHeaderColor = const Color(0xffc93436),
     Color? btnTextColor = CommonStyles.blackColor,
     Widget? errorBodyWidget,
+    Widget? errorActions,
     required String errorMessage,
     bool barrierDismissible = true,
     Color? bodyBackgroundColor = CommonStyles.blackColor,
@@ -817,18 +818,19 @@ class CommonStyles {
                                     .copyWith(color: errorMessageColor),
                               ),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomBtn(
-                                  label: tr(LocaleKeys.ok),
-                                  btnTextColor: btnTextColor,
-                                  onPressed: onPressed ??
-                                      () {
-                                        Navigator.of(context).pop();
-                                      }),
-                            ],
-                          ),
+                          errorActions ??
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomBtn(
+                                      label: tr(LocaleKeys.ok),
+                                      btnTextColor: btnTextColor,
+                                      onPressed: onPressed ??
+                                          () {
+                                            Navigator.of(context).pop();
+                                          }),
+                                ],
+                              ),
                         ],
                       ),
                     )
