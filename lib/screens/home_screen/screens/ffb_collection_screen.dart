@@ -496,7 +496,8 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
   Expanded collectionData(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 5, 12, 0),
+        padding: const EdgeInsets.all(12),
+        // padding: const EdgeInsets.fromLTRB(10, 5, 12, 0),
         child: FutureBuilder(
           future: apiCollectionData,
           builder: (context, snapshot) {

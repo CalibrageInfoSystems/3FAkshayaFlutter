@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 Widget custombox({
   required String label,
-  required String data,
+  required String? data,
   Color? dataTextColor,
   Color? labelTextColor,
 }) {
@@ -18,7 +18,7 @@ Widget custombox({
           Expanded(
             flex: 5,
             child: Text(
-              data,
+              data ?? '',
               style: CommonStyles.txStyF14CwFF6.copyWith(
                 color: dataTextColor,
               ),

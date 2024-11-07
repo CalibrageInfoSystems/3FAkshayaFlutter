@@ -10,6 +10,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/crop_maintenance_visits_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/visit_request_screen.dart';
+import 'package:akshaya_flutter/test.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -145,8 +146,8 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       default:
         Navigator.of(context).push(
           MaterialPageRoute(
-            // builder: (context) => TestCrop(plotdata: plot),
-            builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
+            builder: (context) => TestScreen(plotdata: plot),
+            // builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
           ),
         );
         break;

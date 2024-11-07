@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/models/CropData.dart';
 import 'package:http/http.dart' as http;
 import 'package:akshaya_flutter/common_utils/api_config.dart';
@@ -9,6 +10,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CropMaintenanceVisitsScreen extends StatefulWidget {
   final PlotDetailsModel plotdata;
@@ -36,13 +38,16 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
   @override
   void initState() {
     super.initState();
-    // fetchcropmaintencelist();
+    fetchcropmaintencelist();
   }
 
   Future<void> fetchcropmaintencelist() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl =
-        '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/APT00123174004/APEGT13119166001';
+        '$baseUrl$getCropMaintenanceHistoryDetailsByPlotCode/${widget.plotdata.plotcode}/$farmerCode';
 
+    print('Api URL: $apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       setState(() {
@@ -70,6 +75,7 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
             setState(() {
               updated = updated;
               treesAppearance = treessapprearance;
+              print('Trees Appearance: $treesAppearance');
               plamscount = plamscount;
               frequencyofharvest = frequency;
               pestDatalist =
