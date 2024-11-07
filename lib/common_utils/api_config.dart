@@ -54,6 +54,7 @@ const getLabourProductDetails = 'GetLabourRequestDetails';
 const collectionInfoById = 'Collection/CollectionInfoById/';
 const get3FInfo = 'Farmer/Get3FInfo/';
 const getQuickpayDocument = 'QuickPayRequest/GetQuickpayDocument/';
+const passbookFileLocation = '/sdcard/Download/3FAkshaya/ledger';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

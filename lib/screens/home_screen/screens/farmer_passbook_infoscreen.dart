@@ -1067,7 +1067,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     PermissionStatus status = await Permission.storage.status;
 
     if (status.isGranted) {
-      String directoryPath = '/sdcard/Download/3FAkshaya/ledger';
+      String directoryPath = passbookFileLocation;
       Directory directory = Directory(directoryPath);
 
       if (!await directory.exists()) {
@@ -1079,7 +1079,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       PermissionStatus requestStatus = await Permission.storage.request();
 
       if (requestStatus.isGranted) {
-        String directoryPath = '/sdcard/Download/3FAkshaya/ledger';
+        String directoryPath = passbookFileLocation;
         Directory directory = Directory(directoryPath);
 
         if (!await directory.exists()) {
@@ -1141,7 +1141,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     //   if (await Permission.storage.request().isGranted) {
 
     List<int> excelBytes = base64Decode(base64);
-    Directory directoryPath = Directory('/sdcard/Download/3FAkshaya/ledger');
+    Directory directoryPath =
+        Directory(passbookFileLocation); //'/sdcard/Download/3FAkshaya/ledger'
     // Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
     if (!directoryPath.existsSync()) {
       directoryPath.createSync(recursive: true);
