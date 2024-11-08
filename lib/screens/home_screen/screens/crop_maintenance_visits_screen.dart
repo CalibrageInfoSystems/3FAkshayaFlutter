@@ -352,8 +352,8 @@ class _CropMaintenanceVisitsScreen extends State<CropMaintenanceVisitsScreen> {
                                   if (pestData.recommendedFertilizer != null &&
                                       pestData.recommendedFertilizer != 'null')
                                     plotDetailsBox(
-                                        label: tr(
-                                            LocaleKeys.recommended_ertilizer),
+                                        label:
+                                            tr(LocaleKeys.RecommendedChemical),
                                         data:
                                             '${pestData.recommendedFertilizer}'),
                                   if (pestData.dosage != 0.0)

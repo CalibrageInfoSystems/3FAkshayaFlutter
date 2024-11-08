@@ -12,6 +12,7 @@ class CommonWidgets {
     Color? dataTextColor = CommonStyles.dataTextColor,
     bool isColon = false,
     TextStyle? style,
+    bool isSpace = true,
     List<int> flex = const [6, 1, 7],
   }) {
     return Column(
@@ -49,7 +50,7 @@ class CommonWidgets {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        if (isSpace) const SizedBox(height: 10),
       ],
     );
   }
