@@ -31,7 +31,7 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
     plotsData = getPlotDetails();
   }
 
-  Future<List<PlotDetailsModel>> getPlotDetails() async {
+/*   Future<List<PlotDetailsModel>> getPlotDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
     //const apiUrl = 'http://182.18.157.215/3FAkshaya/API/api/Farmer/GetActivePlotsByFarmerCode/APWGBDAB00010005';
@@ -40,7 +40,7 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       print('getPlotDetails: $apiUrl');
-      print('getPlotDetails: ${jsonResponse.body}');
+      // print('getPlotDetails: ${jsonResponse.body}');
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
         if (response['listResult'] != null) {
@@ -56,6 +56,158 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
       }
     } catch (e) {
       rethrow;
+    }
+  } */
+/* 
+  Future<List<PlotDetailsModel>> getPlotDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
+    final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
+
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getPlotDetails: $apiUrl');
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        if (response['listResult'] != null) {
+          List<dynamic> plotList = response['listResult'];
+
+          /* return plotList
+              .map((item) => PlotDetailsModel.fromJson(item))
+              .toList(); */
+          List<PlotDetailsModel> filteredPlots = plotList
+              .map((item) => PlotDetailsModel.fromJson(item))
+              .where((plot) => validationForYeldingPlot(plot.dateOfPlanting!))
+              .toList();
+
+          if (filteredPlots.isNotEmpty) {
+            return filteredPlots;
+          } else {
+            CommonStyles.showCustomDialog(
+                barrierDismissible: false,
+                context,
+                tr(LocaleKeys.noYieldingPlots), onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop(); // Navigate back from the screen
+            });
+            /* Future.delayed(const Duration(seconds: 3), () {
+              if (mounted) {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Navigate back from the screen
+              }
+            }); */
+            throw Exception(
+                'Yeilding Plots are not Available'); // No plots meet the yelding criteria
+          }
+        }
+        throw Exception('list is empty');
+      } else {
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+ */
+
+  Future<List<PlotDetailsModel>> getPlotDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
+    final apiUrl = '$baseUrl$getActivePlotsByFarmerCode$userId';
+
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print('getPlotDetails: $apiUrl');
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        if (response['listResult'] != null) {
+          List<dynamic> plotList = response['listResult'];
+
+          // Map and filter based on the validation method
+          List<PlotDetailsModel> plots =
+              plotList.map((item) => PlotDetailsModel.fromJson(item)).toList();
+
+          // Check if any plot satisfies the validation condition
+          bool hasValidPlot = plots
+              .any((plot) => validationForYeldingPlot(plot.dateOfPlanting!));
+          print('validationForYeldingPlot: $hasValidPlot');
+          if (hasValidPlot) {
+            return plots;
+          } else {
+            CommonStyles.showCustomDialog(
+                barrierDismissible: false,
+                context,
+                tr(LocaleKeys.noYieldingPlots), onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop(); // Navigate back from the screen
+            });
+            /* Future.delayed(const Duration(seconds: 3), () {
+              if (mounted) {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Navigate back from the screen
+              }
+            }); */
+            throw Exception(
+                'Yeilding Plots are not Available'); // No plots meet the yelding criteria
+          }
+        } else {
+          throw Exception('List is empty');
+        }
+      } else {
+        throw Exception(
+            'Request failed with status: ${jsonResponse.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void showDialogAndNavigateBack() {
+    // Show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Prevent closing the dialog by tapping outside
+      builder: (context) {
+        return const AlertDialog(
+          title: Text("Information"),
+          content: Text("This dialog will close in 3 seconds"),
+        );
+      },
+    );
+
+    // Wait for 3 seconds, then close the dialog and navigate back
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.of(context).pop(); // Close the dialog
+        Navigator.of(context).pop(); // Navigate back from the screen
+      }
+    });
+  }
+
+  bool validationForYeldingPlot(String dateOfPlanting) {
+    try {
+      DateTime inputDate = DateTime.parse(dateOfPlanting);
+      DateTime currentDate = DateTime.now();
+
+      int differenceInYears = currentDate.year - inputDate.year;
+
+      if (currentDate.month < inputDate.month ||
+          (currentDate.month == inputDate.month &&
+              currentDate.day < inputDate.day)) {
+        differenceInYears--;
+      }
+
+      print(
+          'validationForYeldingPlot: $inputDate | $currentDate : ${differenceInYears >= 3} : $differenceInYears');
+
+      return differenceInYears >= 3;
+    } catch (e) {
+      print("Invalid date format: $e");
+      return false;
     }
   }
 
@@ -87,6 +239,8 @@ class _PlotSelectionScreenState extends State<PlotSelection> {
                       if (plots.isNotEmpty && index < plots.length) {
                         return CropPlotDetails(
                             onTap: () {
+                              //MARK: Condition
+                              // check condition for non yelding plots
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

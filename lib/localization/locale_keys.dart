@@ -23,6 +23,7 @@ class LocaleKeys {
   static const String Prunning = "Prunning";
   static const String Prunning_amount = "Prunning_amount";
   static const String RecommendedChemical = "RecommendedChemical";
+  static const String noYieldingPlots = "noYieldingPlots";
   static const String Rs = "Rs";
   static const String UOMName = "UOMName";
   static const String Valid_service = "Valid_service";

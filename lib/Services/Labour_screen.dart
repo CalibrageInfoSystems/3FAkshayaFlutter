@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +19,6 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:akshaya_flutter/models/plot_details_model.dart';
 
-import '../common_utils/DottedLine.dart';
 import '../common_utils/custom_appbar.dart';
 import 'models/MsgModel.dart';
 
@@ -212,6 +210,29 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     ),
   );
 
+  bool validationForYeldingPlot(String dateOfPlanting) {
+    try {
+      DateTime inputDate = DateTime.parse(dateOfPlanting);
+      DateTime currentDate = DateTime.now();
+
+      int differenceInYears = currentDate.year - inputDate.year;
+
+      if (currentDate.month < inputDate.month ||
+          (currentDate.month == inputDate.month &&
+              currentDate.day < inputDate.day)) {
+        differenceInYears--;
+      }
+
+      print(
+          'validationForYeldingPlot: $inputDate | $currentDate : ${differenceInYears >= 3} : $differenceInYears');
+
+      return differenceInYears >= 3;
+    } catch (e) {
+      print("Invalid date format: $e");
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -300,7 +321,72 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                               ),
                                             ],
                                           ),
+                                          /* 
                                           ...ServiceType_list.map((service) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setDialogState(() {
+                                                  if (selectedServiceIds
+                                                      .contains(
+                                                          service.typeCdId)) {
+                                                    selectedServiceIds.remove(
+                                                        service.typeCdId);
+                                                  } else {
+                                                    selectedServiceIds
+                                                        .add(service.typeCdId!);
+                                                  }
+                                                });
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Checkbox(
+                                                    value: selectedServiceIds
+                                                        .contains(
+                                                            service.typeCdId),
+                                                    activeColor:
+                                                        CommonStyles.blackColor,
+                                                    onChanged: (value) {
+                                                      setDialogState(() {
+                                                        if (value == true) {
+                                                          selectedServiceIds
+                                                              .add(service
+                                                                  .typeCdId!);
+                                                        } else {
+                                                          selectedServiceIds
+                                                              .remove(service
+                                                                  .typeCdId);
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Text(
+                                                    '${service.desc} ',
+                                                    style: CommonStyles
+                                                        .txStyF16CbFF6
+                                                        .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                        */
+
+                                          ...ServiceType_list.where((service) {
+                                            bool isYeldingPlot =
+                                                validationForYeldingPlot(widget
+                                                    .plotdata.dateOfPlanting!);
+                                            print(
+                                                'testing: $isYeldingPlot ${service.desc} | ${service.typeCdId}');
+                                            if (isYeldingPlot) {
+                                              return true;
+                                            } else {
+                                              return service.typeCdId != 20;
+                                            }
+                                          }).map((service) {
                                             return GestureDetector(
                                               onTap: () {
                                                 setDialogState(() {
@@ -339,7 +425,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                   ),
                                                   const SizedBox(width: 12),
                                                   Text(
-                                                    '${service.desc} ', // Assuming service has 'name' and 'localName'
+                                                    '${service.desc} ',
                                                     style: CommonStyles
                                                         .txStyF16CbFF6
                                                         .copyWith(
@@ -373,9 +459,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                             5),
                                                   ),
                                                 ),
-                                                child: const Text(
-                                                  'CANCEL',
-                                                  style: TextStyle(
+                                                child: Text(
+                                                  tr(LocaleKeys
+                                                      .cancel_capitalized),
+                                                  style: const TextStyle(
                                                     color: CommonStyles
                                                         .primaryTextColor,
                                                   ),
@@ -427,8 +514,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                             harvestingCheck);
                                                   });
 
-                                                  Navigator.pop(
-                                                      context); // Close the dialog
+                                                  Navigator.pop(context);
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: Colors.white,
@@ -444,9 +530,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                             5),
                                                   ),
                                                 ),
-                                                child: const Text(
-                                                  'SUBMIT',
-                                                  style: TextStyle(
+                                                child: Text(
+                                                  tr(LocaleKeys.submit),
+                                                  style: const TextStyle(
                                                     color: CommonStyles
                                                         .primaryTextColor,
                                                   ),
@@ -661,10 +747,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
                       */
-                      Container(
+                      SizedBox(
                         height: 55,
-                        padding:
-                            const EdgeInsets.only(left: 0, top: 10.0, right: 0),
                         child: GestureDetector(
                           onTap: () async {
                             _selectDate(context);
@@ -688,7 +772,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                     hintText: tr(LocaleKeys.slecteddate),
                                     hintStyle: CommonStyles.txStyF14CwFF6,
                                     contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 10.0),
+                                        horizontal: 12.0, vertical: 10.0),
                                     // Adjust padding as needed
                                     suffixIcon: const Padding(
                                       padding: EdgeInsets.all(8.0),
@@ -785,7 +869,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             ),
                             menuItemStyleData: const MenuItemStyleData(
                               height: 40,
-                              padding: EdgeInsets.only(left: 20, right: 20),
+                              padding: EdgeInsets.only(left: 12, right: 12),
                             ),
                           ),
                         ),
@@ -829,8 +913,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         child: TextFormField(
                           controller: _commentController,
                           decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.only(top: 5, left: 15),
+                            contentPadding: const EdgeInsets.only(
+                                top: 5, left: 12, right: 12),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   color: Colors.white,

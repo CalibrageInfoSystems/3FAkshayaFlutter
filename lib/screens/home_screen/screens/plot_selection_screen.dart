@@ -87,7 +87,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
       appBar: CustomAppBar(title: tr(LocaleKeys.str_select_plot)),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.all(12),
           // padding: const EdgeInsets.all(12.0),
           child: FutureBuilder(
               future: plotsData,
@@ -143,14 +143,14 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
         });
         checkVisitRequest(widget.serviceTypeId, plot);
         break;
-      default:
+      /* default:
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => TestScreen(plotdata: plot),
             // builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
           ),
         );
-        break;
+        break; */
     }
   }
 
@@ -160,6 +160,7 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
     final String? farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final apiUrl =
         '$baseUrl$raiseCollectionRequest$farmerCode/${plot.plotcode}/$serviceTypeId';
+    print('visitRequest plotscreen: $apiUrl');
     setState(() {
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
     });

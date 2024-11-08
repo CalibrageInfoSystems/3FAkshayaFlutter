@@ -622,7 +622,7 @@ class _TestScreen extends State<TestScreen> {
                 ),
               if (nutrient.recommendedFertilizer != null)
                 CommonWidgets.commonRow(
-                  label: tr(LocaleKeys.RecommendedChemical),
+                  label: tr(LocaleKeys.recommended_ertilizer),
                   data: '${nutrient.recommendedFertilizer}',
                   isSpace: (nutrient.dosage != null && nutrient.uomName != null)
                       ? true

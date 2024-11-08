@@ -57,7 +57,7 @@ class _VisitRequestState extends State<VisitRequest> {
 
   Future<List<TypeIssue>> getTypeOfIssues() async {
     const apiUrl = '$baseUrl$typeOfIssues/10';
-
+    print('visitRequest: $apiUrl');
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {
@@ -68,6 +68,7 @@ class _VisitRequestState extends State<VisitRequest> {
               list.map((item) => TypeIssue.fromJson(item)).toList();
           return typeIssues;
         } else {
+          print('visitRequest getTypeOfIssues: listResult is null');
           throw Exception('list result is null');
         }
       } else {
@@ -207,7 +208,7 @@ class _VisitRequestState extends State<VisitRequest> {
         "requestTypeId": 14,
         "stateCode": plot.stateCode,
         "stateName": plot.stateName,
-        "statusTypeId": plot.statusTypeId,
+        "statusTypeId": 15, // plot.statusTypeId
         "updatedDate": currentDate,
         "yearofPlanting": plot.dateOfPlanting,
       },
@@ -245,16 +246,17 @@ class _VisitRequestState extends State<VisitRequest> {
       body: requestBody,
     );
 
-    print('api response: $apiUrl');
-    print('api response: $requestBody');
-    print('api response: ${jsonResponse.body}');
+    print('visitRequest api: $apiUrl');
+    print('visitRequest requestBody: $requestBody');
 
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['isSuccess']) {
         showSuccessDialog();
       } else {
-        throw Exception('list result is null');
+        print(response['endUserMessage']);
+        CommonStyles.showCustomDialog(context, response['endUserMessage']);
+        throw Exception('An Error occured while raising a Visit Request');
       }
     }
   }
@@ -496,11 +498,14 @@ class _VisitRequestState extends State<VisitRequest> {
           (Route<dynamic> route) => false,
         );
       },
-      errorBodyWidget: SuccessDialog(
-        images: _images,
-        audioFilePath: audioFilePath,
-        comments: commentsController.text,
-        selectedTypeOfIssue: selectedTypeOfIssue,
+      errorBodyWidget: PopScope(
+        canPop: false,
+        child: SuccessDialog(
+          images: _images,
+          audioFilePath: audioFilePath,
+          comments: commentsController.text.trim(),
+          selectedTypeOfIssue: selectedTypeOfIssue,
+        ),
       ),
     );
   }
@@ -541,7 +546,7 @@ class _VisitRequestState extends State<VisitRequest> {
                     ); */
                     return Container(
                       alignment: Alignment.center,
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: CommonStyles.whiteColor),
@@ -686,9 +691,11 @@ class _VisitRequestState extends State<VisitRequest> {
               const SizedBox(height: 5),
               TextField(
                 controller: commentsController,
-                style: CommonStyles.txSty_14w_fb,
+                style: CommonStyles.txStyF14CwFF6,
+                maxLength: 250,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(left: 10),
+                  counterText: '',
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   hintText: tr(LocaleKeys.comments),
                   hintStyle: CommonStyles.txStyF14CwFF6,
                   border: outlineInputBorder(),
@@ -925,11 +932,7 @@ class _VisitRequestState extends State<VisitRequest> {
           isExpanded: true,
           hint: const Text(
             'Select',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: CommonStyles.txStyF14CwFF6,
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
           ),
@@ -968,7 +971,7 @@ class _VisitRequestState extends State<VisitRequest> {
           ),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
-            padding: EdgeInsets.only(left: 20, right: 20),
+            padding: EdgeInsets.symmetric(horizontal: 12),
           ),
         ),
       ),
@@ -1250,6 +1253,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
         if (widget.selectedTypeOfIssue != null)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 flex: 5,
@@ -1284,6 +1288,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     flex: 5,
@@ -1295,7 +1300,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 1,
                     child: Text(':',
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: CommonStyles.txStyF16CrFF6.copyWith(
                             fontWeight: FontWeight.w400,
                             color: CommonStyles.dataTextColor)),
@@ -1303,7 +1308,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
                   Expanded(
                     flex: 7,
                     child: Text('${widget.comments}',
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: CommonStyles.txStyF16CrFF6.copyWith(
                             fontWeight: FontWeight.w400,
                             color: CommonStyles.dataTextColor)),

@@ -568,11 +568,12 @@ class CommonStyles {
     );
   }
 
-  static void showCustomDialog(BuildContext context, String msg) {
+  static void showCustomDialog(BuildContext context, String msg,
+      {void Function()? onPressed, bool barrierDismissible = true}) {
     showGeneralDialog(
       context: context,
       barrierLabel: '',
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 500),
       pageBuilder: (context, animation1, animation2) {
@@ -634,9 +635,10 @@ class CommonStyles {
                     child: SizedBox(
                       height: 30.0, // Set the desired height
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+                        onPressed: onPressed ??
+                            () {
+                              Navigator.of(context).pop();
+                            },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 35.0),
                           backgroundColor: Colors.transparent,
