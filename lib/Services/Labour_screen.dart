@@ -402,35 +402,45 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                 });
                                               },
                                               child: Row(
+                                                // crossAxisAlignment:
+                                                //     CrossAxisAlignment.start,
                                                 children: [
-                                                  Checkbox(
-                                                    value: selectedServiceIds
-                                                        .contains(
-                                                            service.typeCdId),
-                                                    activeColor: CommonStyles
-                                                        .primaryTextColor,
-                                                    onChanged: (value) {
-                                                      setDialogState(() {
-                                                        if (value == true) {
-                                                          selectedServiceIds
-                                                              .add(service
-                                                                  .typeCdId!);
-                                                        } else {
-                                                          selectedServiceIds
-                                                              .remove(service
-                                                                  .typeCdId);
-                                                        }
-                                                      });
-                                                    },
+                                                  SizedBox(
+                                                    child: Checkbox(
+                                                      value: selectedServiceIds
+                                                          .contains(
+                                                              service.typeCdId),
+                                                      activeColor: CommonStyles
+                                                          .primaryTextColor,
+                                                      onChanged: (value) {
+                                                        setDialogState(() {
+                                                          if (value == true) {
+                                                            selectedServiceIds
+                                                                .add(service
+                                                                    .typeCdId!);
+                                                          } else {
+                                                            selectedServiceIds
+                                                                .remove(service
+                                                                    .typeCdId);
+                                                          }
+                                                        });
+                                                      },
+                                                    ),
                                                   ),
                                                   const SizedBox(width: 12),
-                                                  Text(
-                                                    '${service.desc} ',
-                                                    style: CommonStyles
-                                                        .txStyF16CbFF6
-                                                        .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w400,
+                                                  Expanded(
+                                                    child: Text(
+                                                      '${service.desc} ',
+                                                      // textAlign:
+                                                      //     TextAlign.start,
+                                                      // overflow:
+                                                      //     TextOverflow.ellipsis,
+                                                      style: CommonStyles
+                                                          .txStyF16CbFF6
+                                                          .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -559,15 +569,17 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             borderRadius: BorderRadius.circular(8.0),
                             color: Colors.transparent,
                           ),
-                          // Display the selected options or placeholder text
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                selectedServiceNames.isNotEmpty
-                                    ? selectedServiceNames
-                                    : 'Tap to select', // Placeholder when no service selected
-                                style: CommonStyles.txStyF14CwFF6,
+                              Expanded(
+                                child: Text(
+                                  selectedServiceNames.isNotEmpty
+                                      ? selectedServiceNames
+                                      : 'Tap to select',
+                                  style: CommonStyles.txStyF14CwFF6,
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               const Row(
                                 children: [
