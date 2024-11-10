@@ -48,10 +48,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   double? harvestCost;
   double? servicePercentage;
   double? prunningCost;
+  double? harvestingIntercropCost;
+  double? pruningIntercropCost;
   double? pruningWithIntercropCost;
   double? harvestingWithIntercropCost;
   late Future<FarmerModel> farmerData;
-  String? selectedDropDownValue;
+  String? selectedPackageDropDownValue;
   late String farmerCode,
       farmerName,
       Statecode,
@@ -63,6 +65,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
 
   bool harvestingCheck = false;
   bool pruningCheck = false;
+  bool harvestingIntercropCheck = false;
+  bool pruningIntercropCheck = false;
 
   Set<int> selectedServiceIds = {}; // Track selected IDs
   String selectedServiceNames = ''; // Track selected service names
@@ -374,6 +378,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                             );
                                           }),
                                         */
+                                          // Pruning Intercrop   | 33
+                                          // HarvestingIntercrop | 34
 
                                           ...ServiceType_list.where((service) {
                                             bool isYeldingPlot =
@@ -384,7 +390,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                             if (isYeldingPlot) {
                                               return true;
                                             } else {
-                                              return service.typeCdId != 20;
+                                              return service.typeCdId != 20 &&
+                                                  service.typeCdId != 34;
                                             }
                                           }).map((service) {
                                             return GestureDetector(
@@ -402,8 +409,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                 });
                                               },
                                               child: Row(
-                                                // crossAxisAlignment:
-                                                //     CrossAxisAlignment.start,
                                                 children: [
                                                   SizedBox(
                                                     child: Checkbox(
@@ -431,10 +436,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                   Expanded(
                                                     child: Text(
                                                       '${service.desc} ',
-                                                      // textAlign:
-                                                      //     TextAlign.start,
-                                                      // overflow:
-                                                      //     TextOverflow.ellipsis,
                                                       style: CommonStyles
                                                           .txStyF16CbFF6
                                                           .copyWith(
@@ -496,24 +497,34 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                         selectedNames
                                                             .join(', ');
 
-                                                    // Check if pruning is selected and set pruningCheck to true
                                                     pruningCheck =
                                                         selectedServiceNames
                                                             .contains(
                                                                 'Pruning (ప్రూనింగ్)');
 
-                                                    // Check if harvesting is selected and set harvestingCheck to true
                                                     harvestingCheck =
                                                         selectedServiceNames
                                                             .contains(
                                                                 'Harvesting (గెలల కోత)');
+
+                                                    pruningIntercropCheck =
+                                                        selectedServiceNames
+                                                            .contains(
+                                                                'Pruning with Cocoa Intercrop (ప్రూనింగ్ - అంతర పంటలో)');
+
+                                                    harvestingIntercropCheck =
+                                                        selectedServiceNames
+                                                            .contains(
+                                                                'Harvesting with Cocoa Intercrop (గెలల కోత - అంతర పంటలో)');
+
                                                     if (pruningCheck &&
-                                                        harvestingCheck) {
-                                                      selectedDropDownValue =
+                                                        harvestingCheck || pruningIntercropCheck && harvestingIntercropCheck) {
+                                                      selectedPackageDropDownValue =
                                                           null;
                                                       selectduration_id = null;
-                                                    } else if (pruningCheck) {
-                                                      selectedDropDownValue =
+                                                    } else if (pruningCheck ||
+                                                        pruningIntercropCheck) {
+                                                      selectedPackageDropDownValue =
                                                           '1 Day';
                                                       selectduration_id = 38;
                                                     }
@@ -617,6 +628,31 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             // MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.pru_amount),
+                              data: prunningCost != null
+                                  ? prunningCost!.toStringAsFixed(2)
+                                  : "0.00",
+                            ),
+                          ],
+                        ),
+                      ),
+
+                       Visibility(
+                        visible: harvestingIntercropCheck,
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.harv_intercrop),
+                          data: harvestingIntercropCost != null
+                              ? harvestingIntercropCost!.toStringAsFixed(2)
+                              : "0.00",
+                        ),
+                      ),
+                      Visibility(
+                        visible: pruningIntercropCheck,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 4),
+                            // MARK: Pruning Cost
+                            plotDetailsBox(
+                              label: tr(LocaleKeys.intercrop_prunning),
                               data: prunningCost != null
                                   ? prunningCost!.toStringAsFixed(2)
                                   : "0.00",
@@ -838,7 +874,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2<String>(
-                            value: selectedDropDownValue,
+                            value: selectedPackageDropDownValue,
                             iconStyleData: const IconStyleData(
                               icon: Icon(
                                 Icons.keyboard_arrow_down_rounded,
@@ -853,14 +889,14 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             items: dropDownValues,
                             onChanged: (String? newValue) {
                               setState(() {
-                                selectedDropDownValue = newValue;
+                                selectedPackageDropDownValue = newValue;
                                 LabourRequest? selectedRequest =
                                     _labourRequests.firstWhere(
                                   (request) => request.desc == newValue,
                                 );
                                 selectduration_id = selectedRequest.typeCdId;
                                 print(
-                                    'DropDown Values: $selectedDropDownValue | $selectduration_id');
+                                    'DropDown Values: $selectedPackageDropDownValue | $selectduration_id');
                               });
                             },
                             dropdownStyleData: DropdownStyleData(
@@ -894,9 +930,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                           (_selectedDesc == _labourRequests[1].desc ||
                               _selectedDesc == _labourRequests[2].desc ||
                               _selectedDesc == _labourRequests[3].desc)) */
-                      if (selectedDropDownValue == '3 Months' ||
-                          selectedDropDownValue == '6 Months' ||
-                          selectedDropDownValue == '1 Year')
+                      if (selectedPackageDropDownValue == '3 Months' ||
+                          selectedPackageDropDownValue == '6 Months' ||
+                          selectedPackageDropDownValue == '1 Year')
                         Padding(
                           padding: const EdgeInsets.all(0),
                           child: Text(
@@ -1266,7 +1302,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     } else if (_dateController.text.isEmpty) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.date_selectiomn));
       return false;
-    } else if (selectedDropDownValue == null) {
+    } else if (selectedPackageDropDownValue == null) {
       CommonStyles.showCustomDialog(context, tr(LocaleKeys.valid_pack));
       return false;
     } else if (!_isagreed) {
@@ -1312,8 +1348,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                 (result['servicePercentage'] * prunningCostValue) / 100;
             prunningCost =
                 (servicePercentage! + prunningCostValue).roundToDouble();
-            pruningWithIntercropCost = result['pruningWithIntercropCost'];
-            harvestingWithIntercropCost = result['harvestingWithIntercropCost'];
+            pruningIntercropCost = (servicePercentage! + result['pruningWithIntercropCost']).roundToDouble();
+            harvestingIntercropCost = (servicePercentage! + result['harvestingWithIntercropCost']).roundToDouble();
           });
         } else {
           print('Failed to get labour service costs');
@@ -1360,13 +1396,13 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "amount": 1.1,
       "harvestingAmount": harvestingCheck ? harvestCost : null,
       "pruningAmount": pruningCheck ? prunningCost : null,
-      "pruningWithIntercropAmount": 0.0,
-      "harvestingWithIntercropAmount": 0.0,
+      "pruningWithIntercropAmount": pruningIntercropCheck ? harvestingIntercropCost : null,
+      "harvestingWithIntercropAmount": harvestingIntercropCheck ? pruningIntercropCost : null,
       "yearofPlanting": "${widget.plotdata.dateOfPlanting}",
       "clusterId": Cluster_id,
       "ownPole": _isChecked,
       "services": selectedServiceNames,
-      "package": selectedDropDownValue,
+      "package": selectedPackageDropDownValue,
       "stateCode": Statecode,
       "stateName": StateName,
     };
@@ -1389,6 +1425,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
         if (responseData['isSuccess']) {
           String prningcost = prunningCost!.toStringAsFixed(2);
           String Harvestingcost = harvestCost!.toStringAsFixed(2);
+          String harIntercropCost = harvestingIntercropCost!.toStringAsFixed(2);
+          String pruIntercropCost = pruningIntercropCost!.toStringAsFixed(2);
           List<MsgModel> displayList = [
             MsgModel(
                 key: tr(LocaleKeys.select_labour_type),
@@ -1397,8 +1435,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
               MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
             if (pruningCheck)
               MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
+            if (harvestingIntercropCheck)
+              MsgModel(
+                  key: tr(LocaleKeys.harv_intercrop), value: harIntercropCost
+              ),
+            if (pruningIntercropCheck)
+              MsgModel(
+                  key: tr(LocaleKeys.intercrop_prunning), value: pruIntercropCost
+              ),
             MsgModel(
-                key: tr(LocaleKeys.Package), value: "$selectedDropDownValue"),
+                key: tr(LocaleKeys.Package), value: "$selectedPackageDropDownValue"),
             MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
           ];
 
