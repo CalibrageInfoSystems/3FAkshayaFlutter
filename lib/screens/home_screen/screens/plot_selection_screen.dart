@@ -143,14 +143,14 @@ class _PlotSelectionScreenState extends State<PlotSelectionScreen> {
         });
         checkVisitRequest(widget.serviceTypeId, plot);
         break;
-      /* default:
+      default:
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => TestScreen(plotdata: plot),
             // builder: (context) => CropMaintenanceVisitsScreen(plotdata: plot),
           ),
         );
-        break; */
+        break;
     }
   }
 

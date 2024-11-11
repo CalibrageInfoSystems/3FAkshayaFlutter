@@ -221,7 +221,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
               },
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
               flex: 3,
               child: datePickerBox2(
@@ -244,14 +244,14 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
                   });
                 },
               )),
-          const SizedBox(width: 14),
+          const SizedBox(width: 8),
           //MARK: Submit Btn
           Expanded(
-            flex: 4,
+            flex: 3,
             child: CustomBtn(
                 height: 45,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
+                  horizontal: 22,
                 ),
                 label: tr(LocaleKeys.submit),
                 btnTextColor: CommonStyles.primaryTextColor,
