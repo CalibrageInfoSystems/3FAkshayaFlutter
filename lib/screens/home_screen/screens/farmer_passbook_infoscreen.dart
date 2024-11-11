@@ -1031,8 +1031,8 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       "paymentResponce": paymentResponce
     };
 
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
+    const apiUrl = '$baseUrl$exportPayments';
+    // 'http://182.18.157.215/3FAkshaya/API/api/Payment/ExportPayments';
 
     try {
       final jsonResponse = await http.post(

@@ -625,8 +625,8 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
       double totalProductCostGst, double totalTransportCostwithgst) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
-    final url =
-        'http://182.18.157.215/3FAkshaya/API/api/FertilizerSubsidies/$farmerCode';
+    final url = '$baseUrl$fertilizerSubsidies$farmerCode';
+    // 'http://182.18.157.215/3FAkshaya/API/api/FertilizerSubsidies/$farmerCode';
 
     try {
       final response = await http.get(Uri.parse(url));

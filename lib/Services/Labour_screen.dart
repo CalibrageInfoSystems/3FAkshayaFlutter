@@ -112,38 +112,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
     return FarmerModel.fromJson(farmerResult);
   }
-/* 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now().add(const Duration(days: 3));
-    DateTime? picked = await showDatePicker(
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      context: context,
-      initialDate: initialDate,
-      firstDate: initialDate,
-      lastDate: DateTime(DateTime.now().year + 100),
-      cancelText: tr(LocaleKeys.cancel_capitalized),
-      selectableDayPredicate: (DateTime date) {
-        return date.weekday != DateTime.sunday;
-      },
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            inputDecorationTheme: const InputDecorationTheme(
-              enabledBorder: InputBorder.none,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (picked != null) {
-      setState(() {
-        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
-      });
-    }
-  }
- */
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now().add(const Duration(days: 3));
@@ -325,6 +293,8 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                               ),
                                             ],
                                           ),
+
+                                          //MARK: Service Dialog
                                           /* 
                                           ...ServiceType_list.map((service) {
                                             return GestureDetector(
@@ -408,42 +378,48 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                   }
                                                 });
                                               },
-                                              child: Row(
+                                              child: Column(
                                                 children: [
-                                                  SizedBox(
-                                                    child: Checkbox(
-                                                      value: selectedServiceIds
-                                                          .contains(
-                                                              service.typeCdId),
-                                                      activeColor: CommonStyles
-                                                          .primaryTextColor,
-                                                      onChanged: (value) {
-                                                        setDialogState(() {
-                                                          if (value == true) {
-                                                            selectedServiceIds
-                                                                .add(service
-                                                                    .typeCdId!);
-                                                          } else {
-                                                            selectedServiceIds
-                                                                .remove(service
-                                                                    .typeCdId);
-                                                          }
-                                                        });
-                                                      },
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 12),
-                                                  Expanded(
-                                                    child: Text(
-                                                      '${service.desc} ',
-                                                      style: CommonStyles
-                                                          .txStyF16CbFF6
-                                                          .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w400,
+                                                  Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        child: Checkbox(
+                                                          value: selectedServiceIds
+                                                              .contains(service
+                                                                  .typeCdId),
+                                                          activeColor: CommonStyles
+                                                              .primaryTextColor,
+                                                          onChanged: (value) {
+                                                            setDialogState(() {
+                                                              if (value ==
+                                                                  true) {
+                                                                selectedServiceIds
+                                                                    .add(service
+                                                                        .typeCdId!);
+                                                              } else {
+                                                                selectedServiceIds
+                                                                    .remove(service
+                                                                        .typeCdId);
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
                                                       ),
-                                                    ),
+                                                      const SizedBox(width: 12),
+                                                      Expanded(
+                                                        child: Text(
+                                                          '${service.desc} ',
+                                                          style: CommonStyles
+                                                              .txStyF16CbFF6
+                                                              .copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
+                                                  const SizedBox(height: 10),
                                                 ],
                                               ),
                                             );
@@ -518,7 +494,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                                 'Harvesting with Cocoa Intercrop (గెలల కోత - అంతర పంటలో)');
 
                                                     if (pruningCheck &&
-                                                        harvestingCheck || pruningIntercropCheck && harvestingIntercropCheck) {
+                                                            harvestingCheck ||
+                                                        pruningIntercropCheck &&
+                                                            harvestingIntercropCheck) {
                                                       selectedPackageDropDownValue =
                                                           null;
                                                       selectduration_id = null;
@@ -532,7 +510,9 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                                                     dropDownValues =
                                                         setDropDownValues(
                                                             pruningCheck,
-                                                            harvestingCheck);
+                                                            harvestingCheck,
+                                                            pruningIntercropCheck,
+                                                            harvestingIntercropCheck);
                                                   });
 
                                                   Navigator.pop(context);
@@ -636,15 +616,6 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                         ),
                       ),
 
-                       Visibility(
-                        visible: harvestingIntercropCheck,
-                        child: plotDetailsBox(
-                          label: tr(LocaleKeys.harv_intercrop),
-                          data: harvestingIntercropCost != null
-                              ? harvestingIntercropCost!.toStringAsFixed(2)
-                              : "0.00",
-                        ),
-                      ),
                       Visibility(
                         visible: pruningIntercropCheck,
                         child: Column(
@@ -653,11 +624,20 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                             // MARK: Pruning Cost
                             plotDetailsBox(
                               label: tr(LocaleKeys.intercrop_prunning),
-                              data: prunningCost != null
-                                  ? prunningCost!.toStringAsFixed(2)
+                              data: pruningIntercropCost != null
+                                  ? pruningIntercropCost!.toStringAsFixed(2)
                                   : "0.00",
                             ),
                           ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: harvestingIntercropCheck,
+                        child: plotDetailsBox(
+                          label: tr(LocaleKeys.harv_intercrop),
+                          data: harvestingIntercropCost != null
+                              ? harvestingIntercropCost!.toStringAsFixed(2)
+                              : "0.00",
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -796,13 +776,13 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                       ),
                       */
                       SizedBox(
-                        height: 55,
+                        height: 45,
                         child: GestureDetector(
                           onTap: () async {
                             _selectDate(context);
                           },
                           child: Container(
-                            height: 55,
+                            height: 45,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               border:
@@ -1238,6 +1218,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
                 flex: 7,
@@ -1348,8 +1329,20 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                 (result['servicePercentage'] * prunningCostValue) / 100;
             prunningCost =
                 (servicePercentage! + prunningCostValue).roundToDouble();
-            pruningIntercropCost = (servicePercentage! + result['pruningWithIntercropCost']).roundToDouble();
-            harvestingIntercropCost = (servicePercentage! + result['harvestingWithIntercropCost']).roundToDouble();
+
+            final pruInterCostValue = result['pruningWithIntercropCost'];
+            servicePercentage =
+                (result['servicePercentage'] * pruInterCostValue) / 100;
+
+            pruningIntercropCost =
+                (servicePercentage! + pruInterCostValue).roundToDouble();
+
+            final harInterCostValue = result['harvestingWithIntercropCost'];
+            servicePercentage =
+                (result['servicePercentage'] * harInterCostValue) / 100;
+
+            harvestingIntercropCost =
+                (servicePercentage! + harInterCostValue).roundToDouble();
           });
         } else {
           print('Failed to get labour service costs');
@@ -1396,8 +1389,10 @@ class _LabourscreenScreenState extends State<Labourscreen> {
       "amount": 1.1,
       "harvestingAmount": harvestingCheck ? harvestCost : null,
       "pruningAmount": pruningCheck ? prunningCost : null,
-      "pruningWithIntercropAmount": pruningIntercropCheck ? harvestingIntercropCost : null,
-      "harvestingWithIntercropAmount": harvestingIntercropCheck ? pruningIntercropCost : null,
+      "pruningWithIntercropAmount":
+          pruningIntercropCheck ? harvestingIntercropCost : null,
+      "harvestingWithIntercropAmount":
+          harvestingIntercropCheck ? pruningIntercropCost : null,
       "yearofPlanting": "${widget.plotdata.dateOfPlanting}",
       "clusterId": Cluster_id,
       "ownPole": _isChecked,
@@ -1435,16 +1430,16 @@ class _LabourscreenScreenState extends State<Labourscreen> {
               MsgModel(key: tr(LocaleKeys.harv_amount), value: Harvestingcost),
             if (pruningCheck)
               MsgModel(key: tr(LocaleKeys.pru_amount), value: prningcost),
-            if (harvestingIntercropCheck)
-              MsgModel(
-                  key: tr(LocaleKeys.harv_intercrop), value: harIntercropCost
-              ),
             if (pruningIntercropCheck)
               MsgModel(
-                  key: tr(LocaleKeys.intercrop_prunning), value: pruIntercropCost
-              ),
+                  key: tr(LocaleKeys.intercrop_prunning),
+                  value: pruIntercropCost),
+            if (harvestingIntercropCheck)
+              MsgModel(
+                  key: tr(LocaleKeys.harv_intercrop), value: harIntercropCost),
             MsgModel(
-                key: tr(LocaleKeys.Package), value: "$selectedPackageDropDownValue"),
+                key: tr(LocaleKeys.Package),
+                value: "$selectedPackageDropDownValue"),
             MsgModel(key: tr(LocaleKeys.starttDate), value: prefdate),
           ];
 
@@ -1781,9 +1776,12 @@ class _LabourscreenScreenState extends State<Labourscreen> {
   }
 
   //MARK: setDropDownValues
-  List<DropdownMenuItem<String>> setDropDownValues(
-      bool pruningCheck, bool harvestingCheck) {
-    if (pruningCheck && harvestingCheck) {
+  List<DropdownMenuItem<String>> setDropDownValues(bool pruningCheck,
+      bool harvestingCheck, bool prunWithCocoaCheck, bool harvWithCocoaCheck) {
+    print(
+        'testing: $pruningCheck, $harvestingCheck | $prunWithCocoaCheck, $harvWithCocoaCheck');
+    if (pruningCheck && harvestingCheck ||
+        prunWithCocoaCheck && harvWithCocoaCheck) {
       return _labourRequests
           .map((request) => DropdownMenuItem<String>(
                 value: request.desc,
@@ -1793,7 +1791,7 @@ class _LabourscreenScreenState extends State<Labourscreen> {
                 ),
               ))
           .toList();
-    } else if (harvestingCheck) {
+    } else if (harvestingCheck || harvWithCocoaCheck) {
       return _labourRequests
           .map((request) => DropdownMenuItem<String>(
                 value: request.desc,

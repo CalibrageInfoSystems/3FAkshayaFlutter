@@ -707,7 +707,9 @@ class _StandardState extends State<Standard> {
   Future<void> _fetchFertilizers(String age) async {
     try {
       final response = await http.get(Uri.parse(
-          'http://182.18.157.215/3FAkshaya/API/api/GetRecommendationsByAge/$age'));
+        '$baseUrl$getRecommendationsByAge$age',
+        // 'http://182.18.157.215/3FAkshaya/API/api/GetRecommendationsByAge/$age',
+      ));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
 
@@ -885,7 +887,9 @@ class _StandardState extends State<Standard> {
 
   Future<List<AgeRecommendation>> fetchAgeRecommendations() async {
     final response = await http.get(Uri.parse(
-        'http://182.18.157.215/3FAkshaya/API/api/GetRecommendationAges'));
+      '$baseUrl$getRecommendationAges',
+      // 'http://182.18.157.215/3FAkshaya/API/api/GetRecommendationAges',
+    ));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body)['listResult'];

@@ -55,6 +55,10 @@ const collectionInfoById = 'Collection/CollectionInfoById/';
 const get3FInfo = 'Farmer/Get3FInfo/';
 const getQuickpayDocument = 'QuickPayRequest/GetQuickpayDocument/';
 const passbookFileLocation = '/sdcard/Download/3FAkshaya/ledger';
+const getRecommendationsByAge = 'GetRecommendationsByAge/';
+const getRecommendationAges = 'GetRecommendationAges';
+const exportPayments = 'Payment/ExportPayments';
+const fertilizerSubsidies = 'FertilizerSubsidies/';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";
