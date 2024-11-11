@@ -43,7 +43,8 @@ class _My3fScreenState extends State<My3fScreen> {
   Future<Map<String, Object>> getImportantContactsAndPlaces() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString(SharedPrefsKeys.farmerCode);
-    final apiUrl = '$baseUrl$get3FInfo$userId/AP';
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$get3FInfo$userId/$statecode';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
@@ -73,7 +74,7 @@ class _My3fScreenState extends State<My3fScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
-    final apiUrl = '$baseUrl$getContactInfo$farmerCode$statecode';
+    final apiUrl = '$baseUrl$getContactInfo$farmerCode/$statecode';
 
     print('my_3f loadContent: $apiUrl');
 

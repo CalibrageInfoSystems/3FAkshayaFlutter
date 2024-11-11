@@ -771,7 +771,9 @@ class _HomeScreenState extends State<HomeScreen> {
 //MARK: Marqee API
 
   Future<List<BannerModel>> getBannersAndMarqueeText() async {
-    final apiUrl = '$baseUrl$getbanners/AP';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$getbanners/$statecode';
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
       if (jsonResponse.statusCode == 200) {

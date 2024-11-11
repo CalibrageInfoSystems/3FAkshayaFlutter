@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_biolab_requests.dart';
 import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_edibleoil_requests.dart';
 import 'package:akshaya_flutter/screens/view_requests.dart/screens/view_equipment_requests.dart';
@@ -13,6 +14,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common_utils/api_config.dart';
 import '../../common_utils/common_styles.dart';
@@ -38,7 +40,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
   }
 
   Future<List<int>> getServicesData() async {
-    final apiUrl = '$baseUrl${getServices}AP';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$getServices/$statecode';
 
     try {
       final jsonResponse = await http.get(Uri.parse(apiUrl));
