@@ -689,18 +689,21 @@ class _VisitRequestState extends State<VisitRequest> {
                 ),
               ),
               const SizedBox(height: 5),
-              TextField(
-                controller: commentsController,
-                style: CommonStyles.txStyF14CwFF6,
-                maxLength: 250,
-                decoration: InputDecoration(
-                  counterText: '',
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                  hintText: tr(LocaleKeys.comments),
-                  hintStyle: CommonStyles.txStyF14CwFF6,
-                  border: outlineInputBorder(),
-                  enabledBorder: outlineInputBorder(),
-                  focusedBorder: outlineInputBorder(),
+              SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: commentsController,
+                  style: CommonStyles.txStyF14CwFF6,
+                  maxLength: 250,
+                  decoration: InputDecoration(
+                    counterText: '',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                    hintText: tr(LocaleKeys.comments),
+                    hintStyle: CommonStyles.txStyF14CwFF6,
+                    border: outlineInputBorder(),
+                    enabledBorder: outlineInputBorder(),
+                    focusedBorder: outlineInputBorder(),
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
