@@ -140,19 +140,6 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     );
   }
 
-  PassbookData getLastOneYearData() {
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
-    String fromDate =
-        formatter.format(DateTime.now().subtract(const Duration(days: 365)));
-    String toDate = formatter.format(DateTime.now());
-
-    return PassbookData(
-      passbookVendorModel: getVendorData(fromDate: fromDate, toDate: toDate),
-      passbookTransportModel:
-          getTransportData(fromDate: fromDate, toDate: toDate),
-    );
-  }
-
   PassbookData getLastFinancialYearData() {
     DateTime now = DateTime.now();
     DateFormat formatter = DateFormat('yyyy-MM-dd');

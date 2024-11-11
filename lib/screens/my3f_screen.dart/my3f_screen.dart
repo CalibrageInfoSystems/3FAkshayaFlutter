@@ -47,8 +47,7 @@ class _My3fScreenState extends State<My3fScreen> {
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
-    print('api check: $apiUrl');
-    print('api check: ${jsonResponse.body}');
+    print('my_3f: $apiUrl');
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       final importantContacts = response['result']['importantContacts'];
@@ -75,6 +74,8 @@ class _My3fScreenState extends State<My3fScreen> {
     final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
     final statecode = prefs.getString(SharedPrefsKeys.statecode);
     final apiUrl = '$baseUrl$getContactInfo$farmerCode$statecode';
+
+    print('my_3f loadContent: $apiUrl');
 
     // const apiUrl =
     //     'http://182.18.157.215/3FAkshaya/API/api/ContactInfo/GetContactInfo/APWGBDAB00010005/AP';
@@ -107,7 +108,7 @@ class _My3fScreenState extends State<My3fScreen> {
           ),
         );
     } else {
-      throw Exception('Failed to get learning data');
+      throw Exception('Failed to load to data: ${jsonResponse.statusCode}');
     }
   }
 

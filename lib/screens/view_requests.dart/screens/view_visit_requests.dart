@@ -714,6 +714,9 @@ class _ViewVisitRequestsState extends State<ViewVisitRequests> {
       });
     });
 
+    print('getVisitRequest: $apiUrl');
+    print('getVisitRequest: $requestBody');
+
     if (jsonResponse.statusCode == 200) {
       Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null) {
