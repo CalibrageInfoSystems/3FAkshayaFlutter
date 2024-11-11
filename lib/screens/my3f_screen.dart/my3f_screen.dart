@@ -71,8 +71,13 @@ class _My3fScreenState extends State<My3fScreen> {
   }
 
   Future<WebViewController> loadContent() async {
-    const apiUrl =
-        'http://182.18.157.215/3FAkshaya/API/api/ContactInfo/GetContactInfo/APWGBDAB00010005/AP';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final farmerCode = prefs.getString(SharedPrefsKeys.farmerCode);
+    final statecode = prefs.getString(SharedPrefsKeys.statecode);
+    final apiUrl = '$baseUrl$getContactInfo$farmerCode$statecode';
+
+    // const apiUrl =
+    //     'http://182.18.157.215/3FAkshaya/API/api/ContactInfo/GetContactInfo/APWGBDAB00010005/AP';
 
     final jsonResponse = await http.get(Uri.parse(apiUrl));
     if (jsonResponse.statusCode == 200) {
