@@ -2,9 +2,9 @@ library APIConstants;
 
 const String SUCCESS_MESSAGE = " You will be contacted by us very soon.";
 
-const baseUrl = "http://103.241.144.240:9096/api/"; //uat
-// const baseUrl = "http://182.18.157.215/3FAkshaya/API/api/"; // Test
-
+// const baseUrl = "http://103.241.144.240:9096/api/"; //uat
+const baseUrl = "http://182.18.157.215/3FAkshaya/API/api/"; // Test
+//
 var getBanners = "GetBanner?Id=null";
 var getbanners = "Banner/GetActiveBannerByStateCode/";
 var getServices = "StateService/GetServicesByStateCode/";
@@ -54,7 +54,7 @@ const getLabourProductDetails = 'GetLabourRequestDetails';
 const collectionInfoById = 'Collection/CollectionInfoById/';
 const get3FInfo = 'Farmer/Get3FInfo/';
 const getQuickpayDocument = 'QuickPayRequest/GetQuickpayDocument/';
-const passbookFileLocation = '/sdcard/Download/3FAkshaya/ledger';
+const passbookFileLocation = '/sdcard/Download/3FAkshaya/ledger/';
 const getRecommendationsByAge = 'GetRecommendationsByAge/';
 const getRecommendationAges = 'GetRecommendationAges';
 const exportPayments = 'Payment/ExportPayments';

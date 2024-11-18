@@ -33,20 +33,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
-  var initializationSettingsAndroid = const AndroidInitializationSettings(
-      '@drawable/ic_logo'); // @mipmap/ic_launcher
-  var initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (details) {
-      // Process the payload from the notification
-      if (details.payload != null) {
-        handleNotification(details.payload!);
-      }
-    },
-  );
+  await initializeLocalNotification();
 
   runApp(
     EasyLocalization(
@@ -67,6 +54,33 @@ void main() async {
   );
 }
 
+Future<void> initializeLocalNotification() async {
+  var initializationSettingsAndroid =
+      const AndroidInitializationSettings('@drawable/ic_logo');
+
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+  );
+  var initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (details) {
+      // Process the payload from the notification
+      if (details.payload != null) {
+        handleNotification(details.payload!);
+      }
+    },
+    // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+  );
+}
+
 /* void handleNotification(String payload) {
   if (payload.isNotEmpty && Directory(payload).existsSync()) {
     print('Opening directory: $payload');
@@ -75,6 +89,7 @@ void main() async {
   }
 } */
 Future<void> handleNotification(String payload) async {
+  print('payload: $payload');
   if (payload.isNotEmpty) {
     PermissionStatus status = await Permission.storage.request();
 
@@ -84,7 +99,7 @@ Future<void> handleNotification(String payload) async {
       if (!(await dir.exists())) {
         await dir.create(recursive: true);
       }
-      OpenFilex.open(folderPath);
+      OpenFilex.open(payload);
     } else if (status.isDenied) {
       print('Error: Storage permission denied.');
     } else if (status.isPermanentlyDenied) {
