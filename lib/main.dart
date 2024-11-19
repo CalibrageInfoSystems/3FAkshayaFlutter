@@ -7,6 +7,7 @@ import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -81,14 +82,35 @@ Future<void> initializeLocalNotification() async {
   );
 }
 
-/* void handleNotification(String payload) {
-  if (payload.isNotEmpty && Directory(payload).existsSync()) {
-    print('Opening directory: $payload');
-  } else {
-    print('Error: Directory does not exist or path is empty');
-  }
-} */
 Future<void> handleNotification(String payload) async {
+  print('handleNotification: $payload');
+
+  if (await Permission.manageExternalStorage.request().isGranted ||
+      await Permission.storage.request().isGranted) {
+    try {
+      /* String folderPath = passbookFileLocation;
+      Directory dir = Directory(folderPath);
+      if (!(await dir.exists())) {
+        await dir.create(recursive: true);
+      }
+      OpenFilex.open(folderPath); */
+      // Open Downloads Folder
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Select Downloads Folder',
+      );
+      if (selectedDirectory != null) {
+        print('handleNotification: Selected Directory: $selectedDirectory');
+      } else {
+        print('handleNotification: No folder selected.');
+      }
+    } catch (e) {
+      print('handleNotification: Error opening folder: $e');
+    }
+  } else {
+    print('handleNotification: Permission Denied.');
+  }
+}
+/* Future<void> handleNotification(String payload) async {
   print('payload: $payload');
   if (payload.isNotEmpty) {
     PermissionStatus status = await Permission.storage.request();
@@ -99,7 +121,11 @@ Future<void> handleNotification(String payload) async {
       if (!(await dir.exists())) {
         await dir.create(recursive: true);
       }
-      OpenFilex.open(payload);
+      OpenFilex.open(folderPath);
+
+      // String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+      //   dialogTitle: 'Select Downloads Folder',
+      // );
     } else if (status.isDenied) {
       print('Error: Storage permission denied.');
     } else if (status.isPermanentlyDenied) {
@@ -110,7 +136,7 @@ Future<void> handleNotification(String payload) async {
   } else {
     print('Error: Payload (directory path) is empty.');
   }
-}
+} */
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
