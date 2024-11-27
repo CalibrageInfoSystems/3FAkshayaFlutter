@@ -5,7 +5,8 @@ import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,7 +30,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
   bool isLoading = false;
   String? farmerId;
   String enteredOTP = '';
-  final _dio = Dio();
+  // final _dio = Dio();
 
   String fetchlast4Digits(String number) {
     return number.substring(number.length - 4);
@@ -216,11 +217,12 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     print("otpsubmiturl==== $url");
     try {
       print("Sending request to URL: $url");
-      final response = await _dio.get(url);
+      final jsonResponse = await http.get(Uri.parse(url));
 
-      print("Response status code: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = response.data;
+      print("Response status code: ${jsonResponse.statusCode}");
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        final Map<String, dynamic> data = response;
         print("Response data: $data");
         if (data['isSuccess']) {
           // Convert the complete response to a JSON string and save it
@@ -261,7 +263,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           _showErrorDialog(data['endUserMessage']);
         }
       } else {
-        print("Server error: Status code ${response.statusCode}");
+        print("Server error: Status code ${jsonResponse.statusCode}");
         _showErrorDialog('Server error');
       }
     } catch (e) {
@@ -290,15 +292,19 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       isLoading = true;
     });
 
-    final dio = Dio();
+    // final dio = Dio();
 
     print("farmerId==263: $farmerId");
 
-    try {
-      final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
+    String apiUrl = '$baseUrl$Farmer_ID_CHECK$farmerId/null';
 
-      if (response.statusCode == 200) {
-        final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+    try {
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      // final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
+
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        final farmerResponseModel = FarmerResponseModel.fromJson(response);
 
         if (farmerResponseModel.isSuccess!) {
           setState(() {
@@ -339,7 +345,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
         // _showDialog('Server Error');
       }
-    } on DioException catch (e) {
+    } catch (e) {
       print('Error: $e');
       CommonStyles.showCustomDialog(context, 'Server Error');
       //  _showDialog('Server Error');

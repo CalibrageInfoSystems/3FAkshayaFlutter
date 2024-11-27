@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
+import 'package:akshaya_flutter/local_notification/notification_service.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -16,25 +17,11 @@ import 'package:provider/provider.dart';
 import 'app_enterance/splash_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
-  if (notificationResponse.input?.isNotEmpty ?? false) {
-    print(
-        'notification action tapped with input: ${notificationResponse.input}');
-  }
-}
-
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.initLocalNotifications();
   await EasyLocalization.ensureInitialized();
 
-  await initializeLocalNotification();
 
   runApp(
     EasyLocalization(
@@ -54,90 +41,6 @@ void main() async {
     ),
   );
 }
-
-Future<void> initializeLocalNotification() async {
-  var initializationSettingsAndroid =
-      const AndroidInitializationSettings('@drawable/ic_logo');
-
-  const DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings(
-    requestAlertPermission: false,
-    requestBadgePermission: false,
-    requestSoundPermission: false,
-  );
-  var initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsDarwin,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    onDidReceiveNotificationResponse: (details) {
-      // Process the payload from the notification
-      if (details.payload != null) {
-        handleNotification(details.payload!);
-      }
-    },
-    // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
-  );
-}
-
-Future<void> handleNotification(String payload) async {
-  print('handleNotification: $payload');
-
-  if (await Permission.manageExternalStorage.request().isGranted ||
-      await Permission.storage.request().isGranted) {
-    try {
-      /* String folderPath = passbookFileLocation;
-      Directory dir = Directory(folderPath);
-      if (!(await dir.exists())) {
-        await dir.create(recursive: true);
-      }
-      OpenFilex.open(folderPath); */
-      // Open Downloads Folder
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
-        dialogTitle: 'Select Downloads Folder',
-      );
-      if (selectedDirectory != null) {
-        print('handleNotification: Selected Directory: $selectedDirectory');
-      } else {
-        print('handleNotification: No folder selected.');
-      }
-    } catch (e) {
-      print('handleNotification: Error opening folder: $e');
-    }
-  } else {
-    print('handleNotification: Permission Denied.');
-  }
-}
-/* Future<void> handleNotification(String payload) async {
-  print('payload: $payload');
-  if (payload.isNotEmpty) {
-    PermissionStatus status = await Permission.storage.request();
-
-    if (status.isGranted) {
-      String folderPath = passbookFileLocation;
-      Directory dir = Directory(folderPath);
-      if (!(await dir.exists())) {
-        await dir.create(recursive: true);
-      }
-      OpenFilex.open(folderPath);
-
-      // String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
-      //   dialogTitle: 'Select Downloads Folder',
-      // );
-    } else if (status.isDenied) {
-      print('Error: Storage permission denied.');
-    } else if (status.isPermanentlyDenied) {
-      print(
-          'Error: Storage permission permanently denied. Please enable it from settings.');
-      openAppSettings();
-    }
-  } else {
-    print('Error: Payload (directory path) is empty.');
-  }
-} */
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

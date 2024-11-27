@@ -17,6 +17,7 @@ import 'package:akshaya_flutter/screens/home_screen/screens/loan_request_screen.
 
 import 'package:akshaya_flutter/screens/home_screen/screens/plot_selection_screen.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/quick_pay_screen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -209,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: MediaQuery.of(context).size.width,
             height: 200,
             child: FlutterCarousel(
-              options: CarouselOptions(
+              options: FlutterCarouselOptions(
                 floatingIndicator: true,
                 height: 200,
                 viewportFraction: 1.0,
@@ -218,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 aspectRatio: 16 / 9,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enableInfiniteScroll: true,
-                slideIndicator: const CircularSlideIndicator(
+                slideIndicator:  CircularSlideIndicator(
                   slideIndicatorOptions: SlideIndicatorOptions(
                     itemSpacing: 10,
                     padding: EdgeInsets.only(bottom: 10.0),

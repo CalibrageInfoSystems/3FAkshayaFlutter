@@ -10,15 +10,17 @@ import 'package:akshaya_flutter/common_utils/custom_appbar.dart';
 import 'package:akshaya_flutter/common_utils/custom_btn.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
+import 'package:akshaya_flutter/local_notification/notification_service.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/main.dart';
 import 'package:akshaya_flutter/models/passbook_transport_model.dart';
 import 'package:akshaya_flutter/models/passbook_vendor_model.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+// import 'package:device_info_plus/device_info_plus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 // import 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
@@ -27,6 +29,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -914,28 +917,73 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
     });
   }
 
-  Future<void> checkStoragePermission() async {
-    bool permissionStatus;
-    final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  // Future<void> checkStoragePermission() async {
+  //   bool permissionStatus;
+    
+  //   final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
-    if (deviceInfo.version.sdkInt > 32) {
-      permissionStatus = await Permission.storage.request().isGranted;
+  //   if (deviceInfo.version.sdkInt > 32) {
+  //     permissionStatus = await Permission.storage.request().isGranted;
+  //   } else {
+  //     permissionStatus = await Permission.storage.request().isGranted;
+  //   }
+  //   if (await Permission.storage.request().isGranted) {
+  //   } else {
+  //     Map<Permission, PermissionStatus> status = await [
+  //       Permission.storage,
+  //     ].request();
+
+  //     if (status[Permission.storage] == PermissionStatus.granted) {
+  //       print('Storage permission is granted');
+  //     } else {
+  //       print('Storage permission is denied');
+  //     }
+  //   }
+  // }
+
+
+Future<void> checkStoragePermission() async {
+  bool permissionStatus = false;
+  final deviceInfo = DeviceInfoPlugin();
+
+  // Determine the platform and get the device info
+  if (Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+
+    // Check Android SDK version
+    if (androidInfo.version.sdkInt > 32) {
+      // For Android 13+ (SDK 33), use the new 'manageExternalStorage' permission
+      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
     } else {
+      // For older Android versions, use 'storage' permission
       permissionStatus = await Permission.storage.request().isGranted;
     }
-    if (await Permission.storage.request().isGranted) {
-    } else {
-      Map<Permission, PermissionStatus> status = await [
-        Permission.storage,
-      ].request();
+  } else if (Platform.isIOS) {
+    // On iOS, use the 'photos' or 'mediaLibrary' permission as needed
+    permissionStatus = await Permission.photos.request().isGranted;
+  }
 
-      if (status[Permission.storage] == PermissionStatus.granted) {
-        print('Storage permission is granted');
-      } else {
-        print('Storage permission is denied');
-      }
+  // Check the permission status
+  if (permissionStatus) {
+    print('Permission is granted');
+  } else {
+    // Request permission if not granted
+    Map<Permission, PermissionStatus> status = await [
+      if (Platform.isAndroid) 
+        (await deviceInfo.androidInfo).version.sdkInt > 32 ? Permission.manageExternalStorage : Permission.storage
+      else if (Platform.isIOS) 
+        Permission.photos
+    ].request();
+
+    if (status[Platform.isAndroid ? Permission.storage : Permission.photos] == PermissionStatus.granted) {
+      print('Storage permission is granted');
+    } else {
+      print('Storage permission is denied');
     }
   }
+}
+
+
 }
 
 class FarmerPassbookTabView extends StatefulWidget {
@@ -971,8 +1019,7 @@ class FarmerPassbookTabView extends StatefulWidget {
 }
 
 class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
-  int notificationId = 0;
-
+    int notificationId = 0;
   void openDirectory() async {
     var status = await Permission.storage.request();
     if (!status.isGranted) {
@@ -1036,7 +1083,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
 
       print('www: $apiUrl');
       print('www: ${jsonEncode(requestBody)}');
-      print('www: ${jsonResponse.body}');
+      // print('www: ${jsonResponse.body}');
 
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
@@ -1050,6 +1097,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
           CommonStyles.hideHorizontalDotsLoadingDialog(context);
         });
       });
+      print('catch: $e');
       rethrow;
     }
   }
@@ -1115,6 +1163,43 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     }
   }
 
+
+
+// Future<void> openDownloadFileDirectory() async {
+//   try {
+//     // Get the path of the application's documents directory
+//     Directory directory = await getApplicationDocumentsDirectory();
+//     String path = directory.path;
+
+//     // Check if the directory exists
+//     if (await Directory(path).exists()) {
+//       // Open the directory using open_filex
+//       await OpenFilex.open(path);
+//     } else {
+//       print("Directory does not exist");
+//     }
+//   } catch (e) {
+//     print("Error opening directory: $e");
+//   }
+// }
+
+
+Future<void> openDownloadFileDirectory() async {
+  try {
+    String? result = await FilePicker.platform.getDirectoryPath();
+    if (result != null) {
+      // Open the selected directory (or navigate within it)
+       await OpenFilex.open(result);
+      // await Share.shareXFiles(
+      //   [XFile(result)],
+      //   text: 'Open the directory in the Files app',
+      // );
+    }
+  } catch (e) {
+    print("Error using file picker: $e");
+  }
+}
+
   Future<void> convertBase64ToExcelAndSaveIntoSpecificDirectory(
       String base64String) async {
     if (base64String.isEmpty) {
@@ -1163,44 +1248,22 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       });
     });
     CommonStyles.showToast('File Downloaded Successfully');
-    /* _showNotification(
-        id: 1,
-        title: fileName, // file.path,
-        message: 'Downloaded Successfully',
-        path: file.path); */
-    await showPlainNotification(
-        id: notificationId++,
-        title: fileName, // file.path,
-        message: 'Downloaded Successfully',
-        path: filePath);
-    // path: '/sdcard/Download/3FAkshaya/ledger');
+    
+    await NotificationService.showNotification(id: notificationId++,
+                      title: fileName, body: 'Downloaded Successfully',);
+    // await showPlainNotification(
+    //     id: notificationId++,
+    //     title: fileName, // file.path,
+    //     message: 'Downloaded Successfully',
+    //     path: filePath);
   }
 
-  Future<void> showPlainNotification(
-      {required int id,
-      required String title,
-      required String message,
-      String? path}) async {
-    const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('akshaya channel id', 'akshaya channel name',
-            channelDescription: 'akshaya channel description',
-            importance: Importance.max,
-            priority: Priority.high,
-            icon: 'ic_logo',
-            ticker: 'ticker');
 
-    const DarwinNotificationDetails darwinNotificationDetails =
-        DarwinNotificationDetails(
-      subtitle: 'the subtitle',
-    );
-
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: darwinNotificationDetails,
-    );
-    await flutterLocalNotificationsPlugin
-        .show(id, title, message, notificationDetails, payload: path);
+  Future<void> shareFile(BuildContext context, File file) async {
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.shareXFiles([XFile(file.path)]);
   }
+
 
   String sanitizeBase64(String base64String) {
     return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');
@@ -1557,56 +1620,14 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     var platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      message,
-      platformChannelSpecifics,
-      payload: path,
-    );
+    // await flutterLocalNotificationsPlugin.show(
+    //   id,
+    //   title,
+    //   message,
+    //   platformChannelSpecifics,
+    //   payload: path,
+    // );
   }
-
-  Future<void> openDownloadsDirectory() async {
-    // Request Manage External Storage Permission for Android 13+
-
-    if (await Permission.manageExternalStorage.request().isGranted ||
-        await Permission.storage.request().isGranted) {
-      try {
-        // Open Downloads Folder
-        String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
-          dialogTitle: 'Select Downloads Folder',
-        );
-        if (selectedDirectory != null) {
-          debugPrint('Selected Directory: $selectedDirectory');
-        } else {
-          debugPrint('No folder selected.');
-        }
-      } catch (e) {
-        debugPrint('Error opening folder: $e');
-      }
-    } else {
-      debugPrint('Permission Denied.');
-    }
-  }
-
-/*   Future<void> openDownloadsDirectory() async {
-    PermissionStatus status = await Permission.storage.request();
-
-    if (status.isGranted) {
-      String folderPath = passbookFileLocation;
-      Directory dir = Directory(folderPath);
-      if (!(await dir.exists())) {
-        await dir.create(recursive: true);
-      }
-      OpenFilex.open(folderPath);
-    } else if (status.isDenied) {
-      print('Error: Storage permission denied.');
-    } else if (status.isPermanentlyDenied) {
-      print(
-          'Error: Storage permission permanently denied. Please enable it from settings.');
-      openAppSettings();
-    }
-  } */
 
   Row downloadBtns() {
     return Row(
@@ -1618,7 +1639,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
             padding: const EdgeInsets.all(0),
             height: 60,
             btnTextColor: CommonStyles.primaryTextColor,
-            onPressed: openDownloadsDirectory,
+            onPressed: openDownloadFileDirectory,
             // onPressed: checkAndOpenDirectory,
           ),
         ),
