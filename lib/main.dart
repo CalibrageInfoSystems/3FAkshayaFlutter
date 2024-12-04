@@ -1,27 +1,20 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:io';
 
-import 'package:akshaya_flutter/common_utils/api_config.dart';
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/local_notification/notification_service.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
 import 'package:akshaya_flutter/screens/home_screen/screens/DataProvider.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:open_filex/open_filex.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'app_enterance/splash_screen.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initLocalNotifications();
   await EasyLocalization.ensureInitialized();
-
 
   runApp(
     EasyLocalization(
@@ -41,6 +34,7 @@ void main() async {
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -53,9 +47,6 @@ class MyApp extends StatelessWidget {
           selectionColor: Colors.blue.withOpacity(0.3),
           selectionHandleColor: CommonStyles.primaryTextColor,
         ),
-        /*  checkboxTheme: CheckboxThemeData(
-          fillColor: WidgetStateProperty.all(CommonStyles.primaryTextColor),
-        ), */
         colorScheme: const ColorScheme.light(
           primary: CommonStyles.primaryTextColor,
           onPrimary: Colors.white,

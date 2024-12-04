@@ -15,6 +15,7 @@ import 'package:akshaya_flutter/localization/locale_keys.dart';
 import 'package:akshaya_flutter/main.dart';
 import 'package:akshaya_flutter/models/passbook_transport_model.dart';
 import 'package:akshaya_flutter/models/passbook_vendor_model.dart';
+// import 'package:akshaya_flutter/notification_service.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 // import 'package:device_info_plus/device_info_plus.dart';
@@ -32,7 +33,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 
 class FarmerPassbookInfo extends StatefulWidget {
   const FarmerPassbookInfo(
@@ -919,7 +925,7 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
 
   // Future<void> checkStoragePermission() async {
   //   bool permissionStatus;
-    
+
   //   final deviceInfo = await DeviceInfoPlugin().androidInfo;
 
   //   if (deviceInfo.version.sdkInt > 32) {
@@ -941,49 +947,50 @@ class _FarmerPassbookInfoState extends State<FarmerPassbookInfo> {
   //   }
   // }
 
+  Future<void> checkStoragePermission() async {
+    bool permissionStatus = false;
+    final deviceInfo = DeviceInfoPlugin();
 
-Future<void> checkStoragePermission() async {
-  bool permissionStatus = false;
-  final deviceInfo = DeviceInfoPlugin();
+    // Determine the platform and get the device info
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
 
-  // Determine the platform and get the device info
-  if (Platform.isAndroid) {
-    final androidInfo = await deviceInfo.androidInfo;
-
-    // Check Android SDK version
-    if (androidInfo.version.sdkInt > 32) {
-      // For Android 13+ (SDK 33), use the new 'manageExternalStorage' permission
-      permissionStatus = await Permission.manageExternalStorage.request().isGranted;
-    } else {
-      // For older Android versions, use 'storage' permission
-      permissionStatus = await Permission.storage.request().isGranted;
+      // Check Android SDK version
+      if (androidInfo.version.sdkInt > 32) {
+        // For Android 13+ (SDK 33), use the new 'manageExternalStorage' permission
+        permissionStatus =
+            await Permission.manageExternalStorage.request().isGranted;
+      } else {
+        // For older Android versions, use 'storage' permission
+        permissionStatus = await Permission.storage.request().isGranted;
+      }
+    } else if (Platform.isIOS) {
+      // On iOS, use the 'photos' or 'mediaLibrary' permission as needed
+      permissionStatus = await Permission.photos.request().isGranted;
     }
-  } else if (Platform.isIOS) {
-    // On iOS, use the 'photos' or 'mediaLibrary' permission as needed
-    permissionStatus = await Permission.photos.request().isGranted;
-  }
 
-  // Check the permission status
-  if (permissionStatus) {
-    print('Permission is granted');
-  } else {
-    // Request permission if not granted
-    Map<Permission, PermissionStatus> status = await [
-      if (Platform.isAndroid) 
-        (await deviceInfo.androidInfo).version.sdkInt > 32 ? Permission.manageExternalStorage : Permission.storage
-      else if (Platform.isIOS) 
-        Permission.photos
-    ].request();
-
-    if (status[Platform.isAndroid ? Permission.storage : Permission.photos] == PermissionStatus.granted) {
-      print('Storage permission is granted');
+    // Check the permission status
+    if (permissionStatus) {
+      print('Permission is granted');
     } else {
-      print('Storage permission is denied');
+      // Request permission if not granted
+      Map<Permission, PermissionStatus> status = await [
+        if (Platform.isAndroid)
+          (await deviceInfo.androidInfo).version.sdkInt > 32
+              ? Permission.manageExternalStorage
+              : Permission.storage
+        else if (Platform.isIOS)
+          Permission.photos
+      ].request();
+
+      if (status[Platform.isAndroid ? Permission.storage : Permission.photos] ==
+          PermissionStatus.granted) {
+        print('Storage permission is granted');
+      } else {
+        print('Storage permission is denied');
+      }
     }
   }
-}
-
-
 }
 
 class FarmerPassbookTabView extends StatefulWidget {
@@ -1019,22 +1026,7 @@ class FarmerPassbookTabView extends StatefulWidget {
 }
 
 class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
-    int notificationId = 0;
-  void openDirectory() async {
-    var status = await Permission.storage.request();
-    if (!status.isGranted) {
-      print('Storage permission not granted');
-      return;
-    }
-
-    String folderPath = '/storage/emulated/0/Download/Srikar_Groups/ledger';
-    Directory dir = Directory(folderPath);
-    if (!(await dir.exists())) {
-      await dir.create(recursive: true);
-      print('Directory created at $folderPath');
-    }
-    OpenFilex.open(folderPath);
-  }
+  int notificationId = 0;
 
   //MARK: requestBody
   void exportPaymentsAndDownloadFile() async {
@@ -1163,8 +1155,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     }
   }
 
-
-
 // Future<void> openDownloadFileDirectory() async {
 //   try {
 //     // Get the path of the application's documents directory
@@ -1183,22 +1173,21 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
 //   }
 // }
 
-
-Future<void> openDownloadFileDirectory() async {
-  try {
-    String? result = await FilePicker.platform.getDirectoryPath();
-    if (result != null) {
-      // Open the selected directory (or navigate within it)
-       await OpenFilex.open(result);
-      // await Share.shareXFiles(
-      //   [XFile(result)],
-      //   text: 'Open the directory in the Files app',
-      // );
+  Future<void> openDownloadFileDirectory() async {
+    try {
+      String? result = await FilePicker.platform.getDirectoryPath();
+      if (result != null) {
+        // Open the selected directory (or navigate within it)
+        await OpenFilex.open(result);
+        // await Share.shareXFiles(
+        //   [XFile(result)],
+        //   text: 'Open the directory in the Files app',
+        // );
+      }
+    } catch (e) {
+      print("Error using file picker: $e");
     }
-  } catch (e) {
-    print("Error using file picker: $e");
   }
-}
 
   Future<void> convertBase64ToExcelAndSaveIntoSpecificDirectory(
       String base64String) async {
@@ -1210,58 +1199,91 @@ Future<void> openDownloadFileDirectory() async {
       });
       return;
     }
-    String base64 = sanitizeBase64(base64String);
-    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    int sdkInt = androidInfo.version.sdkInt;
-    //   if (await Permission.storage.request().isGranted) {
 
+    String base64 = sanitizeBase64(base64String);
     List<int> excelBytes = base64Decode(base64);
-    Directory directoryPath =
-        Directory(passbookFileLocation); //'/sdcard/Download/3FAkshaya/ledger'
-    // Directory('/storage/emulated/0/Download/Srikar_Groups/ledger');
-    if (!directoryPath.existsSync()) {
-      directoryPath.createSync(recursive: true);
-    }
-    String filePath = directoryPath.path;
+
+    Directory? directoryPath;
     String timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
     String fileName = "3FAkshaya_ledger_$timestamp.xlsx";
+    String filePath;
 
-    final File file = File('$filePath/$fileName');
-
-    // Force delete the file if it exists
-    try {
-      if (await file.exists()) {
-        await file.delete();
+    if (Platform.isAndroid) {
+      // Request storage permission on Android
+      if (await Permission.storage.request().isGranted) {
+        directoryPath = await getExternalStorageDirectory();
+      } else {
+        print('Storage permission is denied');
+        return;
       }
-    } catch (e) {
-      print('Error deleting existing file: $e');
+    } else if (Platform.isIOS) {
+      // directoryPath = await getApplicationSupportDirectory();
+      directoryPath = await getApplicationDocumentsDirectory();
+    } else {
+      print("Unsupported platform");
+      return;
     }
 
-    await file.create(recursive: true);
+          Directory appDirectory = Directory('${directoryPath?.path}/3FAkshaya');
+      if (!await appDirectory.exists()) {
+        await appDirectory.create(recursive: true);
+      }
 
-    await file.writeAsBytes(excelBytes);
+      filePath = '${appDirectory.path}/$fileName';
+      final File file = File(filePath);
+      await file.create(recursive: true);
+      await file.writeAsBytes(excelBytes);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        CommonStyles.hideHorizontalDotsLoadingDialog(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          CommonStyles.hideHorizontalDotsLoadingDialog(context);
+        });
       });
-    });
-    CommonStyles.showToast('File Downloaded Successfully');
-    
-    await NotificationService.showNotification(id: notificationId++,
-                      title: fileName, body: 'Downloaded Successfully',);
-    // await showPlainNotification(
-    //     id: notificationId++,
-    //     title: fileName, // file.path,
-    //     message: 'Downloaded Successfully',
-    //     path: filePath);
+      CommonStyles.showToast('File Downloaded Successfully');
+
+      await NotificationService.showNotification(
+        id: notificationId++,
+        title: fileName,
+        body: 'Downloaded Successfully',
+      );
   }
 
+    Future<void> downloadPdfFile() async {
+    const url =
+        'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    try {
+      Directory appDocDirectory = await getApplicationDocumentsDirectory();
+      Directory jessyDirectory = Directory('${appDocDirectory.path}/Jessy');
+      if (!await jessyDirectory.exists()) {
+        await jessyDirectory.create(recursive: true);
+      }
 
-  Future<void> shareFile(BuildContext context, File file) async {
-    final box = context.findRenderObject() as RenderBox?;
-    await Share.shareXFiles([XFile(file.path)]);
+      final String savePath = p.join(jessyDirectory.path,
+          'test_${DateTime.now().millisecondsSinceEpoch}.pdf');
+
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final File file = File(savePath);
+        await file.writeAsBytes(response.bodyBytes);
+        print('File downloaded to: $savePath');
+        showSnackbar('File downloaded to: $savePath');
+      } else {
+        showSnackbar(
+            'Failed to download file. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('catch: $e');
+      rethrow;
+    }
+  }
+
+  void showSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
 
@@ -1602,31 +1624,6 @@ Future<void> openDownloadFileDirectory() async {
         if (isSpace) const SizedBox(height: 5),
       ],
     );
-  }
-
-  //MARK: Notification Method
-  Future<void> _showNotification(
-      {required int id,
-      required String title,
-      required String message,
-      String? path}) async {
-    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
-      'akshay_channel',
-      'akshay_channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'akshay_ticker',
-    );
-    var platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    // await flutterLocalNotificationsPlugin.show(
-    //   id,
-    //   title,
-    //   message,
-    //   platformChannelSpecifics,
-    //   payload: path,
-    // );
   }
 
   Row downloadBtns() {

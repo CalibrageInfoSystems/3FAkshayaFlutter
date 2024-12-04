@@ -1,6 +1,10 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_filex/open_filex.dart';
 
 class NotificationService {
+
+  
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -27,8 +31,8 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: notificationAction,
-      onDidReceiveBackgroundNotificationResponse: notificationAction,
+      onDidReceiveNotificationResponse: openDownloadFileDirectory,
+      onDidReceiveBackgroundNotificationResponse: openDownloadFileDirectory,
     );
 
     await flutterLocalNotificationsPlugin
@@ -54,5 +58,18 @@ class NotificationService {
 
     flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails,
         payload: payload);
+  }
+
+    static void openDownloadFileDirectory(
+      NotificationResponse notificationResponse) async {
+        print('-------openDownloadFileDirectory method called-------');
+    try {
+      String? result = await FilePicker.platform.getDirectoryPath();
+      if (result != null) {
+        await OpenFilex.open(result);
+      }
+    } catch (e) {
+      print("Error using file picker: $e");
+    }
   }
 }
