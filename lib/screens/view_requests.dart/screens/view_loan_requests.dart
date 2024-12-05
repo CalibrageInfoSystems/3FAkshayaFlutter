@@ -395,12 +395,20 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                             (request.comments == null ||
                                     request.comments!.isEmpty)
                                 ? const SizedBox()
-                                : Row(
-                                    children: [
-                                      Text('${request.comments}',
-                                          style: CommonStyles.txStyF14CbFF6),
-                                    ],
-                                  ),
+                                : 
+                                // Row(
+                                //     children: [
+                                //       Text('${request.comments}',
+                                //           style: CommonStyles.txStyF14CbFF6),
+                                //     ],
+                                //   ),
+                                Text(
+                            '${request.comments}',
+                            textAlign: TextAlign.center,
+                            // maxLines: 4,
+                            // overflow: TextOverflow.ellipsis,
+                            style: CommonStyles.txStyF14CbFF6,
+                          ),
                           ],
                         ),
                       );
