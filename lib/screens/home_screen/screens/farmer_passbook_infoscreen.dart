@@ -1209,13 +1209,14 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
     String filePath;
 
     if (Platform.isAndroid) {
-      // Request storage permission on Android
+      directoryPath = await getExternalStorageDirectory();
+      /* // Request storage permission on Android
       if (await Permission.storage.request().isGranted) {
         directoryPath = await getExternalStorageDirectory();
       } else {
         print('Storage permission is denied');
         return;
-      }
+      } */
     } else if (Platform.isIOS) {
       // directoryPath = await getApplicationSupportDirectory();
       directoryPath = await getApplicationDocumentsDirectory();
@@ -1224,31 +1225,31 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       return;
     }
 
-          Directory appDirectory = Directory('${directoryPath?.path}/3FAkshaya');
-      if (!await appDirectory.exists()) {
-        await appDirectory.create(recursive: true);
-      }
+    Directory appDirectory = Directory('${directoryPath?.path}/3FAkshaya');
+    if (!await appDirectory.exists()) {
+      await appDirectory.create(recursive: true);
+    }
 
-      filePath = '${appDirectory.path}/$fileName';
-      final File file = File(filePath);
-      await file.create(recursive: true);
-      await file.writeAsBytes(excelBytes);
+    filePath = '${appDirectory.path}/$fileName';
+    final File file = File(filePath);
+    await file.create(recursive: true);
+    await file.writeAsBytes(excelBytes);
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        CommonStyles.hideHorizontalDotsLoadingDialog(context);
       });
-      CommonStyles.showToast('File Downloaded Successfully');
+    });
+    CommonStyles.showToast('File Downloaded Successfully');
 
-      await NotificationService.showNotification(
-        id: notificationId++,
-        title: fileName,
-        body: 'Downloaded Successfully',
-      );
+    await NotificationService.showNotification(
+      id: notificationId++,
+      title: fileName,
+      body: 'Downloaded Successfully',
+    );
   }
 
-    Future<void> downloadPdfFile() async {
+  Future<void> downloadPdfFile() async {
     const url =
         'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
     try {
@@ -1285,7 +1286,6 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
       ),
     );
   }
-
 
   String sanitizeBase64(String base64String) {
     return base64String.replaceAll(RegExp(r'\s+'), '').replaceAll('"', '');

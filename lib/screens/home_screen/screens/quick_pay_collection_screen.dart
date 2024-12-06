@@ -142,6 +142,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         body: requestBody,
       );
 
+      print('quicky_pay: $apiUrl');
+      print('quicky_pay: $requestBody');
+
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
 
@@ -832,92 +835,96 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-            side: const BorderSide(
-              color: Color(0x8D000000),
-              width: 2.0, // Adding border to the dialog
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+              side: const BorderSide(
+                color: Color(0x8D000000),
+                width: 2.0, // Adding border to the dialog
+              ),
             ),
-          ),
-          child: Container(
-            color: CommonStyles.blackColor,
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                // Header with "X" icon and "Error" text
-                Container(
-                  padding: const EdgeInsets.all(10.0),
-                  color: CommonStyles.RedColor,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.close, color: Colors.white),
-                      Text('  Error', style: CommonStyles.txStyF16CwFF6),
-                      SizedBox(
-                          width: 24.0), // Spacer to align text in the center
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Text(
-                  msg,
-                  textAlign: TextAlign.center,
-                  style: CommonStyles.text16white,
-                ),
-                // OK Button
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(20.0), // Rounded corners
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0xFFCCCCCC), // Start color (light gray)
-                          Color(0xFFFFFFFF), // Center color (white)
-                          Color(0xFFCCCCCC), // End color (light gray)
-                        ],
-                      ),
-                      border: Border.all(
-                        color: const Color(0xFFe86100), // Orange border color
-                        width: 2.0,
-                      ),
+            child: Container(
+              color: CommonStyles.blackColor,
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Header with "X" icon and "Error" text
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    color: CommonStyles.RedColor,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.close, color: Colors.white),
+                        Text('  Error', style: CommonStyles.txStyF16CwFF6),
+                        SizedBox(
+                            width: 24.0), // Spacer to align text in the center
+                      ],
                     ),
-                    child: SizedBox(
-                      height: 30.0, // Set the desired height
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Close the dialog and navigate to the previous screen
-                          Navigator.of(context).pop(); // Closes the dialog
-                          List<MsgModel> displayList = [];
+                  ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    msg,
+                    textAlign: TextAlign.center,
+                    style: CommonStyles.text16white,
+                  ),
+                  // OK Button
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(20.0), // Rounded corners
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xFFCCCCCC), // Start color (light gray)
+                            Color(0xFFFFFFFF), // Center color (white)
+                            Color(0xFFCCCCCC), // End color (light gray)
+                          ],
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFFe86100), // Orange border color
+                          width: 2.0,
+                        ),
+                      ),
+                      child: SizedBox(
+                        height: 30.0, // Set the desired height
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Close the dialog and navigate to the previous screen
+                            Navigator.of(context).pop(); // Closes the dialog
+                            List<MsgModel> displayList = [];
 
-                          // Show success dialog
-                          showSuccessDialog(context, displayList,
-                              tr(LocaleKeys.qucick_success));
-                          Navigator.of(context)
-                              .pop(); // Navigates to the previous screen
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
+                            // Show success dialog
+                            showSuccessDialog(context, displayList,
+                                tr(LocaleKeys.qucick_success));
+                            Navigator.of(context)
+                                .pop(); // Navigates to the previous screen
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          child: Text(
+                            tr(LocaleKeys.ok),
+                            style: CommonStyles.txStyF14CbFF6,
                           ),
                         ),
-                        child: Text(
-                          tr(LocaleKeys.ok),
-                          style: CommonStyles.txStyF14CbFF6,
-                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         );
