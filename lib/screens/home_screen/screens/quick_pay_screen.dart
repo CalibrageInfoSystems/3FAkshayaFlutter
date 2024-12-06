@@ -30,6 +30,12 @@ class QuickPayScreen extends StatefulWidget {
 class _QuickPayScreenState extends State<QuickPayScreen> {
   late Future<List<UnpaidCollection>> futureUnpaidCollection;
 
+  @override
+  void initState() {
+    super.initState();
+    futureUnpaidCollection = getUnpaidCollection();
+  }
+
   Future<List<UnpaidCollection>> getUnpaidCollection() async {
     // http://182.18.157.215/3FAkshaya/API/api/Farmer/GetUnPayedCollectionsByFarmerCode/APWGNJAP00150015
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -38,11 +44,16 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     final apiUrl = '$baseUrl$getUnPaidCollections$farmerCode';
     final jsonResponse = await http.get(Uri.parse(apiUrl));
 
+    print('getUnpaidCollection: $apiUrl');
+
     if (jsonResponse.statusCode == 200) {
       final Map<String, dynamic> response = jsonDecode(jsonResponse.body);
       if (response['listResult'] != null && response['listResult'].isNotEmpty) {
         List<dynamic> result = response['listResult'];
-        return result.map((item) => UnpaidCollection.fromJson(item)).toList();
+        return checkHolidayForQuickPayRequest(
+            stateCode: result[0]['stateCode'],
+            districtId: result[0]['districtId'],
+            result: result);
       } else {
         throw Exception(
           tr(LocaleKeys.no_unpaid_collections),
@@ -53,10 +64,158 @@ class _QuickPayScreenState extends State<QuickPayScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    futureUnpaidCollection = getUnpaidCollection();
+  Future<List<UnpaidCollection>> checkHolidayForQuickPayRequest(
+      {required String stateCode,
+      required int districtId,
+      required List<dynamic> result}) async {
+    const apiUrl = '$baseUrl$isQuickPayBlockDate';
+    if (stateCode != 'AP') {
+      districtId = 0;
+    }
+
+    final docDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+    final requestBody = jsonEncode({
+      "districtId": districtId,
+      "docDate": docDate,
+      "isQuickPayBlocked": true,
+      "stateCode": stateCode
+    });
+
+    final jsonResponse = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: requestBody,
+    );
+
+    print('checkHolidayForQuickPayRequest: $apiUrl');
+    print('checkHolidayForQuickPayRequest: $requestBody');
+
+    if (jsonResponse.statusCode == 200) {
+      Map<String, dynamic> response = jsonDecode(jsonResponse.body);
+      if (response['isSuccess']) {
+        return result.map((item) => UnpaidCollection.fromJson(item)).toList();
+      } else {
+        showCustomDialog(context, response['endUserMessage']);
+        return throw Exception('');
+      }
+    } else {
+      throw Exception('Request failed with status: ${jsonResponse.statusCode}');
+    }
+  }
+
+  void showCustomDialog(BuildContext context, String msg,
+      {void Function()? onPressed, bool barrierDismissible = true}) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: '',
+      barrierDismissible: barrierDismissible,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return PopScope(
+          canPop: false,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+              side: const BorderSide(
+                  color: Color(0x8D000000),
+                  width: 2.0), // Adding border to the dialog
+            ),
+            child: Container(
+              color: CommonStyles.blackColor,
+              padding: const EdgeInsets.all(0.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  // Header with "X" icon and "Error" text
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    color: CommonStyles.RedColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.close, color: Colors.white),
+                        const SizedBox(width: 12.0),
+                        Text(tr(LocaleKeys.error),
+                            style: CommonStyles.txStyF20CwFF6),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  // Message Text
+                  Text(
+                    msg,
+                    textAlign: TextAlign.center,
+                    style: CommonStyles.text16white,
+                  ),
+                  const SizedBox(height: 20.0),
+                  // OK Button
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(20.0), // Rounded corners
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color(0xFFCCCCCC), // Start color (light gray)
+                            Color(0xFFFFFFFF), // Center color (white)
+                            Color(0xFFCCCCCC), // End color (light gray)
+                          ],
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFFe86100), // Orange border color
+                          width: 2.0,
+                        ),
+                      ),
+                      child: SizedBox(
+                        height: 30.0, // Set the desired height
+                        child: ElevatedButton(
+                          onPressed: onPressed ??
+                              () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                          style: ElevatedButton.styleFrom(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 35.0),
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          child: Text(
+                            tr(LocaleKeys.ok),
+                            style: CommonStyles.txStyF16CbFF6,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+              parent: animation1,
+              curve: Curves.easeOutBack, // Customize the animation curve here
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
   }
 
   @override

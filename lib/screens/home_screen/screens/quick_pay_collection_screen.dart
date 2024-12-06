@@ -142,8 +142,8 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         body: requestBody,
       );
 
-      print('quicky_pay: $apiUrl');
-      print('quicky_pay: $requestBody');
+      print('quicky_pay getQuickPayDetails: $apiUrl');
+      print('quicky_pay getQuickPayDetails: $requestBody');
 
       if (jsonResponse.statusCode == 200) {
         final response = jsonDecode(jsonResponse.body);
