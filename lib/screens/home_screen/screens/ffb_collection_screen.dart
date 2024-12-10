@@ -61,11 +61,12 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
         children: [
           //MARK: header
           Container(
-            height: dropdownItems.indexOf(selectedDropDownValue!) == 0
-                /* (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
-                    dropdownItems.indexOf(selectedDropDownValue!) == 1) */
-                ? (size.height / 2) - AppBar().preferredSize.height
-                : null,
+            // height: dropdownItems.indexOf(selectedDropDownValue!) == 0
+            //     /* (dropdownItems.indexOf(selectedDropDownValue!) == 0 ||
+            //         dropdownItems.indexOf(selectedDropDownValue!) == 1) */
+            //     ? (size.height / 2) - AppBar().preferredSize.height
+            //     : null,
+               
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [

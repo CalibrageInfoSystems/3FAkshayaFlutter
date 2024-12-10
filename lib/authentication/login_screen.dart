@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:akshaya_flutter/authentication/login_otp_screen.dart';
@@ -12,8 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
+// import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+// import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -221,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
+                                  print('scan btn clicked');
                                   _scanQR();
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -287,17 +291,17 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    final dio = Dio();
     final farmerId = _farmercodeController.text.trim();
     print("farmerId==255: $farmerId");
-
+    final apiUrl = '$baseUrl$Farmer_ID_CHECK$farmerId/null';
     try {
-      final response = await dio.get('$baseUrl$Farmer_ID_CHECK$farmerId/null');
-      print("farmerId==259: $response");
-      print("farmerId==260: ${response.statusCode}");
+      final jsonResponse = await http.get(Uri.parse(apiUrl));
+      print("farmerId==259: $jsonResponse");
+      print("farmerId==260: ${jsonResponse.statusCode}");
 
-      if (response.statusCode == 200) {
-        final farmerResponseModel = FarmerResponseModel.fromJson(response.data);
+      if (jsonResponse.statusCode == 200) {
+        final response = jsonDecode(jsonResponse.body);
+        final farmerResponseModel = FarmerResponseModel.fromJson(response);
         print("farmerId==266: ${farmerResponseModel.isSuccess!}");
         if (farmerResponseModel.isSuccess!) {
           if (farmerResponseModel.result != null) {
@@ -322,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
         _showErrorDialog('Server Error');
       }
-    } on DioException catch (e) {
+    } catch (e) {
       print('Error: $e');
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
       _showErrorDialog('Server Error');
@@ -334,26 +338,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _scanQR() async {
-    // Request camera permission
-    var status = await Permission.camera.request();
-    if (status.isGranted) {
-      try {
-        String? cameraScanResult = await scanner.scan();
-        setState(() {
-          if (cameraScanResult != null) {
-            _farmercodeController.text = cameraScanResult;
-          }
-        });
-      } on PlatformException catch (e) {
-        print(e);
-      }
-    } else {
-      // Handle permission denied
-      setState(() {
-        _farmercodeController.text = "Camera permission denied";
-      });
-    }
+    String cameraScanResult = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666", "Cancel", false, ScanMode.DEFAULT);
+
+    setState(() {
+      _farmercodeController.text = cameraScanResult;
+    });
   }
+
+  // Future<void> _scanQR() async {
+  //   // Request camera permission
+  //   var status = await Permission.camera.isGranted;
+  //   print('status: $status');
+  //   if (status) {
+  //     try {
+  //       String? cameraScanResult = await scanner.scan();
+  //       setState(() {
+  //         if (cameraScanResult != null) {
+  //           _farmercodeController.text = cameraScanResult;
+  //         }
+  //       });
+  //     } on PlatformException catch (e) {
+  //       print(e);
+  //     }
+  //   } else {
+  //     // Handle permission denied
+  //     setState(() {
+  //       _farmercodeController.text = "Camera permission denied";
+  //     });
+  //   }
+  // }
 
   Future<bool> isvalidations() async {
     bool isValid = true;

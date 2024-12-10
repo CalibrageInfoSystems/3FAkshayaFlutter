@@ -278,7 +278,8 @@ class _VisitRequestState extends State<VisitRequest> {
     }
 
     final directory = await getApplicationDocumentsDirectory();
-    String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.mp3';
+    //String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.mp3';
+    String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
     // String fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
     audioFilePath = '${directory.path}/$fileName';
 

@@ -404,7 +404,7 @@ class _ViewLoanRequestsState extends State<ViewLoanRequests> {
                                 //   ),
                                 Text(
                             '${request.comments}',
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.start,
                             // maxLines: 4,
                             // overflow: TextOverflow.ellipsis,
                             style: CommonStyles.txStyF14CbFF6,

@@ -98,7 +98,7 @@ class _PDFViewScreenState extends State<PDFViewScreen>
           errorMessage.isEmpty
               ? !isReady
                   ? const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator.adaptive(),
                     )
                   : Container()
               : Center(
