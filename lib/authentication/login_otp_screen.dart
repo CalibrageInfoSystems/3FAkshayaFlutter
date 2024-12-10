@@ -404,7 +404,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     final apiUrl = Uri.parse('$baseUrl$addAppInstallation');
 
     final requestBody = jsonEncode({
-      "id": 1,
+      "id": 0,
       "farmerCode": farmerModel.code,
       "installedOn": currentDate,
       "imeiNumber": uniqueIdentifier,
