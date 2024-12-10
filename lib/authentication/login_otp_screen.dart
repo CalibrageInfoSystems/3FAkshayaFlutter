@@ -1,20 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/common_utils/constants.dart';
 import 'package:akshaya_flutter/common_utils/shared_prefs_keys.dart';
 import 'package:akshaya_flutter/gen/assets.gen.dart';
 import 'package:akshaya_flutter/localization/locale_keys.dart';
+import 'package:akshaya_flutter/models/farmer_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common_utils/api_config.dart';
 import '../models/FarmerResponseModel.dart';
 import '../screens/main_screen.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class LoginOtpScreen extends StatefulWidget {
   final String mobile;
@@ -28,11 +32,23 @@ class LoginOtpScreen extends StatefulWidget {
 class _LoginOtpScreenState extends State<LoginOtpScreen> {
   bool isLoading = false;
   String? farmerId;
-  String enteredOTP = '';
+  final TextEditingController otpController = TextEditingController();
   // final _dio = Dio();
 
   String fetchlast4Digits(String number) {
     return number.substring(number.length - 4);
+  }
+
+/*   @override
+  void initState() {
+    fetchDeviceIdentifier();
+    super.initState();
+  } */
+
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,6 +85,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: PinCodeTextField(
+                      controller: otpController,
                       appContext: context,
                       textStyle: CommonStyles.txStyF16CwFF6,
                       length: 6,
@@ -89,13 +106,6 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                       animationDuration: const Duration(milliseconds: 300),
                       enableActiveFill: true,
                       keyboardType: TextInputType.number,
-                      onCompleted: (v) {
-                        print(v);
-                        setState(() {
-                          enteredOTP = v;
-                        });
-                        print("Completed");
-                      },
                       beforeTextPaste: (text) {
                         print("Allowing to paste $text");
                         return true;
@@ -105,23 +115,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
                   const SizedBox(height: 20),
                   submitBtn(context, tr(LocaleKeys.submit)),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          resendOTP();
-                        },
-                        child: Text(
-                          tr(LocaleKeys.re_send),
-                          style: CommonStyles.text14white.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                  resendOtp()
                 ],
               ),
             ),
@@ -131,10 +125,29 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     );
   }
 
+  Row resendOtp() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: () {
+            resendOTP();
+          },
+          child: Text(
+            tr(LocaleKeys.re_send),
+            style: CommonStyles.text14white.copyWith(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<bool> isvalidations() async {
     bool isValid = true;
-    print('enteredOTP===$enteredOTP');
-    if (enteredOTP.isEmpty) {
+    if (otpController.text.isEmpty) {
       CommonStyles.showCustomDialog(context, 'Please Enter OTP');
       //  showCustomToastMessageLong('Please Enter OTP', context, 1, 4);
       isValid = false;
@@ -168,7 +181,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
         child: ElevatedButton(
           onPressed: () async {
             // _verifyOtp();
-            print('enteredOTP$enteredOTP');
+            print('otpController: ${otpController.text}');
             bool validationSuccess = await isvalidations();
             if (validationSuccess) {
               _verifyOtp();
@@ -212,7 +225,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
       CommonStyles.showHorizontalDotsLoadingDialog(context);
     });
 
-    final url = '$baseUrl$Farmer_otp${farmerId!}/$enteredOTP';
+    final url = '$baseUrl$Farmer_otp${farmerId!}/${otpController.text}';
     print("otpsubmiturl==== $url");
     try {
       print("Sending request to URL: $url");
@@ -246,8 +259,10 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
           setState(() {
             isLoading = false;
           });
+          // fetchUniqueIdentifierFromDeviceAndSave();
           try {
             print("Attempting to navigate to MainScreen");
+            fetchUniqueIdentifierFromDeviceAndSave();
             await Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => const MainScreen(),
@@ -371,5 +386,96 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
     }).join(', '); // Join with a comma
 
     return formattedNumbers;
+  }
+
+  Future<void> fetchUniqueIdentifierFromDeviceAndSave() async {
+    String? uniqueIdentifier = await fetchDeviceIdentifier();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final result = prefs.getString(SharedPrefsKeys.farmerData);
+    if (result == null) {
+      throw Exception('No farmer data found in shared preferences');
+    }
+    Map<String, dynamic> response = json.decode(result);
+    Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
+    final FarmerModel farmerModel = FarmerModel.fromJson(farmerResult);
+
+    final currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final apiUrl = Uri.parse('$baseUrl$addAppInstallation');
+
+    final requestBody = jsonEncode({
+      "id": 1,
+      "farmerCode": farmerModel.code,
+      "installedOn": currentDate,
+      "imeiNumber": uniqueIdentifier,
+      "lastLoginDate": currentDate,
+      "isActive": true,
+      "farmerName": farmerModel.firstName,
+      "clusterId": farmerModel.clusterId,
+      "stateCode": farmerModel.stateCode,
+      "stateName": farmerModel.stateName
+    });
+
+    try {
+      final jsonResponse = await http.post(apiUrl,
+          headers: {'Content-Type': 'application/json'}, body: requestBody);
+
+      print('fetchUniqueIdentifierFromDeviceAndSave: $uniqueIdentifier');
+      print('fetchUniqueIdentifierFromDeviceAndSave: $apiUrl');
+      print('fetchUniqueIdentifierFromDeviceAndSave: $requestBody');
+
+      if (jsonResponse.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unique identifier saved successfully!'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to save unique identifier!'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<String?> fetchDeviceIdentifier() async {
+    try {
+      if (Platform.isAndroid) {
+        return await _getAndroidIMEI();
+      } else if (Platform.isIOS) {
+        return await _getiOSUDID();
+      } else {
+        return "Unsupported Platform";
+      }
+    } catch (e) {
+      print('catch: $e');
+    }
+    return null;
+  }
+
+  Future<String?> _getAndroidIMEI() async {
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      print('getDeviceData uniqueIdentifier: ${androidInfo.id}');
+      return androidInfo.id;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<String?> _getiOSUDID() async {
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor;
+    } catch (e) {
+      return null;
+    }
   }
 }

@@ -61,6 +61,7 @@ const exportPayments = 'Payment/ExportPayments';
 const fertilizerSubsidies = 'FertilizerSubsidies/';
 const getContactInfo = 'ContactInfo/GetContactInfo/';
 const isQuickPayBlockDate = 'QuickPayBlockDate/IsQuickPayBlockDate';
+const addAppInstallation = 'AppInstall/AddAppInstallation';
 
 // APWGBDAB00010005
 var getLabourServicetype = "Farmer/GetServicesByPlotCode/";

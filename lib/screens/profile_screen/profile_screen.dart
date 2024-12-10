@@ -65,8 +65,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<FarmerModel> getFarmerInfoFromSharedPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final result = prefs.getString(SharedPrefsKeys.farmerData);
-    if (result != null) {}
-    Map<String, dynamic> response = json.decode(result!);
+    if (result == null) {
+      throw Exception('No farmer data found in shared preferences');
+    }
+    Map<String, dynamic> response = json.decode(result);
     Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
     return FarmerModel.fromJson(farmerResult);
   }

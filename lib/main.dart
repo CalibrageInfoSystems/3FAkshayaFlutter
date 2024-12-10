@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-
 import 'package:akshaya_flutter/common_utils/common_styles.dart';
 import 'package:akshaya_flutter/local_notification/notification_service.dart';
 import 'package:akshaya_flutter/localization/app_locale.dart';
