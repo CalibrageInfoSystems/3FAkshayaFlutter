@@ -11,6 +11,7 @@ import 'package:akshaya_flutter/models/FarmerResponseModel.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:dio/dio.dart';
@@ -337,38 +338,43 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-/*   Future<void> _scanQR() async {
+  Future<void> _scanQR() async {
     String cameraScanResult = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", "Cancel", false, ScanMode.DEFAULT);
-
-    setState(() {
-      _farmercodeController.text = cameraScanResult;
-    });
-  } */
-
-  Future<void> _scanQR() async {
-    try {
-      var status = await Permission.camera.request();
-      print('qrscan: status $status');
-
-      if (status.isGranted) {
-        String? cameraScanResult = await scanner.scan();
-
-        setState(() {
-          print('qrscan: cameraScanResult $cameraScanResult');
-          if (cameraScanResult != null) {
-            _farmercodeController.text = cameraScanResult;
-          }
-        });
-      } else {
-        print('Camera permission is required.');
-        CommonStyles.showCustomDialog(
-            context, 'Camera permission is required.');
-      }
-    } catch (e) {
-      print('qrscan: e $e');
+    print('cameraScanResult: $cameraScanResult');
+    if (cameraScanResult != '-1') {
+      setState(() {
+        _farmercodeController.text = cameraScanResult;
+      });
     }
   }
+
+  // Future<void> _scanQR() async {
+  //   try {
+  //     var status = await Permission.camera.request();
+  //     print('qrscan: status $status');
+
+  //     if (status.isGranted) {
+  //       String? cameraScanResult = await scanner.scan();
+
+  //       setState(() {
+  //         print('qrscan: cameraScanResult $cameraScanResult');
+  //         if (cameraScanResult != null) {
+  //           _farmercodeController.text = cameraScanResult;
+  //         }
+  //       });
+  //     } else if (status == PermissionStatus.permanentlyDenied ||
+  //         status == PermissionStatus.denied) {
+  //       openAppSettings();
+  //     } else {
+  //       print('Camera permission is required.');
+  //       CommonStyles.showCustomDialog(
+  //           context, 'Camera permission is required.');
+  //     }
+  //   } catch (e) {
+  //     print('qrscan: e $e');
+  //   }
+  // }
 
   // Future<void> _scanQR() async {
   //   // Request camera permission
