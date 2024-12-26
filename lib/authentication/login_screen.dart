@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 // import 'package:qrscan/qrscan.dart' as scanner;
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -337,13 +337,37 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _scanQR() async {
+/*   Future<void> _scanQR() async {
     String cameraScanResult = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666", "Cancel", false, ScanMode.DEFAULT);
 
     setState(() {
       _farmercodeController.text = cameraScanResult;
     });
+  } */
+
+  Future<void> _scanQR() async {
+    try {
+      var status = await Permission.camera.request();
+      print('qrscan: status $status');
+
+      if (status.isGranted) {
+        String? cameraScanResult = await scanner.scan();
+
+        setState(() {
+          print('qrscan: cameraScanResult $cameraScanResult');
+          if (cameraScanResult != null) {
+            _farmercodeController.text = cameraScanResult;
+          }
+        });
+      } else {
+        print('Camera permission is required.');
+        CommonStyles.showCustomDialog(
+            context, 'Camera permission is required.');
+      }
+    } catch (e) {
+      print('qrscan: e $e');
+    }
   }
 
   // Future<void> _scanQR() async {

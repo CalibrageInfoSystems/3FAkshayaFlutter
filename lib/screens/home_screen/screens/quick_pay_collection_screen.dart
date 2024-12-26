@@ -151,6 +151,9 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
         // Check if listResult is null or empty
         if (response['listResult'] == null || response['listResult'].isEmpty) {
           _showErrorDialog(tr(LocaleKeys.ffbratenorthere));
+          /*  CommonStyles.showCustomDialog(
+              context, tr(LocaleKeys.ffbratenorthere)); */
+
           throw Exception(tr(LocaleKeys.ffbratenorthere));
         }
 
@@ -847,7 +850,6 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
             ),
             child: Container(
               color: CommonStyles.blackColor,
-              padding: const EdgeInsets.all(12.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -866,12 +868,15 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                     ),
                   ),
                   const SizedBox(height: 10.0),
-                  Text(
-                    msg,
-                    textAlign: TextAlign.center,
-                    style: CommonStyles.text16white,
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      style: CommonStyles.text16white,
+                    ),
                   ),
-                  // OK Button
+                  //MARK: OK Button
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Container(
@@ -896,13 +901,14 @@ class _QuickPayCollectionScreenState extends State<QuickPayCollectionScreen> {
                         height: 30.0, // Set the desired height
                         child: ElevatedButton(
                           onPressed: () {
-                            // Close the dialog and navigate to the previous screen
-                            Navigator.of(context).pop(); // Closes the dialog
+                            print('Navigator.pop - 1');
+                            Navigator.of(context).pop();
                             List<MsgModel> displayList = [];
 
                             // Show success dialog
                             showSuccessDialog(context, displayList,
                                 tr(LocaleKeys.qucick_success));
+                            print('Navigator.pop - 2');
                             Navigator.of(context)
                                 .pop(); // Navigates to the previous screen
                           },

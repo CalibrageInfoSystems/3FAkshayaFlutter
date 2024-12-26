@@ -387,7 +387,7 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
 
     return formattedNumbers;
   }
-
+/* 
   Future<void> fetchUniqueIdentifierFromDeviceAndSave() async {
     String? uniqueIdentifier = await fetchDeviceIdentifier();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -436,6 +436,53 @@ class _LoginOtpScreenState extends State<LoginOtpScreen> {
             content: Text('Failed to save unique identifier!'),
           ),
         );
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+ */
+
+  Future<void> fetchUniqueIdentifierFromDeviceAndSave() async {
+    String? uniqueIdentifier = await fetchDeviceIdentifier();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final result = prefs.getString(SharedPrefsKeys.farmerData);
+    if (result == null) {
+      throw Exception('No farmer data found in shared preferences');
+    }
+    Map<String, dynamic> response = json.decode(result);
+    Map<String, dynamic> farmerResult = response['result']['farmerDetails'][0];
+    final FarmerModel farmerModel = FarmerModel.fromJson(farmerResult);
+
+    final currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final apiUrl = Uri.parse('$baseUrl$addAppInstallation');
+
+    final requestBody = jsonEncode({
+      "id": 1,
+      "farmerCode": farmerModel.code,
+      "installedOn": currentDate,
+      "imeiNumber": uniqueIdentifier,
+      "lastLoginDate": currentDate,
+      "isActive": true,
+      "farmerName": farmerModel.firstName,
+      "clusterId": farmerModel.clusterId,
+      "stateCode": farmerModel.stateCode,
+      "stateName": farmerModel.stateName
+    });
+
+    try {
+      final jsonResponse = await http.post(apiUrl,
+          headers: {'Content-Type': 'application/json'}, body: requestBody);
+
+      print('fetchUniqueIdentifierFromDeviceAndSave: $uniqueIdentifier');
+      print('fetchUniqueIdentifierFromDeviceAndSave: $apiUrl');
+      print('fetchUniqueIdentifierFromDeviceAndSave: $requestBody');
+
+      if (jsonResponse.statusCode == 200) {
+        print('Unique identifier saved successfully!');
+      } else {
+        print('Failed to save unique identifier!');
       }
     } catch (e) {
       print('Error: $e');
