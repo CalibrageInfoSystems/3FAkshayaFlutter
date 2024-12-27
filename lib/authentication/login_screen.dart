@@ -356,7 +356,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //     if (status.isGranted) {
   //       String? cameraScanResult = await scanner.scan();
-
   //       setState(() {
   //         print('qrscan: cameraScanResult $cameraScanResult');
   //         if (cameraScanResult != null) {

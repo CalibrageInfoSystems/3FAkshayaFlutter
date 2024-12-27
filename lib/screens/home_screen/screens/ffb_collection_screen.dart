@@ -204,7 +204,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Expanded(
             flex: 3,
             child: datePickerBox1(
-              dateLabel: tr(LocaleKeys.fromDateWithOutStar),
+              dateLabel: tr(LocaleKeys.from_date),
               displaydate: displayFromDate,
               onTap: () {
                 CommonWidgets.launchDatePicker(
@@ -226,7 +226,7 @@ class _FfbCollectionScreenState extends State<FfbCollectionScreen> {
           Expanded(
               flex: 3,
               child: datePickerBox2(
-                dateLabel: tr(LocaleKeys.toDateWithOutStar),
+                dateLabel: tr(LocaleKeys.to_date),
                 // dateLabel: 'To Date',
                 displaydate: displayToDate,
                 onTap: () async {
