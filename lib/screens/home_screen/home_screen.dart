@@ -72,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
             .toList();
         return serviceTypeIds;
       } else {
-        throw Exception('Failed to get learning data');
+        throw Exception(
+            'We encountered an issue while retrieving the services data. Please try again later');
+        // throw Exception('Failed to get learning data');
       }
     } on SocketException {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -119,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }).toList();
       } else {
-        throw Exception('Failed to get services data');
+        throw Exception('Failed to get learning data');
       }
     } catch (error) {
       rethrow;
@@ -219,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 aspectRatio: 16 / 9,
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enableInfiniteScroll: true,
-                slideIndicator:  CircularSlideIndicator(
+                slideIndicator: CircularSlideIndicator(
                   slideIndicatorOptions: SlideIndicatorOptions(
                     itemSpacing: 10,
                     padding: EdgeInsets.only(bottom: 10.0),

@@ -768,14 +768,14 @@ class _ProductCardScreenState extends State<ProductCardScreen> {
           throw Exception('Result got null');
         }
       } else {
-        print('Failed to submit request: ${jsonResponse.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Failed to submit request: ${jsonResponse.statusCode}'),
+            content: Text(
+                '${jsonDecode(jsonResponse.body)['message'] ?? 'Something went wrong, please try again'}'),
           ),
         );
-        throw Exception('Failed to submit request: ${jsonResponse.statusCode}');
+        throw Exception(
+            '${jsonDecode(jsonResponse.body)['message'] ?? 'Something went wrong, please try again'}');
       }
     } catch (e) {
       rethrow;

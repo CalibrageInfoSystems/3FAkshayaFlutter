@@ -625,8 +625,14 @@ class _ProductCardScreenState extends State<EquipProductCardScreen> {
         // Show success dialog
         showSuccessDialog(context, displayList, tr(LocaleKeys.success_pole));
       } else {
-        print('Failed to submit request: ${response.statusCode}');
-        print('Error Response: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                '${jsonDecode(response.body)['message'] ?? 'Something went wrong, please try again'}'),
+          ),
+        );
+        throw Exception(
+            '${jsonDecode(response.body)['message'] ?? 'Something went wrong, please try again'}');
       }
     } catch (e) {
       print('Error occurred: $e');

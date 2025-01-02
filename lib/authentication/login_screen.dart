@@ -325,12 +325,12 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         CommonStyles.hideHorizontalDotsLoadingDialog(context);
-        _showErrorDialog('Server Error');
+        _showErrorDialog('Server Not Responding, Please Try Again');
       }
     } catch (e) {
       print('Error: $e');
       CommonStyles.hideHorizontalDotsLoadingDialog(context);
-      _showErrorDialog('Server Error');
+      _showErrorDialog('$e');
     } finally {
       setState(() {
         _isLoading = false;
