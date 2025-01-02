@@ -227,7 +227,7 @@ class GoDownsCard extends StatelessWidget {
                 child: Text('$data',
                     style: CommonStyles.txStyF14CbFF6
                         .copyWith(color: CommonStyles.blackColorShade),
-                    maxLines: 4,
+                    maxLines: 5,
                     overflow: TextOverflow.ellipsis),
               ),
             ],

@@ -1388,7 +1388,7 @@ class _FarmerPassbookTabViewState extends State<FarmerPassbookTabView> {
             ),
           ),
           note(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
         ],
       ),
     );
@@ -1745,7 +1745,7 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
           transportationRateBtn(widget.future),
           const SizedBox(height: 10),
           note(),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
         ],
       ),
     );
@@ -2105,20 +2105,20 @@ class _FarmerTransportTabViewState extends State<FarmerTransportTabView> {
                               children: [
                                 if (trasportRates[0].village != null)
                                   CommonWidgets.commonRowWithColon(
-                                    flex: [5, 1, 6],
+                                    flex: [6, 1, 6],
                                     label: tr(LocaleKeys.village),
                                     data: '${trasportRates[0].village}',
                                   ),
                                 if (trasportRates[0].mandal != null)
                                   CommonWidgets.commonRowWithColon(
-                                    flex: [5, 1, 6],
+                                    flex: [6, 1, 6],
                                     label: tr(LocaleKeys.mandal),
                                     data: '${trasportRates[0].mandal}',
                                   ),
                                 if (trasportRates[0].rate != null &&
                                     trasportRates[0].rate!.isNotEmpty)
                                   CommonWidgets.commonRowWithColon(
-                                      flex: [5, 1, 6],
+                                      flex: [6, 1, 6],
                                       label: tr(LocaleKeys.rate),
                                       data: '${trasportRates[0].rate}'
                                       // '${formatToTwoDecimalPlaces(trasportRates[0].rate)}',
